@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply font-sans text-gray-800 bg-white;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .btn-primary {
+    @apply bg-gradient-to-r from-primary-600 to-secondary-500 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg hover:-translate-y-1 transition-all;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary-500 hover:bg-secondary-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105;
+  }
+  
+  .btn-outline {
+    @apply border-2 border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white font-semibold py-2 px-5 rounded-lg transition-all duration-300;
+  }
+  
+  .card {
+    @apply bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden;
+  }
+  
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold text-center mb-4;
+  }
+  
+  .section-subtitle {
+    @apply text-lg text-gray-600 text-center max-w-3xl mx-auto mb-12;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all;
+  }
+}
+
+/* ===== Animations ===== */
+
+@keyframes heroZoom {
+  from { transform: scale(1); }
+  to   { transform: scale(1.08); }
+}
+.animate-hero-zoom {
+  animation: heroZoom 18s ease-in-out infinite alternate;
+}
+
+@keyframes slow-zoom {
+  0%   { transform: scale(1.1); }
+  100% { transform: scale(1.25); }
+}
+.animate-slow-zoom {
+  animation: slow-zoom 25s ease-in-out infinite alternate;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s forwards ease-out;
+}
+
+
+
+/* Grille subtile */
+.bg-grid-pattern {
+  background-image: radial-gradient(circle, #cbd5e1 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Points pattern */
+.bg-dot-pattern {
+  background-image: radial-gradient(#94a3b8 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Animation zoom lente */
+@keyframes slow-zoom {
+  0% { transform: scale(1.1); }
+  100% { transform: scale(1.25); }
+}
+.animate-slow-zoom {
+  animation: slow-zoom 25s ease-in-out infinite alternate;
+}
+
+/* Animation fade-in-up */
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s forwards ease-out;
+}
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+/* Container personnalisé */
+.container-custom {
+  @apply container mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Boutons */
+.btn-primary {
+  @apply bg-gradient-to-r from-primary-600 to-secondary-500 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg hover:-translate-y-1 transition-all;
+}
+.btn-outline {
+  @apply border-2 border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white font-semibold py-2 px-5 rounded-lg transition-all duration-300;
+}
+
+/* Titres de section */
+.section-title {
+  @apply text-3xl md:text-4xl font-bold text-center mb-4;
+}
+.section-subtitle {
+  @apply text-lg text-gray-600 text-center max-w-3xl mx-auto mb-12;
+}
+
+/* Patterns d’arrière‑plan */
+.bg-grid-pattern {
+  background-image: radial-gradient(circle, #cbd5e1 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.bg-dot-pattern {
+  background-image: radial-gradient(#94a3b8 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Animation zoom lent */
+@keyframes slow-zoom {
+  0% { transform: scale(1.1); }
+  100% { transform: scale(1.25); }
+}
+.animate-slow-zoom {
+  animation: slow-zoom 25s ease-in-out infinite alternate;
+}
+
+
