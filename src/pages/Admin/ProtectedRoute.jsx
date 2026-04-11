@@ -1,20 +1,31 @@
-// src/components/ProtectedRoute.jsx
-import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 
-const ProtectedRoute = ({ children, allowedRoles = [] }) => {
+/**
+ * Protège une route selon le token et le rôle attendu.
+ *
+ * Usage dans App.jsx :
+ *   <Route path="/admin" element={<ProtectedRoute role="admin"><AdminLayout /></ProtectedRoute>}>
+ *   <Route path="/client/dashboard" element={<ProtectedRoute role="client"><ClientDashboard /></ProtectedRoute>} />
+ *
+ * @param {string} role - 'admin' | 'client' | undefined (juste connecté)
+ */
+const ProtectedRoute = ({ children, role }) => {
   const token = localStorage.getItem('accessToken')
   const userRole = localStorage.getItem('userRole')
 
-  if (!token) {
-    return <Navigate to="/login" replace />
+  // Pas connecté → login
+  if (!token) return <Navigate to="/login" replace />
+
+  // Vérifie le rôle si précisé
+  if (role === 'admin' && userRole !== 'super_admin' && userRole !== 'admin') {
+    return <Navigate to="/client/dashboard" replace />
   }
 
-  if (allowedRoles.length > 0 && !allowedRoles.includes(userRole)) {
-    return <Navigate to="/" replace />
+  if (role === 'client' && (userRole === 'super_admin' || userRole === 'admin')) {
+    return <Navigate to="/admin/dashboard" replace />
   }
 
-  // Si children existe, les afficher, sinon afficher Outlet
-  return children ? children : <Outlet />
+  return children
 }
 
 export default ProtectedRoute

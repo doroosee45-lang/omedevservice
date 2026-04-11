@@ -505,7 +505,7 @@ const Home = () => {
         </Link>
 
         <Link
-          to="/admin"
+          to="/solutions"
           className="group border-2 border-white/30 hover:border-white px-5 py-2 rounded-xl font-semibold text-white hover:bg-white/10 flex items-center justify-center gap-2 transition-all text-sm"
         >
           <span>Voir les solutions</span>
