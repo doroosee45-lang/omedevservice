@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { 
-  FileText, 
-  FolderKanban, 
-  Clock, 
+import {
+  FileText,
+  FolderKanban,
+  Clock,
   Euro,
   ArrowRight,
   User,
@@ -58,7 +58,7 @@ const staggerContainer = {
 
 const StatCard = ({ icon: Icon, title, value, color, trend, trendValue }) => {
   const getColorClasses = () => {
-    switch(color) {
+    switch (color) {
       case 'blue': return 'from-blue-500 to-cyan-500';
       case 'green': return 'from-emerald-500 to-teal-500';
       case 'orange': return 'from-orange-500 to-amber-500';
@@ -97,7 +97,7 @@ const ClientDashboard = () => {
     // Récupérer les informations de l'utilisateur connecté depuis localStorage
     const name = localStorage.getItem('userName')
     const email = localStorage.getItem('userEmail')
-    
+
     if (name) {
       setUserName(name)
     } else {
@@ -109,7 +109,7 @@ const ClientDashboard = () => {
         setUserName(user.name)
       }
     }
-    
+
     if (email) {
       setUserEmail(email)
     }
@@ -160,9 +160,9 @@ const ClientDashboard = () => {
   return (
     <>
       <style>{globalStyles}</style>
-      
+
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
-        
+
         {/* Header */}
         <ClientHeader onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
 
@@ -180,7 +180,7 @@ const ClientDashboard = () => {
           {/* Main content */}
           <div className="flex-1 lg:ml-64">
             <main className="p-6 md:p-8">
-              
+
               {/* Welcome Section avec nom dynamique */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -230,8 +230,8 @@ const ClientDashboard = () => {
                     {recentDemandes.map((demande, idx) => {
                       const status = getStatusBadge(demande.status)
                       return (
-                        <motion.div 
-                          key={demande.id} 
+                        <motion.div
+                          key={demande.id}
                           className="p-4 hover:bg-white/5 transition cursor-pointer"
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
@@ -266,7 +266,7 @@ const ClientDashboard = () => {
                   </div>
                   <div className="p-6 space-y-6">
                     {activeProjects.map((project, idx) => (
-                      <motion.div 
+                      <motion.div
                         key={project.id}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -333,14 +333,16 @@ const ClientDashboard = () => {
                     <h3 className="text-xl font-bold text-white font-syne mb-1">Besoin d'un nouveau service ?</h3>
                     <p className="text-gray-400">Demandez un devis gratuitement en quelques clics</p>
                   </div>
-                  <motion.button 
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all shadow-lg"
-                  >
-                    Nouvelle demande
-                    <ArrowRight className="w-4 h-4" />
-                  </motion.button>
+                  <Link to="/demander-devis">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all shadow-lg"
+                    >
+                      Nouvelle demande
+                      <ArrowRight className="w-4 h-4" />
+                    </motion.button>
+                  </Link>
                 </div>
               </motion.div>
 
