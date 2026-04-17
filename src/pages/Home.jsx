@@ -37,8 +37,15 @@ import {
   TrendingDown,
   FileText,
   Lock,
-  AlertTriangle,
+  AlertTriangle, Handshake
 } from 'lucide-react';
+
+
+
+
+
+
+
 
 /* ─────────────────────────────────────────────
    DESIGN SYSTEM — Inspired by HTML page (navy/electric/gold)
@@ -418,148 +425,169 @@ const Home = () => {
 
       {/* ==================== HERO SECTION - Premium Navy ==================== */}
       {/* ==================== HERO SECTION - HOME avec image de fond ==================== */}
-    <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden pt-20 pb-12">
+      <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden pt-20 pb-12">
 
-  {/* Image de fond avec zoom lent */}
-  <div className="absolute inset-0 overflow-hidden">
-    <div
-      className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110 animate-slow-zoom"
-      style={{
-        backgroundImage: `url('https://img.freepik.com/photos-gratuite/contexte-energie-nucleaire-ia-innovation-future-technologie-rupture_53876-129783.jpg?semt=ais_hybrid&w=740&q=80')`
-      }}
-    />
-    <div className="absolute inset-0 bg-black/65"></div>
-  </div>
-
-  {/* Grille de fond technologique */}
-  <div className="absolute inset-0 opacity-20" style={{
-    backgroundImage: `linear-gradient(rgba(59,130,246,0.08) 1px, transparent 1px),
-                      linear-gradient(90deg, rgba(59,130,246,0.08) 1px, transparent 1px)`,
-    backgroundSize: '60px 60px'
-  }} />
-
-  {/* Effet lumineux radial subtil */}
-  <div className="absolute inset-0 bg-[radial-gradient(at_top_right,#3b82f630_0%,transparent_60%)]" />
-  <div className="absolute inset-0 bg-[radial-gradient(at_bottom_left,#8b5cf620_0%,transparent_60%)]" />
-
-  {/* Orbes flottants animés (réduits) */}
-  <div className="absolute w-80 h-80 bg-blue-600/20 top-10 -left-20 rounded-full filter blur-[80px] animate-float" />
-  <div className="absolute w-64 h-64 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
-  <div className="absolute w-40 h-40 bg-cyan-500/10 top-1/2 left-1/2 -translate-x-1/2 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '4s' }} />
-
-  {/* Contenu principal */}
-  <div className="container mx-auto px-4 relative z-10 py-8">
-    <div className="max-w-3xl mx-auto text-center">
-
-      {/* Badge */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="inline-flex items-center gap-2 mb-4 px-3 py-1.5 rounded-full"
-        style={{ background: 'rgba(37,99,235,0.15)', border: '1px solid rgba(37,99,235,0.3)' }}
-      >
-        <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
-        <span className="text-blue-300 font-semibold text-[10px] tracking-wide font-syne">Solutions Digitales Premium – Afrique</span>
-      </motion.div>
-
-      {/* Titre principal */}
-      <motion.h1
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.1 }}
-        className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight mb-4 font-syne"
-      >
-        Transformez votre <br />
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
-          Business Digital
-        </span>
-        <br />
-        avec l'expertise
-      </motion.h1>
-
-      {/* Sous-titre */}
-      <motion.p
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.2 }}
-        className="text-gray-300 text-base md:text-lg mb-6 max-w-2xl mx-auto"
-      >
-        ERP • SaaS • Cybersécurité • Développement Web & Mobile.<br />
-        Omedev vous accompagne dans votre <strong className="text-white">digitalisation complète</strong>.
-      </motion.p>
-
-      {/* Boutons */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.3 }}
-        className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-8"
-      >
-        <Link
-          to="/demander-devis"
-          className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-2 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20 transition-all hover:scale-[1.02] hover:shadow-xl text-sm"
-        >
-          <span>Demander un devis</span>
-          <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
-        </Link>
-
-        <Link
-          to="/solutions"
-          className="group border-2 border-white/30 hover:border-white px-5 py-2 rounded-xl font-semibold text-white hover:bg-white/10 flex items-center justify-center gap-2 transition-all text-sm"
-        >
-          <span>Voir les solutions</span>
-          <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
-        </Link>
-
-        <Link
-          to="/audit-gratuit"
-          className="px-4 py-2 rounded-xl font-semibold text-amber-400 border border-amber-500/30 hover:bg-amber-500/10 transition-all flex items-center gap-2 text-sm"
-        >
-          <span>🎁 Audit Gratuit</span>
-        </Link>
-      </motion.div>
-
-      {/* Stats */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.4 }}
-        className="grid grid-cols-2 sm:grid-cols-4 gap-3"
-      >
-        {[
-          { n: '150+', l: 'Projets livrés', icon: '🚀' },
-          { n: '98%', l: 'Satisfaction client', icon: '⭐' },
-          { n: '50+', l: 'Entreprises clientes', icon: '🏢' },
-          { n: '5 ans', l: "D'expertise", icon: '📅' }
-        ].map((s, i) => (
+        {/* Image de fond avec zoom lent */}
+        <div className="absolute inset-0 overflow-hidden">
           <div
-            key={i}
-            className="group rounded-xl p-3 text-center transition-all duration-300 hover:scale-105 hover:border-blue-500/40"
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110 animate-slow-zoom"
             style={{
-              background: 'linear-gradient(135deg, rgba(59,130,246,0.08), rgba(30,64,175,0.03))',
-              border: '1px solid rgba(37,99,235,0.2)'
+              backgroundImage: `url('https://img.freepik.com/photos-gratuite/contexte-energie-nucleaire-ia-innovation-future-technologie-rupture_53876-129783.jpg?semt=ais_hybrid&w=740&q=80')`
             }}
-          >
-            <div className="text-xl mb-0.5 opacity-60 group-hover:opacity-100 transition-opacity">{s.icon}</div>
-            <div className="font-extrabold text-xl text-white mb-0.5 font-syne">{s.n}</div>
-            <div className="text-gray-400 text-[11px]">{s.l}</div>
-          </div>
-        ))}
-      </motion.div>
-    </div>
-  </div>
+          />
+          <div className="absolute inset-0 bg-black/65"></div>
+        </div>
 
-  {/* Vague décorative en bas */}
-  <div className="absolute bottom-0 left-0 right-0 z-10 text-white/10">
-    <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-8">
-      <path
-        d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z"
-        fill="currentColor"
-      />
-    </svg>
-  </div>
-</section>
+        {/* Grille de fond technologique */}
+        <div className="absolute inset-0 opacity-20" style={{
+          backgroundImage: `linear-gradient(rgba(59,130,246,0.08) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(59,130,246,0.08) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px'
+        }} />
+
+        {/* Effet lumineux radial subtil */}
+        <div className="absolute inset-0 bg-[radial-gradient(at_top_right,#3b82f630_0%,transparent_60%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(at_bottom_left,#8b5cf620_0%,transparent_60%)]" />
+
+        {/* Orbes flottants animés (réduits) */}
+        <div className="absolute w-80 h-80 bg-blue-600/20 top-10 -left-20 rounded-full filter blur-[80px] animate-float" />
+        <div className="absolute w-64 h-64 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
+        <div className="absolute w-40 h-40 bg-cyan-500/10 top-1/2 left-1/2 -translate-x-1/2 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '4s' }} />
+
+        {/* Contenu principal */}
+        <div className="container mx-auto px-4 relative z-10 py-8">
+          <div className="max-w-3xl mx-auto text-center">
+
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="
+    inline-flex items-center gap-2
+    mt-6 sm:mt-8
+    mb-4
+    px-3 py-1.5
+    rounded-full
+    max-w-full
+    text-center
+    mx-auto sm:mx-0
+  "
+              style={{
+                background: 'rgba(37,99,235,0.15)',
+                border: '1px solid rgba(37,99,235,0.3)'
+              }}
+            >
+              <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse shrink-0" />
+
+              <span className="
+    text-blue-300 font-semibold
+    text-[10px] sm:text-xs
+    tracking-wide font-syne
+    leading-tight
+    break-words
+  ">
+                Solutions Digitales Premium – Afrique
+              </span>
+            </motion.div>
+
+            {/* Titre principal */}
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight mb-4 font-syne"
+            >
+              Transformez votre <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
+                Business Digital
+              </span>
+              <br />
+              avec l'expertise
+            </motion.h1>
+
+            {/* Sous-titre */}
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="text-gray-300 text-base md:text-lg mb-6 max-w-2xl mx-auto"
+            >
+              ERP • SaaS • Cybersécurité • Développement Web & Mobile.<br />
+              Omedev vous accompagne dans votre <strong className="text-white">digitalisation complète</strong>.
+            </motion.p>
+
+            {/* Boutons */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+              className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-8"
+            >
+              <Link
+                to="/demander-devis"
+                className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-2 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20 transition-all hover:scale-[1.02] hover:shadow-xl text-sm"
+              >
+                <span>Demander un devis</span>
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
+              </Link>
+
+              <Link
+                to="/solutions"
+                className="group border-2 border-white/30 hover:border-white px-5 py-2 rounded-xl font-semibold text-white hover:bg-white/10 flex items-center justify-center gap-2 transition-all text-sm"
+              >
+                <span>Voir les solutions</span>
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
+              </Link>
+
+              <Link
+                to="/audit-gratuit"
+                className="px-4 py-2 rounded-xl font-semibold text-amber-400 border border-amber-500/30 hover:bg-amber-500/10 transition-all flex items-center gap-2 text-sm"
+              >
+                <span>🎁 Audit Gratuit</span>
+              </Link>
+            </motion.div>
+
+            {/* Stats */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.4 }}
+              className="grid grid-cols-2 sm:grid-cols-4 gap-3"
+            >
+              {[
+                { n: '150+', l: 'Projets livrés', icon: '🚀' },
+                { n: '98%', l: 'Satisfaction client', icon: '⭐' },
+                { n: '50+', l: 'Entreprises clientes', icon: '🏢' },
+                { n: '5 ans', l: "D'expertise", icon: '📅' }
+              ].map((s, i) => (
+                <div
+                  key={i}
+                  className="group rounded-xl p-3 text-center transition-all duration-300 hover:scale-105 hover:border-blue-500/40"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(59,130,246,0.08), rgba(30,64,175,0.03))',
+                    border: '1px solid rgba(37,99,235,0.2)'
+                  }}
+                >
+                  <div className="text-xl mb-0.5 opacity-60 group-hover:opacity-100 transition-opacity">{s.icon}</div>
+                  <div className="font-extrabold text-xl text-white mb-0.5 font-syne">{s.n}</div>
+                  <div className="text-gray-400 text-[11px]">{s.l}</div>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Vague décorative en bas */}
+        <div className="absolute bottom-0 left-0 right-0 z-10 text-white/10">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-8">
+            <path
+              d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z"
+              fill="currentColor"
+            />
+          </svg>
+        </div>
+      </section>
       {/* Styles CSS à ajouter dans votre fichier global */}
       <style jsx>{`
   @keyframes float {
@@ -583,7 +611,7 @@ const Home = () => {
       <section className="py-24 relative overflow-hidden">
         <div className="container">
           <div className="text-center mb-14">
-            <span className="section-badge" style={{ background: '#fef3c7', color: '#b45309', borderColor: '#fde68a' }}>⚠️ Problèmes courants</span>
+            <span className="section-badge" style={{ background: '#3f59a1', color: '#edeae7', borderColor: '#3f7394' }}>⚠️ Problèmes courants</span>
             <h2 className="section-title">Ces défis vous parlent ?</h2>
             <div className="divider" />
             <p className="section-subtitle">La plupart des PME africaines perdent des opportunités faute d'outils digitaux adaptés.</p>
@@ -669,7 +697,7 @@ const Home = () => {
                 </div>
                 <h3 className="font-display font-bold text-white text-xl mb-3">{service.title}</h3>
                 <p className="text-slate-400 text-sm leading-relaxed mb-4">{service.description}</p>
-                <Link to="#" className="text-blue-400 text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">En savoir plus <ArrowRight size={14} /></Link>
+                <Link to="/solutions" className="text-blue-400 text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">En savoir plus <ArrowRight size={14} /></Link>
               </motion.div>
             ))}
           </div>
@@ -875,7 +903,7 @@ const Home = () => {
               </Link>
 
               <Link
-                to="/boutique"
+                to="/services/vente-materiel"
                 className="btn-outline"
                 style={{
                   color: 'white',
@@ -889,6 +917,56 @@ const Home = () => {
           </motion.div>
         </div>
       </section>
+
+       {/* ==================== CTA FINALE (DOUBLE) ==================== */}
+<section className="py-20 relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/5">
+  <div className="absolute inset-0 opacity-30" style={{
+    backgroundImage: `radial-gradient(circle at 30% 40%, rgba(59,130,246,0.3) 0%, transparent 60%),
+                      radial-gradient(circle at 80% 70%, rgba(6,182,212,0.2) 0%, transparent 60%)`
+  }} />
+  <div className="container mx-auto px-4 relative z-10">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0 }}
+        className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20 hover:border-blue-500/50 text-center"
+      >
+        <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110">
+          <Target size={28} className="text-white" />
+        </div>
+        <h3 className="text-2xl md:text-3xl font-bold text-white font-syne mb-3">Audit gratuit</h3>
+        <p className="text-gray-300 mb-6">
+          Bénéficiez d'un diagnostic complet de vos infrastructures sans engagement.
+        </p>
+        <Link to="/blog" className="inline-flex items-center gap-2 bg-white/10 border border-white/20 hover:bg-white/20 text-white px-6 py-2.5 rounded-xl font-semibold transition-all hover:scale-105">
+          Consultez notre blog <ArrowRight size={16} />
+        </Link>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-amber-500/20 hover:border-amber-500/50 text-center"
+      >
+        <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110">
+          <Handshake size={28} className="text-white" />
+        </div>
+        <h3 className="text-2xl md:text-3xl font-bold text-white font-syne mb-3">Devis personnalisé</h3>
+        <p className="text-gray-300 mb-6">
+          Recevez une proposition sur mesure adaptée à vos besoins et votre budget.
+        </p>
+
+        <Link to="/inscription" className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 py-2.5 rounded-xl font-semibold transition-all hover:scale-105">
+          Inscrivez-vous dans notre Centre <ArrowRight size={16} />
+        </Link>
+      </motion.div>
+    </div>
+  </div>
+</section>
     </>
   );
 };

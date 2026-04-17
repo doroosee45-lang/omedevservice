@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { 
+import {
   Users, Award, Target, Globe, Zap, Shield, Lightbulb, TrendingUp,
   ArrowRight, Headphones, CheckCircle, Rocket, Heart, Briefcase,
   Calendar, MapPin, Star, Phone, Mail, Handshake
@@ -87,19 +87,19 @@ const About = () => {
   // Équipe - version simplifiée
   const team = [
     {
-      name: 'Jean Mukendi',
+      name: 'Meya Dorodoro ',
       role: 'CEO & Fondateur',
-      position: 'Expert en infrastructure IT',
+      position: 'Expert en Informatique Appliqué & developpeur full-stack',
       bio: 'Expert en infrastructure IT et cybersécurité avec plus de 15 ans d’expérience en Afrique centrale.',
-      image: 'https://randomuser.me/api/portraits/men/32.jpg',
+      image: 'https://meyaosee.github.io/ensein/me1.jpg',
       gradient: 'from-blue-500 to-blue-600',
     },
     {
-      name: 'Amina Kabongo',
+      name: 'Osee Mbongo ',
       role: 'Directrice Technique',
       position: 'Ingénieur télécoms',
       bio: 'Ingénieur en télécommunications, spécialiste des réseaux haut débit et des solutions cloud.',
-      image: 'https://randomuser.me/api/portraits/women/68.jpg',
+      image: 'https://meyaosee.github.io/hosp/os2.jpg',
       gradient: 'from-cyan-500 to-cyan-600',
     },
     {
@@ -126,107 +126,107 @@ const About = () => {
 
       {/* ==================== HERO SECTION ==================== */}
       {/* ==================== HERO SECTION ==================== */}
-<section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden pt-28 pb-16">
-  <div className="absolute inset-0 opacity-20" style={{
-    backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
+      <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden pt-28 pb-16">
+        <div className="absolute inset-0 opacity-20" style={{
+          backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
                       linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`,
-    backgroundSize: '60px 60px'
-  }} />
-  
-  <div className="absolute inset-0 overflow-hidden">
-    <div
-      className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110 animate-slow-zoom"
-      style={{
-        backgroundImage: `url('https://img.freepik.com/photos-gratuite/contexte-energie-nucleaire-ia-innovation-future-technologie-rupture_53876-129783.jpg?semt=ais_hybrid&w=740&q=80')`
-      }}
-    />
-    <div className="absolute inset-0 bg-black/65"></div>
-  </div>
+          backgroundSize: '60px 60px'
+        }} />
 
-  <div className="absolute inset-0 bg-[radial-gradient(at_top_right,#3b82f645_0%,transparent_65%)]" />
-  
-  <div className="absolute w-80 h-80 bg-blue-600/20 top-20 -left-20 rounded-full filter blur-[80px] animate-float" />
-  <div className="absolute w-64 h-64 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
-  <div className="absolute w-40 h-40 bg-cyan-500/10 top-1/2 left-1/2 -translate-x-1/2 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '4s' }} />
+        <div className="absolute inset-0 overflow-hidden">
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110 animate-slow-zoom"
+            style={{
+              backgroundImage: `url('https://img.freepik.com/photos-gratuite/contexte-energie-nucleaire-ia-innovation-future-technologie-rupture_53876-129783.jpg?semt=ais_hybrid&w=740&q=80')`
+            }}
+          />
+          <div className="absolute inset-0 bg-black/65"></div>
+        </div>
 
-  <div className="container mx-auto px-4 relative z-10">
-    <div className="max-w-3xl mx-auto text-center">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="inline-flex items-center gap-2 mb-5 px-4 py-2 rounded-full bg-blue-600/15 border border-blue-500/30"
-      >
-        <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse-ring" />
-        <span className="text-blue-300 font-semibold text-xs tracking-wide font-syne">Qui sommes-nous ?</span>
-      </motion.div>
+        <div className="absolute inset-0 bg-[radial-gradient(at_top_right,#3b82f645_0%,transparent_65%)]" />
 
-      <motion.h1
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.1 }}
-        className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight mb-5 font-syne"
-      >
-        À propos{' '}
-        <span className="relative inline-block">
-          <span className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 blur-2xl opacity-50" />
-          <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
-            d’OMDEVE
-          </span>
-        </span>
-      </motion.h1>
+        <div className="absolute w-80 h-80 bg-blue-600/20 top-20 -left-20 rounded-full filter blur-[80px] animate-float" />
+        <div className="absolute w-64 h-64 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
+        <div className="absolute w-40 h-40 bg-cyan-500/10 top-1/2 left-1/2 -translate-x-1/2 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '4s' }} />
 
-      <motion.div
-        initial={{ opacity: 0, scaleX: 0 }}
-        animate={{ opacity: 1, scaleX: 1 }}
-        transition={{ duration: 0.7, delay: 0.2 }}
-        className="w-20 h-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 rounded-full mx-auto mb-5"
-      />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-3xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-2 mb-5 px-4 py-2 rounded-full bg-blue-600/15 border border-blue-500/30"
+            >
+              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse-ring" />
+              <span className="text-blue-300 font-semibold text-xs tracking-wide font-syne">Qui sommes-nous ?</span>
+            </motion.div>
 
-      <motion.p
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.3 }}
-        className="text-gray-300 text-lg md:text-xl mb-6 max-w-2xl mx-auto"
-      >
-        Leader en solutions IT, énergétiques et digitales en République Démocratique du Congo.
-      </motion.p>
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight mb-5 font-syne"
+            >
+              À propos{' '}
+              <span className="relative inline-block">
+                <span className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 blur-2xl opacity-50" />
+                <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
+                  d’OMDEVE
+                </span>
+              </span>
+            </motion.h1>
 
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.4 }}
-        className="flex flex-wrap gap-4 justify-center"
-      >
-        <Link to="/contact" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105 hover:shadow-xl">
-          Nous contacter <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-        </Link>
-        <Link to="/realisations" className="group border-2 border-white/30 hover:border-white px-6 py-3 rounded-xl font-semibold text-white hover:bg-white/10 transition-all hover:scale-105">
-          Voir nos réalisations <CheckCircle size={18} />
-        </Link>
-      </motion.div>
+            <motion.div
+              initial={{ opacity: 0, scaleX: 0 }}
+              animate={{ opacity: 1, scaleX: 1 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="w-20 h-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 rounded-full mx-auto mb-5"
+            />
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.7, delay: 0.6 }}
-        className="mt-12 flex justify-center"
-      >
-        <div className="animate-bounce">
-          <div className="w-6 h-10 rounded-full border-2 border-white/30 flex justify-center">
-            <div className="w-1 h-2 bg-white/50 rounded-full mt-2 animate-pulse" />
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+              className="text-gray-300 text-lg md:text-xl mb-6 max-w-2xl mx-auto"
+            >
+              Leader en solutions IT, énergétiques et digitales en République Démocratique du Congo.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.4 }}
+              className="flex flex-wrap gap-4 justify-center"
+            >
+              <Link to="/contact" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105 hover:shadow-xl">
+                Nous contacter <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link to="/realisations" className="group border-2 border-white/30 hover:border-white px-6 py-3 rounded-xl font-semibold text-white hover:bg-white/10 transition-all hover:scale-105">
+                Voir nos réalisations <CheckCircle size={18} />
+              </Link>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.6 }}
+              className="mt-12 flex justify-center"
+            >
+              <div className="animate-bounce">
+                <div className="w-6 h-10 rounded-full border-2 border-white/30 flex justify-center">
+                  <div className="w-1 h-2 bg-white/50 rounded-full mt-2 animate-pulse" />
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
-      </motion.div>
-    </div>
-  </div>
 
-  <div className="absolute bottom-0 left-0 right-0 text-white/10">
-    <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-10">
-      <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="currentColor" />
-    </svg>
-  </div>
-</section>
+        <div className="absolute bottom-0 left-0 right-0 text-white/10">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-10">
+            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="currentColor" />
+          </svg>
+        </div>
+      </section>
 
 
 
@@ -253,11 +253,11 @@ const About = () => {
               </div>
               <div className="space-y-4 text-gray-300 leading-relaxed">
                 <p>
-                  Fondée en 2018 à Kinshasa, <strong className="text-blue-400">OMDEVE Services</strong> est née de la volonté de répondre aux défis numériques et énergétiques de la RDC. 
+                  Fondée en 2018 à Kinshasa, <strong className="text-blue-400">OMDEVE Services</strong> est née de la volonté de répondre aux défis numériques et énergétiques de la RDC.
                   Partant d'une petite équipe de 3 passionnés d'informatique, nous avons rapidement grandi pour devenir un acteur incontournable du secteur.
                 </p>
                 <p>
-                  En 2020, nous avons élargi nos compétences aux énergies renouvelables, puis au développement digital en 2022. 
+                  En 2020, nous avons élargi nos compétences aux énergies renouvelables, puis au développement digital en 2022.
                   Aujourd'hui, nous accompagnons plus de 150 entreprises congolaises dans leur transformation technologique.
                 </p>
                 <p>
@@ -478,9 +478,9 @@ const About = () => {
                 className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:border-blue-500/50"
               >
                 <div className="relative overflow-hidden h-72">
-                  <img 
-                    src={member.image} 
-                    alt={member.name} 
+                  <img
+                    src={member.image}
+                    alt={member.name}
                     className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60" />
@@ -500,6 +500,18 @@ const About = () => {
           </div>
         </div>
       </div>
+      <div className="grid place-items-center mt-12">
+        <Link
+          to="/experts"
+          className="group inline-flex items-center gap-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-8 py-3.5 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg shadow-amber-500/20"
+        >
+          <Rocket size={20} className="group-hover:rotate-12 transition-transform duration-300" />
+          <span>Rencontrer toute l'équipe</span>
+          <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
+        </Link>
+      </div>
+
+
 
       {/* ==================== CONTACT INFO CARD ==================== */}
       <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/10">

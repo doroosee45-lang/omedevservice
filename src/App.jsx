@@ -20,6 +20,7 @@ import BlogPost from './pages/BlogPost'
 import Contact from './pages/Contact'
 import AuditGratuit from './pages/AuditGratuit'
 import DemanderDevis from './pages/DemanderDevis'
+import Expert from './pages/autre/Expert'
 
 // Authentification
 import Login from './pages/Auth/Login'
@@ -88,7 +89,7 @@ function App() {
           <Route path="/audit-gratuit" element={<AuditGratuit />} />
           <Route path="/demander-devis" element={<DemanderDevis />} />
           <Route path="/inscription" element={<Inscription />} />
-
+          <Route path="/experts" element={<Expert />} />
           {/* ========== SERVICES ========== */}
           <Route path="/services/reseau-infrastructure" element={<ReseauInfrastructure />} />
           <Route path="/services/securite" element={<Securite />} />
