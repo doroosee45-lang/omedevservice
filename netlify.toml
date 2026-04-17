@@ -1,6 +1,9 @@
+cat > netlify.toml << 'EOF'
 [build]
   command = "npm run build"
   publish = "docs"
 
 [build.environment]
   NODE_VERSION = "20"
+  NPM_VERSION = "10"
+EOF

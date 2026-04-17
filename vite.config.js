@@ -1,19 +1,24 @@
-// import { defineConfig } from 'vite'
+﻿// import { defineConfig } from 'vite'
 // import react from '@vitejs/plugin-react'
 
 // export default defineConfig({
 //   plugins: [react()],
-//   base: './',
+//   base: '/omedevservice/',  // ⚠️ IMPORTANT : avec les slashs
+//   build: {
+//     outDir: 'docs'
+//   }
 // })
 
 
+cat > vite.config.js << 'EOF'
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
-// vite.config.js
 export default defineConfig({
   plugins: [react()],
-  base: '/omedevservice/',
+  base: './',
   build: {
-    outDir: 'docs',
-    assetsDir: 'assets'
+    outDir: 'docs'
   }
 })
+EOF
