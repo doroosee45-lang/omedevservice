@@ -10,7 +10,7 @@ import {
 import meyaImg from '../Assets/images/experts/mm.jpeg';
 import oseeImg from '../Assets/images/experts/mab.jpeg';
 import paulImg from '../Assets/images/experts/ro.jpeg';
-import claireImg from '../Assets/images/experts/os4.jpg';
+import claireImg from '../Assets/images/experts/st.jpeg';
 
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
@@ -270,7 +270,7 @@ const About = () => {
       initial: 'P',
     },
     {
-      name: 'Claire Mbenza',
+      name: 'Stephane ',
       role: 'Lead Développement',
       position: 'Développeuse Full-Stack',
       bio: "Développeuse full-stack, elle conçoit des applications web et mobiles sur mesure.",
