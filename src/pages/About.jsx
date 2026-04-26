@@ -7,10 +7,10 @@ import {
   Calendar, MapPin, Star, Phone, Mail, Handshake
 } from 'lucide-react';
 
-import meyaImg from '../Assets/images/experts/mm.jpeg';
-import oseeImg from '../Assets/images/experts/mab.jpeg';
-import paulImg from '../Assets/images/experts/ro.jpeg';
-import claireImg from '../Assets/images/experts/st.jpeg';
+import meyaImg from '../assets/images/experts/mm.jpeg';
+import oseeImg from '../assets/images/experts/mab.jpeg';
+import paulImg from '../assets/images/experts/ro.jpeg';
+import claireImg from '../assets/images/experts/st.jpeg';
 
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
