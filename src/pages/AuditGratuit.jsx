@@ -20,6 +20,7 @@ import {
   ArrowRight,
   Clock
 } from 'lucide-react'
+import api from '../services/api'
 
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
@@ -90,6 +91,7 @@ const AuditGratuit = () => {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [auditResult, setAuditResult] = useState(null)
+  const [errorMessage, setErrorMessage] = useState('')
   const { register, handleSubmit, formState: { errors }, trigger, setValue } = useForm()
 
   const sectors = [
@@ -171,99 +173,104 @@ const AuditGratuit = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const calculateAuditScore = () => {
-    let score = 0
-    if (formData.hasNetwork === 'yes') score += 10
-    if (formData.hasServer === 'yes') score += 10
-    if (formData.hasFirewall === 'yes') score += 10
-    if (formData.hasAntivirus === 'yes') score += 10
-    if (formData.hasBackup === 'yes') score += 15
-    if (formData.hasCyberPolicy === 'yes') score += 10
-    if (formData.lastAudit === 'moins-6-mois') score += 5
-    else if (formData.lastAudit === '6-12-mois') score += 3
-    else if (formData.lastAudit === '1-2-ans') score += 1
-    score -= formData.mainIssues.length * 2
-    return Math.max(0, Math.min(100, score))
-  }
+  const onSubmit = async () => {
+    if (!formData.companyName || !formData.sector || !formData.employeeCount) {
+      alert('Veuillez remplir toutes les informations de l\'entreprise')
+      return
+    }
+    setIsSubmitting(true)
+    setErrorMessage('')
 
-  const getAuditRecommendations = (score) => {
-    if (score >= 80) {
-      return {
-        level: 'Excellent',
-        color: 'text-emerald-400',
-        bg: 'bg-emerald-500/20',
-        border: 'border-emerald-500/30',
-        icon: '🏆',
-        message: 'Votre infrastructure est très bien configurée. Quelques optimisations mineures peuvent encore améliorer vos performances.',
-        recommendations: [
-          'Mettre en place une veille technologique régulière',
-          'Former les équipes aux bonnes pratiques',
-          'Envisager une migration vers le cloud pour plus d\'agilité',
-          'Automatiser les processus de sauvegarde'
-        ]
+    try {
+      const response = await api.post('/audit-requests', formData)
+      // Le backend doit renvoyer { success, _id, requestNumber, audit: { score, level, recommendations } }
+      const { requestNumber, audit, _id } = response.data
+
+      let rec = {}
+      switch (audit.level) {
+        case 'Excellent':
+          rec = {
+            level: 'Excellent',
+            color: 'text-emerald-400',
+            bg: 'bg-emerald-500/20',
+            border: 'border-emerald-500/30',
+            icon: '🏆',
+            message: 'Votre infrastructure est très bien configurée. Quelques optimisations mineures peuvent encore améliorer vos performances.',
+            recommendations: audit.recommendations
+          }
+          break
+        case 'Bon':
+          rec = {
+            level: 'Bon',
+            color: 'text-blue-400',
+            bg: 'bg-blue-500/20',
+            border: 'border-blue-500/30',
+            icon: '👍',
+            message: 'Votre infrastructure est fonctionnelle mais présente des axes d\'amélioration significatifs.',
+            recommendations: audit.recommendations
+          }
+          break
+        case 'Moyen':
+          rec = {
+            level: 'Moyen',
+            color: 'text-yellow-400',
+            bg: 'bg-yellow-500/20',
+            border: 'border-yellow-500/30',
+            icon: '⚠️',
+            message: 'Des vulnérabilités importantes ont été identifiées. Une action rapide est recommandée.',
+            recommendations: audit.recommendations
+          }
+          break
+        default:
+          rec = {
+            level: 'Critique',
+            color: 'text-red-400',
+            bg: 'bg-red-500/20',
+            border: 'border-red-500/30',
+            icon: '🚨',
+            message: 'Votre infrastructure présente des risques majeurs. Une intervention urgente est nécessaire.',
+            recommendations: audit.recommendations
+          }
       }
-    } else if (score >= 60) {
-      return {
-        level: 'Bon',
-        color: 'text-blue-400',
-        bg: 'bg-blue-500/20',
-        border: 'border-blue-500/30',
-        icon: '👍',
-        message: 'Votre infrastructure est fonctionnelle mais présente des axes d\'amélioration significatifs.',
-        recommendations: [
-          'Renforcer la sécurité réseau avec un firewall nouvelle génération',
-          'Mettre en place des sauvegardes automatisées',
-          'Auditer les accès et les permissions utilisateurs',
-          'Optimiser la bande passante internet'
-        ]
-      }
-    } else if (score >= 40) {
-      return {
-        level: 'Moyen',
-        color: 'text-yellow-400',
-        bg: 'bg-yellow-500/20',
-        border: 'border-yellow-500/30',
-        icon: '⚠️',
-        message: 'Des vulnérabilités importantes ont été identifiées. Une action rapide est recommandée.',
-        recommendations: [
-          'Installer un antivirus centralisé',
-          'Mettre en place une politique de mots de passe stricts',
-          'Réaliser un audit de sécurité complet',
-          'Former les employés à la cybersécurité',
-          'Mettre en place des sauvegardes régulières'
-        ]
-      }
-    } else {
-      return {
-        level: 'Critique',
-        color: 'text-red-400',
-        bg: 'bg-red-500/20',
-        border: 'border-red-500/30',
-        icon: '🚨',
-        message: 'Votre infrastructure présente des risques majeurs. Une intervention urgente est nécessaire.',
-        recommendations: [
-          'Audit complet de l\'infrastructure IT',
-          'Mise en place d\'une solution de sécurité globale',
-          'Migration vers une infrastructure moderne',
-          'Formation cybersécurité pour toute l\'équipe',
-          'Mise en place d\'un plan de reprise d\'activité'
-        ]
-      }
+
+      setAuditResult({
+        _id,                       // stocke l'ID MongoDB pour le téléchargement
+        score: audit.score,
+        recommendations: rec,
+        ...formData,
+        requestNumber
+      })
+      setStep(6)
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi de l\'audit:', error)
+      const msg = error.response?.data?.message || 'Une erreur est survenue. Veuillez réessayer.'
+      setErrorMessage(msg)
+      alert(msg)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
-  const onSubmit = async (data) => {
-    setIsSubmitting(true)
-    const score = calculateAuditScore()
-    const recommendations = getAuditRecommendations(score)
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    setAuditResult({ score, recommendations, ...formData })
-    setStep(6)
-    setIsSubmitting(false)
-  }
-
-  const downloadPDFReport = () => {
-    alert("Le rapport PDF sera généré et téléchargé.")
+  const downloadPDFReport = async () => {
+    if (!auditResult?._id) {
+      alert('Aucun rapport disponible')
+      return
+    }
+    try {
+      const response = await api.get(`/audit-requests/${auditResult._id}/pdf`, {
+        responseType: 'blob'
+      })
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `audit_${auditResult.requestNumber}.pdf`)
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+    } catch (error) {
+      console.error('Erreur téléchargement PDF:', error)
+      alert('Impossible de générer le PDF. Veuillez réessayer.')
+    }
   }
 
   const steps = [
@@ -274,6 +281,7 @@ const AuditGratuit = () => {
     { number: 5, title: 'Contact', icon: User }
   ]
 
+  // Écran de résultat
   if (auditResult && step === 6) {
     const rec = auditResult.recommendations
     return (
@@ -765,7 +773,7 @@ const AuditGratuit = () => {
                       <div className="space-y-5">
                         <div>
                           <label className="block text-sm font-medium text-gray-300 mb-1">Nom complet <span className="text-red-400">*</span></label>
-                          <input {...register('name', { required: 'Champ requis' })} onChange={(e) => handleInputChange('name', e.target.value)} className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-400" placeholder="Jean Dupont" />
+                          <input {...register('name', { required: 'Champ requis' })} onChange={(e) => handleInputChange('name', e.target.value)} className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-400" placeholder="omedev " />
                           {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name.message}</p>}
                         </div>
                         <div>

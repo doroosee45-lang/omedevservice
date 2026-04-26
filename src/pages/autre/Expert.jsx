@@ -1,14 +1,9 @@
-
-// export default Experts;
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
-  Users, Award, Target, Globe, Zap, Shield, Lightbulb, TrendingUp,
-  ArrowRight, Headphones, CheckCircle, Rocket, Heart, Briefcase,
-  Calendar, MapPin, Star, Phone, Mail, Handshake,
-  Mail as MailIcon, Share2
+  Users, Award, Target, ArrowRight, Headphones, Briefcase,
+  Calendar, Star, Handshake
 } from 'lucide-react';
 
 import { FaLinkedin, FaGithub, FaTwitter, FaInstagram, FaBehance } from 'react-icons/fa';
@@ -21,15 +16,17 @@ import expert4 from '/src/assets/images/experts/os4.jpg';
 import expert5 from '/src/assets/images/experts/os5.jpeg';
 import expert6 from '/src/assets/images/experts/fido.jpeg';
 import expert7 from '/src/assets/images/experts/am.jpeg';
+import expert8 from '/src/assets/images/experts/ro.jpeg';
+import expert9 from '/src/assets/images/experts/glo.jpeg';
 
-
-
-
+/* ─────────────────────────────────────────────────────────────
+   STYLES GLOBAUX
+───────────────────────────────────────────────────────────── */
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  
+
   body {
     font-family: 'DM Sans', sans-serif;
     background: #0f172a;
@@ -37,60 +34,58 @@ const globalStyles = `
     overflow-x: hidden;
   }
 
+  /* ── Animations ── */
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
+    50%       { transform: translateY(-20px); }
   }
-  
   @keyframes pulse-ring {
-    0% { transform: scale(0.8); opacity: 1; }
-    70% { transform: scale(1.3); opacity: 0; }
+    0%   { transform: scale(0.8); opacity: 1; }
+    70%  { transform: scale(1.3); opacity: 0; }
     100% { transform: scale(0.8); opacity: 0; }
   }
-  
   @keyframes slow-zoom {
-    0% { transform: scale(1); }
+    0%   { transform: scale(1);   }
     100% { transform: scale(1.1); }
   }
-  
   @keyframes shimmer {
-    0% { background-position: -1000px 0; }
-    100% { background-position: 1000px 0; }
+    0%   { background-position: -1000px 0; }
+    100% { background-position:  1000px 0; }
   }
-  
   @keyframes borderGlow {
-    0% { border-color: rgba(59,130,246,0.3); box-shadow: 0 0 0 0 rgba(59,130,246,0.2); }
-    50% { border-color: rgba(59,130,246,0.8); box-shadow: 0 0 25px 5px rgba(59,130,246,0.5); }
-    100% { border-color: rgba(59,130,246,0.3); box-shadow: 0 0 0 0 rgba(59,130,246,0.2); }
+    0%   { border-color: rgba(59,130,246,0.3); box-shadow: 0 0 0   0 rgba(59,130,246,0.2); }
+    50%  { border-color: rgba(59,130,246,0.8); box-shadow: 0 0 25px 5px rgba(59,130,246,0.5); }
+    100% { border-color: rgba(59,130,246,0.3); box-shadow: 0 0 0   0 rgba(59,130,246,0.2); }
   }
-  
   @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0%   { background-position: 0%   50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0%   50%; }
   }
-  
   @keyframes rotateGlow {
-    0% { transform: rotate(0deg); }
+    0%   { transform: rotate(0deg);   }
     100% { transform: rotate(360deg); }
   }
-  
-  .animate-float { animation: float 6s ease-in-out infinite; }
-  .animate-pulse-ring { animation: pulse-ring 2s ease-out infinite; }
-  .animate-slow-zoom { animation: slow-zoom 20s ease-out forwards; }
-  
+
+  .animate-float       { animation: float       6s  ease-in-out infinite; }
+  .animate-pulse-ring  { animation: pulse-ring  2s  ease-out   infinite; }
+  .animate-slow-zoom   { animation: slow-zoom   20s ease-out   forwards; }
+
   .shimmer {
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
     background-size: 1000px 100%;
     animation: shimmer 2s infinite;
   }
 
-  /* ── CONTENEUR IMAGE : ratio fixe 4/3 pour toutes les cartes ── */
+  /* ──────────────────────────────────────────
+     PHOTO : ratio 3/4 portrait, recadrage tête
+  ────────────────────────────────────────── */
   .expert-image-container {
     position: relative;
     width: 100%;
-    padding-top: 75%;
+    padding-top: 100%;   /* carré parfait – change en 75% pour 4/3 paysage */
     overflow: hidden;
+    border-radius: 0;    /* les coins arrondis sont portés par la carte parente */
   }
 
   .expert-image {
@@ -99,138 +94,125 @@ const globalStyles = `
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 15%;
+    /* Position par défaut : cadrer le haut (visages) */
+    object-position: center 10%;
     transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    filter: brightness(0.92) contrast(1.05);
   }
+
+  /* Légère compensation par expert si nécessaire */
+  .expert-image.pos1 { object-position: center 5%;  }
+  .expert-image.pos2 { object-position: center 8%;  }
+  .expert-image.pos3 { object-position: center 10%; }
+  .expert-image.pos4 { object-position: center 12%; }
+  .expert-image.pos5 { object-position: center 5%;  }
+  .expert-image.pos6 { object-position: center 8%;  }
+  .expert-image.pos7 { object-position: center 10%; }
+  .expert-image.pos8 { object-position: center 8%;  }
+  .expert-image.pos9 { object-position: center 10%; }
 
   .expert-card:hover .expert-image {
-    transform: scale(1.12);
+    transform: scale(1.08);
+    filter: brightness(1) contrast(1.05);
   }
 
-  /* Overlay de couleur au survol */
+  /* Overlay coloré au survol */
   .image-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(59,130,246,0.5), rgba(139,92,246,0.5));
+    background: linear-gradient(135deg, rgba(59,130,246,0.45), rgba(139,92,246,0.45));
     opacity: 0;
     transition: opacity 0.5s ease;
     z-index: 2;
   }
-  
-  .expert-card:hover .image-overlay {
-    opacity: 1;
-  }
+  .expert-card:hover .image-overlay { opacity: 1; }
 
-  /* Effet de brillance */
+  /* Effet brillance (shine) */
   .image-shine {
     position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    transition: left 0.7s ease;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+    transition: left 0.75s ease;
     z-index: 3;
     pointer-events: none;
   }
-  
-  .expert-card:hover .image-shine {
-    left: 100%;
+  .expert-card:hover .image-shine { left: 100%; }
+
+  /* Dégradé bas de l'image pour fondu avec le corps de la carte */
+  .image-bottom-fade {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 55%;
+    background: linear-gradient(to top, #0f172a 0%, rgba(15,23,42,0.6) 55%, transparent 100%);
+    z-index: 4;
   }
 
-  /* Cercle lumineux rotatif */
+  /* Anneau lumineux rotatif */
   .glow-ring {
     position: absolute;
-    inset: -5px;
-    border-radius: 50%;
+    inset: -4px;
+    border-radius: inherit;
     background: conic-gradient(from 0deg, transparent, #3b82f6, transparent, #8b5cf6, transparent);
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.35s ease;
     z-index: 0;
     pointer-events: none;
   }
-  
   .expert-card:hover .glow-ring {
-    opacity: 0.6;
-    animation: rotateGlow 2s linear infinite;
+    opacity: 0.5;
+    animation: rotateGlow 2.5s linear infinite;
   }
 
-  .expert-image.pos1 { object-position: center 10%; }
-  .expert-image.pos2 { object-position: center 15%; }
-  .expert-image.pos3 { object-position: center 12%; }
-  .expert-image.pos4 { object-position: center 18%; }
-  .expert-image.pos5 { object-position: center 10%; }
-  .expert-image.pos6 { object-position: center 8%; }
-
-  /* Animation des réseaux sociaux */
+  /* ── Icônes réseaux sociaux ── */
   .social-icon {
-    transform: translateY(20px);
+    transform: translateY(18px);
     opacity: 0;
     transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
-  
-  .expert-card:hover .social-icon {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  
-  .social-icon:nth-child(1) { transition-delay: 0.05s; }
-  .social-icon:nth-child(2) { transition-delay: 0.1s; }
-  .social-icon:nth-child(3) { transition-delay: 0.15s; }
-  .social-icon:nth-child(4) { transition-delay: 0.2s; }
-  .social-icon:nth-child(5) { transition-delay: 0.25s; }
+  .expert-card:hover .social-icon { transform: translateY(0); opacity: 1; }
+  .social-icon:nth-child(1) { transition-delay: 0.04s; }
+  .social-icon:nth-child(2) { transition-delay: 0.09s; }
+  .social-icon:nth-child(3) { transition-delay: 0.14s; }
+  .social-icon:nth-child(4) { transition-delay: 0.19s; }
+  .social-icon:nth-child(5) { transition-delay: 0.24s; }
 
-  /* Animation du badge */
+  /* ── Badge rôle ── */
   .role-badge {
     transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     z-index: 10;
   }
-  
   .expert-card:hover .role-badge {
-    transform: scale(1.08);
-    box-shadow: 0 0 20px rgba(59,130,246,0.6);
+    transform: scale(1.07);
+    box-shadow: 0 0 18px rgba(59,130,246,0.55);
   }
 
-  /* Animation des compétences */
-  .skill-tag {
-    transition: all 0.3s ease;
-  }
-  
+  /* ── Tags compétences ── */
+  .skill-tag { transition: all 0.25s ease; }
   .skill-tag:hover {
     transform: translateY(-2px) scale(1.05);
-    background: rgba(59,130,246,0.3) !important;
-    border-color: rgba(59,130,246,0.8) !important;
+    background: rgba(59,130,246,0.28) !important;
+    border-color: rgba(59,130,246,0.75) !important;
   }
 
-  /* Carte principale */
+  /* ── Carte ── */
   .expert-card {
     transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     position: relative;
-    background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-    backdrop-filter: blur(2px);
+    background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
+    backdrop-filter: blur(3px);
   }
-  
   .expert-card:hover {
-    transform: translateY(-12px);
-    box-shadow: 0 30px 50px -20px rgba(59,130,246,0.4);
-    border-color: rgba(59,130,246,0.7);
-    animation: borderGlow 0.5s ease;
+    transform: translateY(-10px);
+    box-shadow: 0 28px 48px -18px rgba(59,130,246,0.38);
+    border-color: rgba(59,130,246,0.65) !important;
   }
 
-  /* Effet de lecture sur la bio */
-  .expert-bio {
-    transition: all 0.3s ease;
-  }
-  
-  .expert-card:hover .expert-bio {
-    color: #cbd5e1;
-  }
+  /* ── Bio & nom ── */
+  .expert-bio { transition: color 0.3s ease; }
+  .expert-card:hover .expert-bio { color: #cbd5e1; }
 
-  /* Animation du nom */
-  .expert-name {
-    transition: all 0.3s ease;
-  }
-  
+  .expert-name { transition: all 0.3s ease; }
   .expert-card:hover .expert-name {
     background: linear-gradient(135deg, #60a5fa, #a78bfa);
     background-size: 200% 200%;
@@ -238,17 +220,23 @@ const globalStyles = `
   }
 `;
 
+/* ─────────────────────────────────────────────────────────────
+   VARIANTS FRAMER-MOTION
+───────────────────────────────────────────────────────────── */
 const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
+  hidden:  { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.7 } }
 };
-
 const staggerContainer = {
-  hidden: { opacity: 0 },
+  hidden:  { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.08 } }
 };
 
+/* ─────────────────────────────────────────────────────────────
+   COMPOSANT PRINCIPAL
+───────────────────────────────────────────────────────────── */
 const Experts = () => {
+
   const experts = [
     {
       id: 1,
@@ -257,13 +245,13 @@ const Experts = () => {
       position: 'Expert en Informatique Appliquée & Développeur Full-Stack',
       bio: "Plus de 15 ans d'expérience en infrastructure IT et cybersécurité en Afrique centrale. Visionnaire et passionné par l'innovation technologique.",
       image: expert1,
-      gradient: 'from-blue-500 to-blue-600',
+      gradient: 'from-blue-500 to-blue-700',
       posClass: 'pos1',
       socials: {
         linkedin: 'https://linkedin.com/in/meya-dorodoro',
-        github: 'https://github.com/meyadorodoro',
-        twitter: 'https://twitter.com/meyadorodoro',
-        email: 'oseedoro@gmail.com'
+        github:   'https://github.com/meyadorodoro',
+        twitter:  'https://twitter.com/meyadorodoro',
+        email:    'oseedoro@gmail.com'
       },
       skills: ['Cybersécurité', 'Infrastructure IT', 'Cloud Computing', 'Leadership'],
       certifications: ['CISSP', 'PMP', 'AWS Solutions Architect']
@@ -275,13 +263,13 @@ const Experts = () => {
       position: 'Ingénieur Télécoms',
       bio: "Ingénieur en télécommunications, spécialiste des réseaux haut débit et des solutions cloud. Elle pilote l'innovation technique et la R&D.",
       image: expert2,
-      gradient: 'from-cyan-500 to-cyan-600',
+      gradient: 'from-cyan-500 to-cyan-700',
       posClass: 'pos2',
       socials: {
         linkedin: 'https://linkedin.com/in/osee-mbongo',
-        github: 'https://github.com/oseembongo',
-        twitter: 'https://twitter.com/oseembongo',
-        email: 'osee.mbongo@omedev.com'
+        github:   'https://github.com/oseembongo',
+        twitter:  'https://twitter.com/oseembongo',
+        email:    'osee.mbongo@omedev.com'
       },
       skills: ['Réseaux', 'Télécommunications', 'Cloud', '5G', 'IoT'],
       certifications: ['CCNP', 'Azure Administrator', '5G Specialist']
@@ -293,31 +281,31 @@ const Experts = () => {
       position: 'Ingénieur Énergies Renouvelables',
       bio: "Ingénieur en énergies renouvelables, il pilote nos projets solaires et d'efficacité énergétique. Expert en solutions photovoltaïques.",
       image: expert3,
-      gradient: 'from-amber-500 to-amber-600',
+      gradient: 'from-amber-500 to-orange-600',
       posClass: 'pos3',
       socials: {
         linkedin: 'https://linkedin.com/in/paul-kasongo',
-        twitter: 'https://twitter.com/paulkasongo',
-        email: 'paul.kasongo@omedev.com'
+        twitter:  'https://twitter.com/paulkasongo',
+        email:    'paul.kasongo@omedev.com'
       },
       skills: ['Solaire photovoltaïque', 'Efficacité énergétique', 'Stockage batterie', 'Micro-grids'],
       certifications: ['PV Design Expert', 'Energy Manager', 'HSE']
     },
     {
       id: 4,
-      name: 'Stephane',
-      role: ' Développement',
+      name: 'Stéphane',
+      role: 'Développement',
       position: 'Développeuse Full-Stack',
       bio: 'Développeuse full-stack, elle conçoit des applications web et mobiles sur mesure. Spécialisée en React, Node.js et architecture cloud-native.',
       image: expert4,
-      gradient: 'from-purple-500 to-purple-600',
+      gradient: 'from-violet-500 to-purple-700',
       posClass: 'pos4',
       socials: {
-        linkedin: 'https://linkedin.com/in/claire-mbenza',
-        github: 'https://github.com/clairembenza',
-        twitter: 'https://twitter.com/clairembenza',
+        linkedin:  'https://linkedin.com/in/claire-mbenza',
+        github:    'https://github.com/clairembenza',
+        twitter:   'https://twitter.com/clairembenza',
         instagram: 'https://instagram.com/claire.dev',
-        email: 'claire.mbenza@omedev.com'
+        email:     'claire.mbenza@omedev.com'
       },
       skills: ['React', 'Node.js', 'Flutter', 'MongoDB', 'AWS'],
       certifications: ['Meta Frontend Developer', 'AWS Cloud Practitioner']
@@ -329,90 +317,119 @@ const Experts = () => {
       position: 'Pentester & Consultant Sécurité',
       bio: "Spécialiste en sécurité offensive et défensive. Il réalise des audits de sécurité, tests d'intrusion et accompagne les entreprises dans leur conformité.",
       image: expert5,
-      gradient: 'from-red-500 to-red-600',
+      gradient: 'from-red-500 to-rose-700',
       posClass: 'pos5',
       socials: {
         linkedin: 'https://linkedin.com/in/yannick-tshibangu',
-        github: 'https://github.com/yannicksec',
-        twitter: 'https://twitter.com/yannick_sec',
-        email: 'yannick.tshibangu@omedev.com'
+        github:   'https://github.com/yannicksec',
+        twitter:  'https://twitter.com/yannick_sec',
+        email:    'yannick.tshibangu@omedev.com'
       },
       skills: ['Pentest', 'Audit sécurité', 'SOC', 'ISO 27001', 'Forensics'],
       certifications: ['CEH', 'OSCP', 'CISA']
     },
-
     {
       id: 6,
       name: 'Fido Makayabu',
-      role: 'Expert en telecomunications et administrateur réseau',
-      position: 'Spécialiste en télécommunications et administration réseau, il conçoit et maintient des infrastructures réseau robustes et sécurisées pour nos clients.',
-      bio: 'Certifié dans le domaine des télécommunications et de l\'administration réseau, il conçoit et maintient des infrastructures réseau robustes et sécurisées pour nos clients.',
+      role: 'Admin. Réseau',
+      position: 'Expert Télécommunications & Administration Réseau',
+      bio: "Certifié dans le domaine des télécommunications et de l'administration réseau, il conçoit et maintient des infrastructures réseau robustes et sécurisées.",
       image: expert6,
-      gradient: 'from-pink-500 to-pink-600',
+      gradient: 'from-teal-500 to-emerald-700',
       posClass: 'pos6',
       socials: {
-        linkedin: 'https://linkedin.com/in/fido-makayabu',
+        linkedin:  'https://linkedin.com/in/fido-makayabu',
         instagram: 'https://instagram.com/fido.tech',
-        behance: 'https://behance.net/fidomakayabu',
-        email: 'fido.makayabu@omedev.com'
+        behance:   'https://behance.net/fidomakayabu',
+        email:     'fido.makayabu@omedev.com'
       },
-      skills: ['Networking', 'Cisco', 'Juniper', 'Linux', 'Windows'],
+      skills: ['Networking', 'Cisco', 'Juniper', 'Linux', 'Windows Server'],
       certifications: ['CCNA', 'CCNP', 'MCSE']
-    }, 
-    
+    },
     {
       id: 7,
       name: 'Amosi Aristote',
-      role: 'Responsable De la Climatisation',
-      position: 'Expert en installation et maintenance de systèmes de climatisation',
-      bio: 'Certifié dans le domaine de la climatisation, il intervient sur linstallation, la maintenance et la réparation des systèmes de climatisation.',
+      role: 'Resp. Climatisation',
+      position: 'Expert en Installation & Maintenance HVAC',
+      bio: "Certifié dans le domaine de la climatisation, il intervient sur l'installation, la maintenance et la réparation des systèmes de climatisation et de réfrigération.",
       image: expert7,
-      gradient: 'from-pink-500 to-pink-600',
+      gradient: 'from-sky-500 to-blue-700',
       posClass: 'pos7',
       socials: {
-        linkedin: 'https://linkedin.com/in/amosi-aristote',
+        linkedin:  'https://linkedin.com/in/amosi-aristote',
         instagram: 'https://instagram.com/amosi.clim',
-        behance: 'https://behance.net/amosiaristote',
-        email: 'amosi.aristote@omedev.com'
+        email:     'amosi.aristote@omedev.com'
       },
-      skills: ['Climatisation', 'Installation', 'Service', 'Réparation', 'Maintenance'],
-      certifications: ['Certificat en Climatisation', 'Maintenance HVAC', 'Technicien en Réfrigération']
-    }, 
-
+      skills: ['Climatisation', 'HVAC', 'Installation', 'Maintenance', 'Réparation'],
+      certifications: ['Certificat Climatisation', 'Maintenance HVAC', 'Technicien Réfrigération']
+    },
+    {
+      id: 8,
+      name: 'Rodric Kasway',
+      role: 'Resp. Vidéosurveillance',
+      position: 'Expert en Vidéosurveillance & Configuration Serveurs',
+      bio: "Spécialiste en vidéosurveillance et configuration de serveurs, il conçoit et maintient des systèmes de surveillance robustes et sécurisés pour nos clients.",
+      image: expert8,
+      gradient: 'from-indigo-500 to-indigo-700',
+      posClass: 'pos8',
+      socials: {
+        linkedin:  'https://linkedin.com/in/rodric-kasway',
+        instagram: 'https://instagram.com/rodric.tech',
+        email:     'rodric.kasway@omedev.com'
+      },
+      skills: ['Vidéosurveillance', 'NVR/DVR', 'IP Cameras', 'Configuration réseau', 'Câblage'],
+      certifications: ['Certificat Vidéosurveillance', 'Technicien Sécurité Électronique']
+    },
+    {
+      id: 9,
+      name: 'Glody Ntudi',
+      role: 'Infographie & IT',
+      position: 'Expert en Infographie & Informatique',
+      bio: "Certifié en informatique et graphisme, il conçoit des solutions visuelles et numériques innovantes : identité visuelle, supports de communication et outils informatiques.",
+      image: expert9,
+      gradient: 'from-fuchsia-500 to-pink-700',
+      posClass: 'pos9',
+      socials: {
+        linkedin:  'https://linkedin.com/in/glody-ntudi',
+        instagram: 'https://instagram.com/glody.design',
+        behance:   'https://behance.net/glodyntudi',
+        email:     'glody.ntudi@omedev.com'
+      },
+      skills: ['Photoshop', 'Illustrator', 'InDesign', 'Identité visuelle', 'Web Design'],
+      certifications: ['Adobe Certified', 'Technicien Infographiste', 'Web Designer']
+    },
   ];
 
   const stats = [
-    { value: '8+', label: "Années d'expertise", icon: Calendar },
-    { value: '150+', label: 'Projets réalisés', icon: Briefcase },
-    { value: '98%', label: 'Clients satisfaits', icon: Star },
-    { value: '24/7', label: 'Support technique', icon: Headphones },
+    { value: '8+',   label: "Années d'expertise",  icon: Calendar  },
+    { value: '150+', label: 'Projets réalisés',     icon: Briefcase },
+    { value: '98%',  label: 'Clients satisfaits',   icon: Star      },
+    { value: '24/7', label: 'Support technique',    icon: Headphones },
   ];
 
-  const getSocialUrl = (platform, url) => {
-    if (platform === 'email') return `mailto:${url}`;
-    return url;
-  };
+  const getSocialUrl = (platform, url) =>
+    platform === 'email' ? `mailto:${url}` : url;
 
   const SocialIcon = ({ platform, url }) => {
     const icons = {
       linkedin: FaLinkedin,
-      github: FaGithub,
-      twitter: FaTwitter,
+      github:   FaGithub,
+      twitter:  FaTwitter,
       instagram: FaInstagram,
-      behance: FaBehance,
-      email: MdEmail
+      behance:  FaBehance,
+      email:    MdEmail
     };
     const Icon = icons[platform];
     if (!url || !Icon) return null;
-    const finalUrl = getSocialUrl(platform, url);
     return (
       <a
-        href={finalUrl}
+        href={getSocialUrl(platform, url)}
         target={platform === 'email' ? '_self' : '_blank'}
         rel={platform === 'email' ? '' : 'noopener noreferrer'}
-        className="social-icon w-9 h-9 rounded-full bg-white/10 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-white/30 group"
+        className="social-icon w-9 h-9 rounded-full bg-white/15 flex items-center justify-center
+                   transition-all duration-300 hover:scale-115 hover:bg-white/35 group"
       >
-        <Icon size={16} className="text-gray-400 group-hover:text-white transition-colors" />
+        <Icon size={15} className="text-gray-300 group-hover:text-white transition-colors" />
       </a>
     );
   };
@@ -421,7 +438,7 @@ const Experts = () => {
     <>
       <style>{globalStyles}</style>
 
-      {/* ==================== HERO SECTION ==================== */}
+      {/* ══════════════════════════ HERO ══════════════════════════ */}
       <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden pt-32 pb-20">
         <div className="absolute inset-0 overflow-hidden">
           <div
@@ -430,17 +447,14 @@ const Experts = () => {
               backgroundImage: `url('https://img.freepik.com/photos-gratuite/contexte-energie-nucleaire-ia-innovation-future-technologie-rupture_53876-129783.jpg?semt=ais_hybrid&w=740&q=80')`
             }}
           />
-          <div className="absolute inset-0 bg-black/70"></div>
+          <div className="absolute inset-0 bg-black/70" />
         </div>
-        
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-slate-900/50 to-indigo-900/20" />
-        
         <div className="absolute inset-0 opacity-30" style={{
           backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
                             linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`,
           backgroundSize: '60px 60px'
         }} />
-        
         <div className="absolute w-96 h-96 bg-blue-600/20 top-20 -left-48 rounded-full filter blur-[100px] animate-float" />
         <div className="absolute w-80 h-80 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[100px] animate-float" style={{ animationDelay: '2s' }} />
         <div className="absolute w-60 h-60 bg-cyan-500/10 top-1/2 left-1/2 -translate-x-1/2 rounded-full filter blur-[100px] animate-float" style={{ animationDelay: '4s' }} />
@@ -511,7 +525,7 @@ const Experts = () => {
         </div>
       </section>
 
-      {/* ==================== STATS SECTION ==================== */}
+      {/* ══════════════════════════ STATS ══════════════════════════ */}
       <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
         <div className="container mx-auto px-4 py-16">
           <motion.div
@@ -544,9 +558,11 @@ const Experts = () => {
         </div>
       </div>
 
-      {/* ==================== EXPERTS GRID ==================== */}
+      {/* ══════════════════════════ GRILLE EXPERTS ══════════════════════════ */}
       <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/10">
         <div className="container mx-auto px-4 py-20">
+
+          {/* Titre section */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -561,6 +577,7 @@ const Experts = () => {
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">Des professionnels qualifiés à votre service</p>
           </motion.div>
 
+          {/* Cartes */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {experts.map((expert, i) => (
               <motion.div
@@ -568,73 +585,90 @@ const Experts = () => {
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="expert-card group bg-gradient-to-br from-white/5 to-white/0 border border-white/10 rounded-2xl overflow-hidden transition-all duration-500"
+                transition={{ delay: i * 0.08 }}
+                className="expert-card group border border-white/10 rounded-2xl overflow-hidden"
               >
-                {/* Anneau lumineux rotatif */}
+                {/* Anneau lumineux */}
                 <div className="glow-ring" />
-                
-                {/* Zone image */}
+
+                {/* ── Zone photo ── */}
                 <div className="expert-image-container">
                   <img
                     src={expert.image}
                     alt={expert.name}
                     className={`expert-image ${expert.posClass}`}
+                    loading="lazy"
                   />
+
+                  {/* Couches d'effets */}
                   <div className="image-overlay" />
                   <div className="image-shine" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent z-5" />
+                  <div className="image-bottom-fade" />
 
-                  {/* Badge rôle */}
+                  {/* Badge rôle — coin supérieur droit */}
                   <div className="absolute top-4 right-4 z-10">
                     <div className={`role-badge px-3 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r ${expert.gradient} text-white shadow-lg backdrop-blur-sm`}>
                       {expert.role}
                     </div>
                   </div>
 
-                  {/* Réseaux sociaux */}
-                  <div className="absolute bottom-4 left-4 right-4 flex gap-2 justify-center z-10">
+                  {/* Réseaux sociaux — bas de photo, centré */}
+                  <div className="absolute bottom-4 left-0 right-0 flex gap-2 justify-center z-10 px-4">
                     {Object.entries(expert.socials).map(([platform, url]) => (
                       <SocialIcon key={platform} platform={platform} url={url} />
                     ))}
                   </div>
                 </div>
 
-                {/* Contenu */}
+                {/* ── Corps de la carte ── */}
                 <div className="p-6">
-                  <h3 className="expert-name text-xl font-bold text-white font-syne mb-1 bg-gradient-to-r from-white to-white bg-clip-text text-transparent transition-all duration-300">
+                  {/* Nom */}
+                  <h3 className="expert-name text-xl font-bold font-syne mb-1
+                                 bg-gradient-to-r from-white to-white bg-clip-text text-transparent
+                                 transition-all duration-300">
                     {expert.name}
                   </h3>
-                  <p className={`text-sm font-semibold mb-3 bg-gradient-to-r ${expert.gradient} bg-clip-text text-transparent`}>
+
+                  {/* Poste */}
+                  <p className={`text-xs font-semibold mb-3 bg-gradient-to-r ${expert.gradient} bg-clip-text text-transparent uppercase tracking-wide`}>
                     {expert.position}
                   </p>
+
+                  {/* Bio */}
                   <p className="expert-bio text-gray-400 text-sm leading-relaxed mb-4 line-clamp-3 transition-all duration-300">
                     {expert.bio}
                   </p>
 
+                  {/* Séparateur */}
+                  <div className="w-full h-px bg-white/5 mb-4" />
+
                   {/* Skills */}
                   <div className="flex flex-wrap gap-2 mb-4">
                     {expert.skills.slice(0, 3).map((skill, idx) => (
-                      <span key={idx} className="skill-tag text-xs px-2 py-1 rounded-full bg-white/10 text-gray-300 border border-white/5 cursor-default transition-all duration-300">
+                      <span
+                        key={idx}
+                        className="skill-tag text-xs px-2.5 py-1 rounded-full bg-white/8 text-gray-300 border border-white/10 cursor-default"
+                        style={{ background: 'rgba(255,255,255,0.06)' }}
+                      >
                         {skill}
                       </span>
                     ))}
                     {expert.skills.length > 3 && (
-                      <span className="text-xs px-2 py-1 rounded-full bg-blue-500/20 text-blue-400">
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/20">
                         +{expert.skills.length - 3}
                       </span>
                     )}
                   </div>
 
                   {/* Certifications */}
-                  <details className="mt-3 group">
-                    <summary className="text-xs text-blue-400 cursor-pointer hover:text-blue-300 transition-colors flex items-center gap-1">
+                  <details className="mt-1 group/det">
+                    <summary className="text-xs text-blue-400 cursor-pointer hover:text-blue-300 transition-colors flex items-center gap-1.5 select-none">
                       <Award size={12} />
                       Certifications ({expert.certifications.length})
                     </summary>
                     <div className="mt-2 flex flex-wrap gap-2">
                       {expert.certifications.map((cert, idx) => (
-                        <span key={idx} className="text-xs px-2 py-1 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                        <span key={idx} className="text-xs px-2 py-1 rounded-full bg-blue-500/15 text-blue-400 border border-blue-500/25">
                           {cert}
                         </span>
                       ))}
@@ -647,7 +681,7 @@ const Experts = () => {
         </div>
       </div>
 
-      {/* ==================== CTA FINALE ==================== */}
+      {/* ══════════════════════════ CTA ══════════════════════════ */}
       <section className="py-24 relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/5">
         <div className="absolute inset-0 opacity-30" style={{
           backgroundImage: `radial-gradient(circle at 30% 40%, rgba(59,130,246,0.3) 0%, transparent 60%),
@@ -655,6 +689,7 @@ const Experts = () => {
         }} />
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -692,6 +727,7 @@ const Experts = () => {
                 Demander un devis <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </motion.div>
+
           </div>
         </div>
       </section>

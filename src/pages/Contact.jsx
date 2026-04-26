@@ -4,9 +4,10 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import {
   ArrowRight, CheckCircle, MapPin, Phone, Mail, MessageCircle, Clock,
-  Shield, Star, Briefcase, Handshake, Calendar
+  Shield, Star, Briefcase, Handshake, Calendar, Headphones, FileText
 } from 'lucide-react';
-import { Headphones, FileText } from 'lucide-react';
+import api from '../services/api';  // ← Import du service API centralisé
+
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
 
@@ -53,23 +54,54 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitStatus(null);
+    setErrorMessage('');
 
-    // Simulation d'envoi (à remplacer par votre API)
-    setTimeout(() => {
-      console.log('Formulaire soumis :', formData);
+    try {
+      // Appel API via l'instance axios préconfigurée
+      const response = await api.post('/contact', formData);
+      
+      // Succès
       setSubmitStatus('success');
       setFormData({ nom: '', email: '', phone: '', objet: '', message: '' });
-      setIsSubmitting(false);
       setTimeout(() => setSubmitStatus(null), 5000);
-    }, 1200);
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi:', error);
+      
+      // Récupérer le message d'erreur renvoyé par le backend
+      let userMessage = 'Une erreur est survenue. Veuillez réessayer plus tard.';
+      
+      if (error.response) {
+        // Le serveur a répondu avec un statut d'erreur (4xx, 5xx)
+        userMessage = error.response.data?.message || `Erreur ${error.response.status}: ${error.response.statusText}`;
+        
+        // Messages spécifiques pour les erreurs d'authentification email
+        if (error.response.data?.code === 'EAUTH' || userMessage.includes('Invalid login') || userMessage.includes('Username and Password not accepted')) {
+          userMessage = 'Erreur de configuration email. Notre équipe technique a été informée. Veuillez nous contacter directement par téléphone.';
+        }
+      } else if (error.request) {
+        // La requête a été faite mais pas de réponse (backend hors ligne)
+        userMessage = 'Impossible de contacter le serveur. Vérifiez que le backend est démarré.';
+      } else {
+        // Autre erreur
+        userMessage = error.message || userMessage;
+      }
+      
+      setErrorMessage(userMessage);
+      setSubmitStatus('error');
+      setTimeout(() => setSubmitStatus(null), 8000); // plus long pour lire l'erreur
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactInfo = [
@@ -120,115 +152,111 @@ const Contact = () => {
     <>
       <style>{globalStyles}</style>
 
-      {/* Hero Section (identique aux services/blog) */}
-     {/* Hero Section - Contact */}{/* Hero Section - Contact */}
-<section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden pt-28 pb-16">
-  <div className="absolute inset-0 opacity-20" style={{
-    backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
-                      linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`,
-    backgroundSize: '60px 60px'
-  }} />
-  
-  {/* Image d'arrière-plan avec overlay */}
-  <div className="absolute inset-0 overflow-hidden">
-    <div
-      className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110 animate-slow-zoom"
-      style={{
-        backgroundImage: `url('https://img.freepik.com/photos-gratuite/contexte-energie-nucleaire-ia-innovation-future-technologie-rupture_53876-129783.jpg?semt=ais_hybrid&w=740&q=80')`
-      }}
-    />
-    <div className="absolute inset-0 bg-black/65"></div>
-  </div>
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden pt-28 pb-16">
+        <div className="absolute inset-0 opacity-20" style={{
+          backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px'
+        }} />
+        
+        {/* Image d'arrière-plan avec overlay */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110 animate-slow-zoom"
+            style={{
+              backgroundImage: `url('https://img.freepik.com/photos-gratuite/contexte-energie-nucleaire-ia-innovation-future-technologie-rupture_53876-129783.jpg?semt=ais_hybrid&w=740&q=80')`
+            }}
+          />
+          <div className="absolute inset-0 bg-black/65"></div>
+        </div>
 
-  <div className="absolute inset-0 bg-[radial-gradient(at_top_right,#3b82f645_0%,transparent_65%)]" />
-  
-  <div className="absolute w-80 h-80 bg-blue-600/20 top-20 -left-20 rounded-full filter blur-[80px] animate-float" />
-  <div className="absolute w-64 h-64 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
-  <div className="absolute w-40 h-40 bg-cyan-500/10 top-1/2 left-1/2 -translate-x-1/2 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '4s' }} />
+        <div className="absolute inset-0 bg-[radial-gradient(at_top_right,#3b82f645_0%,transparent_65%)]" />
+        
+        <div className="absolute w-80 h-80 bg-blue-600/20 top-20 -left-20 rounded-full filter blur-[80px] animate-float" />
+        <div className="absolute w-64 h-64 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
+        <div className="absolute w-40 h-40 bg-cyan-500/10 top-1/2 left-1/2 -translate-x-1/2 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '4s' }} />
 
-  <div className="container mx-auto px-4 relative z-10">
-    <div className="max-w-3xl mx-auto text-center">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="inline-flex items-center gap-2 mb-5 px-4 py-2 rounded-full bg-blue-600/15 border border-blue-500/30"
-      >
-        <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse-ring" />
-        <span className="text-blue-300 font-semibold text-xs tracking-wide font-syne">Contactez-nous</span>
-      </motion.div>
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-3xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-2 mb-5 px-4 py-2 rounded-full bg-blue-600/15 border border-blue-500/30"
+            >
+              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse-ring" />
+              <span className="text-blue-300 font-semibold text-xs tracking-wide font-syne">Contactez-nous</span>
+            </motion.div>
 
-      <motion.h1
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.1 }}
-        className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight mb-5 font-syne"
-      >
-        On reste{' '}
-        <span className="relative inline-block">
-          <span className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 blur-2xl opacity-50" />
-          <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
-            en contact
-          </span>
-        </span>
-      </motion.h1>
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight mb-5 font-syne"
+            >
+              On reste{' '}
+              <span className="relative inline-block">
+                <span className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 blur-2xl opacity-50" />
+                <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
+                  en contact
+                </span>
+              </span>
+            </motion.h1>
 
-      <motion.div
-        initial={{ opacity: 0, scaleX: 0 }}
-        animate={{ opacity: 1, scaleX: 1 }}
-        transition={{ duration: 0.7, delay: 0.2 }}
-        className="w-20 h-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 rounded-full mx-auto mb-5"
-      />
+            <motion.div
+              initial={{ opacity: 0, scaleX: 0 }}
+              animate={{ opacity: 1, scaleX: 1 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="w-20 h-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 rounded-full mx-auto mb-5"
+            />
 
-      <motion.p
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.3 }}
-        className="text-gray-300 text-lg md:text-xl mb-6 max-w-2xl mx-auto"
-      >
-        Une question, un projet ? Notre équipe IT, Énergie & Infrastructure est là pour vous répondre.
-      </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+              className="text-gray-300 text-lg md:text-xl mb-6 max-w-2xl mx-auto"
+            >
+              Une question, un projet ? Notre équipe IT, Énergie & Infrastructure est là pour vous répondre.
+            </motion.p>
 
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.4 }}
-        className="flex flex-wrap gap-4 justify-center"
-      >
-        <Link to="/contact" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105 hover:shadow-xl">
-          Nous écrire <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-        </Link>
-        <Link to="/audit" className="group border-2 border-white/30 hover:border-white px-6 py-3 rounded-xl font-semibold text-white hover:bg-white/10 transition-all hover:scale-105">
-          Audit gratuit <CheckCircle size={18} />
-        </Link>
-      </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.4 }}
+              className="flex flex-wrap gap-4 justify-center"
+            >
+              <Link to="/contact" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105 hover:shadow-xl">
+                Nous écrire <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link to="/audit" className="group border-2 border-white/30 hover:border-white px-6 py-3 rounded-xl font-semibold text-white hover:bg-white/10 transition-all hover:scale-105">
+                Audit gratuit <CheckCircle size={18} />
+              </Link>
+            </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.7, delay: 0.6 }}
-        className="mt-12 flex justify-center"
-      >
-        <div className="animate-bounce">
-          <div className="w-6 h-10 rounded-full border-2 border-white/30 flex justify-center">
-            <div className="w-1 h-2 bg-white/50 rounded-full mt-2 animate-pulse" />
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.6 }}
+              className="mt-12 flex justify-center"
+            >
+              <div className="animate-bounce">
+                <div className="w-6 h-10 rounded-full border-2 border-white/30 flex justify-center">
+                  <div className="w-1 h-2 bg-white/50 rounded-full mt-2 animate-pulse" />
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
-      </motion.div>
-    </div>
-  </div>
 
-  <div className="absolute bottom-0 left-0 right-0 text-white/10">
-    <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-10">
-      <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="currentColor" />
-    </svg>
-  </div>
-</section>
+        <div className="absolute bottom-0 left-0 right-0 text-white/10">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-10">
+            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="currentColor" />
+          </svg>
+        </div>
+      </section>
 
-
-
-
-      {/* Cartes d'informations (style glassmorphisme) */}
+      {/* Cartes d'informations */}
       <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 -mt-16 relative z-10 pb-16">
         <div className="container mx-auto px-4">
           <motion.div
@@ -265,7 +293,7 @@ const Contact = () => {
       <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
         <div className="container mx-auto px-4 py-16">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Formulaire - prend 2 colonnes */}
+            {/* Formulaire */}
             <div className="lg:col-span-2">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
@@ -287,6 +315,12 @@ const Contact = () => {
                   </div>
                 )}
 
+                {submitStatus === 'error' && (
+                  <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-xl text-sm text-red-300 font-medium transition-all">
+                    ❌ {errorMessage || 'Erreur lors de l\'envoi du message'}
+                  </div>
+                )}
+
                 <form onSubmit={handleSubmit}>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
@@ -301,7 +335,7 @@ const Contact = () => {
                         required
                         disabled={isSubmitting}
                         className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-all"
-                        placeholder="Jean Dupont"
+                        placeholder="Omedeve Services"
                       />
                     </div>
                     <div>
@@ -316,7 +350,7 @@ const Contact = () => {
                         required
                         disabled={isSubmitting}
                         className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-all"
-                        placeholder="jean@exemple.com"
+                        placeholder="omedevservices@gmail.com"
                       />
                     </div>
                   </div>
@@ -372,7 +406,7 @@ const Contact = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="mt-6 w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3.5 rounded-xl font-semibold transition-all hover:scale-105 hover:shadow-xl flex items-center justify-center gap-2"
+                    className="mt-6 w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3.5 rounded-xl font-semibold transition-all hover:scale-105 hover:shadow-xl flex items-center justify-center gap-2 disabled:opacity-70"
                   >
                     {isSubmitting ? (
                       <>
@@ -387,7 +421,7 @@ const Contact = () => {
               </motion.div>
             </div>
 
-            {/* Sidebar - 1 colonne */}
+            {/* Sidebar */}
             <div className="space-y-6">
               {/* Horaires */}
               <motion.div
@@ -458,7 +492,7 @@ const Contact = () => {
         </div>
       </div>
 
-      {/* Section Carte (avec style cohérent) */}
+      {/* Section Carte */}
       <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/10">
         <div className="container mx-auto px-4 py-16">
           <motion.div
@@ -508,9 +542,8 @@ const Contact = () => {
         </div>
       </div>
 
-            {/* CTA double - Assistance et Devis */}
+      {/* CTA double */}
       <section className="py-20 relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/5">
-        {/* Effets d'arrière-plan */}
         <div className="absolute inset-0 opacity-30" style={{
           backgroundImage: `radial-gradient(circle at 30% 40%, rgba(59,130,246,0.3) 0%, transparent 60%),
                             radial-gradient(circle at 80% 70%, rgba(6,182,212,0.2) 0%, transparent 60%)`
@@ -520,7 +553,6 @@ const Contact = () => {
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            
             {/* Carte 1 : Assistance immédiate */}
             <motion.div
               initial={{ opacity: 0, y: 40 }}
@@ -530,7 +562,6 @@ const Contact = () => {
               className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20 hover:border-blue-500/50"
             >
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/0 via-blue-500/0 to-blue-500/0 opacity-0 transition-all duration-500 group-hover:opacity-100 group-hover:from-blue-500/5 group-hover:via-blue-500/10 group-hover:to-blue-500/5 pointer-events-none" />
-              
               <div className="relative z-10 text-center">
                 <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110">
                   <Headphones size={28} className="text-white" />
@@ -540,18 +571,10 @@ const Contact = () => {
                   Notre support technique est disponible <strong className="text-blue-400">24h/24 et 7j/7</strong> pour répondre à vos urgences.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <a
-                    href="tel:+24355550359"
-                    className="inline-flex items-center justify-center gap-2 bg-white/10 border border-white/20 hover:bg-white/20 text-white px-5 py-2.5 rounded-xl font-semibold transition-all hover:scale-105"
-                  >
+                  <a href="tel:+24355550359" className="inline-flex items-center justify-center gap-2 bg-white/10 border border-white/20 hover:bg-white/20 text-white px-5 py-2.5 rounded-xl font-semibold transition-all hover:scale-105">
                     <Phone size={16} /> Appeler maintenant
                   </a>
-                  <a
-                    href="https://wa.me/24355550359"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-5 py-2.5 rounded-xl font-semibold transition-all hover:scale-105"
-                  >
+                  <a href="https://wa.me/24355550359" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-5 py-2.5 rounded-xl font-semibold transition-all hover:scale-105">
                     <MessageCircle size={16} /> WhatsApp
                   </a>
                 </div>
@@ -567,7 +590,6 @@ const Contact = () => {
               className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20 hover:border-blue-500/50"
             >
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/0 via-blue-500/0 to-blue-500/0 opacity-0 transition-all duration-500 group-hover:opacity-100 group-hover:from-blue-500/5 group-hover:via-blue-500/10 group-hover:to-blue-500/5 pointer-events-none" />
-              
               <div className="relative z-10 text-center">
                 <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110">
                   <FileText size={28} className="text-white" />
@@ -576,15 +598,11 @@ const Contact = () => {
                 <p className="text-gray-300 mb-6">
                   Étudions ensemble votre besoin et obtenez un <strong className="text-amber-400">devis personnalisé</strong> sans engagement.
                 </p>
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 py-2.5 rounded-xl font-semibold transition-all hover:scale-105 group"
-                >
+                <Link to="/contact" className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 py-2.5 rounded-xl font-semibold transition-all hover:scale-105 group">
                   Demander un devis <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
             </motion.div>
-
           </div>
         </div>
       </section>

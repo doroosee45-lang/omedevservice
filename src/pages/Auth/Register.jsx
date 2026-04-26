@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import { User, Mail, Phone, Lock, Eye, EyeOff, UserPlus, CheckCircle, Shield, Users } from 'lucide-react'
+import api from '../../services/api'
 
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
@@ -20,67 +21,41 @@ const Register = () => {
   const [registered, setRegistered] = useState(false)
   const [error, setError] = useState('')
 
-  // FIX : register('role') dans le hook + setValue pour synchroniser avec les boutons
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     defaultValues: { role: 'client' }
   })
 
   const password = watch('password')
-  const selectedRole = watch('role') // lecture réactive du rôle courant
-
-  const getUsers = () => {
-    const users = localStorage.getItem('omdeve_users')
-    return users ? JSON.parse(users) : []
-  }
-
-  const saveUser = (user) => {
-    const users = getUsers()
-    users.push(user)
-    localStorage.setItem('omdeve_users', JSON.stringify(users))
-  }
-
-  const emailExists = (email) => getUsers().some(u => u.email === email)
-
-  const isFirstUser = () => getUsers().length === 0
+  const selectedRole = watch('role')
 
   const onSubmit = async (data) => {
     setIsLoading(true)
     setError('')
 
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    try {
+      const response = await api.post('/auth/register', {
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        password: data.password,
+        role: data.role,
+      })
 
-    if (emailExists(data.email)) {
-      setError('Cet email est déjà utilisé. Veuillez vous connecter.')
+      if (response.data) {
+        setRegistered(true)
+        setTimeout(() => navigate('/login'), 3000)
+      }
+    } catch (err) {
+      console.error('Erreur inscription:', err)
+      // ✅ Affichage du message d'erreur retourné par le backend (ex: "Cet utilisateur existe déjà")
+      const message = err.response?.data?.message || 'Une erreur est survenue. Veuillez réessayer.'
+      setError(message)
+    } finally {
       setIsLoading(false)
-      return
     }
-
-    // Premier utilisateur → super_admin automatiquement
-    // Sinon on utilise data.role qui est maintenant correctement synchronisé
-    const role = isFirstUser() ? 'super_admin' : data.role
-
-    const newUser = {
-      id: Date.now(),
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      password: data.password,
-      role,
-      status: 'active',
-      createdAt: new Date().toISOString()
-    }
-
-    saveUser(newUser)
-
-    console.log(`✅ Utilisateur créé: ${newUser.email} | Rôle: ${newUser.role}`)
-
-    setRegistered(true)
-    setIsLoading(false)
-
-    setTimeout(() => navigate('/login'), 3000)
   }
 
-  // ── Écran de succès ───────────────────────────────────────────────
+  // ── Écran de succès ──────────────────────────────────────────────
   if (registered) {
     return (
       <>
@@ -107,11 +82,10 @@ const Register = () => {
     )
   }
 
-  // ── Formulaire ────────────────────────────────────────────────────
+  // ── Formulaire ───────────────────────────────────────────────────
   return (
     <>
       <style>{globalStyles}</style>
-
       <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden min-h-screen flex items-center py-12">
         <div className="absolute inset-0 opacity-20" style={{
           backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
@@ -139,6 +113,7 @@ const Register = () => {
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
+                {/* ✅ Erreur API affichée ici */}
                 {error && (
                   <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-3 text-sm text-red-300">
                     {error}
@@ -152,7 +127,10 @@ const Register = () => {
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
                       type="text"
-                      {...register('name', { required: 'Nom requis', minLength: { value: 2, message: 'Minimum 2 caractères' } })}
+                      {...register('name', {
+                        required: 'Nom requis',
+                        minLength: { value: 2, message: 'Minimum 2 caractères' }
+                      })}
                       className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-400"
                       placeholder="Jean Dupont"
                     />
@@ -193,59 +171,42 @@ const Register = () => {
                   {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone.message}</p>}
                 </div>
 
-                {/* Sélection du rôle — uniquement si ce n'est pas le premier utilisateur */}
-                {!isFirstUser() ? (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Type de compte</label>
-
-                    {/* FIX : champ role enregistré dans react-hook-form, boutons appellent setValue */}
-                    <input type="hidden" {...register('role', { required: true })} />
-
-                    <div className="grid grid-cols-2 gap-3">
-                      <button
-                        type="button"
-                        onClick={() => setValue('role', 'client', { shouldValidate: true })}
-                        className={`flex items-center justify-center gap-2 p-3 rounded-xl border transition-all ${
-                          selectedRole === 'client'
-                            ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400'
-                            : 'bg-white/10 border-white/20 text-gray-400 hover:bg-white/20'
-                        }`}
-                      >
-                        <Users className="w-4 h-4" />
-                        <span className="text-sm font-medium">Client</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setValue('role', 'admin', { shouldValidate: true })}
-                        className={`flex items-center justify-center gap-2 p-3 rounded-xl border transition-all ${
-                          selectedRole === 'admin'
-                            ? 'bg-purple-500/20 border-purple-500/50 text-purple-400'
-                            : 'bg-white/10 border-white/20 text-gray-400 hover:bg-white/20'
-                        }`}
-                      >
-                        <Shield className="w-4 h-4" />
-                        <span className="text-sm font-medium">Administrateur</span>
-                      </button>
-                    </div>
-
-                    <p className="text-xs text-gray-500 mt-2">
-                      {selectedRole === 'admin'
-                        ? "⚠️ L'administrateur a accès à la gestion des utilisateurs, devis et projets."
-                        : "✅ Le client a accès à son espace personnel, ses projets et demandes."}
-                    </p>
+                {/* Type de compte */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Type de compte</label>
+                  <input type="hidden" {...register('role', { required: true })} />
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setValue('role', 'client', { shouldValidate: true })}
+                      className={`flex items-center justify-center gap-2 p-3 rounded-xl border transition-all ${
+                        selectedRole === 'client'
+                          ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400'
+                          : 'bg-white/10 border-white/20 text-gray-400 hover:bg-white/20'
+                      }`}
+                    >
+                      <Users className="w-4 h-4" />
+                      <span className="text-sm font-medium">Client</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setValue('role', 'admin', { shouldValidate: true })}
+                      className={`flex items-center justify-center gap-2 p-3 rounded-xl border transition-all ${
+                        selectedRole === 'admin'
+                          ? 'bg-purple-500/20 border-purple-500/50 text-purple-400'
+                          : 'bg-white/10 border-white/20 text-gray-400 hover:bg-white/20'
+                      }`}
+                    >
+                      <Shield className="w-4 h-4" />
+                      <span className="text-sm font-medium">Administrateur</span>
+                    </button>
                   </div>
-                ) : (
-                  /* Premier utilisateur : super_admin automatique */
-                  <div className="bg-purple-500/20 border border-purple-500/30 rounded-lg p-3">
-                    <div className="flex items-center gap-2">
-                      <Shield className="w-4 h-4 text-purple-400" />
-                      <p className="text-sm text-purple-300">
-                        Premier utilisateur — vous serez automatiquement Super Admin
-                      </p>
-                    </div>
-                  </div>
-                )}
+                  <p className="text-xs text-gray-500 mt-2">
+                    {selectedRole === 'admin'
+                      ? "⚠️ L'administrateur a accès à la gestion des utilisateurs, devis et projets."
+                      : "✅ Le client a accès à son espace personnel, ses projets et demandes."}
+                  </p>
+                </div>
 
                 {/* Mot de passe */}
                 <div>
@@ -269,7 +230,7 @@ const Register = () => {
                   {errors.password && <p className="text-red-400 text-xs mt-1">{errors.password.message}</p>}
                 </div>
 
-                {/* Confirmation */}
+                {/* Confirmation mot de passe */}
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1">Confirmer le mot de passe</label>
                   <div className="relative">
@@ -307,7 +268,6 @@ const Register = () => {
                   Déjà inscrit ?{' '}
                   <Link to="/login" className="text-blue-400 hover:text-blue-300 font-medium">Se connecter</Link>
                 </div>
-
               </form>
             </motion.div>
 

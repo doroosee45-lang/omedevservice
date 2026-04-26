@@ -8,11 +8,11 @@ import ProtectedRoute from './pages/Admin/ProtectedRoute'
 // Pages Publiques
 import Home from './pages/Home'
 import Services from './pages/Services'
-import ServiceDetail from './pages/ServiceDetail'
+// import ServiceDetail from './pages/ServiceDetail'
 import Solutions from './pages/Solutions'
-import SolutionDetail from './pages/SolutionDetail'
+// import SolutionDetail from './pages/SolutionDetail'
 import Realisations from './pages/Realisations'
-import RealisationDetail from './pages/RealisationDetail'
+// import RealisationDetail from './pages/RealisationDetail'
 import Tarifs from './pages/Tarifs'
 import About from './pages/About'
 import Blog from './pages/Blog'
@@ -76,11 +76,11 @@ function App() {
           {/* ========== PAGES PUBLIQUES ========== */}
           <Route path="/" element={<Home />} />
           <Route path="/services" element={<Services />} />
-          <Route path="/services/:slug" element={<ServiceDetail />} />
+          {/* <Route path="/services/:slug" element={<ServiceDetail />} /> */}
           <Route path="/solutions" element={<Solutions />} />
-          <Route path="/solutions/:slug" element={<SolutionDetail />} />
+          {/* <Route path="/solutions/:slug" element={<SolutionDetail />} /> */}
           <Route path="/realisations" element={<Realisations />} />
-          <Route path="/realisations/:slug" element={<RealisationDetail />} />
+          {/* <Route path="/realisations/:slug" element={<RealisationDetail />} /> */}
           <Route path="/tarifs" element={<Tarifs />} />
           <Route path="/about" element={<About />} />
           <Route path="/blog" element={<Blog />} />

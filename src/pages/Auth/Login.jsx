@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import { Mail, Lock, LogIn, Eye, EyeOff, Shield, Users } from 'lucide-react'
+import api from '../../services/api'
 
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
@@ -13,50 +14,13 @@ const globalStyles = `
 `
 
 const Login = () => {
-  // FIX : useNavigate pour la redirection (React Router-aware)
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+
   const { register, handleSubmit, setValue, formState: { errors } } = useForm()
 
-  const initializeDefaultUsers = () => {
-    const defaultUsers = [
-      {
-        id: 1,
-        name: 'Super Admin',
-        email: 'admin@omdeve.com',
-        phone: '+243 000 000 000',
-        password: 'admin123',
-        role: 'super_admin',
-        status: 'active',
-        createdAt: new Date().toISOString()
-      },
-      {
-        id: 2,
-        name: 'Jean Client',
-        email: 'client@omdeve.com',
-        phone: '+243 000 000 001',
-        password: 'client123',
-        role: 'client',
-        status: 'active',
-        createdAt: new Date().toISOString()
-      }
-    ]
-    localStorage.setItem('omdeve_users', JSON.stringify(defaultUsers))
-    return defaultUsers
-  }
-
-  const getUsers = () => {
-    const stored = localStorage.getItem('omdeve_users')
-    if (!stored) return initializeDefaultUsers()
-    const parsed = JSON.parse(stored)
-    const hasAdmin = parsed.some(u => u.role === 'super_admin' || u.role === 'admin')
-    if (!hasAdmin) return initializeDefaultUsers()
-    return parsed
-  }
-
-  // Remplir les champs démo via setValue (synchronise react-hook-form)
   const fillDemoAccount = (email, password) => {
     setValue('email', email, { shouldValidate: true })
     setValue('password', password, { shouldValidate: true })
@@ -65,35 +29,28 @@ const Login = () => {
   const onSubmit = async (data) => {
     setIsLoading(true)
     setError('')
+    try {
+      const response = await api.post('/auth/login', {
+        email: data.email,
+        password: data.password,
+      })
+      const user = response.data
 
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
-    const users = getUsers()
-    const user = users.find(u => u.email === data.email && u.password === data.password)
-
-    if (user) {
-      if (user.status === 'inactive') {
-        setError('Votre compte est désactivé. Veuillez contacter l\'administrateur.')
-        setIsLoading(false)
-        return
-      }
-
-      // Stocker la session
-      localStorage.setItem('accessToken', `fake-token-${Date.now()}`)
-      localStorage.setItem('userRole',  user.role)
+      localStorage.setItem('accessToken', user.token)
+      localStorage.setItem('userRole', user.role)
       localStorage.setItem('userEmail', user.email)
-      localStorage.setItem('userName',  user.name)
-      localStorage.setItem('userId',    String(user.id))
+      localStorage.setItem('userName', user.name)
+      localStorage.setItem('userId', String(user._id))
 
-      // FIX : navigate() au lieu de window.location.href
-      // → garde React Router en vie, ProtectedRoute peut lire le localStorage immédiatement
       if (user.role === 'super_admin' || user.role === 'admin') {
         navigate('/admin/dashboard', { replace: true })
       } else {
         navigate('/client/dashboard', { replace: true })
       }
-    } else {
-      setError('Email ou mot de passe incorrect')
+    } catch (err) {
+      const message = err.response?.data?.message || 'Email ou mot de passe incorrect'
+      setError(message)
+    } finally {
       setIsLoading(false)
     }
   }
@@ -101,7 +58,6 @@ const Login = () => {
   return (
     <>
       <style>{globalStyles}</style>
-
       <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden min-h-screen flex items-center">
         <div className="absolute inset-0 opacity-20" style={{
           backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
@@ -128,7 +84,6 @@ const Login = () => {
               </div>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-
                 {/* Email */}
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1">Email</label>
@@ -169,6 +124,7 @@ const Login = () => {
                   {errors.password && <p className="text-red-400 text-xs mt-1">{errors.password.message}</p>}
                 </div>
 
+                {/* Erreur API */}
                 {error && (
                   <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-3 text-sm text-red-300">
                     {error}
@@ -233,7 +189,6 @@ const Login = () => {
                     💡 Cliquez sur un compte pour le remplir automatiquement
                   </p>
                 </div>
-
               </form>
             </motion.div>
 

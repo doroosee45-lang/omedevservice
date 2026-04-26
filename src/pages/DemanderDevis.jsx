@@ -1,7 +1,3 @@
-
-
-
-
 import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -31,6 +27,7 @@ import {
   X,
   FileText
 } from 'lucide-react'
+import api from '../services/api'   // ← Import du service API
 
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
@@ -65,15 +62,8 @@ const globalStyles = `
   .animate-slow-zoom { animation: slow-zoom 20s ease-out forwards; }
 `;
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7 } }
-};
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.08 } }
-};
+const fadeUp = { hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7 } } }
+const staggerContainer = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.08 } } }
 
 const Devis = () => {
   const [step, setStep] = useState(1)
@@ -92,9 +82,8 @@ const Devis = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submittedRequest, setSubmittedRequest] = useState(null)
   const fileInputRef = useRef(null)
-  const { register, handleSubmit, formState: { errors }, trigger, setValue, watch } = useForm()
+  const { register, formState: { errors }, trigger, setValue } = useForm()
 
-  // Liste des services disponibles
   const serviceOptions = [
     { id: 'reseau', label: 'Réseau & Infrastructure', icon: Server },
     { id: 'securite', label: 'Sécurité informatique', icon: Shield },
@@ -107,6 +96,14 @@ const Devis = () => {
   ]
 
   const budgetRanges = ['< 5 000 €', '5 000 - 15 000 €', '15 000 - 30 000 €', '30 000 - 50 000 €', '> 50 000 €', 'À déterminer']
+
+  const steps = [
+    { number: 1, title: 'Service', icon: Briefcase },
+    { number: 2, title: 'Description', icon: FileText },
+    { number: 3, title: 'Budget & Lieu', icon: Euro },
+    { number: 4, title: 'Fichiers', icon: FileUp },
+    { number: 5, title: 'Confirmation', icon: Send }
+  ]
 
   const handleServiceToggle = (serviceId) => {
     setFormData(prev => {
@@ -138,7 +135,7 @@ const Devis = () => {
     if (step === 1) isValid = formData.services.length > 0
     if (step === 2) isValid = await trigger('description')
     if (step === 3) isValid = formData.budget !== '' && formData.location !== ''
-    if (step === 4) isValid = true // fichiers optionnels
+    if (step === 4) isValid = true
     if (isValid) {
       setStep(step + 1)
       window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -152,36 +149,6 @@ const Devis = () => {
   const prevStep = () => {
     setStep(step - 1)
     window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  // Génération d'un numéro de demande unique DEV-XXXXXX
-  const generateRequestNumber = () => {
-    const timestamp = Date.now().toString().slice(-6)
-    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0')
-    return `DEV-${timestamp}${random}`
-  }
-
-  // Simulation d'envoi d'email à l'équipe
-  const sendEmailToTeam = async (requestNumber, data, filesList) => {
-    // Dans un vrai projet, on enverrait ces données à un endpoint backend
-    console.log('📧 Envoi email à l\'équipe OMDEVE', {
-      requestNumber,
-      ...data,
-      files: filesList.map(f => f.name)
-    })
-    // Simulation d'un appel API
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({ success: true, message: 'Email envoyé avec succès' })
-      }, 500)
-    })
-  }
-
-  // Relance programmée (simulation - backend réel requis)
-  const scheduleReminder = (requestNumber, email) => {
-    console.log(`⏰ Relance programmée pour ${email} (dossier ${requestNumber}) dans 48h si pas de réponse.`)
-    // Ici, on enverrait une requête à un backend qui planifie un job cron
-    // Pour la démo, on affiche simplement un message dans la console.
   }
 
   const onSubmit = async () => {
@@ -198,39 +165,49 @@ const Devis = () => {
       return
     }
     setIsSubmitting(true)
-    
+
     try {
-      const requestNumber = generateRequestNumber()
-      // Simuler l'envoi de l'email à l'équipe
-      await sendEmailToTeam(requestNumber, formData, files)
-      // Simuler la planification d'une relance (backend)
-      scheduleReminder(requestNumber, formData.email)
-      
-      // Ici vous pouvez également envoyer les fichiers vers un serveur via FormData
-      // const formDataToSend = new FormData()
-      // files.forEach(file => formDataToSend.append('files', file))
-      // etc.
-      
+      // Mapping des services frontend vers les valeurs enum du backend
+      const serviceTypeMap = {
+        reseau: 'reseau',
+        securite: 'securite',
+        web: 'site-web',
+        cloud: 'cloud',
+        energie: 'energie',
+        formation: 'formation',
+        audit: 'autre',
+        conseil: 'autre'
+      }
+      const mappedServiceType = serviceTypeMap[formData.services[0]] || 'autre'
+
+      const payload = {
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        company: formData.company,
+        serviceType: mappedServiceType,
+        description: formData.description,
+        budget: formData.budget,
+        timeline: formData.notes || null
+      }
+
+      const response = await api.post('/quote-requests', payload)
+      const requestNumber = response.data?.requestNumber || 'DEV-' + Date.now()
+
       setSubmittedRequest({ number: requestNumber, email: formData.email })
-      setStep(6) // écran de confirmation
+      setStep(6)
     } catch (error) {
       console.error('Erreur lors de l\'envoi :', error)
-      alert('Une erreur est survenue. Veuillez réessayer.')
+      const msg = error.response?.data?.message || 'Une erreur est survenue. Veuillez réessayer.'
+      alert(msg)
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  const steps = [
-    { number: 1, title: 'Service', icon: Briefcase },
-    { number: 2, title: 'Description', icon: FileText },
-    { number: 3, title: 'Budget & Lieu', icon: Euro },
-    { number: 4, title: 'Fichiers', icon: FileUp },
-    { number: 5, title: 'Confirmation', icon: Send }
-  ]
-
-  // Écran de confirmation après soumission
+  // Écran de confirmation
   if (submittedRequest && step === 6) {
+
     return (
       <>
         <style>{globalStyles}</style>
@@ -564,7 +541,7 @@ const Devis = () => {
                           value={formData.fullName}
                           onChange={(e) => handleInputChange('fullName', e.target.value)}
                           className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl"
-                          placeholder="Jean Dupont"
+                          placeholder="omedev services"
                         />
                         {errors.fullName && <p className="text-red-400 text-xs">{errors.fullName.message}</p>}
                       </div>
