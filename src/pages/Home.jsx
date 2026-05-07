@@ -1374,7 +1374,7 @@ const Home = () => {
         <div className="absolute inset-0 overflow-hidden">
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110"
-            style={{ backgroundImage: `url('https://img.freepik.com/photos-gratuite/contexte-energie-nucleaire-ia-innovation-future-technologie-rupture_53876-129783.jpg?semt=ais_hybrid&w=740&q=80')` }}
+            style={{ backgroundImage: `url('https://doroosee45-lang.github.io/monentreprise/assets/Log1-CoOG_Tn1.jpeg')` }}
           />
           <div className="absolute inset-0" style={{ background: 'rgba(15,23,42,0.72)' }}></div>
         </div>
