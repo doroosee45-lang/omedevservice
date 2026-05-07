@@ -1,5 +1,981 @@
 
 
+// import { motion, useInView } from 'framer-motion';
+// import { Link } from 'react-router-dom';
+// import { useRef, useEffect, useState } from 'react';
+// import {
+//   ArrowRight,
+//   Server,
+//   Shield,
+//   Code,
+//   Cloud,
+//   Zap,
+//   GraduationCap,
+//   CheckCircle,
+//   Users,
+//   Clock,
+//   Award,
+//   Star,
+//   Quote,
+//   Briefcase,
+//   Globe,
+//   Cpu,
+//   Camera,
+//   Wifi,
+//   Wrench,
+//   Phone,
+//   ThermometerSun,
+//   Monitor,
+//   ChevronRight,
+//   Sparkles,
+//   TrendingUp,
+//   Headphones,
+//   Rocket,
+//   Target,
+//   Layers,
+//   BarChart3,
+//   TrendingDown,
+//   FileText,
+//   Lock,
+//   AlertTriangle, Handshake
+// } from 'lucide-react';
+
+
+
+
+
+
+
+
+// /* ─────────────────────────────────────────────
+//    DESIGN SYSTEM — Inspired by HTML page (navy/electric/gold)
+//    ───────────────────────────────────────────── */
+// const styles = {
+//   colors: {
+//     navy: {
+//       50: '#eff6ff',
+//       100: '#dbeafe',
+//       200: '#bfdbfe',
+//       300: '#93c5fd',
+//       400: '#60a5fa',
+//       500: '#3b82f6',
+//       600: '#2563eb',
+//       700: '#1d4ed8',
+//       800: '#1e40af',
+//       900: '#1e3a8a',
+//       950: '#172554',
+//     },
+//     background: {
+//       light: 'rgba(248, 250, 255, 0.85)', // bleu très clair transparent
+//       default: 'rgba(235, 245, 255, 0.95)', // légèrement plus opaque
+//       dark: 'rgba(23, 37, 84, 0.92)', // pour sections foncées / overlay
+//     },
+//     electric: {
+//       50: '#eff6ff',
+//       100: '#dbeafe',
+//       200: '#bfdbfe',
+//       300: '#93c5fd',
+//       400: '#60a5fa',
+//       500: '#3b82f6',
+//       600: '#2563eb',
+//       700: '#1d4ed8',
+//       800: '#1e40af',
+//       900: '#1e3a8a',
+//     },
+
+//     // ✨ gold amélioré (léger ajustement visuel)
+//     gold: '#e2a733',
+
+//     white: '#FFFFFF',
+
+//     gray: {
+//       50: '#F9FAFB',
+//       100: '#F3F4F6',
+//       200: '#E5E7EB',
+//       300: '#D1D5DB',
+//       400: '#9CA3AF',
+//       500: '#6B7280',
+//       600: '#4B5563',
+//       700: '#374151',
+//       800: '#1F2937',
+//       900: '#111827',
+//     },
+
+//     // ✅ corrigé (violet → pas cohérent avec ton thème bleu)
+//     success: '#10B981',
+//   },
+
+//   gradients: {
+//     primary: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+//     accent: 'linear-gradient(135deg, #e2a733 0%, #f59e0b 100%)',
+//     darkOverlay: 'linear-gradient(135deg, rgba(2,14,24,0.9) 0%, rgba(10,24,80,0.85) 100%)',
+//   },
+
+//   shadows: {
+//     md: '0 4px 6px rgba(0, 0, 0, 0.08)',
+//     xl: '0 20px 25px rgba(0, 0, 0, 0.12)',
+//     glow: '0 0 20px rgba(59, 130, 246, 0.35)',
+//   },
+
+//   animation: {
+//     duration: 0.5,
+//     stagger: 0.08,
+//   },
+// };
+
+
+
+
+
+
+
+// const globalStyles = `
+//   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+
+//   * {
+//     margin: 0;
+//     padding: 0;
+//     box-sizing: border-box;
+//   }
+
+//   body {
+//     font-family: 'DM Sans', sans-serif;
+//     background: ${styles.colors.navy[950]};
+//     color: #e2e8f0;
+//     overflow-x: hidden;
+//   }
+
+//   .container {
+//     max-width: 1280px;
+//     margin: 0 auto;
+//     padding: 0 2rem;
+//   }
+
+//   .section-badge {
+//     display: inline-flex;
+//     align-items: center;
+//     gap: 0.5rem;
+//     font-size: 0.7rem;
+//     font-weight: 600;
+//     letter-spacing: 0.15em;
+//     text-transform: uppercase;
+//     padding: 0.5rem 1.2rem;
+//     border-radius: 99px;
+//     background: rgba(37, 99, 235, 0.15);
+//     color: ${styles.colors.electric[400]};
+//     border: 1px solid rgba(37, 99, 235, 0.3);
+//     font-family: 'Syne', sans-serif;
+//   }
+
+//   .section-title {
+//     font-size: clamp(2rem, 4vw, 3rem);
+//     font-weight: 800;
+//     line-height: 1.2;
+//     letter-spacing: -0.02em;
+//     margin-bottom: 1rem;
+//     font-family: 'Syne', sans-serif;
+//     background: linear-gradient(135deg, #60a5fa, #2563eb, #818cf8);
+//     -webkit-background-clip: text;
+//     background-clip: text;
+//     color: transparent;
+//   }
+
+//   .section-subtitle {
+//     font-size: 1.1rem;
+//     color: ${styles.colors.gray[400]};
+//     max-width: 48ch;
+//     margin: 0 auto;
+//     line-height: 1.6;
+//   }
+
+//   .divider {
+//     width: 60px;
+//     height: 4px;
+//     background: linear-gradient(90deg, transparent, ${styles.colors.electric[500]}, transparent);
+//     border-radius: 99px;
+//     margin: 1rem auto 1.5rem;
+//   }
+
+//   .btn-primary {
+//     display: inline-flex;
+//     align-items: center;
+//     gap: 0.6rem;
+//     background: ${styles.gradients.primary};
+//     color: white;
+//     font-size: 0.9rem;
+//     font-weight: 600;
+//     padding: 0.9rem 2rem;
+//     border-radius: 12px;
+//     text-decoration: none;
+//     transition: all 0.3s ease;
+//     cursor: pointer;
+//     border: none;
+//     font-family: 'Syne', sans-serif;
+//     box-shadow: ${styles.shadows.md};
+//     position: relative;
+//     overflow: hidden;
+//   }
+//   .btn-primary::before {
+//     content: '';
+//     position: absolute;
+//     inset: 0;
+//     background: linear-gradient(135deg, #3b82f6, #2563eb);
+//     opacity: 0;
+//     transition: opacity 0.3s ease;
+//   }
+//   .btn-primary:hover::before { opacity: 1; }
+//   .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(37,99,235,0.4); }
+
+//   .btn-outline {
+//     display: inline-flex;
+//     align-items: center;
+//     gap: 0.6rem;
+//     background: transparent;
+//     color: ${styles.colors.gray[300]};
+//     font-size: 0.9rem;
+//     font-weight: 600;
+//     padding: 0.85rem 2rem;
+//     border-radius: 12px;
+//     border: 1px solid rgba(37,99,235,0.5);
+//     text-decoration: none;
+//     transition: all 0.3s ease;
+//     cursor: pointer;
+//     font-family: 'Syne', sans-serif;
+//   }
+//   .btn-outline:hover {
+//     border-color: ${styles.colors.electric[500]};
+//     background: rgba(37,99,235,0.1);
+//     transform: translateY(-2px);
+//     color: white;
+//   }
+
+//   .btn-accent {
+//     display: inline-flex;
+//     align-items: center;
+//     gap: 0.6rem;
+//     background: linear-gradient(135deg, #e2a733, #f59e0b);
+//     color: white;
+//     font-size: 0.9rem;
+//     font-weight: 700;
+//     padding: 0.9rem 2rem;
+//     border-radius: 12px;
+//     text-decoration: none;
+//     transition: all 0.3s ease;
+//     cursor: pointer;
+//     border: none;
+//     font-family: 'Syne', sans-serif;
+//     box-shadow: ${styles.shadows.md};
+//   }
+//   .btn-accent:hover {
+//     transform: translateY(-2px);
+//     box-shadow: 0 10px 30px rgba(245,158,11,0.4);
+//     filter: brightness(1.05);
+//   }
+
+//   .card-hover {
+//     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+//     background: rgba(255,255,255,0.02);
+//     border: 1px solid rgba(255,255,255,0.06);
+//     border-radius: 1.5rem;
+//   }
+//   .card-hover:hover {
+//     transform: translateY(-6px);
+//     box-shadow: 0 20px 60px rgba(37,99,235,0.2);
+//     border-color: rgba(37,99,235,0.5);
+//   }
+
+//   .grid-bg {
+//     background-image: linear-gradient(rgba(37,99,235,0.07) 1px, transparent 1px),
+//       linear-gradient(90deg, rgba(37,99,235,0.07) 1px, transparent 1px);
+//     background-size: 60px 60px;
+//   }
+
+//   .orb {
+//     position: absolute;
+//     border-radius: 50%;
+//     filter: blur(80px);
+//     pointer-events: none;
+//     z-index: 0;
+//   }
+
+//   @keyframes float {
+//     0%, 100% { transform: translateY(0px); }
+//     50% { transform: translateY(-20px); }
+//   }
+//   .animate-float {
+//     animation: float 6s ease-in-out infinite;
+//   }
+// `;
+
+// const fadeUp = {
+//   hidden: { opacity: 0, y: 40 },
+//   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] } },
+// };
+// const staggerContainer = {
+//   hidden: { opacity: 0 },
+//   visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
+// };
+// const scaleIn = {
+//   hidden: { opacity: 0, scale: 0.9 },
+//   visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
+// };
+
+// const SectionHeader = ({ badge, title, subtitle }) => (
+//   <motion.div variants={staggerContainer} style={{ textAlign: 'center', marginBottom: '3rem' }}>
+//     {badge && <motion.div variants={fadeUp}><span className="section-badge">{badge}</span></motion.div>}
+//     <motion.h2 variants={fadeUp} className="section-title">{title}</motion.h2>
+//     <motion.div variants={fadeUp} className="divider" />
+//     {subtitle && <motion.p variants={fadeUp} className="section-subtitle">{subtitle}</motion.p>}
+//   </motion.div>
+// );
+
+// const Counter = ({ end, suffix, duration = 2.5 }) => {
+//   const [count, setCount] = useState(0);
+//   const ref = useRef(null);
+//   const isInView = useInView(ref, { once: true, margin: '-60px' });
+//   useEffect(() => {
+//     if (!isInView) return;
+//     let start = 0;
+//     const inc = end / (duration * 60);
+//     const timer = setInterval(() => {
+//       start += inc;
+//       if (start >= end) { setCount(end); clearInterval(timer); }
+//       else setCount(Math.floor(start));
+//     }, 16);
+//     return () => clearInterval(timer);
+//   }, [isInView, end, duration]);
+//   return <span ref={ref}>{count}{suffix}</span>;
+// };
+
+// // Données
+// const services = [
+//   { icon: Server, title: 'Réseau & Infrastructure', description: 'Câblage structuré, WiFi entreprise, fibre optique haute performance', color: styles.colors.electric[500] },
+//   { icon: Shield, title: 'Cybersécurité & Surveillance', description: 'Firewalls, audits, vidéosurveillance intelligente 24/7', color: styles.colors.electric[400] },
+//   { icon: Code, title: 'Développement Digital', description: 'Applications web, mobiles, ERP sur mesure', color: styles.colors.gold },
+//   { icon: Cloud, title: 'Cloud & Télécommunications', description: 'Hébergement cloud, VoIP, solutions télécom intégrées', color: styles.colors.electric[500] },
+//   { icon: Zap, title: 'Énergie & Maintenance', description: 'Panneaux solaires, maintenance préventive et corrective', color: styles.colors.electric[400] },
+//   { icon: GraduationCap, title: 'Formation & Accompagnement', description: 'Formations certifiantes et transfert de compétences', color: styles.colors.gold },
+// ];
+
+// const expertise = [
+//   { icon: Code, title: 'Développement Logiciel', desc: 'Apps web & mobiles sur mesure, API, IA intégrée', color: styles.colors.electric[500] },
+//   { icon: Phone, title: 'Télécommunications', desc: 'Réseaux VoIP, fibre, communication unifiée', color: styles.colors.electric[400] },
+//   { icon: Camera, title: 'Vidéosurveillance', desc: 'Caméras IP, IA de reconnaissance, monitoring 24/7', color: styles.colors.gold },
+//   { icon: Wrench, title: 'Maintenance & Support', desc: 'Maintenance préventive, corrective, assistance dédiée', color: styles.colors.electric[500] },
+// ];
+
+// const products = [
+//   { icon: ThermometerSun, title: 'Climatisation Pro', description: 'Systèmes de refroidissement haute performance pour entreprises', color: styles.colors.electric[500] },
+//   { icon: Monitor, title: 'Matériel IT', description: 'PC, serveurs, écrans et accessoires professionnels', color: styles.colors.electric[400] },
+//   { icon: Camera, title: 'Surveillance', description: 'Caméras IP 4K, PTZ, IA intégrée', color: styles.colors.gold },
+// ];
+
+// const stats = [
+//   { icon: Users, value: 150, label: 'Clients satisfaits', suffix: '+' },
+//   { icon: Code, value: 200, label: 'Projets réalisés', suffix: '+' },
+//   { icon: Clock, value: 24, label: 'Support technique', suffix: '/7' },
+//   { icon: Award, value: 100, label: 'Qualité garantie', suffix: '%' },
+// ];
+
+// const packs = [
+//   { name: 'Pack Essentiel', features: ['Réseau de base', 'Sécurité essentielle', 'Support standard', 'Maintenance incluse'], icon: Briefcase, price: 'Sur devis', featured: false },
+//   { name: 'Pack Business', features: ['Réseau complet + Sécurité', 'ERP sur mesure', 'Support prioritaire', 'Maintenance préventive'], icon: Cpu, price: 'Sur devis', featured: true },
+//   { name: 'Pack Enterprise', features: ['Infrastructure complète', 'Solution digitale intégrée', 'Support dédié 24/7', 'Formation équipe'], icon: Globe, price: 'Sur devis', featured: false },
+// ];
+
+// const whyUs = [
+//   { icon: Users, title: 'Expertise locale', description: 'Une équipe basée à Kinshasa qui comprend vos enjeux locaux', color: styles.colors.electric[500] },
+//   { icon: Clock, title: 'Support 24/7', description: 'Assistance réactive et disponible à tout moment', color: styles.colors.electric[400] },
+//   { icon: Award, title: 'Qualité certifiée', description: 'Standards internationaux et certifications professionnelles', color: styles.colors.gold },
+//   { icon: TrendingUp, title: 'Innovation constante', description: 'Veille technologique et solutions toujours à jour', color: styles.colors.electric[500] },
+// ];
+
+// const testimonials = [
+//   { name: 'Jean M.', position: 'CEO, TechCorp', content: 'OMDEVE a transformé notre infrastructure IT. Service impeccable et équipe très professionnelle.', rating: 5, avatar: 'https://randomuser.me/api/portraits/men/32.jpg' },
+//   { name: 'Sarah K.', position: 'Directrice, Energy Solutions', content: "L'installation des panneaux solaires a été réalisée avec excellence. Économies d'énergie significatives.", rating: 5, avatar: 'https://randomuser.me/api/portraits/women/68.jpg' },
+//   { name: 'Marc L.', position: 'CTO, Digital Africa', content: 'La plateforme e-commerce développée est performante et élégante. Hautement recommandé.', rating: 5, avatar: 'https://randomuser.me/api/portraits/men/45.jpg' },
+// ];
+
+// const steps = [
+//   { number: '01', title: 'Audit & Conseil', desc: 'Analyse approfondie de vos besoins et diagnostic gratuit' },
+//   { number: '02', title: 'Proposition sur mesure', desc: 'Devis détaillé et planning transparent' },
+//   { number: '03', title: 'Déploiement', desc: 'Installation, configuration et tests qualité' },
+//   { number: '04', title: 'Support & Évolution', desc: 'Maintenance et améliorations continues' },
+// ];
+
+// const challenges = [
+//   { icon: <TrendingDown size={28} />, title: 'Perte financière', desc: 'Des processus inefficaces coûtent en moyenne 20% du CA chaque année.', color: '#ef4444' },
+//   { icon: <FileText size={28} />, title: 'Gestion manuelle', desc: 'Fichiers Excel, papier, erreurs humaines… votre temps vaut plus que ça.', color: '#f59e0b' },
+//   { icon: <Lock size={28} />, title: 'Failles de sécurité', desc: 'Sans cybersécurité, vos données et celles de vos clients sont vulnérables.', color: '#3b82f6' },
+//   { icon: <AlertTriangle size={28} />, title: 'Croissance bloquée', desc: "L'absence d'outils digitaux freine votre expansion et votre compétitivité.", color: '#8b5cf6' },
+// ];
+
+// const galleryImages = [
+//   'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop',
+//   'https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=400&h=300&fit=crop',
+//   'https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=400&h=300&fit=crop',
+//   'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=400&h=300&fit=crop',
+//   'https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?w=400&h=300&fit=crop',
+// ];
+
+// const Home = () => {
+//   return (
+//     <>
+//       <style>{globalStyles}</style>
+
+//       {/* ==================== HERO SECTION - Premium Navy ==================== */}
+//       {/* ==================== HERO SECTION - HOME avec image de fond ==================== */}
+//       <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden pt-20 pb-12">
+
+//         {/* Image de fond avec zoom lent */}
+//         <div className="absolute inset-0 overflow-hidden">
+//           <div
+//             className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110 animate-slow-zoom"
+//             style={{
+//               backgroundImage: `url('https://img.freepik.com/photos-gratuite/contexte-energie-nucleaire-ia-innovation-future-technologie-rupture_53876-129783.jpg?semt=ais_hybrid&w=740&q=80')`
+//             }}
+//           />
+//           <div className="absolute inset-0 bg-black/65"></div>
+//         </div>
+
+//         {/* Grille de fond technologique */}
+//         <div className="absolute inset-0 opacity-20" style={{
+//           backgroundImage: `linear-gradient(rgba(59,130,246,0.08) 1px, transparent 1px),
+//                       linear-gradient(90deg, rgba(59,130,246,0.08) 1px, transparent 1px)`,
+//           backgroundSize: '60px 60px'
+//         }} />
+
+//         {/* Effet lumineux radial subtil */}
+//         <div className="absolute inset-0 bg-[radial-gradient(at_top_right,#3b82f630_0%,transparent_60%)]" />
+//         <div className="absolute inset-0 bg-[radial-gradient(at_bottom_left,#8b5cf620_0%,transparent_60%)]" />
+
+//         {/* Orbes flottants animés (réduits) */}
+//         <div className="absolute w-80 h-80 bg-blue-600/20 top-10 -left-20 rounded-full filter blur-[80px] animate-float" />
+//         <div className="absolute w-64 h-64 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
+//         <div className="absolute w-40 h-40 bg-cyan-500/10 top-1/2 left-1/2 -translate-x-1/2 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '4s' }} />
+
+//         {/* Contenu principal */}
+//         <div className="container mx-auto px-4 relative z-10 py-8">
+//           <div className="max-w-3xl mx-auto text-center">
+
+//             {/* Badge */}
+//             <motion.div
+//               initial={{ opacity: 0, scale: 0.9 }}
+//               animate={{ opacity: 1, scale: 1 }}
+//               transition={{ duration: 0.5 }}
+//               className="
+//     inline-flex items-center gap-2
+//     mt-6 sm:mt-8
+//     mb-4
+//     px-3 py-1.5
+//     rounded-full
+//     max-w-full
+//     text-center
+//     mx-auto sm:mx-0
+//   "
+//               style={{
+//                 background: 'rgba(37,99,235,0.15)',
+//                 border: '1px solid rgba(37,99,235,0.3)'
+//               }}
+//             >
+//               <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse shrink-0" />
+
+//               <span className="
+//     text-blue-300 font-semibold
+//     text-[10px] sm:text-xs
+//     tracking-wide font-syne
+//     leading-tight
+//     break-words
+//   ">
+//                 Solutions Digitales Premium – Afrique
+//               </span>
+//             </motion.div>
+
+//             {/* Titre principal */}
+//             <motion.h1
+//               initial={{ opacity: 0, y: 30 }}
+//               animate={{ opacity: 1, y: 0 }}
+//               transition={{ duration: 0.7, delay: 0.1 }}
+//               className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight mb-4 font-syne"
+//             >
+//               Transformez votre <br />
+//               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
+//                 Business Digital
+//               </span>
+//               <br />
+//               avec l'expertise
+//             </motion.h1>
+
+//             {/* Sous-titre */}
+//             <motion.p
+//               initial={{ opacity: 0, y: 30 }}
+//               animate={{ opacity: 1, y: 0 }}
+//               transition={{ duration: 0.7, delay: 0.2 }}
+//               className="text-gray-300 text-base md:text-lg mb-6 max-w-2xl mx-auto"
+//             >
+//               ERP • SaaS • Cybersécurité • Développement Web & Mobile.<br />
+//               Omedev vous accompagne dans votre <strong className="text-white">digitalisation complète</strong>.
+//             </motion.p>
+
+//             {/* Boutons */}
+//             <motion.div
+//               initial={{ opacity: 0, y: 30 }}
+//               animate={{ opacity: 1, y: 0 }}
+//               transition={{ duration: 0.7, delay: 0.3 }}
+//               className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-8"
+//             >
+//               <Link
+//                 to="/demander-devis"
+//                 className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-2 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20 transition-all hover:scale-[1.02] hover:shadow-xl text-sm"
+//               >
+//                 <span>Demander un devis</span>
+//                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
+//               </Link>
+
+//               <Link
+//                 to="/solutions"
+//                 className="group border-2 border-white/30 hover:border-white px-5 py-2 rounded-xl font-semibold text-white hover:bg-white/10 flex items-center justify-center gap-2 transition-all text-sm"
+//               >
+//                 <span>Voir les solutions</span>
+//                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
+//               </Link>
+
+//               <Link
+//                 to="/audit-gratuit"
+//                 className="px-4 py-2 rounded-xl font-semibold text-amber-400 border border-amber-500/30 hover:bg-amber-500/10 transition-all flex items-center gap-2 text-sm"
+//               >
+//                 <span>🎁 Audit Gratuit</span>
+//               </Link>
+//             </motion.div>
+
+//             {/* Stats */}
+//             <motion.div
+//               initial={{ opacity: 0, y: 30 }}
+//               animate={{ opacity: 1, y: 0 }}
+//               transition={{ duration: 0.7, delay: 0.4 }}
+//               className="grid grid-cols-2 sm:grid-cols-4 gap-3"
+//             >
+//               {[
+//                 { n: '150+', l: 'Projets livrés', icon: '🚀' },
+//                 { n: '98%', l: 'Satisfaction client', icon: '⭐' },
+//                 { n: '50+', l: 'Entreprises clientes', icon: '🏢' },
+//                 { n: '5 ans', l: "D'expertise", icon: '📅' }
+//               ].map((s, i) => (
+//                 <div
+//                   key={i}
+//                   className="group rounded-xl p-3 text-center transition-all duration-300 hover:scale-105 hover:border-blue-500/40"
+//                   style={{
+//                     background: 'linear-gradient(135deg, rgba(59,130,246,0.08), rgba(30,64,175,0.03))',
+//                     border: '1px solid rgba(37,99,235,0.2)'
+//                   }}
+//                 >
+//                   <div className="text-xl mb-0.5 opacity-60 group-hover:opacity-100 transition-opacity">{s.icon}</div>
+//                   <div className="font-extrabold text-xl text-white mb-0.5 font-syne">{s.n}</div>
+//                   <div className="text-gray-400 text-[11px]">{s.l}</div>
+//                 </div>
+//               ))}
+//             </motion.div>
+//           </div>
+//         </div>
+
+//         {/* Vague décorative en bas */}
+//         <div className="absolute bottom-0 left-0 right-0 z-10 text-white/10">
+//           <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-8">
+//             <path
+//               d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z"
+//               fill="currentColor"
+//             />
+//           </svg>
+//         </div>
+//       </section>
+//       {/* Styles CSS à ajouter dans votre fichier global */}
+//       <style jsx>{`
+//   @keyframes float {
+//     0%, 100% { transform: translateY(0px); }
+//     50% { transform: translateY(-20px); }
+//   }
+//   .animate-float {
+//     animation: float 6s ease-in-out infinite;
+//   }
+//   .orb {
+//     position: absolute;
+//     border-radius: 50%;
+//     filter: blur(80px);
+//     pointer-events: none;
+//     z-index: 0;
+//   }
+// `}</style>
+
+
+//       {/* ==================== DÉFIS (Ces défis vous parlent ?) ==================== */}
+//       <section className="py-24 relative overflow-hidden">
+//         <div className="container">
+//           <div className="text-center mb-14">
+//             <span className="section-badge" style={{ background: '#3f59a1', color: '#edeae7', borderColor: '#3f7394' }}>⚠️ Problèmes courants</span>
+//             <h2 className="section-title">Ces défis vous parlent ?</h2>
+//             <div className="divider" />
+//             <p className="section-subtitle">La plupart des PME africaines perdent des opportunités faute d'outils digitaux adaptés.</p>
+//           </div>
+//           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+//             {challenges.map((c, idx) => (
+//               <motion.div key={idx} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
+//                 className="card-hover p-6 text-center" style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '1.5rem' }}>
+//                 <div style={{ color: c.color, marginBottom: '1rem' }}>{c.icon}</div>
+//                 <h3 className="font-display font-bold text-white text-lg mb-2">{c.title}</h3>
+//                 <p className="text-slate-400 text-sm leading-relaxed">{c.desc}</p>
+//               </motion.div>
+//             ))}
+//           </div>
+//           <div className="text-center mt-12">
+//             <p className="text-slate-400 mb-6 text-lg">Omedev a la solution pour chacun de ces défis.</p>
+//             <Link to="/services" className="btn-primary">Découvrir nos solutions <ArrowRight size={18} /></Link>
+//           </div>
+//         </div>
+//       </section>
+
+
+
+
+//       {/* ==================== DOMAINES D'EXCELLENCE ==================== */}
+//       <section className="py-24 bg-white/5">
+//         <div className="container">
+//           <SectionHeader badge="Notre savoir-faire" title="Domaines d'excellence" subtitle="Nous maîtrisons l'ensemble des technologies essentielles à votre réussite" />
+//           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+//             {expertise.map((item, idx) => (
+//               <motion.div key={idx} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.08 }}
+//                 className="card-hover p-8 text-center">
+//                 <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ background: `${item.color}20`, color: item.color }}>
+//                   <item.icon size={32} />
+//                 </div>
+//                 <h3 className="font-display font-bold text-white text-xl mb-2">{item.title}</h3>
+//                 <p className="text-slate-400 text-sm">{item.desc}</p>
+//               </motion.div>
+//             ))}
+//           </div>
+//         </div>
+//       </section>
+
+
+
+
+//       {/* ==================== GALERIE (1 droite + 4 gauche) ==================== */}
+//       <section className="py-24">
+//         <div className="container">
+//           <SectionHeader badge="Notre travail" title="Galerie" subtitle="Découvrez quelques-unes de nos réalisations" />
+//           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+//             {/* 4 miniatures à gauche */}
+//             <div className="grid grid-cols-2 gap-4">
+//               {galleryImages.slice(1, 5).map((img, idx) => (
+//                 <motion.div key={idx} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
+//                   className="rounded-2xl overflow-hidden shadow-lg cursor-pointer aspect-video" whileHover={{ scale: 1.02 }}>
+//                   <img src={img} alt={`galerie-${idx}`} className="w-full h-full object-cover" />
+//                 </motion.div>
+//               ))}
+//             </div>
+//             {/* Grande image à droite */}
+//             <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
+//               className="rounded-2xl overflow-hidden shadow-xl cursor-pointer aspect-video" whileHover={{ scale: 1.01 }}>
+//               <img src={galleryImages[0]} alt="galerie-principale" className="w-full h-full object-cover" />
+//             </motion.div>
+//           </div>
+//         </div>
+//       </section>
+
+
+
+
+//       {/* ==================== SERVICES ==================== */}
+//       <section className="py-24 bg-white/5">
+//         <div className="container">
+//           <SectionHeader badge="Nos services" title="Solutions Intégrées" subtitle="De l'infrastructure aux applications, nous couvrons tout le cycle technologique" />
+//           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+//             {services.map((service, idx) => (
+//               <motion.div key={idx} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.07 }}
+//                 className="card-hover p-8">
+//                 <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5" style={{ background: `${service.color}20`, color: service.color }}>
+//                   <service.icon size={28} />
+//                 </div>
+//                 <h3 className="font-display font-bold text-white text-xl mb-3">{service.title}</h3>
+//                 <p className="text-slate-400 text-sm leading-relaxed mb-4">{service.description}</p>
+//                 <Link to="/solutions" className="text-blue-400 text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">En savoir plus <ArrowRight size={14} /></Link>
+//               </motion.div>
+//             ))}
+//           </div>
+//         </div>
+//       </section>
+
+
+
+
+//       {/* ==================== STATS ==================== */}
+//       <section className="py-20" style={{ background: 'rgba(23,37,84,0.9)' }}> {/* navy foncé transparent */}
+//         <div className="container">
+//           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+//             {stats.map((stat, idx) => (
+//               <motion.div
+//                 key={idx}
+//                 initial={{ opacity: 0, y: 30 }}
+//                 whileInView={{ opacity: 1, y: 0 }}
+//                 viewport={{ once: true }}
+//                 transition={{ delay: idx * 0.1 }}
+//                 className="p-6 rounded-2xl backdrop-blur-md"
+//                 style={{
+//                   background: 'rgba(255, 255, 255, 0.05)', // léger overlay transparent
+//                   border: '1px solid rgba(255, 255, 255, 0.15)',
+//                   boxShadow: '0 8px 20px rgba(0,0,0,0.2)',
+//                 }}
+//               >
+//                 <div
+//                   className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3"
+//                   style={{ background: 'linear-gradient(135deg, #60a5fa, #1e40af)' }} // bleu moderne
+//                 >
+//                   <stat.icon size={24} className="text-white" />
+//                 </div>
+//                 <div className="text-4xl font-bold text-white mb-1">
+//                   <Counter end={stat.value} suffix={stat.suffix} />
+//                 </div>
+//                 <div className="text-white/70 text-sm">{stat.label}</div>
+//               </motion.div>
+//             ))}
+//           </div>
+//         </div>
+//       </section>
+
+
+
+
+//       {/* ==================== PRODUITS & ÉQUIPEMENTS ==================== */}
+//       <section className="py-24">
+//         <div className="container">
+//           <SectionHeader badge="Produits & Équipements" title="Achetez chez nous" subtitle="Climatiseurs · Matériel IT · Caméras — directement livrés et installés" />
+//           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+//             {products.map((product, idx) => (
+//               <motion.div key={idx} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
+//                 className="card-hover p-8">
+//                 <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5" style={{ background: `${product.color}20`, color: product.color }}>
+//                   <product.icon size={28} />
+//                 </div>
+//                 <h3 className="font-display font-bold text-white text-xl mb-3">{product.title}</h3>
+//                 <p className="text-slate-400 text-sm leading-relaxed mb-4">{product.description}</p>
+//                 <Link to="/boutique" className="text-blue-400 text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">Voir les produits <ArrowRight size={14} /></Link>
+//               </motion.div>
+//             ))}
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* ==================== SOLUTIONS PACKAGÉES ==================== */}
+//       <section className="py-24 bg-white/5">
+//         <div className="container">
+//           <SectionHeader badge="Offres packagées" title="Solutions Clé en Main" subtitle="Choisissez l'offre adaptée à votre entreprise" />
+//           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+//             {packs.map((pack, idx) => (
+//               <motion.div key={idx} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
+//                 className={`card-hover p-8 relative ${pack.featured ? 'border-2 border-blue-500' : ''}`}>
+//                 {pack.featured && <div className="absolute top-0 right-0 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-xl">Populaire</div>}
+//                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style={{ background: `${styles.colors.electric[500]}20`, color: styles.colors.electric[500] }}>
+//                   <pack.icon size={24} />
+//                 </div>
+//                 <h3 className="font-display font-bold text-white text-2xl mb-2">{pack.name}</h3>
+//                 <p className="text-3xl font-bold text-blue-400 mb-6">{pack.price}</p>
+//                 <ul className="space-y-3 mb-8">
+//                   {pack.features.map((f, i) => (
+//                     <li key={i} className="flex items-center gap-2 text-slate-300 text-sm"><CheckCircle size={16} className="text-blue-400 flex-shrink-0" /> {f}</li>
+//                   ))}
+//                 </ul>
+//                 <Link to="/demander-devis" className={`block w-full text-center py-3 rounded-xl font-semibold transition-all ${pack.featured ? 'btn-primary' : 'btn-outline'}`}>
+//                   Demander ce pack {pack.featured && <ArrowRight size={16} className="inline ml-1" />}
+//                 </Link>
+//               </motion.div>
+//             ))}
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* ==================== POURQUOI NOUS CHOISIR ==================== */}
+//       <section className="py-24">
+//         <div className="container">
+//           <SectionHeader badge="Pourquoi OMDEVE" title="Pourquoi nous choisir" subtitle="Une expertise locale avec des standards internationaux" />
+//           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+//             {whyUs.map((item, idx) => (
+//               <motion.div key={idx} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.08 }}
+//                 className="text-center p-6 rounded-2xl bg-white/5 border border-white/10">
+//                 <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ background: `${item.color}20`, color: item.color }}>
+//                   <item.icon size={32} />
+//                 </div>
+//                 <h3 className="font-display font-bold text-white text-lg mb-2">{item.title}</h3>
+//                 <p className="text-slate-400 text-sm">{item.description}</p>
+//               </motion.div>
+//             ))}
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* ==================== PROCESSUS ==================== */}
+//       <section className="py-24 bg-white/5">
+//         <div className="container">
+//           <SectionHeader badge="Notre méthodologie" title="Comment ça marche" subtitle="Un processus simple et transparent" />
+//           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+//             {steps.map((step, idx) => (
+//               <motion.div key={idx} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
+//                 className="text-center">
+//                 <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center mx-auto mb-4 text-2xl font-black text-white">{step.number}</div>
+//                 <h3 className="font-display font-bold text-white text-lg mb-2">{step.title}</h3>
+//                 <p className="text-slate-400 text-sm">{step.desc}</p>
+//               </motion.div>
+//             ))}
+//           </div>
+//         </div>
+//       </section>
+
+
+
+
+//       {/* ==================== TÉMOIGNAGES ==================== */}
+//       <section className="py-24">
+//         <div className="container">
+//           <SectionHeader badge="Témoignages" title="Ils nous font confiance" subtitle="Ce que nos clients pensent de nous" />
+//           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+//             {testimonials.map((t, idx) => (
+//               <motion.div key={idx} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
+//                 className="card-hover p-6">
+//                 <Quote size={28} className="text-blue-400 opacity-50 mb-4" />
+//                 <p className="text-slate-300 text-sm italic mb-6">"{t.content}"</p>
+//                 <div className="flex items-center gap-3">
+//                   <img src={t.avatar} alt={t.name} className="w-10 h-10 rounded-full object-cover" />
+//                   <div><p className="font-semibold text-white text-sm">{t.name}</p><p className="text-slate-500 text-xs">{t.position}</p></div>
+//                   <div className="ml-auto flex gap-0.5">{[...Array(t.rating)].map((_, i) => <Star key={i} size={14} className="fill-yellow-400 text-yellow-400" />)}</div>
+//                 </div>
+//               </motion.div>
+//             ))}
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* ==================== CTA FINALE ==================== */}
+//       <section
+//         className="py-24 relative overflow-hidden"
+//         style={{
+//           background: 'linear-gradient(135deg, rgba(23,37,84,0.95) 0%, rgba(15, 27, 66, 0.9) 100%)', // bleu foncé moderne
+//         }}
+//       >
+//         <div className="container text-center relative z-10">
+//           <motion.div
+//             initial={{ opacity: 0, y: 40 }}
+//             whileInView={{ opacity: 1, y: 0 }}
+//             viewport={{ once: true }}
+//             transition={{ duration: 0.8 }}
+//           >
+//             <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 mb-6 text-amber-300 text-sm font-semibold">
+//               <Rocket size={16} /> Prêt à démarrer
+//             </div>
+
+//             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+//               Prêt à transformer votre entreprise ?
+//             </h2>
+
+//             <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">
+//               Climatisation · Matériel IT · Caméras · Solutions digitales complètes
+//             </p>
+
+//             <div className="flex flex-wrap gap-4 justify-center">
+//               <Link
+//                 to="/demander-devis"
+//                 className="btn-accent"
+//                 style={{
+//                   background: 'linear-gradient(135deg, #1d1141 0%,#172554 100%)',
+//                   color: 'white',
+//                 }}
+//               >
+//                 Demander un devis <ArrowRight size={18} />
+//               </Link>
+
+//               <Link
+//                 to="/audit-gratuit"
+//                 className="btn-outline"
+//                 style={{
+//                   color: 'white',
+//                   border: '1px solid rgba(255,255,255,0.3)',
+//                   background: 'rgba(255,255,255,0.05)',
+//                 }}
+//               >
+//                 Audit gratuit <CheckCircle size={18} />
+//               </Link>
+
+//               <Link
+//                 to="/services/vente-materiel"
+//                 className="btn-outline"
+//                 style={{
+//                   color: 'white',
+//                   border: '1px solid rgba(255,255,255,0.3)',
+//                   background: 'rgba(255,255,255,0.05)',
+//                 }}
+//               >
+//                 Voir nos produits <ChevronRight size={18} />
+//               </Link>
+//             </div>
+//           </motion.div>
+//         </div>
+//       </section>
+
+//        {/* ==================== CTA FINALE (DOUBLE) ==================== */}
+// <section className="py-20 relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/5">
+//   <div className="absolute inset-0 opacity-30" style={{
+//     backgroundImage: `radial-gradient(circle at 30% 40%, rgba(59,130,246,0.3) 0%, transparent 60%),
+//                       radial-gradient(circle at 80% 70%, rgba(6,182,212,0.2) 0%, transparent 60%)`
+//   }} />
+//   <div className="container mx-auto px-4 relative z-10">
+//     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+//       <motion.div
+//         initial={{ opacity: 0, y: 40 }}
+//         whileInView={{ opacity: 1, y: 0 }}
+//         viewport={{ once: true }}
+//         transition={{ duration: 0.6, delay: 0 }}
+//         className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20 hover:border-blue-500/50 text-center"
+//       >
+//         <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110">
+//           <Target size={28} className="text-white" />
+//         </div>
+//         <h3 className="text-2xl md:text-3xl font-bold text-white font-syne mb-3">Audit gratuit</h3>
+//         <p className="text-gray-300 mb-6">
+//           Bénéficiez d'un diagnostic complet de vos infrastructures sans engagement.
+//         </p>
+//         <Link to="/blog" className="inline-flex items-center gap-2 bg-white/10 border border-white/20 hover:bg-white/20 text-white px-6 py-2.5 rounded-xl font-semibold transition-all hover:scale-105">
+//           Consultez notre blog <ArrowRight size={16} />
+//         </Link>
+//       </motion.div>
+
+//       <motion.div
+//         initial={{ opacity: 0, y: 40 }}
+//         whileInView={{ opacity: 1, y: 0 }}
+//         viewport={{ once: true }}
+//         transition={{ duration: 0.6, delay: 0.2 }}
+//         className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-amber-500/20 hover:border-amber-500/50 text-center"
+//       >
+//         <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110">
+//           <Handshake size={28} className="text-white" />
+//         </div>
+//         <h3 className="text-2xl md:text-3xl font-bold text-white font-syne mb-3">Devis personnalisé</h3>
+//         <p className="text-gray-300 mb-6">
+//           Recevez une proposition sur mesure adaptée à vos besoins et votre budget.
+//         </p>
+
+//         <Link to="/inscription" className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 py-2.5 rounded-xl font-semibold transition-all hover:scale-105">
+//           Inscrivez-vous dans notre Centre <ArrowRight size={16} />
+//         </Link>
+//       </motion.div>
+//     </div>
+//   </div>
+// </section>
+//     </>
+//   );
+// };
+
+// export default Home;
+
+
+
+
 import { motion, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useRef, useEffect, useState } from 'react';
@@ -40,15 +1016,8 @@ import {
   AlertTriangle, Handshake
 } from 'lucide-react';
 
-
-
-
-
-
-
-
 /* ─────────────────────────────────────────────
-   DESIGN SYSTEM — Inspired by HTML page (navy/electric/gold)
+   DESIGN SYSTEM — Thème CLAIR (blanc/gris, texte sombre)
    ───────────────────────────────────────────── */
 const styles = {
   colors: {
@@ -65,11 +1034,6 @@ const styles = {
       900: '#1e3a8a',
       950: '#172554',
     },
-    background: {
-      light: 'rgba(248, 250, 255, 0.85)', // bleu très clair transparent
-      default: 'rgba(235, 245, 255, 0.95)', // légèrement plus opaque
-      dark: 'rgba(23, 37, 84, 0.92)', // pour sections foncées / overlay
-    },
     electric: {
       50: '#eff6ff',
       100: '#dbeafe',
@@ -82,12 +1046,8 @@ const styles = {
       800: '#1e40af',
       900: '#1e3a8a',
     },
-
-    // ✨ gold amélioré (léger ajustement visuel)
-    gold: '#e2a733',
-
+    gold: '#d97706',
     white: '#FFFFFF',
-
     gray: {
       50: '#F9FAFB',
       100: '#F3F4F6',
@@ -100,34 +1060,37 @@ const styles = {
       800: '#1F2937',
       900: '#111827',
     },
-
-    // ✅ corrigé (violet → pas cohérent avec ton thème bleu)
     success: '#10B981',
+    // Couleurs thème clair
+    bg: {
+      page: '#F8FAFF',
+      section: '#FFFFFF',
+      sectionAlt: '#F1F5FD',
+      card: '#FFFFFF',
+    },
+    text: {
+      primary: '#111827',
+      secondary: '#374151',
+      muted: '#6B7280',
+      light: '#9CA3AF',
+    },
   },
 
   gradients: {
     primary: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-    accent: 'linear-gradient(135deg, #e2a733 0%, #f59e0b 100%)',
-    darkOverlay: 'linear-gradient(135deg, rgba(2,14,24,0.9) 0%, rgba(10,24,80,0.85) 100%)',
+    accent: 'linear-gradient(135deg, #d97706 0%, #f59e0b 100%)',
+    hero: 'linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 60%, #2563eb 100%)',
   },
 
   shadows: {
-    md: '0 4px 6px rgba(0, 0, 0, 0.08)',
-    xl: '0 20px 25px rgba(0, 0, 0, 0.12)',
-    glow: '0 0 20px rgba(59, 130, 246, 0.35)',
-  },
-
-  animation: {
-    duration: 0.5,
-    stagger: 0.08,
+    sm: '0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04)',
+    md: '0 4px 12px rgba(0,0,0,0.08)',
+    lg: '0 10px 30px rgba(0,0,0,0.10)',
+    xl: '0 20px 40px rgba(0,0,0,0.12)',
+    card: '0 2px 8px rgba(37,99,235,0.07), 0 1px 3px rgba(0,0,0,0.06)',
+    cardHover: '0 12px 32px rgba(37,99,235,0.15)',
   },
 };
-
-
-
-
-
-
 
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
@@ -140,8 +1103,8 @@ const globalStyles = `
 
   body {
     font-family: 'DM Sans', sans-serif;
-    background: ${styles.colors.navy[950]};
-    color: #e2e8f0;
+    background: ${styles.colors.bg.page};
+    color: ${styles.colors.text.primary};
     overflow-x: hidden;
   }
 
@@ -159,41 +1122,38 @@ const globalStyles = `
     font-weight: 600;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    padding: 0.5rem 1.2rem;
+    padding: 0.45rem 1.1rem;
     border-radius: 99px;
-    background: rgba(37, 99, 235, 0.15);
-    color: ${styles.colors.electric[400]};
-    border: 1px solid rgba(37, 99, 235, 0.3);
+    background: #EFF6FF;
+    color: #1d4ed8;
+    border: 1px solid #BFDBFE;
     font-family: 'Syne', sans-serif;
   }
 
   .section-title {
-    font-size: clamp(2rem, 4vw, 3rem);
+    font-size: clamp(2rem, 4vw, 2.75rem);
     font-weight: 800;
     line-height: 1.2;
     letter-spacing: -0.02em;
     margin-bottom: 1rem;
     font-family: 'Syne', sans-serif;
-    background: linear-gradient(135deg, #60a5fa, #2563eb, #818cf8);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: #111827;
   }
 
   .section-subtitle {
-    font-size: 1.1rem;
-    color: ${styles.colors.gray[400]};
+    font-size: 1.05rem;
+    color: ${styles.colors.text.muted};
     max-width: 48ch;
     margin: 0 auto;
-    line-height: 1.6;
+    line-height: 1.65;
   }
 
   .divider {
-    width: 60px;
-    height: 4px;
-    background: linear-gradient(90deg, transparent, ${styles.colors.electric[500]}, transparent);
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #3b82f6, transparent);
     border-radius: 99px;
-    margin: 1rem auto 1.5rem;
+    margin: 0.75rem auto 1.5rem;
   }
 
   .btn-primary {
@@ -204,103 +1164,91 @@ const globalStyles = `
     color: white;
     font-size: 0.9rem;
     font-weight: 600;
-    padding: 0.9rem 2rem;
-    border-radius: 12px;
+    padding: 0.85rem 1.8rem;
+    border-radius: 10px;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
     cursor: pointer;
     border: none;
     font-family: 'Syne', sans-serif;
-    box-shadow: ${styles.shadows.md};
-    position: relative;
-    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(37,99,235,0.3);
   }
-  .btn-primary::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37,99,235,0.4);
+    filter: brightness(1.05);
   }
-  .btn-primary:hover::before { opacity: 1; }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(37,99,235,0.4); }
 
   .btn-outline {
     display: inline-flex;
     align-items: center;
     gap: 0.6rem;
-    background: transparent;
-    color: ${styles.colors.gray[300]};
+    background: white;
+    color: #374151;
     font-size: 0.9rem;
     font-weight: 600;
-    padding: 0.85rem 2rem;
-    border-radius: 12px;
-    border: 1px solid rgba(37,99,235,0.5);
+    padding: 0.85rem 1.8rem;
+    border-radius: 10px;
+    border: 1.5px solid #D1D5DB;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
     cursor: pointer;
     font-family: 'Syne', sans-serif;
   }
   .btn-outline:hover {
-    border-color: ${styles.colors.electric[500]};
-    background: rgba(37,99,235,0.1);
+    border-color: #3b82f6;
+    color: #1d4ed8;
+    background: #EFF6FF;
     transform: translateY(-2px);
-    color: white;
+    box-shadow: 0 4px 12px rgba(37,99,235,0.12);
   }
 
   .btn-accent {
     display: inline-flex;
     align-items: center;
     gap: 0.6rem;
-    background: linear-gradient(135deg, #e2a733, #f59e0b);
+    background: ${styles.gradients.accent};
     color: white;
     font-size: 0.9rem;
     font-weight: 700;
-    padding: 0.9rem 2rem;
-    border-radius: 12px;
+    padding: 0.85rem 1.8rem;
+    border-radius: 10px;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
     cursor: pointer;
     border: none;
     font-family: 'Syne', sans-serif;
-    box-shadow: ${styles.shadows.md};
+    box-shadow: 0 4px 14px rgba(217,119,6,0.3);
   }
   .btn-accent:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(245,158,11,0.4);
+    box-shadow: 0 8px 24px rgba(217,119,6,0.4);
     filter: brightness(1.05);
   }
 
   .card-hover {
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 1.5rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 1.25rem;
+    box-shadow: ${styles.shadows.card};
   }
   .card-hover:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 60px rgba(37,99,235,0.2);
-    border-color: rgba(37,99,235,0.5);
+    transform: translateY(-5px);
+    box-shadow: ${styles.shadows.cardHover};
+    border-color: #BFDBFE;
   }
 
-  .grid-bg {
-    background-image: linear-gradient(rgba(37,99,235,0.07) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(37,99,235,0.07) 1px, transparent 1px);
-    background-size: 60px 60px;
+  .section-light {
+    background: ${styles.colors.bg.section};
   }
-
-  .orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    pointer-events: none;
-    z-index: 0;
+  .section-alt {
+    background: ${styles.colors.bg.sectionAlt};
   }
 
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
+    50% { transform: translateY(-18px); }
   }
   .animate-float {
     animation: float 6s ease-in-out infinite;
@@ -308,22 +1256,18 @@ const globalStyles = `
 `;
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] } },
+  hidden: { opacity: 0, y: 36 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.25, 0.1, 0.25, 1] } },
 };
 const staggerContainer = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
 };
-const scaleIn = {
-  hidden: { opacity: 0, scale: 0.9 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
-};
 
 const SectionHeader = ({ badge, title, subtitle }) => (
   <motion.div variants={staggerContainer} style={{ textAlign: 'center', marginBottom: '3rem' }}>
     {badge && <motion.div variants={fadeUp}><span className="section-badge">{badge}</span></motion.div>}
-    <motion.h2 variants={fadeUp} className="section-title">{title}</motion.h2>
+    <motion.h2 variants={fadeUp} className="section-title" style={{ marginTop: '0.75rem' }}>{title}</motion.h2>
     <motion.div variants={fadeUp} className="divider" />
     {subtitle && <motion.p variants={fadeUp} className="section-subtitle">{subtitle}</motion.p>}
   </motion.div>
@@ -349,25 +1293,25 @@ const Counter = ({ end, suffix, duration = 2.5 }) => {
 
 // Données
 const services = [
-  { icon: Server, title: 'Réseau & Infrastructure', description: 'Câblage structuré, WiFi entreprise, fibre optique haute performance', color: styles.colors.electric[500] },
-  { icon: Shield, title: 'Cybersécurité & Surveillance', description: 'Firewalls, audits, vidéosurveillance intelligente 24/7', color: styles.colors.electric[400] },
-  { icon: Code, title: 'Développement Digital', description: 'Applications web, mobiles, ERP sur mesure', color: styles.colors.gold },
-  { icon: Cloud, title: 'Cloud & Télécommunications', description: 'Hébergement cloud, VoIP, solutions télécom intégrées', color: styles.colors.electric[500] },
-  { icon: Zap, title: 'Énergie & Maintenance', description: 'Panneaux solaires, maintenance préventive et corrective', color: styles.colors.electric[400] },
-  { icon: GraduationCap, title: 'Formation & Accompagnement', description: 'Formations certifiantes et transfert de compétences', color: styles.colors.gold },
+  { icon: Server, title: 'Réseau & Infrastructure', description: 'Câblage structuré, WiFi entreprise, fibre optique haute performance', color: '#2563eb' },
+  { icon: Shield, title: 'Cybersécurité & Surveillance', description: 'Firewalls, audits, vidéosurveillance intelligente 24/7', color: '#7c3aed' },
+  { icon: Code, title: 'Développement Digital', description: 'Applications web, mobiles, ERP sur mesure', color: '#d97706' },
+  { icon: Cloud, title: 'Cloud & Télécommunications', description: 'Hébergement cloud, VoIP, solutions télécom intégrées', color: '#0891b2' },
+  { icon: Zap, title: 'Énergie & Maintenance', description: 'Panneaux solaires, maintenance préventive et corrective', color: '#16a34a' },
+  { icon: GraduationCap, title: 'Formation & Accompagnement', description: 'Formations certifiantes et transfert de compétences', color: '#dc2626' },
 ];
 
 const expertise = [
-  { icon: Code, title: 'Développement Logiciel', desc: 'Apps web & mobiles sur mesure, API, IA intégrée', color: styles.colors.electric[500] },
-  { icon: Phone, title: 'Télécommunications', desc: 'Réseaux VoIP, fibre, communication unifiée', color: styles.colors.electric[400] },
-  { icon: Camera, title: 'Vidéosurveillance', desc: 'Caméras IP, IA de reconnaissance, monitoring 24/7', color: styles.colors.gold },
-  { icon: Wrench, title: 'Maintenance & Support', desc: 'Maintenance préventive, corrective, assistance dédiée', color: styles.colors.electric[500] },
+  { icon: Code, title: 'Développement Logiciel', desc: 'Apps web & mobiles sur mesure, API, IA intégrée', color: '#2563eb' },
+  { icon: Phone, title: 'Télécommunications', desc: 'Réseaux VoIP, fibre, communication unifiée', color: '#7c3aed' },
+  { icon: Camera, title: 'Vidéosurveillance', desc: 'Caméras IP, IA de reconnaissance, monitoring 24/7', color: '#d97706' },
+  { icon: Wrench, title: 'Maintenance & Support', desc: 'Maintenance préventive, corrective, assistance dédiée', color: '#0891b2' },
 ];
 
 const products = [
-  { icon: ThermometerSun, title: 'Climatisation Pro', description: 'Systèmes de refroidissement haute performance pour entreprises', color: styles.colors.electric[500] },
-  { icon: Monitor, title: 'Matériel IT', description: 'PC, serveurs, écrans et accessoires professionnels', color: styles.colors.electric[400] },
-  { icon: Camera, title: 'Surveillance', description: 'Caméras IP 4K, PTZ, IA intégrée', color: styles.colors.gold },
+  { icon: ThermometerSun, title: 'Climatisation Pro', description: 'Systèmes de refroidissement haute performance pour entreprises', color: '#0891b2' },
+  { icon: Monitor, title: 'Matériel IT', description: 'PC, serveurs, écrans et accessoires professionnels', color: '#2563eb' },
+  { icon: Camera, title: 'Surveillance', description: 'Caméras IP 4K, PTZ, IA intégrée', color: '#d97706' },
 ];
 
 const stats = [
@@ -384,10 +1328,10 @@ const packs = [
 ];
 
 const whyUs = [
-  { icon: Users, title: 'Expertise locale', description: 'Une équipe basée à Kinshasa qui comprend vos enjeux locaux', color: styles.colors.electric[500] },
-  { icon: Clock, title: 'Support 24/7', description: 'Assistance réactive et disponible à tout moment', color: styles.colors.electric[400] },
-  { icon: Award, title: 'Qualité certifiée', description: 'Standards internationaux et certifications professionnelles', color: styles.colors.gold },
-  { icon: TrendingUp, title: 'Innovation constante', description: 'Veille technologique et solutions toujours à jour', color: styles.colors.electric[500] },
+  { icon: Users, title: 'Expertise locale', description: 'Une équipe basée à Kinshasa qui comprend vos enjeux locaux', color: '#2563eb' },
+  { icon: Clock, title: 'Support 24/7', description: 'Assistance réactive et disponible à tout moment', color: '#7c3aed' },
+  { icon: Award, title: 'Qualité certifiée', description: 'Standards internationaux et certifications professionnelles', color: '#d97706' },
+  { icon: TrendingUp, title: 'Innovation constante', description: 'Veille technologique et solutions toujours à jour', color: '#16a34a' },
 ];
 
 const testimonials = [
@@ -404,10 +1348,10 @@ const steps = [
 ];
 
 const challenges = [
-  { icon: <TrendingDown size={28} />, title: 'Perte financière', desc: 'Des processus inefficaces coûtent en moyenne 20% du CA chaque année.', color: '#ef4444' },
-  { icon: <FileText size={28} />, title: 'Gestion manuelle', desc: 'Fichiers Excel, papier, erreurs humaines… votre temps vaut plus que ça.', color: '#f59e0b' },
-  { icon: <Lock size={28} />, title: 'Failles de sécurité', desc: 'Sans cybersécurité, vos données et celles de vos clients sont vulnérables.', color: '#3b82f6' },
-  { icon: <AlertTriangle size={28} />, title: 'Croissance bloquée', desc: "L'absence d'outils digitaux freine votre expansion et votre compétitivité.", color: '#8b5cf6' },
+  { icon: <TrendingDown size={28} />, title: 'Perte financière', desc: 'Des processus inefficaces coûtent en moyenne 20% du CA chaque année.', color: '#ef4444', bg: '#FEF2F2' },
+  { icon: <FileText size={28} />, title: 'Gestion manuelle', desc: 'Fichiers Excel, papier, erreurs humaines… votre temps vaut plus que ça.', color: '#d97706', bg: '#FFFBEB' },
+  { icon: <Lock size={28} />, title: 'Failles de sécurité', desc: 'Sans cybersécurité, vos données et celles de vos clients sont vulnérables.', color: '#2563eb', bg: '#EFF6FF' },
+  { icon: <AlertTriangle size={28} />, title: 'Croissance bloquée', desc: "L'absence d'outils digitaux freine votre expansion et votre compétitivité.", color: '#7c3aed', bg: '#F5F3FF' },
 ];
 
 const galleryImages = [
@@ -423,75 +1367,45 @@ const Home = () => {
     <>
       <style>{globalStyles}</style>
 
-      {/* ==================== HERO SECTION - Premium Navy ==================== */}
-      {/* ==================== HERO SECTION - HOME avec image de fond ==================== */}
-      <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden pt-20 pb-12">
+      {/* ==================== HERO SECTION — fond foncé gardé pour le contraste ====================  */}
+      <section className="relative text-white overflow-hidden pt-20 pb-12"
+        style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1d4ed8 100%)' }}>
 
-        {/* Image de fond avec zoom lent */}
         <div className="absolute inset-0 overflow-hidden">
           <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110 animate-slow-zoom"
-            style={{
-              backgroundImage: `url('https://img.freepik.com/photos-gratuite/contexte-energie-nucleaire-ia-innovation-future-technologie-rupture_53876-129783.jpg?semt=ais_hybrid&w=740&q=80')`
-            }}
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110"
+            style={{ backgroundImage: `url('https://img.freepik.com/photos-gratuite/contexte-energie-nucleaire-ia-innovation-future-technologie-rupture_53876-129783.jpg?semt=ais_hybrid&w=740&q=80')` }}
           />
-          <div className="absolute inset-0 bg-black/65"></div>
+          <div className="absolute inset-0" style={{ background: 'rgba(15,23,42,0.72)' }}></div>
         </div>
 
-        {/* Grille de fond technologique */}
-        <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: `linear-gradient(rgba(59,130,246,0.08) 1px, transparent 1px),
-                      linear-gradient(90deg, rgba(59,130,246,0.08) 1px, transparent 1px)`,
+        <div className="absolute inset-0 opacity-15" style={{
+          backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`,
           backgroundSize: '60px 60px'
         }} />
 
-        {/* Effet lumineux radial subtil */}
-        <div className="absolute inset-0 bg-[radial-gradient(at_top_right,#3b82f630_0%,transparent_60%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(at_bottom_left,#8b5cf620_0%,transparent_60%)]" />
+        <div className="absolute w-72 h-72 rounded-full animate-float"
+          style={{ background: 'rgba(59,130,246,0.18)', top: '5%', left: '-8%', filter: 'blur(72px)' }} />
+        <div className="absolute w-56 h-56 rounded-full animate-float"
+          style={{ background: 'rgba(99,102,241,0.14)', bottom: '15%', right: '5%', filter: 'blur(72px)', animationDelay: '2s' }} />
 
-        {/* Orbes flottants animés (réduits) */}
-        <div className="absolute w-80 h-80 bg-blue-600/20 top-10 -left-20 rounded-full filter blur-[80px] animate-float" />
-        <div className="absolute w-64 h-64 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
-        <div className="absolute w-40 h-40 bg-cyan-500/10 top-1/2 left-1/2 -translate-x-1/2 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '4s' }} />
-
-        {/* Contenu principal */}
         <div className="container mx-auto px-4 relative z-10 py-8">
           <div className="max-w-3xl mx-auto text-center">
 
-            {/* Badge */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
-              className="
-    inline-flex items-center gap-2
-    mt-6 sm:mt-8
-    mb-4
-    px-3 py-1.5
-    rounded-full
-    max-w-full
-    text-center
-    mx-auto sm:mx-0
-  "
-              style={{
-                background: 'rgba(37,99,235,0.15)',
-                border: '1px solid rgba(37,99,235,0.3)'
-              }}
+              className="inline-flex items-center gap-2 mt-6 sm:mt-8 mb-4 px-3 py-1.5 rounded-full"
+              style={{ background: 'rgba(37,99,235,0.2)', border: '1px solid rgba(96,165,250,0.35)' }}
             >
               <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse shrink-0" />
-
-              <span className="
-    text-blue-300 font-semibold
-    text-[10px] sm:text-xs
-    tracking-wide font-syne
-    leading-tight
-    break-words
-  ">
+              <span className="text-blue-200 font-semibold text-[10px] sm:text-xs tracking-wide font-syne">
                 Solutions Digitales Premium – Afrique
               </span>
             </motion.div>
 
-            {/* Titre principal */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -499,14 +1413,13 @@ const Home = () => {
               className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight mb-4 font-syne"
             >
               Transformez votre <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-cyan-300 to-sky-300">
                 Business Digital
               </span>
               <br />
               avec l'expertise
             </motion.h1>
 
-            {/* Sous-titre */}
             <motion.p
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -517,38 +1430,28 @@ const Home = () => {
               Omedev vous accompagne dans votre <strong className="text-white">digitalisation complète</strong>.
             </motion.p>
 
-            {/* Boutons */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.3 }}
               className="flex flex-col sm:flex-row gap-3 justify-center items-center mb-8"
             >
-              <Link
-                to="/demander-devis"
-                className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-2 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20 transition-all hover:scale-[1.02] hover:shadow-xl text-sm"
-              >
+              <Link to="/demander-devis"
+                className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-2 rounded-xl font-semibold flex items-center justify-center gap-2 shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl text-sm">
                 <span>Demander un devis</span>
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
-
-              <Link
-                to="/solutions"
-                className="group border-2 border-white/30 hover:border-white px-5 py-2 rounded-xl font-semibold text-white hover:bg-white/10 flex items-center justify-center gap-2 transition-all text-sm"
-              >
+              <Link to="/solutions"
+                className="group border-2 border-white/30 hover:border-white px-5 py-2 rounded-xl font-semibold text-white hover:bg-white/10 flex items-center justify-center gap-2 transition-all text-sm">
                 <span>Voir les solutions</span>
                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
-
-              <Link
-                to="/audit-gratuit"
-                className="px-4 py-2 rounded-xl font-semibold text-amber-400 border border-amber-500/30 hover:bg-amber-500/10 transition-all flex items-center gap-2 text-sm"
-              >
+              <Link to="/audit-gratuit"
+                className="px-4 py-2 rounded-xl font-semibold text-amber-300 border border-amber-400/35 hover:bg-amber-400/10 transition-all flex items-center gap-2 text-sm">
                 <span>🎁 Audit Gratuit</span>
               </Link>
             </motion.div>
 
-            {/* Stats */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -561,14 +1464,9 @@ const Home = () => {
                 { n: '50+', l: 'Entreprises clientes', icon: '🏢' },
                 { n: '5 ans', l: "D'expertise", icon: '📅' }
               ].map((s, i) => (
-                <div
-                  key={i}
-                  className="group rounded-xl p-3 text-center transition-all duration-300 hover:scale-105 hover:border-blue-500/40"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(59,130,246,0.08), rgba(30,64,175,0.03))',
-                    border: '1px solid rgba(37,99,235,0.2)'
-                  }}
-                >
+                <div key={i}
+                  className="group rounded-xl p-3 text-center transition-all duration-300 hover:scale-105"
+                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)' }}>
                   <div className="text-xl mb-0.5 opacity-60 group-hover:opacity-100 transition-opacity">{s.icon}</div>
                   <div className="font-extrabold text-xl text-white mb-0.5 font-syne">{s.n}</div>
                   <div className="text-gray-400 text-[11px]">{s.l}</div>
@@ -578,186 +1476,178 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Vague décorative en bas */}
-        <div className="absolute bottom-0 left-0 right-0 z-10 text-white/10">
-          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-8">
-            <path
-              d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z"
-              fill="currentColor"
-            />
+        <div className="absolute bottom-0 left-0 right-0 z-10" style={{ color: styles.colors.bg.page }}>
+          <svg viewBox="0 0 1200 80" preserveAspectRatio="none" className="w-full h-10">
+            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z"
+              fill="currentColor" />
           </svg>
         </div>
       </section>
-      {/* Styles CSS à ajouter dans votre fichier global */}
-      <style jsx>{`
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-  }
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-  .orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    pointer-events: none;
-    z-index: 0;
-  }
-`}</style>
 
-
-      {/* ==================== DÉFIS (Ces défis vous parlent ?) ==================== */}
-      <section className="py-24 relative overflow-hidden">
+      {/* ==================== DÉFIS ==================== */}
+      <section className="py-24 section-light">
         <div className="container">
           <div className="text-center mb-14">
-            <span className="section-badge" style={{ background: '#3f59a1', color: '#edeae7', borderColor: '#3f7394' }}>⚠️ Problèmes courants</span>
-            <h2 className="section-title">Ces défis vous parlent ?</h2>
+            <span className="section-badge" style={{ background: '#FEF3C7', color: '#92400e', borderColor: '#FDE68A' }}>⚠️ Problèmes courants</span>
+            <h2 className="section-title" style={{ marginTop: '0.75rem' }}>Ces défis vous parlent ?</h2>
             <div className="divider" />
             <p className="section-subtitle">La plupart des PME africaines perdent des opportunités faute d'outils digitaux adaptés.</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {challenges.map((c, idx) => (
-              <motion.div key={idx} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
-                className="card-hover p-6 text-center" style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '1.5rem' }}>
-                <div style={{ color: c.color, marginBottom: '1rem' }}>{c.icon}</div>
-                <h3 className="font-display font-bold text-white text-lg mb-2">{c.title}</h3>
-                <p className="text-slate-400 text-sm leading-relaxed">{c.desc}</p>
+              <motion.div key={idx}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="card-hover p-6 text-center">
+                <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center"
+                  style={{ background: c.bg, color: c.color }}>
+                  {c.icon}
+                </div>
+                <h3 className="font-semibold text-gray-900 text-lg mb-2" style={{ fontFamily: "'Syne', sans-serif" }}>{c.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{c.desc}</p>
               </motion.div>
             ))}
           </div>
           <div className="text-center mt-12">
-            <p className="text-slate-400 mb-6 text-lg">Omedev a la solution pour chacun de ces défis.</p>
+            <p className="text-gray-500 mb-6 text-base">Omedev a la solution pour chacun de ces défis.</p>
             <Link to="/services" className="btn-primary">Découvrir nos solutions <ArrowRight size={18} /></Link>
           </div>
         </div>
       </section>
 
-
-
-
       {/* ==================== DOMAINES D'EXCELLENCE ==================== */}
-      <section className="py-24 bg-white/5">
+      <section className="py-24 section-alt">
         <div className="container">
           <SectionHeader badge="Notre savoir-faire" title="Domaines d'excellence" subtitle="Nous maîtrisons l'ensemble des technologies essentielles à votre réussite" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {expertise.map((item, idx) => (
-              <motion.div key={idx} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.08 }}
+              <motion.div key={idx}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.08 }}
                 className="card-hover p-8 text-center">
-                <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ background: `${item.color}20`, color: item.color }}>
-                  <item.icon size={32} />
+                <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center"
+                  style={{ background: `${item.color}14`, color: item.color }}>
+                  <item.icon size={30} />
                 </div>
-                <h3 className="font-display font-bold text-white text-xl mb-2">{item.title}</h3>
-                <p className="text-slate-400 text-sm">{item.desc}</p>
+                <h3 className="font-semibold text-gray-900 text-lg mb-2" style={{ fontFamily: "'Syne', sans-serif" }}>{item.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-
-
-
-      {/* ==================== GALERIE (1 droite + 4 gauche) ==================== */}
-      <section className="py-24">
+      {/* ==================== GALERIE ==================== */}
+      <section className="py-24 section-light">
         <div className="container">
           <SectionHeader badge="Notre travail" title="Galerie" subtitle="Découvrez quelques-unes de nos réalisations" />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* 4 miniatures à gauche */}
             <div className="grid grid-cols-2 gap-4">
               {galleryImages.slice(1, 5).map((img, idx) => (
-                <motion.div key={idx} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
-                  className="rounded-2xl overflow-hidden shadow-lg cursor-pointer aspect-video" whileHover={{ scale: 1.02 }}>
+                <motion.div key={idx}
+                  initial={{ opacity: 0, scale: 0.92 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="rounded-2xl overflow-hidden cursor-pointer aspect-video"
+                  style={{ boxShadow: styles.shadows.md }}
+                  whileHover={{ scale: 1.02 }}>
                   <img src={img} alt={`galerie-${idx}`} className="w-full h-full object-cover" />
                 </motion.div>
               ))}
             </div>
-            {/* Grande image à droite */}
-            <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
-              className="rounded-2xl overflow-hidden shadow-xl cursor-pointer aspect-video" whileHover={{ scale: 1.01 }}>
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="rounded-2xl overflow-hidden cursor-pointer aspect-video"
+              style={{ boxShadow: styles.shadows.lg }}
+              whileHover={{ scale: 1.01 }}>
               <img src={galleryImages[0]} alt="galerie-principale" className="w-full h-full object-cover" />
             </motion.div>
           </div>
         </div>
       </section>
 
-
-
-
       {/* ==================== SERVICES ==================== */}
-      <section className="py-24 bg-white/5">
+      <section className="py-24 section-alt">
         <div className="container">
           <SectionHeader badge="Nos services" title="Solutions Intégrées" subtitle="De l'infrastructure aux applications, nous couvrons tout le cycle technologique" />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, idx) => (
-              <motion.div key={idx} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.07 }}
+              <motion.div key={idx}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.07 }}
                 className="card-hover p-8">
-                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5" style={{ background: `${service.color}20`, color: service.color }}>
-                  <service.icon size={28} />
+                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5"
+                  style={{ background: `${service.color}12`, color: service.color }}>
+                  <service.icon size={26} />
                 </div>
-                <h3 className="font-display font-bold text-white text-xl mb-3">{service.title}</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-4">{service.description}</p>
-                <Link to="/solutions" className="text-blue-400 text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">En savoir plus <ArrowRight size={14} /></Link>
+                <h3 className="font-semibold text-gray-900 text-xl mb-3" style={{ fontFamily: "'Syne', sans-serif" }}>{service.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed mb-4">{service.description}</p>
+                <Link to="/solutions" className="text-blue-600 text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all hover:text-blue-700">
+                  En savoir plus <ArrowRight size={14} />
+                </Link>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-
-
-
-      {/* ==================== STATS ==================== */}
-      <section className="py-20" style={{ background: 'rgba(23,37,84,0.9)' }}> {/* navy foncé transparent */}
+      {/* ==================== STATS — seule section sombre conservée ==================== */}
+      <section className="py-20" style={{ background: 'linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%)' }}>
         <div className="container">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {stats.map((stat, idx) => (
-              <motion.div
-                key={idx}
+              <motion.div key={idx}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
-                className="p-6 rounded-2xl backdrop-blur-md"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.05)', // léger overlay transparent
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                  boxShadow: '0 8px 20px rgba(0,0,0,0.2)',
-                }}
-              >
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3"
-                  style={{ background: 'linear-gradient(135deg, #60a5fa, #1e40af)' }} // bleu moderne
-                >
+                className="p-6 rounded-2xl"
+                style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)' }}>
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3"
+                  style={{ background: 'rgba(255,255,255,0.15)' }}>
                   <stat.icon size={24} className="text-white" />
                 </div>
-                <div className="text-4xl font-bold text-white mb-1">
+                <div className="text-4xl font-bold text-white mb-1" style={{ fontFamily: "'Syne', sans-serif" }}>
                   <Counter end={stat.value} suffix={stat.suffix} />
                 </div>
-                <div className="text-white/70 text-sm">{stat.label}</div>
+                <div className="text-blue-100 text-sm">{stat.label}</div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-
-
-
       {/* ==================== PRODUITS & ÉQUIPEMENTS ==================== */}
-      <section className="py-24">
+      <section className="py-24 section-light">
         <div className="container">
           <SectionHeader badge="Produits & Équipements" title="Achetez chez nous" subtitle="Climatiseurs · Matériel IT · Caméras — directement livrés et installés" />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {products.map((product, idx) => (
-              <motion.div key={idx} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
+              <motion.div key={idx}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
                 className="card-hover p-8">
-                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5" style={{ background: `${product.color}20`, color: product.color }}>
-                  <product.icon size={28} />
+                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5"
+                  style={{ background: `${product.color}12`, color: product.color }}>
+                  <product.icon size={26} />
                 </div>
-                <h3 className="font-display font-bold text-white text-xl mb-3">{product.title}</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-4">{product.description}</p>
-                <Link to="/boutique" className="text-blue-400 text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">Voir les produits <ArrowRight size={14} /></Link>
+                <h3 className="font-semibold text-gray-900 text-xl mb-3" style={{ fontFamily: "'Syne', sans-serif" }}>{product.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed mb-4">{product.description}</p>
+                <Link to="/boutique" className="text-blue-600 text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all hover:text-blue-700">
+                  Voir les produits <ArrowRight size={14} />
+                </Link>
               </motion.div>
             ))}
           </div>
@@ -765,25 +1655,38 @@ const Home = () => {
       </section>
 
       {/* ==================== SOLUTIONS PACKAGÉES ==================== */}
-      <section className="py-24 bg-white/5">
+      <section className="py-24 section-alt">
         <div className="container">
           <SectionHeader badge="Offres packagées" title="Solutions Clé en Main" subtitle="Choisissez l'offre adaptée à votre entreprise" />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {packs.map((pack, idx) => (
-              <motion.div key={idx} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
-                className={`card-hover p-8 relative ${pack.featured ? 'border-2 border-blue-500' : ''}`}>
-                {pack.featured && <div className="absolute top-0 right-0 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-xl">Populaire</div>}
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style={{ background: `${styles.colors.electric[500]}20`, color: styles.colors.electric[500] }}>
-                  <pack.icon size={24} />
+              <motion.div key={idx}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className={`card-hover p-8 relative ${pack.featured ? 'ring-2 ring-blue-500' : ''}`}
+                style={pack.featured ? { borderColor: '#3b82f6' } : {}}>
+                {pack.featured && (
+                  <div className="absolute top-0 right-6 -translate-y-1/2 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-xs font-bold px-4 py-1 rounded-full shadow-md">
+                    Populaire
+                  </div>
+                )}
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
+                  style={{ background: '#EFF6FF', color: '#2563eb' }}>
+                  <pack.icon size={22} />
                 </div>
-                <h3 className="font-display font-bold text-white text-2xl mb-2">{pack.name}</h3>
-                <p className="text-3xl font-bold text-blue-400 mb-6">{pack.price}</p>
+                <h3 className="font-bold text-gray-900 text-2xl mb-2" style={{ fontFamily: "'Syne', sans-serif" }}>{pack.name}</h3>
+                <p className="text-2xl font-bold text-blue-600 mb-6">{pack.price}</p>
                 <ul className="space-y-3 mb-8">
                   {pack.features.map((f, i) => (
-                    <li key={i} className="flex items-center gap-2 text-slate-300 text-sm"><CheckCircle size={16} className="text-blue-400 flex-shrink-0" /> {f}</li>
+                    <li key={i} className="flex items-center gap-2 text-gray-600 text-sm">
+                      <CheckCircle size={16} className="text-blue-500 flex-shrink-0" /> {f}
+                    </li>
                   ))}
                 </ul>
-                <Link to="/demander-devis" className={`block w-full text-center py-3 rounded-xl font-semibold transition-all ${pack.featured ? 'btn-primary' : 'btn-outline'}`}>
+                <Link to="/demander-devis"
+                  className={`block w-full text-center py-3 rounded-xl font-semibold transition-all ${pack.featured ? 'btn-primary' : 'btn-outline'}`}>
                   Demander ce pack {pack.featured && <ArrowRight size={16} className="inline ml-1" />}
                 </Link>
               </motion.div>
@@ -793,18 +1696,24 @@ const Home = () => {
       </section>
 
       {/* ==================== POURQUOI NOUS CHOISIR ==================== */}
-      <section className="py-24">
+      <section className="py-24 section-light">
         <div className="container">
           <SectionHeader badge="Pourquoi OMDEVE" title="Pourquoi nous choisir" subtitle="Une expertise locale avec des standards internationaux" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {whyUs.map((item, idx) => (
-              <motion.div key={idx} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.08 }}
-                className="text-center p-6 rounded-2xl bg-white/5 border border-white/10">
-                <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ background: `${item.color}20`, color: item.color }}>
-                  <item.icon size={32} />
+              <motion.div key={idx}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.08 }}
+                className="text-center p-6 rounded-2xl border"
+                style={{ background: '#FAFBFF', borderColor: '#E5E7EB' }}>
+                <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center"
+                  style={{ background: `${item.color}10`, color: item.color }}>
+                  <item.icon size={30} />
                 </div>
-                <h3 className="font-display font-bold text-white text-lg mb-2">{item.title}</h3>
-                <p className="text-slate-400 text-sm">{item.description}</p>
+                <h3 className="font-semibold text-gray-900 text-lg mb-2" style={{ fontFamily: "'Syne', sans-serif" }}>{item.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{item.description}</p>
               </motion.div>
             ))}
           </div>
@@ -812,39 +1721,52 @@ const Home = () => {
       </section>
 
       {/* ==================== PROCESSUS ==================== */}
-      <section className="py-24 bg-white/5">
+      <section className="py-24 section-alt">
         <div className="container">
           <SectionHeader badge="Notre méthodologie" title="Comment ça marche" subtitle="Un processus simple et transparent" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {steps.map((step, idx) => (
-              <motion.div key={idx} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
+              <motion.div key={idx}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
                 className="text-center">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center mx-auto mb-4 text-2xl font-black text-white">{step.number}</div>
-                <h3 className="font-display font-bold text-white text-lg mb-2">{step.title}</h3>
-                <p className="text-slate-400 text-sm">{step.desc}</p>
+                <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-black text-white"
+                  style={{ background: 'linear-gradient(135deg, #2563eb, #3b82f6)', boxShadow: '0 8px 24px rgba(37,99,235,0.3)' }}>
+                  {step.number}
+                </div>
+                <h3 className="font-semibold text-gray-900 text-lg mb-2" style={{ fontFamily: "'Syne', sans-serif" }}>{step.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{step.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-
-
-
       {/* ==================== TÉMOIGNAGES ==================== */}
-      <section className="py-24">
+      <section className="py-24 section-light">
         <div className="container">
           <SectionHeader badge="Témoignages" title="Ils nous font confiance" subtitle="Ce que nos clients pensent de nous" />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((t, idx) => (
-              <motion.div key={idx} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
+              <motion.div key={idx}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
                 className="card-hover p-6">
-                <Quote size={28} className="text-blue-400 opacity-50 mb-4" />
-                <p className="text-slate-300 text-sm italic mb-6">"{t.content}"</p>
+                <Quote size={26} style={{ color: '#93c5fd', marginBottom: '1rem' }} />
+                <p className="text-gray-600 text-sm italic mb-6 leading-relaxed">"{t.content}"</p>
                 <div className="flex items-center gap-3">
                   <img src={t.avatar} alt={t.name} className="w-10 h-10 rounded-full object-cover" />
-                  <div><p className="font-semibold text-white text-sm">{t.name}</p><p className="text-slate-500 text-xs">{t.position}</p></div>
-                  <div className="ml-auto flex gap-0.5">{[...Array(t.rating)].map((_, i) => <Star key={i} size={14} className="fill-yellow-400 text-yellow-400" />)}</div>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">{t.name}</p>
+                    <p className="text-gray-400 text-xs">{t.position}</p>
+                  </div>
+                  <div className="ml-auto flex gap-0.5">
+                    {[...Array(t.rating)].map((_, i) => <Star key={i} size={14} className="fill-amber-400 text-amber-400" />)}
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -853,12 +1775,13 @@ const Home = () => {
       </section>
 
       {/* ==================== CTA FINALE ==================== */}
-      <section
-        className="py-24 relative overflow-hidden"
-        style={{
-          background: 'linear-gradient(135deg, rgba(23,37,84,0.95) 0%, rgba(15, 27, 66, 0.9) 100%)', // bleu foncé moderne
-        }}
-      >
+      <section className="py-24 relative overflow-hidden"
+        style={{ background: 'linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 60%, #2563eb 100%)' }}>
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+          backgroundSize: '50px 50px'
+        }} />
         <div className="container text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -866,51 +1789,28 @@ const Home = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 mb-6 text-amber-300 text-sm font-semibold">
+            <div className="inline-flex items-center gap-2 rounded-full px-4 py-2 mb-6 text-amber-200 text-sm font-semibold"
+              style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)' }}>
               <Rocket size={16} /> Prêt à démarrer
             </div>
-
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: "'Syne', sans-serif" }}>
               Prêt à transformer votre entreprise ?
             </h2>
-
-            <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">
+            <p className="text-blue-100 text-lg mb-8 max-w-xl mx-auto">
               Climatisation · Matériel IT · Caméras · Solutions digitales complètes
             </p>
-
             <div className="flex flex-wrap gap-4 justify-center">
-              <Link
-                to="/demander-devis"
-                className="btn-accent"
-                style={{
-                  background: 'linear-gradient(135deg, #1d1141 0%,#172554 100%)',
-                  color: 'white',
-                }}
-              >
+              <Link to="/demander-devis" className="btn-accent">
                 Demander un devis <ArrowRight size={18} />
               </Link>
-
-              <Link
-                to="/audit-gratuit"
-                className="btn-outline"
-                style={{
-                  color: 'white',
-                  border: '1px solid rgba(255,255,255,0.3)',
-                  background: 'rgba(255,255,255,0.05)',
-                }}
-              >
+              <Link to="/audit-gratuit"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white transition-all hover:scale-[1.02]"
+                style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.25)' }}>
                 Audit gratuit <CheckCircle size={18} />
               </Link>
-
-              <Link
-                to="/services/vente-materiel"
-                className="btn-outline"
-                style={{
-                  color: 'white',
-                  border: '1px solid rgba(255,255,255,0.3)',
-                  background: 'rgba(255,255,255,0.05)',
-                }}
-              >
+              <Link to="/services/vente-materiel"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white transition-all hover:scale-[1.02]"
+                style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.25)' }}>
                 Voir nos produits <ChevronRight size={18} />
               </Link>
             </div>
@@ -918,61 +1818,57 @@ const Home = () => {
         </div>
       </section>
 
-       {/* ==================== CTA FINALE (DOUBLE) ==================== */}
-<section className="py-20 relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/5">
-  <div className="absolute inset-0 opacity-30" style={{
-    backgroundImage: `radial-gradient(circle at 30% 40%, rgba(59,130,246,0.3) 0%, transparent 60%),
-                      radial-gradient(circle at 80% 70%, rgba(6,182,212,0.2) 0%, transparent 60%)`
-  }} />
-  <div className="container mx-auto px-4 relative z-10">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0 }}
-        className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20 hover:border-blue-500/50 text-center"
-      >
-        <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110">
-          <Target size={28} className="text-white" />
-        </div>
-        <h3 className="text-2xl md:text-3xl font-bold text-white font-syne mb-3">Audit gratuit</h3>
-        <p className="text-gray-300 mb-6">
-          Bénéficiez d'un diagnostic complet de vos infrastructures sans engagement.
-        </p>
-        <Link to="/blog" className="inline-flex items-center gap-2 bg-white/10 border border-white/20 hover:bg-white/20 text-white px-6 py-2.5 rounded-xl font-semibold transition-all hover:scale-105">
-          Consultez notre blog <ArrowRight size={16} />
-        </Link>
-      </motion.div>
+      {/* ==================== CTA FINALE DOUBLE ==================== */}
+      <section className="py-20 section-alt" style={{ borderTop: '1px solid #E5E7EB' }}>
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
 
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-amber-500/20 hover:border-amber-500/50 text-center"
-      >
-        <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110">
-          <Handshake size={28} className="text-white" />
-        </div>
-        <h3 className="text-2xl md:text-3xl font-bold text-white font-syne mb-3">Devis personnalisé</h3>
-        <p className="text-gray-300 mb-6">
-          Recevez une proposition sur mesure adaptée à vos besoins et votre budget.
-        </p>
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0 }}
+              className="group card-hover p-8 text-center">
+              <div className="w-16 h-16 mx-auto mb-5 rounded-2xl flex items-center justify-center"
+                style={{ background: 'linear-gradient(135deg, #3b82f6, #2563eb)', boxShadow: '0 6px 20px rgba(37,99,235,0.25)' }}>
+                <Target size={28} className="text-white" />
+              </div>
+              <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3" style={{ fontFamily: "'Syne', sans-serif" }}>Audit gratuit</h3>
+              <p className="text-gray-500 mb-6 leading-relaxed">
+                Bénéficiez d'un diagnostic complet de vos infrastructures sans engagement.
+              </p>
+              <Link to="/blog" className="btn-outline inline-flex">
+                Consultez notre blog <ArrowRight size={16} />
+              </Link>
+            </motion.div>
 
-        <Link to="/inscription" className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 py-2.5 rounded-xl font-semibold transition-all hover:scale-105">
-          Inscrivez-vous dans notre Centre <ArrowRight size={16} />
-        </Link>
-      </motion.div>
-    </div>
-  </div>
-</section>
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="group card-hover p-8 text-center">
+              <div className="w-16 h-16 mx-auto mb-5 rounded-2xl flex items-center justify-center"
+                style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', boxShadow: '0 6px 20px rgba(217,119,6,0.25)' }}>
+                <Handshake size={28} className="text-white" />
+              </div>
+              <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3" style={{ fontFamily: "'Syne', sans-serif" }}>Devis personnalisé</h3>
+              <p className="text-gray-500 mb-6 leading-relaxed">
+                Recevez une proposition sur mesure adaptée à vos besoins et votre budget.
+              </p>
+              <Link to="/inscription" className="btn-accent inline-flex">
+                Inscrivez-vous dans notre Centre <ArrowRight size={16} />
+              </Link>
+            </motion.div>
+
+          </div>
+        </div>
+      </section>
     </>
   );
 };
 
 export default Home;
-
 
 
 

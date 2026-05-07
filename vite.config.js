@@ -3,8 +3,8 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/omedevservice/', // ⚠️ nom exact du repo
+  base: '/omedevservice/', // ⚠️ nom du repo GitHub
   build: {
-    outDir: 'docs'
+    outDir: 'dist'
   }
 })

@@ -60,9 +60,9 @@ const Navbar = () => {
           </div>
           <div>
             <span className="font-bold text-2xl text-gray-900 tracking-tight">
-              OMDEVE <span className="text-primary-600">Services</span>
+              Omedev <span className="text-primary-600"></span>
             </span>
-            <p className="text-[10px] text-gray-500 -mt-1 tracking-widest">SOLUTIONS IT & ÉNERGIE</p>
+            <p className="text-[10px] text-gray-500 -mt-1 tracking-widest">Services</p>
           </div>
         </Link>
 
