@@ -56,7 +56,8 @@ import EnergieEquipements from './pages/services/EnergieEquipements'
 import VenteMateriel from './pages/services/VenteMateriel'
 import Formation from './pages/services/Formation'
 import Inscription from './pages/services/Inscription'
-import DevisCloud from './pages/services/DevisCloud'
+import DevisCloud from './pages/services/DevisCloud';
+import Projets from './pages/services/Projets'
 
 // Routes où Navbar et Footer publiques doivent être masquées
 const HIDDEN_CHROME = ['/admin', '/client', '/login', '/register', '/forgot-password', '/reset-password']
@@ -99,6 +100,7 @@ function App() {
           <Route path="/services/vente-materiel" element={<VenteMateriel />} />
           <Route path="/services/formation" element={<Formation />} />
           <Route path="/devis-cloud" element={<DevisCloud />} />
+          <Route path="/projets" element={<Projets />} />
 
           {/* ========== AUTHENTIFICATION ========== */}
           <Route path="/login" element={<Login />} />

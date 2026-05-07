@@ -997,10 +997,10 @@ const RealisationsPage = () => {
                   Contactez-nous pour discuter de votre besoin et obtenir un devis personnalisé.
                 </p>
                 <Link
-                  to="/contact"
+                  to="/projets"
                   className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-6 py-3 rounded-xl font-semibold transition-all hover:scale-105 hover:shadow-xl"
                 >
-                  Contactez-nous <ArrowRight size={18} />
+                  Voir la Gamerie de nos projets  <ArrowRight size={18} />
                 </Link>
               </motion.div>
             </div>
