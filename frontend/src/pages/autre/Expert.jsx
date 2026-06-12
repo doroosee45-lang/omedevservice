@@ -9,11 +9,12 @@ import {
 import { FaLinkedin, FaGithub, FaTwitter, FaInstagram, FaBehance } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
 
-import expert1 from '/src/assets/images/experts/os1.jpg';
+import expert1 from '/src/assets/images/experts/os5.jpeg';
 import expert2 from '/src/assets/images/experts/os2.jpg';
 import expert3 from '/src/assets/images/experts/os3.jpeg';
-import expert4 from '/src/assets/images/experts/os4.jpg';
-import expert5 from '/src/assets/images/experts/os5.jpeg';
+import expert4 from '/src/assets/images/experts/st.jpeg';
+import expert5 from '/src/assets/images/experts/os1.jpg';
+
 import expert6 from '/src/assets/images/experts/fido.jpeg';
 import expert7 from '/src/assets/images/experts/am.jpeg';
 import expert8 from '/src/assets/images/experts/ro.jpeg';
@@ -266,7 +267,7 @@ const Experts = () => {
       name: 'Meya Dorodoro',
       role: 'CEO & Fondateur',
       position: 'Expert en Informatique Appliquée & Développeur Full-Stack',
-      bio: "Plus de 15 ans d'expérience en infrastructure IT et cybersécurité en Afrique centrale. Visionnaire et passionné par l'innovation technologique.",
+      bio: "Plus de 7 ans d'expérience en infrastructure IT et cybersécurité en Afrique centrale. Visionnaire et passionné par l'innovation technologique.",
       image: expert1,
       gradient: 'from-blue-500 to-blue-700',
       posClass: 'pos1',
@@ -289,7 +290,7 @@ const Experts = () => {
     },
     {
       id: 3,
-      name: 'Paul Kasongo',
+      name: 'Adine Munoko',
       role: 'Responsable Énergie',
       position: 'Ingénieur Énergies Renouvelables',
       bio: "Ingénieur en énergies renouvelables, il pilote nos projets solaires et d'efficacité énergétique. Expert en solutions photovoltaïques.",
