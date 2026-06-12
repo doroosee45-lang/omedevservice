@@ -13,7 +13,12 @@ connectDB();
 const app = express();
 
 // Middleware
-app.use(cors()); // Permet les requêtes depuis le front-end
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production'
+    ? [process.env.FRONTEND_URL, 'https://doroosee45-lang.github.io'].filter(Boolean)
+    : true,
+  credentials: true,
+}));
 app.use(express.json()); // Pour parser le JSON des requêtes
 app.use(express.urlencoded({ extended: true })); // Pour parser les données de formulaire
 
