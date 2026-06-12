@@ -55,6 +55,7 @@ app.use('/api/history', require('./routes/historyRoutes'));
 app.use('/api/ferronnerie-projects', require('./routes/ferronnerieProjectRoutes'));
 app.use('/api/assistant', require('./routes/assistantRoutes'));
 app.use('/api/newsletter', require('./routes/newsletterRoutes'));
+app.use('/api/vente-materiel', require('./routes/venteMaterielRoutes'));
 
 // Middleware de gestion d'erreurs global (à placer après toutes les routes)
 const { errorHandler } = require('./middleware/errorMiddleware');

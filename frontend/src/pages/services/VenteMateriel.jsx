@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { venteMateriel as vmApi } from '../../services/api'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Computer, 
@@ -88,6 +89,10 @@ const floatVariants = {
   }
 };
 
+// Icônes par catégorie pour l'affichage des produits API
+const CATEGORY_ICONS = { Ordinateurs: Computer, Climatisation: Wind, Sécurité: Camera, Réseau: Wifi, Composants: HardDrive, Accessoires: Mouse, Serveurs: Server, Autre: ShoppingBag }
+const CATEGORY_GRADIENTS = { Ordinateurs: 'from-blue-500 to-blue-600', Climatisation: 'from-cyan-500 to-cyan-600', Sécurité: 'from-indigo-500 to-indigo-600', Réseau: 'from-purple-500 to-purple-600', Composants: 'from-blue-500 to-cyan-500', Accessoires: 'from-emerald-500 to-emerald-600', Serveurs: 'from-blue-500 to-indigo-500', Autre: 'from-gray-500 to-gray-600' }
+
 const VenteMateriel = () => {
   const [showOrderForm, setShowOrderForm] = useState(false)
   const [step, setStep] = useState(1)
@@ -106,18 +111,19 @@ const VenteMateriel = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [orderComplete, setOrderComplete] = useState(false)
   const [orderNumber, setOrderNumber] = useState('')
+  const [products, setProducts] = useState([])
 
-  const products = [
-    { id: 1, name: "Ordinateur Portable Professionnel", category: "Ordinateurs", description: "PC portable 15.6\" Intel Core i7, 16 Go RAM, SSD 512 Go", price: 899, priceFormatted: "899 €", image: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=400&h=250&fit=crop", icon: Computer, gradient: "from-blue-500 to-blue-600" },
-    { id: 2, name: "Climatiseur Mobile 12000 BTU", category: "Climatisation", description: "Climatiseur monobloc, mode froid/chauffage", price: 449, priceFormatted: "449 €", image: "https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=400&h=250&fit=crop", icon: Wind, gradient: "from-cyan-500 to-cyan-600" },
-    { id: 3, name: "Caméra de Surveillance 4K", category: "Sécurité", description: "Caméra IP extérieure, vision nocturne, détection mouvement", price: 129, priceFormatted: "129 €", image: "https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?w=400&h=250&fit=crop", icon: Camera, gradient: "from-indigo-500 to-indigo-600" },
-    { id: 4, name: "Switch Gigabit 24 ports", category: "Réseau", description: "Switch administrable, 24 ports Gigabit, PoE+", price: 349, priceFormatted: "349 €", image: "https://images.unsplash.com/photo-1611095556210-4f2e6a8b4e1a?w=400&h=250&fit=crop", icon: Wifi, gradient: "from-purple-500 to-purple-600" },
-    { id: 5, name: "SSD NVMe 1 To", category: "Composants", description: "Disque SSD ultra-rapide, lecture 7000 Mo/s", price: 109, priceFormatted: "109 €", image: "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=400&h=250&fit=crop", icon: HardDrive, gradient: "from-blue-500 to-cyan-500" },
-    { id: 6, name: "Souris & Clavier sans fil", category: "Accessoires", description: "Set ergonomique, connexion 2.4 GHz", price: 49, priceFormatted: "49 €", image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&h=250&fit=crop", icon: Mouse, gradient: "from-emerald-500 to-emerald-600" },
-    { id: 7, name: "Serveur Tour Dell PowerEdge", category: "Serveurs", description: "Intel Xeon, 32 Go RAM, 4 baies SAS", price: 1899, priceFormatted: "1 899 €", image: "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=400&h=250&fit=crop", icon: Server, gradient: "from-blue-500 to-indigo-500" },
-    { id: 8, name: "Kit Caméras Wi-Fi (4 caméras)", category: "Sécurité", description: "Pack 4 caméras intérieures, vision 360°", price: 199, priceFormatted: "199 €", image: "https://images.unsplash.com/photo-1580128665081-1fbf9b8a1c3d?w=400&h=250&fit=crop", icon: Camera, gradient: "from-cyan-500 to-indigo-500" },
-    { id: 9, name: "Climatiseur Réversible Gainable", category: "Climatisation", description: "Puissance 18000 BTU, silence, gain énergétique", price: 2290, priceFormatted: "2 290 €", image: "https://images.unsplash.com/photo-1631549916768-4119b2e5f926?w=400&h=250&fit=crop", icon: Wind, gradient: "from-teal-500 to-cyan-500" }
-  ]
+  useEffect(() => {
+    vmApi.getProducts()
+      .then(res => setProducts(res.data.map(p => ({
+        ...p,
+        id: p._id,
+        priceFormatted: p.price?.toLocaleString('fr-FR') + ' €',
+        icon: CATEGORY_ICONS[p.category] || ShoppingBag,
+        gradient: CATEGORY_GRADIENTS[p.category] || 'from-gray-500 to-gray-600',
+      }))))
+      .catch(err => console.error('Erreur chargement produits:', err))
+  }, [])
 
   const features = [
     { icon: Computer, title: 'Ordinateurs & périphériques', desc: 'PC, Mac, écrans, claviers, souris', gradient: 'from-blue-500 to-blue-600' },
@@ -168,12 +174,27 @@ const VenteMateriel = () => {
 
   const submitOrder = async () => {
     setIsSubmitting(true)
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    const newOrderNumber = 'CMD-' + Math.floor(Math.random() * 1000000)
-    setOrderNumber(newOrderNumber)
-    setOrderComplete(true)
-    setIsSubmitting(false)
-    console.log('Commande envoyée', { product: selectedProduct, quantity, ...formData, total: totalPrice, orderNumber: newOrderNumber })
+    try {
+      const res = await vmApi.createOrder({
+        productId: selectedProduct?._id || selectedProduct?.id,
+        quantity,
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+        city: formData.city,
+        postalCode: formData.postalCode,
+        country: formData.country,
+        paymentMethod: formData.paymentMethod,
+      })
+      setOrderNumber(res.data?.orderNumber || 'CMD-' + Math.floor(Math.random() * 1000000))
+      setOrderComplete(true)
+    } catch (err) {
+      console.error('Erreur commande:', err)
+      alert('Erreur lors de l\'envoi de la commande. Veuillez réessayer.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const steps = [

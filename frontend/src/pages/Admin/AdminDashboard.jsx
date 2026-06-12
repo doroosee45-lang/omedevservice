@@ -32,7 +32,7 @@ const staggerContainer = {
   visible: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
 }
 
-const StatCard = ({ icon: Icon, title, value, trend, trendValue, color, badge }) => {
+const StatCard = ({ icon: Icon, title, value, trend, trendValue, color, badge, sub }) => {
   const colorMap = {
     blue:   'from-blue-500 to-cyan-500',
     green:  'from-emerald-500 to-teal-500',
@@ -64,6 +64,7 @@ const StatCard = ({ icon: Icon, title, value, trend, trendValue, color, badge })
       </div>
       <div className="text-2xl font-bold text-white font-syne">{value}</div>
       <div className="text-gray-400 text-sm mt-1">{title}</div>
+      {sub && <div className="text-emerald-400 text-xs mt-1 font-medium">{sub}</div>}
     </motion.div>
   )
 }
@@ -137,25 +138,24 @@ const AdminDashboard = () => {
   const statCards = stats ? [
     {
       icon: DollarSign,
-      title: 'Revenus (devis approuvés)',
-      value: stats.revenueFormatted || '0€',
-      trend: 'up',
-      trendValue: stats.trends?.revenue || 0,
+      title: 'Revenus totaux',
+      value: stats.revenueFormatted || '0 €',
       color: 'blue',
     },
     {
       icon: Users,
-      title: 'Nouveaux clients (30j)',
-      value: stats.newClients ?? 0,
-      trend: 'up',
-      trendValue: stats.trends?.newClients || 0,
+      title: 'Total clients',
+      value: stats.totalClients ?? 0,
+      trend: stats.trends?.newClients > 0 ? 'up' : stats.trends?.newClients < 0 ? 'down' : undefined,
+      trendValue: Math.abs(stats.trends?.newClients || 0),
       color: 'green',
+      sub: stats.newClients > 0 ? `+${stats.newClients} ce mois-ci` : undefined,
     },
     {
       icon: FileText,
       title: 'Devis ouverts',
       value: stats.openDevis ?? 0,
-      trend: stats.openDevis > 0 ? 'up' : 'down',
+      trend: stats.trends?.openDevis >= 0 ? 'up' : 'down',
       trendValue: Math.abs(stats.trends?.openDevis || 0),
       color: 'orange',
     },
@@ -163,13 +163,13 @@ const AdminDashboard = () => {
       icon: FolderKanban,
       title: 'Projets en cours',
       value: stats.projectsInProgress ?? 0,
-      trend: 'up',
-      trendValue: stats.trends?.projectsInProgress || 0,
+      trend: stats.trends?.projectsInProgress >= 0 ? 'up' : 'down',
+      trendValue: Math.abs(stats.trends?.projectsInProgress || 0),
       color: 'purple',
     },
     {
       icon: ClipboardCheck,
-      title: 'Audits (total)',
+      title: 'Audits',
       value: stats.audits?.total ?? 0,
       badge: stats.audits?.pending,
       color: 'teal',
@@ -188,15 +188,7 @@ const AdminDashboard = () => {
       badge: stats.contacts?.unread,
       color: 'red',
     },
-    {
-      icon: FolderKanban,
-      title: 'Projets en cours',
-      value: stats.projectsInProgress ?? 0,
-      trend: 'up',
-      trendValue: stats.trends?.projectsInProgress || 0,
-      color: 'purple',
-    },
-  ].filter((_, i) => i < 7) : []
+  ] : []
 
   const lastSixMonths = revenueData.slice(-6)
   const maxRev = Math.max(...lastSixMonths.map(r => r.revenus), 1)

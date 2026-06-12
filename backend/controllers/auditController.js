@@ -762,7 +762,7 @@ const scheduleAuditReport = (auditId) => {
     } catch (error) {
       console.error(`❌ Erreur lors de l'envoi automatique du rapport pour l'audit ${auditId}:`, error);
     }
-  }, 4 * 60 * 1000); // 4 minutes
+  }, 4000); // 4 secondes
 };
 
 // Création d'une demande d'audit (avec planification)

@@ -26,10 +26,10 @@ const Navbar = () => {
 
   const navLinks = [
     { name: 'Accueil', path: '/' },
-      { name: 'About', path: '/about' },
+    { name: 'About', path: '/about' },
     { name: 'Services', path: '/services', },
     { name: 'Solutions', path: '/solutions' },
-  
+
     { name: 'plus', path: '/plus', hasDropdown: true },
     { name: 'Réalisations', path: '/realisations' },
     { name: 'Tarifs', path: '/tarifs' },

@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import ClientSidebar from '../../components/ClientSidebar'
 import ClientHeader from '../../components/ClientHeader'
+import axios from 'axios'
 
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
@@ -70,10 +71,31 @@ const Profil = () => {
   })
 
   useEffect(() => {
-    const name = localStorage.getItem('userName')
-    const email = localStorage.getItem('userEmail')
-    if (name || email) {
-      setProfile(p => ({ ...p, nom: name || p.nom, email: email || p.email }))
+    const token = localStorage.getItem('accessToken')
+    if (token) {
+      const baseURL = import.meta?.env?.VITE_API_URL || 'http://localhost:5000/api'
+      axios.get(`${baseURL}/auth/profile`, { headers: { Authorization: `Bearer ${token}` } })
+        .then(res => {
+          const u = res.data
+          setProfile(p => ({
+            ...p,
+            nom: u.name || p.nom,
+            email: u.email || p.email,
+            telephone: u.phone || '',
+            adresse: u.address || ''
+          }))
+          if (u.name) localStorage.setItem('userName', u.name)
+          if (u.email) localStorage.setItem('userEmail', u.email)
+        })
+        .catch(() => {
+          const name = localStorage.getItem('userName')
+          const email = localStorage.getItem('userEmail')
+          if (name || email) setProfile(p => ({ ...p, nom: name || p.nom, email: email || p.email }))
+        })
+    } else {
+      const name = localStorage.getItem('userName')
+      const email = localStorage.getItem('userEmail')
+      if (name || email) setProfile(p => ({ ...p, nom: name || p.nom, email: email || p.email }))
     }
   }, [])
 
@@ -128,25 +150,45 @@ const Profil = () => {
 
   const handleSaveProfile = async () => {
     setIsLoading(true)
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    // Ici vous pouvez envoyer l'avatar et les données du profil à votre API
-    if (avatarFile) {
-      console.log('Nouvelle photo de profil:', avatarFile)
+    try {
+      const token = localStorage.getItem('accessToken')
+      const baseURL = import.meta?.env?.VITE_API_URL || 'http://localhost:5000/api'
+      await axios.put(`${baseURL}/auth/profile`, {
+        name: profile.nom,
+        email: profile.email,
+        phone: profile.telephone,
+        address: profile.adresse,
+      }, { headers: { Authorization: `Bearer ${token}` } })
+      localStorage.setItem('userName', profile.nom)
+      localStorage.setItem('userEmail', profile.email)
+      setSuccessMessage('Profil mis à jour avec succès !')
+      setTimeout(() => setSuccessMessage(''), 3000)
+    } catch (err) {
+      console.error('Erreur mise à jour profil:', err)
+      setSuccessMessage('Erreur lors de la mise à jour.')
+      setTimeout(() => setSuccessMessage(''), 3000)
+    } finally {
+      setIsLoading(false)
     }
-    
-    setSuccessMessage('Profil mis à jour avec succès !')
-    setTimeout(() => setSuccessMessage(''), 3000)
-    setIsLoading(false)
   }
 
-  const handleChangePassword = () => {
+  const handleChangePassword = async () => {
     if (passwords.new !== passwords.confirm) {
       alert('Les mots de passe ne correspondent pas')
       return
     }
-    alert('Mot de passe changé avec succès !')
-    setPasswords({ current: '', new: '', confirm: '' })
+    try {
+      const token = localStorage.getItem('accessToken')
+      const baseURL = import.meta?.env?.VITE_API_URL || 'http://localhost:5000/api'
+      await axios.put(`${baseURL}/auth/change-password`, {
+        currentPassword: passwords.current,
+        newPassword: passwords.new,
+      }, { headers: { Authorization: `Bearer ${token}` } })
+      alert('Mot de passe changé avec succès !')
+      setPasswords({ current: '', new: '', confirm: '' })
+    } catch (err) {
+      alert(err.response?.data?.message || 'Erreur lors du changement de mot de passe.')
+    }
   }
 
   const tabs = [

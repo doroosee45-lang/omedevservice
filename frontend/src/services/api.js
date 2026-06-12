@@ -20,31 +20,35 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Routes publiques (pas de token)
-const publicRoutes = [
-  '/auth/login',
-  '/auth/register',
-  '/auth/forgot-password',
-  '/auth/reset-password',
-  '/contact',
-  '/quote-requests',
-  '/audit-requests',
-  '/newsletter/subscribe',
-  '/newsletter/unsubscribe',
-];
-
+// Intercepteur requête : ajoute le token si présent (toujours, le backend décide si requis)
 api.interceptors.request.use(
   (config) => {
-    const isPublic = publicRoutes.some(route => config.url.includes(route));
-    if (!isPublic) {
-      const token = localStorage.getItem('accessToken');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
   (error) => Promise.reject(error)
+);
+
+// Intercepteur réponse : redirige vers /login si 401 (token expiré ou manquant)
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      const isAuthRoute = error.config?.url?.includes('/auth/');
+      if (!isAuthRoute) {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('userRole');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userId');
+        window.location.href = '/login';
+      }
+    }
+    return Promise.reject(error);
+  }
 );
 
 
@@ -208,6 +212,25 @@ export const newsletter = {
 export const assistant = {
   chat: (message, sessionId) => api.post('/assistant/chat', { message, sessionId }),
   clearSession: (sessionId) => api.delete(`/assistant/session/${sessionId}`),
+};
+
+// ==================== VENTE MATÉRIEL ====================
+export const venteMateriel = {
+  // Produits
+  getProducts: () => api.get('/vente-materiel/products'),
+  getAllProducts: () => api.get('/vente-materiel/products/all'),
+  createProduct: (data) => api.post('/vente-materiel/products', data),
+  updateProduct: (id, data) => api.put(`/vente-materiel/products/${id}`, data),
+  deleteProduct: (id) => api.delete(`/vente-materiel/products/${id}`),
+  // Commandes
+  createOrder: (data) => api.post('/vente-materiel/orders', data),
+  trackOrder: (orderNumber) => api.get(`/vente-materiel/orders/track/${orderNumber}`),
+  getMyOrders: () => api.get('/vente-materiel/orders/my-orders'),
+  getAllOrders: (params) => api.get('/vente-materiel/orders', { params }),
+  getOrderById: (id) => api.get(`/vente-materiel/orders/${id}`),
+  updateOrderStatus: (id, data) => api.put(`/vente-materiel/orders/${id}/status`, data),
+  deleteOrder: (id) => api.delete(`/vente-materiel/orders/${id}`),
+  getStats: () => api.get('/vente-materiel/orders/stats'),
 };
 
 // ==================== FERRONNERIE PROJETS ====================

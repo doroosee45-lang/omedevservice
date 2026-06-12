@@ -230,6 +230,26 @@ const AdminClients = () => {
         </div>
       </motion.div>
 
+      {/* Stats récap */}
+      <motion.div
+        variants={fadeUp}
+        initial="hidden"
+        animate="visible"
+        className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6"
+      >
+        {[
+          { label: 'Total utilisateurs', value: clients.length, color: 'text-white', bg: 'bg-blue-500/20 border-blue-500/30' },
+          { label: 'Clients', value: clients.filter(c => c.role === 'client').length, color: 'text-emerald-400', bg: 'bg-emerald-500/20 border-emerald-500/30' },
+          { label: 'Admins / Managers', value: clients.filter(c => ['admin','super_admin','manager'].includes(c.role)).length, color: 'text-purple-400', bg: 'bg-purple-500/20 border-purple-500/30' },
+          { label: 'Comptes actifs', value: clients.filter(c => c.status !== 'inactive' && c.isActive !== false).length, color: 'text-cyan-400', bg: 'bg-cyan-500/20 border-cyan-500/30' },
+        ].map((s, i) => (
+          <div key={i} className={`rounded-xl border p-4 ${s.bg} backdrop-blur-sm`}>
+            <p className={`text-2xl font-bold font-syne ${s.color}`}>{s.value}</p>
+            <p className="text-gray-400 text-xs mt-1">{s.label}</p>
+          </div>
+        ))}
+      </motion.div>
+
       {/* Filters */}
       <motion.div
         variants={fadeUp}

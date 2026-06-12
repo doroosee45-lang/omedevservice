@@ -18,6 +18,7 @@ import {
   MessageSquare,
   Hammer,
   Send,
+  ShoppingBag,
 } from 'lucide-react'
 
 const globalStyles = `
@@ -47,6 +48,7 @@ const AdminLayout = () => {
     { path: '/admin/ferronnerie-projets', icon: Hammer,          label: 'Ferronnerie — Portfolio' },
     { path: '/admin/newsletter',          icon: Send,            label: 'Newsletter — Abonnés'    },
     { path: '/admin/blog',                icon: BookOpen,        label: 'Blog & configuration'    },
+    { path: '/admin/vente-materiel',      icon: ShoppingBag,     label: 'Vente de Matériel'       },
   ]
 
   const isActive = (path) => location.pathname === path || location.pathname.startsWith(path + '/')
@@ -67,12 +69,12 @@ const AdminLayout = () => {
               >
                 {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
-              <div className="flex items-center gap-2">
+              <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
                 <div className="w-8 h-8 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center">
                   <span className="text-white font-bold text-sm">AD</span>
                 </div>
                 <span className="font-syne font-bold text-white hidden sm:block">OMDEVE Admin</span>
-              </div>
+              </Link>
             </div>
 
             <div className="flex items-center gap-4">
@@ -96,12 +98,12 @@ const AdminLayout = () => {
         {/* Sidebar */}
         <aside className={`fixed top-0 left-0 h-full w-64 bg-white/10 backdrop-blur-md border-r border-white/10 z-40 transform transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
           <div className="p-6 h-full flex flex-col">
-            <div className="flex items-center gap-2 mb-8">
+            <Link to="/" className="flex items-center gap-2 mb-8 hover:opacity-80 transition-opacity">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center">
                 <span className="text-white font-bold text-lg">AD</span>
               </div>
               <span className="font-syne font-bold text-white">OMDEVE Admin</span>
-            </div>
+            </Link>
 
             <nav className="space-y-1 flex-1 overflow-y-auto">
               {navItems.map((item) => (

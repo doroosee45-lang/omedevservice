@@ -54,6 +54,7 @@ import AdminContacts from './pages/Admin/AdminContacts'
 import AdminDemandesDevis from './pages/Admin/AdminDemandesDevis'
 import AdminFerronnerieProjects from './pages/Admin/AdminFerronnerieProjects'
 import AdminNewsletter from './pages/Admin/AdminNewsletter'
+import AdminVenteMateriel from './pages/Admin/AdminVenteMateriel'
 import NewsletterUnsubscribe from './pages/NewsletterUnsubscribe'
 
 // Services
@@ -146,6 +147,7 @@ function App() {
             <Route path="ferronnerie-projets" element={<AdminFerronnerieProjects />} />
             <Route path="newsletter" element={<AdminNewsletter />} />
             <Route path="blog" element={<AdminBlog />} />
+            <Route path="vente-materiel" element={<AdminVenteMateriel />} />
           </Route>
 
           {/* ========== REDIRECTION 404 ========== */}

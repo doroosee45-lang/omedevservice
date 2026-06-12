@@ -13,58 +13,83 @@ const ContactMessage = require('../models/ContactMessage');
 // @route   GET /api/dashboard/admin/stats
 // @access  Private/Admin
 const getAdminStats = async (req, res) => {
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const now = new Date();
+  const thirtyDaysAgo = new Date(now); thirtyDaysAgo.setDate(now.getDate() - 30);
+  const sixtyDaysAgo  = new Date(now); sixtyDaysAgo.setDate(now.getDate() - 60);
 
   const [
     approvedDevis,
-    newClients,
+    totalClients,
+    newClientsThisPeriod,
+    newClientsPrevPeriod,
+    totalUsers,
+    activeClients,
     openDevis,
+    prevOpenDevis,
     projectsInProgress,
+    prevProjectsInProgress,
     pendingAudits,
     totalAudits,
     pendingQuoteRequests,
     totalQuoteRequests,
     unreadContacts,
     totalContacts,
+    totalProjects,
+    totalDevis,
   ] = await Promise.all([
     Devis.find({ status: 'approved' }),
-    User.countDocuments({ createdAt: { $gte: thirtyDaysAgo }, role: 'client' }),
+    User.countDocuments({ role: 'client' }),
+    User.countDocuments({ role: 'client', createdAt: { $gte: thirtyDaysAgo } }),
+    User.countDocuments({ role: 'client', createdAt: { $gte: sixtyDaysAgo, $lt: thirtyDaysAgo } }),
+    User.countDocuments(),
+    User.countDocuments({ role: 'client', isActive: { $ne: false } }),
     Devis.countDocuments({ status: { $in: ['pending', 'processing'] } }),
+    Devis.countDocuments({ status: { $in: ['pending', 'processing'] }, createdAt: { $lt: thirtyDaysAgo } }),
     Project.countDocuments({ status: { $in: ['progress', 'review'] } }),
+    Project.countDocuments({ status: { $in: ['progress', 'review'] }, createdAt: { $lt: thirtyDaysAgo } }),
     AuditRequest.countDocuments({ status: 'pending' }),
     AuditRequest.countDocuments(),
     QuoteRequest.countDocuments({ status: 'pending' }),
     QuoteRequest.countDocuments(),
     ContactMessage.countDocuments({ isRead: false }),
     ContactMessage.countDocuments(),
+    Project.countDocuments(),
+    Devis.countDocuments(),
   ]);
 
   const totalRevenue = approvedDevis.reduce((sum, d) => sum + (d.estimatedAmount || 0), 0);
 
+  // Calcul des tendances réelles (variation % sur 30j)
+  const trendPct = (current, previous) => {
+    if (previous === 0) return current > 0 ? 100 : 0;
+    return Math.round(((current - previous) / previous) * 100);
+  };
+
   res.json({
     revenue: totalRevenue,
     revenueFormatted: `${totalRevenue.toLocaleString('fr-FR')}€`,
-    newClients,
+    // Clients
+    totalClients,
+    newClients: newClientsThisPeriod,
+    activeClients,
+    totalUsers,
+    // Activité
     openDevis,
     projectsInProgress,
-    audits: {
-      total: totalAudits,
-      pending: pendingAudits,
-    },
-    quoteRequests: {
-      total: totalQuoteRequests,
-      pending: pendingQuoteRequests,
-    },
-    contacts: {
-      total: totalContacts,
-      unread: unreadContacts,
-    },
+    totalProjects,
+    totalDevis,
+    // Audits
+    audits: { total: totalAudits, pending: pendingAudits },
+    // Demandes de devis
+    quoteRequests: { total: totalQuoteRequests, pending: pendingQuoteRequests },
+    // Contacts
+    contacts: { total: totalContacts, unread: unreadContacts },
+    // Tendances réelles
     trends: {
-      revenue: 15,
-      newClients: 8,
-      openDevis: -2,
-      projectsInProgress: 25,
+      revenue: 0,
+      newClients: trendPct(newClientsThisPeriod, newClientsPrevPeriod),
+      openDevis: trendPct(openDevis, prevOpenDevis),
+      projectsInProgress: trendPct(projectsInProgress, prevProjectsInProgress),
     },
   });
 };

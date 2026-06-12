@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useForm } from 'react-hook-form'
@@ -281,6 +281,30 @@ const AuditGratuit = () => {
     { number: 5, title: 'Contact', icon: User }
   ]
 
+  // Compte à rebours pour l'envoi du PDF (4 secondes)
+  const [emailCountdown, setEmailCountdown] = useState(null)
+  const [emailSent, setEmailSent] = useState(false)
+  const countdownRef = useRef(null)
+
+  useEffect(() => {
+    if (step === 6 && auditResult) {
+      setEmailCountdown(4)
+      setEmailSent(false)
+      let count = 4
+      countdownRef.current = setInterval(() => {
+        count -= 1
+        if (count <= 0) {
+          clearInterval(countdownRef.current)
+          setEmailCountdown(0)
+          setEmailSent(true)
+        } else {
+          setEmailCountdown(count)
+        }
+      }, 1000)
+    }
+    return () => clearInterval(countdownRef.current)
+  }, [step, auditResult])
+
   // Écran de résultat
   if (auditResult && step === 6) {
     const rec = auditResult.recommendations
@@ -415,6 +439,53 @@ const AuditGratuit = () => {
               </div>
 
               <div className="p-8 text-center border-t border-white/10">
+                {/* Notification envoi email PDF */}
+                <AnimatePresence mode="wait">
+                  {!emailSent ? (
+                    <motion.div
+                      key="countdown"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="mb-6 flex items-center justify-center gap-3 px-5 py-3 bg-blue-500/15 border border-blue-500/30 rounded-xl"
+                    >
+                      <div className="relative flex-shrink-0">
+                        <svg className="w-10 h-10 -rotate-90">
+                          <circle cx="20" cy="20" r="17" fill="none" strokeWidth="3" stroke="#1e3a5f" />
+                          <circle
+                            cx="20" cy="20" r="17" fill="none" strokeWidth="3"
+                            stroke="#3b82f6"
+                            strokeDasharray={2 * Math.PI * 17}
+                            strokeDashoffset={2 * Math.PI * 17 * ((emailCountdown ?? 4) / 4)}
+                            strokeLinecap="round"
+                            style={{ transition: 'stroke-dashoffset 1s linear' }}
+                          />
+                        </svg>
+                        <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-blue-400">
+                          {emailCountdown ?? 4}
+                        </span>
+                      </div>
+                      <div className="text-left">
+                        <p className="text-blue-300 font-semibold text-sm">Envoi du rapport PDF en cours…</p>
+                        <p className="text-gray-400 text-xs">Votre rapport sera envoyé à <span className="text-blue-300">{auditResult.email}</span></p>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="sent"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="mb-6 flex items-center justify-center gap-3 px-5 py-3 bg-emerald-500/15 border border-emerald-500/30 rounded-xl"
+                    >
+                      <CheckCircle className="w-6 h-6 text-emerald-400 flex-shrink-0" />
+                      <div className="text-left">
+                        <p className="text-emerald-300 font-semibold text-sm">Rapport PDF envoyé !</p>
+                        <p className="text-gray-400 text-xs">Vérifiez votre boîte mail : <span className="text-emerald-300">{auditResult.email}</span></p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
                 <button
                   onClick={downloadPDFReport}
                   className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all shadow-lg hover:shadow-xl"
@@ -422,9 +493,6 @@ const AuditGratuit = () => {
                   <Download className="w-5 h-5 mr-2" />
                   Télécharger le rapport PDF
                 </button>
-                <p className="text-xs text-gray-400 mt-4">
-                  Un email avec le rapport vous sera également envoyé à {auditResult.email}
-                </p>
               </div>
             </motion.div>
           </div>

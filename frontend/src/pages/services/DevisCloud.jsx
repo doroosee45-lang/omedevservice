@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import { Send, CheckCircle, ChevronLeft } from 'lucide-react'
+import { quoteRequests } from '../../services/api'
 
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
@@ -166,18 +167,29 @@ const DevisCloud = () => {
   const handleChange = (e) =>
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    setTimeout(() => {
-      console.log('Devis cloud :', formData)
+    try {
+      await quoteRequests.create({
+        name: formData.nom,
+        email: formData.email,
+        phone: formData.telephone,
+        company: formData.entreprise,
+        service: formData.service || 'Cloud & Hébergement',
+        budget: formData.budget,
+        message: `Type de projet: ${formData.typeProjet} | Date souhaitée: ${formData.dateSouhaitee}\n\n${formData.message}`,
+      })
       setSubmitted(true)
-      setLoading(false)
       setTimeout(() => {
         setSubmitted(false)
         setFormData(EMPTY_FORM)
       }, 3500)
-    }, 1500)
+    } catch (err) {
+      console.error('Erreur devis cloud:', err)
+    } finally {
+      setLoading(false)
+    }
   }
 
   /* ── styles communs ── */

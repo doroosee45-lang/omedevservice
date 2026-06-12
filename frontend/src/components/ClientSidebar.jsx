@@ -71,17 +71,19 @@ const ClientSidebar = () => {
       {/* Logo + Bouton collapse */}
       <div className={`p-6 border-b border-gray-700 flex items-center justify-between ${isCollapsed ? 'flex-col gap-4' : ''}`}>
         {!isCollapsed && (
-          <div className="flex items-center space-x-2">
+          <NavLink to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
               <span className="font-bold text-white text-sm">OM</span>
             </div>
             <span className="font-bold text-white text-lg">OMDEVE</span>
-          </div>
+          </NavLink>
         )}
         {isCollapsed && (
-          <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
-            <span className="font-bold text-white text-sm">OM</span>
-          </div>
+          <NavLink to="/" className="hover:opacity-80 transition-opacity">
+            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+              <span className="font-bold text-white text-sm">OM</span>
+            </div>
+          </NavLink>
         )}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import { quoteRequests } from '../../services/api'
 import {
   GraduationCap,
   User,
@@ -69,17 +70,28 @@ const Inscription = () => {
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value })
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    setTimeout(() => {
+    try {
+      await quoteRequests.create({
+        name: formData.nom,
+        email: formData.email,
+        phone: formData.telephone,
+        service: 'Formation',
+        serviceType: formData.formation,
+        message: `Formation: ${formData.formation} | Centre: ${formData.centre} | Disponibilité: ${formData.disponibilite} | Financement: ${formData.financement}\n\n${formData.message}`,
+      })
       setSubmitted(true)
-      setLoading(false)
       setTimeout(() => {
         setSubmitted(false)
         setFormData({ nom:'', email:'', telephone:'', formation:'', centre:'', disponibilite:'', financement:'', message:'' })
       }, 4000)
-    }, 1600)
+    } catch (err) {
+      console.error('Erreur inscription formation:', err)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const formationsList    = ["Réseaux & Infrastructure","Cybersécurité","Cloud & Virtualisation","Développement DevOps","Soft skills IT","Préparation certifications"]
