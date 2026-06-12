@@ -58,8 +58,10 @@ const server = app.listen(PORT, () => {
   console.log(`✅ Serveur démarré sur le port ${PORT} en mode ${process.env.NODE_ENV}`);
 });
 
-// Gestion des erreurs non capturées
-process.on('unhandledRejection', (err, promise) => {
-  console.log(`❌ Erreur: ${err.message}`);
-  server.close(() => process.exit(1));
+// Log les erreurs non capturées sans tuer le serveur
+process.on('unhandledRejection', (err) => {
+  console.error(`❌ UnhandledRejection: ${err.message}`);
+});
+process.on('uncaughtException', (err) => {
+  console.error(`❌ UncaughtException: ${err.message}`);
 });
