@@ -1,6 +1,7 @@
 // ==================== AdminClients.jsx ====================
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { users as usersApi } from '../../services/api'
 import { 
   Users, 
   Search, 
@@ -109,25 +110,31 @@ const AdminClients = () => {
   const [showModal, setShowModal] = useState(false)
   const [selectedClient, setSelectedClient] = useState(null)
   const [showAuditLog, setShowAuditLog] = useState(true)
-  const itemsPerPage = 12 // 4x3 grid
+  const [loading, setLoading] = useState(false)
+  const itemsPerPage = 12
 
-  const [clients, setClients] = useState([
-    { id: 1, name: 'Jean Dupont', email: 'jean.dupont@email.com', phone: '+243 555 503 59', role: 'client', status: 'active', date: '15/01/2024', totalProjects: 3 },
-    { id: 2, name: 'Marie Martin', email: 'marie.martin@email.com', phone: '+243 555 503 60', role: 'manager', status: 'active', date: '10/02/2024', totalProjects: 8 },
-    { id: 3, name: 'Admin OMDEVE', email: 'admin@omdeve.com', phone: '+243 555 503 61', role: 'super_admin', status: 'active', date: '01/01/2024', totalProjects: 15 },
-    { id: 4, name: 'Sophie Bernard', email: 'sophie@email.com', phone: '+243 555 503 62', role: 'admin', status: 'active', date: '20/03/2024', totalProjects: 12 },
-    { id: 5, name: 'Thomas Dubois', email: 'thomas@email.com', phone: '+243 555 503 63', role: 'client', status: 'inactive', date: '05/04/2024', totalProjects: 1 },
-    { id: 6, name: 'Isabelle Kabila', email: 'isabelle@email.com', phone: '+243 555 503 64', role: 'client', status: 'active', date: '10/04/2024', totalProjects: 2 },
-    { id: 7, name: 'François Lumumba', email: 'francois@email.com', phone: '+243 555 503 65', role: 'manager', status: 'active', date: '15/04/2024', totalProjects: 5 },
-    { id: 8, name: 'Rachel Mputu', email: 'rachel@email.com', phone: '+243 555 503 66', role: 'client', status: 'active', date: '20/04/2024', totalProjects: 1 },
-  ])
+  const [clients, setClients] = useState([])
+  const [auditLog, setAuditLog] = useState([])
 
-  const [auditLog, setAuditLog] = useState([
-    { id: 1, action: 'Modification rôle', user: 'Super Admin', target: 'Jean Dupont', targetId: 1, date: '15/04/2026 10:30' },
-    { id: 2, action: 'Désactivation compte', user: 'Admin', target: 'Thomas Dubois', targetId: 5, date: '14/04/2026 14:20' },
-    { id: 3, action: 'Création utilisateur', user: 'Super Admin', target: 'Sophie Bernard', targetId: 4, date: '13/04/2026 09:15' },
-    { id: 4, action: 'Modification statut', user: 'Manager', target: 'Marie Martin', targetId: 2, date: '12/04/2026 16:45' },
-  ])
+  useEffect(() => { loadUsers() }, [])
+
+  const loadUsers = async () => {
+    setLoading(true)
+    try {
+      const res = await usersApi.getAll()
+      const data = (res.data?.users || res.data || []).map(u => ({
+        ...u,
+        id: u._id,
+        date: u.createdAt ? new Date(u.createdAt).toLocaleDateString('fr-FR') : '',
+        totalProjects: u.totalProjects || 0,
+      }))
+      setClients(data)
+    } catch (err) {
+      console.error('Erreur chargement utilisateurs:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const getRoleBadge = (role) => {
     const badges = {
@@ -154,52 +161,37 @@ const AdminClients = () => {
     currentPage * itemsPerPage
   )
 
-  const handleSaveClient = (data) => {
-    if (selectedClient) {
-      setClients(clients.map(c => c.id === selectedClient.id ? { ...c, ...data } : c))
-      // Ajouter au journal d'audit
-      const newLog = {
-        id: auditLog.length + 1,
-        action: 'Modification profil',
-        user: 'Admin',
-        target: data.name,
-        targetId: selectedClient.id,
-        date: new Date().toLocaleString('fr-FR')
+  const handleSaveClient = async (data) => {
+    try {
+      if (selectedClient) {
+        await usersApi.update(selectedClient._id || selectedClient.id, {
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          role: data.role,
+        })
+        const log = { id: Date.now(), action: 'Modification profil', user: 'Admin', target: data.name, targetId: selectedClient.id, date: new Date().toLocaleString('fr-FR') }
+        setAuditLog(prev => [log, ...prev])
       }
-      setAuditLog([newLog, ...auditLog])
-    } else {
-      const newClient = { ...data, id: clients.length + 1, date: new Date().toLocaleDateString('fr-FR'), totalProjects: 0 }
-      setClients([...clients, newClient])
-      // Ajouter au journal d'audit
-      const newLog = {
-        id: auditLog.length + 1,
-        action: 'Création utilisateur',
-        user: 'Admin',
-        target: data.name,
-        targetId: newClient.id,
-        date: new Date().toLocaleString('fr-FR')
-      }
-      setAuditLog([newLog, ...auditLog])
+      setShowModal(false)
+      setSelectedClient(null)
+      await loadUsers()
+    } catch (err) {
+      console.error('Erreur sauvegarde utilisateur:', err)
     }
-    setShowModal(false)
-    setSelectedClient(null)
   }
 
-  const toggleStatus = (id) => {
-    const client = clients.find(c => c.id === id)
-    const newStatus = client.status === 'active' ? 'inactive' : 'active'
-    setClients(clients.map(c => c.id === id ? { ...c, status: newStatus } : c))
-    
-    // Ajouter au journal d'audit
-    const newLog = {
-      id: auditLog.length + 1,
-      action: newStatus === 'active' ? 'Activation compte' : 'Désactivation compte',
-      user: 'Admin',
-      target: client.name,
-      targetId: id,
-      date: new Date().toLocaleString('fr-FR')
+  const toggleStatus = async (id) => {
+    const client = clients.find(c => c.id === id || c._id === id)
+    try {
+      await usersApi.toggleStatus(id)
+      const newStatus = client?.status === 'active' ? 'inactive' : 'active'
+      const log = { id: Date.now(), action: newStatus === 'active' ? 'Activation compte' : 'Désactivation compte', user: 'Admin', target: client?.name, targetId: id, date: new Date().toLocaleString('fr-FR') }
+      setAuditLog(prev => [log, ...prev])
+      await loadUsers()
+    } catch (err) {
+      console.error('Erreur changement statut:', err)
     }
-    setAuditLog([newLog, ...auditLog])
   }
 
   const getInitials = (name) => {

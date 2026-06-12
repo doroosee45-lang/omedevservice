@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { projects as projectsApi } from '../../services/api'
 import { 
   FolderKanban, Calendar, Users, MessageCircle,
   CheckCircle, Clock, ArrowRight, X, Send,
@@ -380,74 +381,22 @@ const Projets = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [modalDiscuter, setModalDiscuter] = useState(null)
   const [modalDetails,  setModalDetails]  = useState(null)
+  const [projets, setProjets] = useState([])
 
-  const projets = [
-    {
-      id: 'PRJ-001',
-      name: 'Site E-commerce',
-      description: "Développement complet d'une plateforme e-commerce avec paiement intégré",
-      progress: 75,
-      status: 'in_progress',
-      startDate: '25/04/2026',
-      endDate: '30/06/2026',
-      team: ['Jean Tech', 'Marie Design', 'Paul Backend'],
-      tasks: [
-        { name: 'Maquettes UI/UX', completed: true },
-        { name: 'Développement Frontend', completed: true },
-        { name: 'Développement Backend', completed: false },
-        { name: 'Intégration paiement', completed: false },
-        { name: 'Tests & Déploiement', completed: false },
-      ]
-    },
-    {
-      id: 'PRJ-002',
-      name: 'Installation Réseau',
-      description: 'Installation réseau pour 50 postes + WiFi entreprise',
-      progress: 40,
-      status: 'in_progress',
-      startDate: '10/04/2026',
-      endDate: '20/05/2026',
-      team: ['Marc Infra', 'David Network'],
-      tasks: [
-        { name: 'Audit site', completed: true },
-        { name: 'Câblage structuré', completed: true },
-        { name: 'Configuration équipements', completed: false },
-        { name: 'Tests & validation', completed: false },
-      ]
-    },
-    {
-      id: 'PRJ-003',
-      name: 'Migration Cloud',
-      description: 'Migration complète des serveurs vers AWS avec formation',
-      progress: 25,
-      status: 'in_progress',
-      startDate: '01/05/2026',
-      endDate: '15/07/2026',
-      team: ['Sophie Cloud', 'Thomas DevOps'],
-      tasks: [
-        { name: 'Analyse infrastructure', completed: true },
-        { name: 'Migration données', completed: false },
-        { name: 'Configuration serveurs', completed: false },
-        { name: 'Formation équipe', completed: false },
-      ]
-    },
-    {
-      id: 'PRJ-004',
-      name: 'Audit Sécurité',
-      description: 'Audit complet de sécurité et conformité RGPD',
-      progress: 90,
-      status: 'in_progress',
-      startDate: '01/03/2026',
-      endDate: '30/04/2026',
-      team: ['Pierre Securité', 'Julie Conformité'],
-      tasks: [
-        { name: 'Scan vulnérabilités', completed: true },
-        { name: 'Test intrusion', completed: true },
-        { name: 'Rapport détaillé', completed: true },
-        { name: 'Plan correction', completed: false },
-      ]
-    },
-  ]
+  useEffect(() => {
+    projectsApi.getMyProjects().then(res => {
+      const data = (res.data?.projects || res.data || []).map(p => ({
+        ...p,
+        id: p.projectId || p._id,
+        status: p.status || 'in_progress',
+        startDate: p.startDate ? new Date(p.startDate).toLocaleDateString('fr-FR') : '',
+        endDate: p.endDate ? new Date(p.endDate).toLocaleDateString('fr-FR') : '',
+        team: p.team?.length ? p.team : [p.assignee].filter(Boolean),
+        tasks: p.tasks || [],
+      }))
+      setProjets(data)
+    }).catch(err => console.error('Erreur chargement projets:', err))
+  }, [])
 
   return (
     <>

@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import ClientSidebar from '../../components/ClientSidebar'
 import ClientHeader from '../../components/ClientHeader'
+import { clientDashboard as dashApi } from '../../services/api'
 
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
@@ -92,45 +93,38 @@ const ClientDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [userName, setUserName] = useState('Client')
   const [userEmail, setUserEmail] = useState('')
+  const [statsData, setStatsData] = useState(null)
+  const [recentDemandes, setRecentDemandes] = useState([])
+  const [activeProjects, setActiveProjects] = useState([])
 
   useEffect(() => {
-    // Récupérer les informations de l'utilisateur connecté depuis localStorage
     const name = localStorage.getItem('userName')
     const email = localStorage.getItem('userEmail')
-
-    if (name) {
-      setUserName(name)
-    } else {
-      // Fallback: essayer de récupérer depuis les utilisateurs stockés
-      const users = JSON.parse(localStorage.getItem('omdeve_users') || '[]')
-      const userEmailStored = localStorage.getItem('userEmail')
-      const user = users.find(u => u.email === userEmailStored)
-      if (user && user.name) {
-        setUserName(user.name)
-      }
-    }
-
-    if (email) {
-      setUserEmail(email)
-    }
+    if (name) setUserName(name)
+    if (email) setUserEmail(email)
+    loadDashboardData()
   }, [])
 
+  const loadDashboardData = async () => {
+    try {
+      const [statsRes, demandsRes, projectsRes] = await Promise.allSettled([
+        dashApi.getStats(),
+        dashApi.getRecentDemands(),
+        dashApi.getActiveProjects(),
+      ])
+      if (statsRes.status === 'fulfilled') setStatsData(statsRes.value.data)
+      if (demandsRes.status === 'fulfilled') setRecentDemandes(demandsRes.value.data?.demands || demandsRes.value.data || [])
+      if (projectsRes.status === 'fulfilled') setActiveProjects(projectsRes.value.data?.projects || projectsRes.value.data || [])
+    } catch (err) {
+      console.error('Erreur chargement dashboard client:', err)
+    }
+  }
+
   const stats = [
-    { icon: FileText, title: 'Demandes en cours', value: '3', color: 'blue' },
-    { icon: FolderKanban, title: 'Projets actifs', value: '2', color: 'green' },
-    { icon: Clock, title: 'En attente', value: '1', color: 'orange' },
-    { icon: Euro, title: 'Total facturé', value: '12 450€', color: 'purple', trend: true, trendValue: '15' },
-  ]
-
-  const recentDemandes = [
-    { id: 'DEV-001', service: 'Développement Digital', date: '15/04/2026', status: 'pending', amount: '5 000€' },
-    { id: 'DEV-002', service: 'Réseau & Infrastructure', date: '10/04/2026', status: 'approved', amount: '3 200€' },
-    { id: 'DEV-003', service: 'Sécurité', date: '05/04/2026', status: 'completed', amount: '2 800€' },
-  ]
-
-  const activeProjects = [
-    { id: 'PRJ-001', name: 'Site E-commerce', progress: 75, status: 'in_progress', nextMilestone: 'Livraison prévue le 30/05' },
-    { id: 'PRJ-002', name: 'Installation Réseau', progress: 40, status: 'in_progress', nextMilestone: 'Validation câblage' },
+    { icon: FileText, title: 'Demandes en cours', value: String(statsData?.demandesEnCours ?? '—'), color: 'blue' },
+    { icon: FolderKanban, title: 'Projets actifs', value: String(statsData?.projetsActifs ?? '—'), color: 'green' },
+    { icon: Clock, title: 'En attente', value: String(statsData?.enAttente ?? '—'), color: 'orange' },
+    { icon: Euro, title: 'Total facturé', value: statsData?.totalFacture ? `${statsData.totalFacture}€` : '—', color: 'purple' },
   ]
 
   const quickLinks = [

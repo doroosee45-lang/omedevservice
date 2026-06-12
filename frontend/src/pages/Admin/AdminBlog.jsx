@@ -1,8 +1,9 @@
 
 
 // src/pages/Admin/AdminBlog.jsx
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { blog as blogApi } from '../../services/api'
 import {
   BookOpen, Package, Settings, Plus, Edit, Trash2, Eye, Save,
   Globe, Share2, DollarSign, X, ExternalLink, Mail, Phone,
@@ -257,28 +258,36 @@ const ConfirmDialog = ({ message, onConfirm, onCancel }) => (
 const AdminBlog = () => {
   const [activeTab, setActiveTab] = useState('blog')
   const [toast, setToast] = useState(null)
+  const [loading, setLoading] = useState(false)
 
-  const [articles, setArticles] = useState([
-    {
-      id: 1, title: "Comment sécuriser son réseau d'entreprise", slug: 'securiser-reseau-entreprise',
-      metaDesc: 'Découvrez les bonnes pratiques pour protéger votre infrastructure réseau contre les cyberattaques.',
-      category: 'Sécurité', status: 'published', date: '15/04/2026',
-      content: "La sécurité réseau est devenue une priorité absolue.\n\n1. Mettre à jour les équipements\n2. Utiliser un pare-feu\n3. Former les employés",
-      image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&h=400&fit=crop'
-    },
-    {
-      id: 2, title: 'Les avantages du cloud pour les PME', slug: 'avantages-cloud-pme',
-      metaDesc: 'Pourquoi migrer vers le cloud ? Économies, flexibilité et sécurité.',
-      category: 'Cloud', status: 'draft', date: '10/04/2026',
-      content: 'Le cloud computing offre aux PME des avantages considérables...',
-      image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=400&fit=crop'
-    },
-  ])
+  const [articles, setArticles] = useState([])
 
   const [editingArticle, setEditingArticle] = useState(null)
   const [showArticleModal, setShowArticleModal] = useState(false)
   const [previewArticle, setPreviewArticle] = useState(null)
   const [deleteConfirm, setDeleteConfirm] = useState(null)
+
+  useEffect(() => { loadArticles() }, [])
+
+  const loadArticles = async () => {
+    setLoading(true)
+    try {
+      const res = await blogApi.getAll()
+      const data = (Array.isArray(res.data) ? res.data : res.data?.articles || []).map(a => ({
+        ...a,
+        id: a._id,
+        metaDesc: a.metaDescription || '',
+        date: a.publishedAt
+          ? new Date(a.publishedAt).toLocaleDateString('fr-FR')
+          : new Date(a.createdAt).toLocaleDateString('fr-FR'),
+      }))
+      setArticles(data)
+    } catch (err) {
+      console.error('Erreur chargement articles:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const [services, setServices] = useState([
     { id: 1, name: 'Réseau & Infrastructure', price: 'Sur devis', order: 1, active: true, description: 'Installation et maintenance de réseaux informatiques' },
@@ -306,22 +315,46 @@ const AdminBlog = () => {
     setTimeout(() => setToast(null), 3500)
   }
 
-  const handleSaveArticle = (form) => {
-    if (editingArticle) {
-      setArticles(prev => prev.map(a => a.id === editingArticle.id ? { ...form, id: a.id, date: a.date } : a))
-      showToast('Article mis à jour !')
-    } else {
-      setArticles(prev => [...prev, { ...form, id: Date.now(), date: new Date().toLocaleDateString('fr-FR') }])
-      showToast('Article créé !')
+  const handleSaveArticle = async (form) => {
+    try {
+      const payload = {
+        title: form.title,
+        slug: form.slug,
+        excerpt: form.metaDesc || form.title,
+        content: form.content || ' ',
+        category: form.category,
+        image: form.image,
+        metaDescription: form.metaDesc,
+        status: form.status,
+      }
+      if (editingArticle) {
+        await blogApi.update(editingArticle._id || editingArticle.id, payload)
+        showToast('Article mis à jour !')
+      } else {
+        await blogApi.create(payload)
+        showToast('Article créé !')
+      }
+      setShowArticleModal(false)
+      setEditingArticle(null)
+      await loadArticles()
+    } catch (err) {
+      showToast(err.response?.data?.message || 'Erreur lors de la sauvegarde', 'error')
     }
-    setShowArticleModal(false)
-    setEditingArticle(null)
   }
 
   const handleDeleteArticle = (id) => {
     setDeleteConfirm({
       message: "Cette action est irréversible.",
-      onConfirm: () => { setArticles(prev => prev.filter(a => a.id !== id)); setDeleteConfirm(null); showToast('Article supprimé.') }
+      onConfirm: async () => {
+        try {
+          await blogApi.delete(id)
+          setDeleteConfirm(null)
+          showToast('Article supprimé.')
+          await loadArticles()
+        } catch (err) {
+          showToast('Erreur lors de la suppression', 'error')
+        }
+      }
     })
   }
 

@@ -1,6 +1,7 @@
 // ==================== AdminProjets.jsx ====================
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { projects as projectsApi } from '../../services/api'
 import { 
   FolderKanban, 
   Plus, 
@@ -450,8 +451,9 @@ const ProjectCard = ({ project, stage, onView }) => {
 // ==================== ADMIN PROJETS ====================
 const AdminProjets = () => {
   const [view,          setView]          = useState('kanban')
-  const [projectsData,  setProjectsData]  = useState(initialProjectsData)
+  const [projectsData,  setProjectsData]  = useState({ todo: [], progress: [], review: [], done: [] })
   const [tickets,       setTickets]       = useState(initialTickets)
+  const [loading,       setLoading]       = useState(false)
 
   // Modals
   const [showNewProjet,   setShowNewProjet]   = useState(false)
@@ -461,7 +463,32 @@ const AdminProjets = () => {
   const [selectedTicket,  setSelectedTicket]  = useState(null)
   const [defaultStage,    setDefaultStage]    = useState('todo')
 
-  // ✅ Liste dynamique de suggestions = membres par défaut + tous les clients existants (dédoublonnés)
+  useEffect(() => { loadProjects() }, [])
+
+  const loadProjects = async () => {
+    setLoading(true)
+    try {
+      const res = await projectsApi.getAll()
+      const all = res.data?.projects || res.data || []
+      const grouped = { todo: [], progress: [], review: [], done: [] }
+      all.forEach(p => {
+        const stage = p.status || 'todo'
+        if (!grouped[stage]) grouped[stage] = []
+        grouped[stage].push({
+          ...p,
+          id: p._id,
+          client: p.clientName || '',
+          deadline: p.endDate ? new Date(p.endDate).toLocaleDateString('fr-FR') : '',
+        })
+      })
+      setProjectsData(grouped)
+    } catch (err) {
+      console.error('Erreur chargement projets:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const suggestions = useMemo(() => {
     const clientNames = projectStages
       .flatMap(s => projectsData[s.id] || [])
@@ -473,11 +500,24 @@ const AdminProjets = () => {
     return [...new Set([...defaultMembers, ...assigneeNames, ...clientNames])].sort()
   }, [projectsData, tickets])
 
-  const handleSaveProjet = (newProject) => {
-    setProjectsData(prev => ({
-      ...prev,
-      [newProject.stage]: [...prev[newProject.stage], newProject],
-    }))
+  const handleSaveProjet = async (newProject) => {
+    try {
+      await projectsApi.create({
+        name: newProject.name,
+        description: newProject.name,
+        clientName: newProject.client,
+        service: 'Général',
+        startDate: new Date(),
+        endDate: newProject.deadline ? new Date(newProject.deadline) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        progress: newProject.progress || 0,
+        status: newProject.stage,
+        priority: newProject.priority,
+        assignee: newProject.assignee,
+      })
+      await loadProjects()
+    } catch (err) {
+      console.error('Erreur création projet:', err)
+    }
   }
 
   const handleAddInStage = (stageId) => {

@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { history as historyApi } from '../../services/api'
 import { 
   History as HistoryIcon,
   CheckCircle,
@@ -621,15 +622,21 @@ const Historique = () => {
   const [yearFilter, setYearFilter]   = useState('all')
   const [modalDetails, setModalDetails]     = useState(null)
   const [modalDownload, setModalDownload]   = useState(null)
+  const [historique, setHistorique] = useState([])
 
-  const historique = [
-    { id: 'PRJ-001', name: 'Site E-commerce',       type: 'Projet',    date: '15/12/2025', status: 'completed', amount: '5 000€', icon: FolderKanban },
-    { id: 'PRJ-002', name: 'Installation Réseau',    type: 'Projet',    date: '10/11/2025', status: 'completed', amount: '3 200€', icon: FolderKanban },
-    { id: 'DEV-003', name: 'Vidéosurveillance',      type: 'Devis',     date: '05/10/2025', status: 'completed', amount: '2 800€', icon: FileText },
-    { id: 'FRM-001', name: 'Formation Cybersécurité', type: 'Formation', date: '20/09/2025', status: 'completed', amount: '1 500€', icon: GraduationCap },
-    { id: 'PRJ-004', name: 'Migration Cloud',         type: 'Projet',    date: '01/08/2025', status: 'completed', amount: '8 500€', icon: FolderKanban },
-    { id: 'DEV-005', name: 'Audit Sécurité',          type: 'Devis',     date: '15/07/2025', status: 'completed', amount: '4 200€', icon: FileText },
-  ]
+  useEffect(() => {
+    historyApi.getMyHistory().then(res => {
+      const data = (res.data?.history || res.data || []).map(h => ({
+        ...h,
+        id: h.reference || h._id,
+        name: h.title || h.description || 'Opération',
+        type: h.type || 'Projet',
+        date: h.createdAt ? new Date(h.createdAt).toLocaleDateString('fr-FR') : '',
+        amount: h.amount ? `${h.amount}€` : '—',
+      }))
+      setHistorique(data)
+    }).catch(err => console.error('Erreur chargement historique:', err))
+  }, [])
 
   const filteredHistorique = historique.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

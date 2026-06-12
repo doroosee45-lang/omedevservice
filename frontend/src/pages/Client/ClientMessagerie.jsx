@@ -1,6 +1,7 @@
 // ==================== ClientMessagerie.jsx ====================
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { tickets as ticketsApi } from '../../services/api'
 import { 
   MessageSquare, 
   Send, 
@@ -154,53 +155,54 @@ const ClientMessagerie = () => {
   const [showNewConversationModal, setShowNewConversationModal] = useState(false)
   const fileInputRef = useRef(null)
 
-  const [conversations, setConversations] = useState([
-    { id: 1, subject: 'Devis DEV-001', lastMessage: 'Bonjour, je vous confirme la réception de votre devis.', date: 'Il y a 2h', unread: 2, avatar: 'S' },
-    { id: 2, subject: 'Projet Site E-commerce', lastMessage: 'Le développement front-end avance bien.', date: 'Hier', unread: 0, avatar: 'T' },
-    { id: 3, subject: 'Support technique', lastMessage: 'Votre problème a été résolu.', date: 'Il y a 3j', unread: 0, avatar: 'S' },
-  ])
+  const [conversations, setConversations] = useState([])
+  const [messages, setMessages] = useState({})
 
-  const [messages, setMessages] = useState({
-    1: [
-      { id: 1, sender: 'client', message: 'Bonjour, pouvez-vous me faire un devis pour un site e-commerce ?', time: '10:30', date: '15/04/2026' },
-      { id: 2, sender: 'support', message: 'Bonjour, voici le devis demandé. N\'hésitez pas si vous avez des questions.', time: '10:45', date: '15/04/2026', attachment: 'devis.pdf' },
-      { id: 3, sender: 'client', message: 'Merci, je vais étudier cela.', time: '11:00', date: '15/04/2026' },
-    ],
-    2: [
-      { id: 1, sender: 'support', message: 'Bonjour, le projet Site E-commerce a démarré. La maquette est en cours.', time: '09:00', date: '14/04/2026' },
-      { id: 2, sender: 'client', message: 'Super, merci pour l\'information !', time: '09:30', date: '14/04/2026' },
-    ],
-    3: [
-      { id: 1, sender: 'client', message: 'Bonjour, j\'ai un problème avec mon réseau.', time: '14:00', date: '12/04/2026' },
-      { id: 2, sender: 'support', message: 'Pouvez-vous décrire le problème plus précisément ?', time: '14:15', date: '12/04/2026' },
-      { id: 3, sender: 'client', message: 'La connexion est très lente depuis ce matin.', time: '14:20', date: '12/04/2026' },
-      { id: 4, sender: 'support', message: 'Nous avons identifié le problème. C\'est résolu.', time: '15:00', date: '12/04/2026' },
-    ],
-  })
+  useEffect(() => {
+    ticketsApi.getMyTickets().then(res => {
+      const tickets = res.data?.tickets || res.data || []
+      const convs = tickets.map(t => ({
+        id: t._id,
+        subject: t.subject || t.title,
+        lastMessage: t.messages?.slice(-1)[0]?.message || t.description || '',
+        date: t.updatedAt ? new Date(t.updatedAt).toLocaleDateString('fr-FR') : '',
+        unread: t.unreadCount || 0,
+        avatar: (t.subject || 'S')[0].toUpperCase(),
+        status: t.status,
+      }))
+      setConversations(convs)
+      const msgMap = {}
+      tickets.forEach(t => {
+        msgMap[t._id] = (t.messages || []).map((m, i) => ({
+          id: i,
+          sender: m.sender === 'client' ? 'client' : 'support',
+          message: m.message,
+          time: m.createdAt ? new Date(m.createdAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '',
+          date: m.createdAt ? new Date(m.createdAt).toLocaleDateString('fr-FR') : '',
+        }))
+      })
+      setMessages(msgMap)
+    }).catch(err => console.error('Erreur chargement tickets:', err))
+  }, [])
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (newMessage.trim() && selectedConversation) {
       const newMsg = {
-        id: messages[selectedConversation].length + 1,
+        id: Date.now(),
         sender: 'client',
         message: newMessage,
         time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
         date: new Date().toLocaleDateString('fr-FR')
       }
-      
-      setMessages({
-        ...messages,
-        [selectedConversation]: [...messages[selectedConversation], newMsg]
-      })
-      
-      // Mettre à jour le dernier message dans la liste des conversations
-      setConversations(conversations.map(conv => 
-        conv.id === selectedConversation 
-          ? { ...conv, lastMessage: newMessage, date: 'À l\'instant' }
-          : conv
-      ))
-      
+      setMessages(prev => ({ ...prev, [selectedConversation]: [...(prev[selectedConversation] || []), newMsg] }))
+      setConversations(prev => prev.map(c => c.id === selectedConversation ? { ...c, lastMessage: newMessage, date: "À l'instant" } : c))
+      const text = newMessage
       setNewMessage('')
+      try {
+        await ticketsApi.addMessage(selectedConversation, text)
+      } catch (err) {
+        console.error('Erreur envoi message:', err)
+      }
     }
   }
 

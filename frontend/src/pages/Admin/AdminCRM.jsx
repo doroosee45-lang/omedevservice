@@ -1,6 +1,7 @@
 // ==================== AdminCRM.jsx ====================
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { crm as crmApi } from '../../services/api'
 import { 
   TrendingUp, 
   Plus, 
@@ -653,31 +654,60 @@ const InteractionCard = ({ interaction }) => {
 
 // ==================== ADMIN CRM ====================
 const AdminCRM = () => {
-  const [prospectsData, setProspectsData] = useState(initialProspectsData)
+  const [prospectsData, setProspectsData] = useState({ lead: [], contact: [], proposition: [], negociation: [], signe: [] })
   const [showNewProspect, setShowNewProspect] = useState(false)
   const [defaultStage, setDefaultStage] = useState('lead')
+  const [loading, setLoading] = useState(false)
 
-  // ✅ Ajouter un prospect
-  const handleSaveProspect = (newProspect) => {
-    setProspectsData(prev => ({
-      ...prev,
-      [newProspect.stage]: [...prev[newProspect.stage], newProspect],
-    }))
+  useEffect(() => { loadProspects() }, [])
+
+  const loadProspects = async () => {
+    setLoading(true)
+    try {
+      const res = await crmApi.getByStage()
+      setProspectsData(res.data || { lead: [], contact: [], proposition: [], negociation: [], signe: [] })
+    } catch (err) {
+      console.error('Erreur chargement prospects:', err)
+    } finally {
+      setLoading(false)
+    }
   }
 
-  // ✅ Ouvrir le formulaire avec une étape pré-sélectionnée (bouton + de colonne)
+  const handleSaveProspect = async (newProspect) => {
+    try {
+      await crmApi.create({
+        name: newProspect.name,
+        contact: newProspect.contact,
+        email: newProspect.email,
+        phone: newProspect.phone,
+        value: newProspect.value,
+        stage: newProspect.stage,
+        lastContact: new Date(),
+      })
+      await loadProspects()
+    } catch (err) {
+      console.error('Erreur création prospect:', err)
+    }
+  }
+
   const handleAddProspectInStage = (stageId) => {
     setDefaultStage(stageId)
     setShowNewProspect(true)
   }
 
-  // ✅ Déplacer un prospect d'une colonne à une autre
-  const handleMoveProspect = (prospect, fromStage, toStage) => {
+  const handleMoveProspect = async (prospect, fromStage, toStage) => {
+    // Mise à jour optimiste
     setProspectsData(prev => ({
       ...prev,
-      [fromStage]: prev[fromStage].filter(p => p.id !== prospect.id),
-      [toStage]: [...prev[toStage], prospect],
+      [fromStage]: prev[fromStage].filter(p => (p._id || p.id) !== (prospect._id || prospect.id)),
+      [toStage]: [...prev[toStage], { ...prospect, stage: toStage }],
     }))
+    try {
+      await crmApi.move(prospect._id || prospect.id, toStage)
+    } catch (err) {
+      console.error('Erreur déplacement prospect:', err)
+      await loadProspects()
+    }
   }
 
   return (

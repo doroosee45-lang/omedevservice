@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import ClientSidebar from '../../components/ClientSidebar'
 import ClientHeader from '../../components/ClientHeader'
+import { devis as devisApi } from '../../services/api'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -32,36 +33,31 @@ const staggerContainer = {
 const DemandeDetail = () => {
   const { id } = useParams()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [demande, setDemande] = useState({
+    id: id, service: '—', description: '—', date: '—', status: 'pending', amount: '—', estimatedDelivery: '—',
+    technicalContact: '—', technicalEmail: '—', technicalPhone: '—', timeline: []
+  })
 
-  // Simulation de données - À remplacer par appel API
-  const demande = {
-    id: id,
-    service: 'Développement Digital',
-    description: 'Site e-commerce complet avec paiement intégré, panier d\'achat, gestion de stock, et dashboard administrateur.',
-    detailedDescription: `Le projet consiste à développer une plateforme e-commerce complète pour une boutique de vêtements. 
-    Fonctionnalités requises :
-    - Catalogue de produits avec filtres avancés
-    - Panier d'achat et checkout
-    - Intégration Stripe/PayPal
-    - Dashboard administrateur (gestion produits, commandes, clients)
-    - Espace client avec historique
-    - SEO optimisé
-    - Responsive design`,
-    date: '15/04/2026',
-    status: 'approved',
-    amount: '5 000€',
-    estimatedDelivery: '15/06/2026',
-    technicalContact: 'Marc Technical',
-    technicalEmail: 'marc@omedev.com',
-    technicalPhone: '+243 555 503 60',
-    timeline: [
-      { step: 'Demande reçue', date: '15/04/2026', completed: true },
-      { step: 'Analyse technique', date: '18/04/2026', completed: true },
-      { step: 'Devis proposé', date: '20/04/2026', completed: true },
-      { step: 'Début du projet', date: '25/04/2026', completed: true },
-      { step: 'Livraison', date: '15/06/2026', completed: false },
-    ]
-  }
+  useEffect(() => {
+    devisApi.getById(id).then(res => {
+      const d = res.data
+      setDemande({
+        ...d,
+        id: d.requestNumber || d._id,
+        service: d.service || d.serviceType || '—',
+        description: d.description || d.projectDescription || '—',
+        date: d.createdAt ? new Date(d.createdAt).toLocaleDateString('fr-FR') : '—',
+        amount: d.budget ? `${d.budget}€` : 'Sur devis',
+        estimatedDelivery: d.deadline ? new Date(d.deadline).toLocaleDateString('fr-FR') : '—',
+        technicalContact: d.assignedTo || 'Équipe OMEDEV',
+        technicalEmail: 'contact@omedev.com',
+        technicalPhone: '+243 555 503 59',
+        timeline: d.timeline || [
+          { step: 'Demande reçue', date: d.createdAt ? new Date(d.createdAt).toLocaleDateString('fr-FR') : '—', completed: true },
+        ]
+      })
+    }).catch(err => console.error('Erreur chargement demande:', err))
+  }, [id])
 
   const getStatusConfig = (status) => {
     const configs = {

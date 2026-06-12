@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { 
   User, 
@@ -63,11 +63,19 @@ const Profil = () => {
   const fileInputRef = useRef(null)
 
   const [profile, setProfile] = useState({
-    nom: 'Jean Dupont',
-    email: 'jean.dupont@email.com',
-    telephone: '+243 555 503 59',
-    adresse: 'Avenue Kabmabre n°75, Lingwala, Kinshasa'
+    nom: localStorage.getItem('userName') || 'Jean Dupont',
+    email: localStorage.getItem('userEmail') || 'jean.dupont@email.com',
+    telephone: '',
+    adresse: ''
   })
+
+  useEffect(() => {
+    const name = localStorage.getItem('userName')
+    const email = localStorage.getItem('userEmail')
+    if (name || email) {
+      setProfile(p => ({ ...p, nom: name || p.nom, email: email || p.email }))
+    }
+  }, [])
 
   const [passwords, setPasswords] = useState({
     current: '',

@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { devis as devisApi } from '../../services/api'
 import { 
   Search, Filter, Eye, Download, Calendar, Euro,
   Clock, CheckCircle, XCircle, AlertCircle, FileText,
@@ -425,15 +426,22 @@ const Demandes = () => {
   const [statusFilter, setStatusFilter] = useState('all')
   const [modalDetails, setModalDetails] = useState(null)
   const [modalDownload, setModalDownload] = useState(null)
+  const [demandes, setDemandes] = useState([])
 
-  const demandes = [
-    { id: 'DEV-001', service: 'Développement Digital',   description: 'Site e-commerce complet avec paiement intégré, gestion de stock et livraison',                       date: '15/04/2026', status: 'pending',   amount: '5000€',  estimatedDelivery: '15/05/2026' },
-    { id: 'DEV-002', service: 'Réseau & Infrastructure', description: 'Installation réseau complet pour 50 postes, câblage structuré et configuration VLAN',                 date: '10/04/2026', status: 'approved',  amount: '3200€',  estimatedDelivery: '10/05/2026' },
-    { id: 'DEV-003', service: 'Sécurité',                description: 'Installation vidéosurveillance 16 caméras 4K avec enregistrement cloud',                             date: '05/04/2026', status: 'completed', amount: '2800€',  estimatedDelivery: '25/04/2026' },
-    { id: 'DEV-004', service: 'Formation',               description: 'Formation Cybersécurité pour 10 personnes (5 jours)',                                                 date: '01/04/2026', status: 'rejected',  amount: '1500€',  estimatedDelivery: '-' },
-    { id: 'DEV-005', service: 'Cloud & Hébergement',     description: 'Migration serveurs vers AWS + maintenance 24/7',                                                      date: '28/03/2026', status: 'approved',  amount: '4200€',  estimatedDelivery: '20/05/2026' },
-    { id: 'DEV-006', service: 'Énergie & Équipements',   description: 'Installation 20 panneaux solaires + onduleurs',                                                      date: '20/03/2026', status: 'pending',   amount: '12500€', estimatedDelivery: '30/06/2026' },
-  ]
+  useEffect(() => {
+    devisApi.getMyDevis().then(res => {
+      const data = (res.data?.devis || res.data || []).map(d => ({
+        ...d,
+        id: d.requestNumber || d._id,
+        service: d.service || d.serviceType || 'Service',
+        description: d.description || d.projectDescription || '',
+        date: d.createdAt ? new Date(d.createdAt).toLocaleDateString('fr-FR') : '',
+        amount: d.budget ? `${d.budget}€` : d.estimatedBudget ? `${d.estimatedBudget}€` : 'Sur devis',
+        estimatedDelivery: d.deadline ? new Date(d.deadline).toLocaleDateString('fr-FR') : '-',
+      }))
+      setDemandes(data)
+    }).catch(err => console.error('Erreur chargement demandes:', err))
+  }, [])
 
   const getStatusConfig = (status) => ({
     pending:   { label: 'En attente', icon: Clock,        color: 'bg-amber-500/20  text-amber-400  border-amber-500/30'  },

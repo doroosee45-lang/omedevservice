@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { devis as devisApi } from '../../services/api'
 import { 
   CreditCard, Download, Eye, Search, Calendar, Euro,
   CheckCircle, Clock, AlertCircle, Plus, Wallet, X,
@@ -721,14 +722,26 @@ const Paiements = () => {
   const [modalDownload, setModalDownload] = useState(null)
   const [modalPayer, setModalPayer]       = useState(null)
 
-  const [paiements, setPaiements] = useState([
-    { id: 'INV-001', projet: 'Site E-commerce',    date: '15/04/2026', montant: '2 500 €', montantValue: 2500, statut: 'paid',    methode: 'Carte bancaire' },
-    { id: 'INV-002', projet: 'Site E-commerce',    date: '01/05/2026', montant: '2 500 €', montantValue: 2500, statut: 'pending', methode: '-' },
-    { id: 'INV-003', projet: 'Installation Réseau', date: '10/04/2026', montant: '1 600 €', montantValue: 1600, statut: 'paid',    methode: 'Virement' },
-    { id: 'INV-004', projet: 'Installation Réseau', date: '25/04/2026', montant: '1 600 €', montantValue: 1600, statut: 'overdue', methode: '-' },
-    { id: 'INV-005', projet: 'Migration Cloud',     date: '05/05/2026', montant: '4 200 €', montantValue: 4200, statut: 'pending', methode: '-' },
-    { id: 'INV-006', projet: 'Audit Sécurité',      date: '20/03/2026', montant: '2 800 €', montantValue: 2800, statut: 'paid',    methode: 'Carte bancaire' },
-  ])
+  const [paiements, setPaiements] = useState([])
+
+  useEffect(() => {
+    devisApi.getMyDevis().then(res => {
+      const data = (res.data?.devis || res.data || []).map((d, i) => {
+        const budget = parseFloat(d.budget || d.estimatedBudget || 0)
+        return {
+          ...d,
+          id: d.requestNumber || d.devisNumber || `INV-${String(i+1).padStart(3,'0')}`,
+          projet: d.service || d.serviceType || 'Service',
+          date: d.createdAt ? new Date(d.createdAt).toLocaleDateString('fr-FR') : '',
+          montant: budget ? `${budget.toLocaleString('fr-FR')} €` : 'Sur devis',
+          montantValue: budget,
+          statut: d.paymentStatus || (d.status === 'completed' ? 'paid' : d.status === 'rejected' ? 'overdue' : 'pending'),
+          methode: d.paymentMethod || '-',
+        }
+      })
+      setPaiements(data)
+    }).catch(err => console.error('Erreur chargement paiements:', err))
+  }, [])
 
   const handlePaySuccess = (id, methodeUsed) =>
     setPaiements(prev => prev.map(p => p.id === id ? { ...p, statut: 'paid', methode: methodeUsed } : p))
