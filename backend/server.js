@@ -12,27 +12,19 @@ connectDB();
 
 const app = express();
 
-// Middleware
-const allowedOrigins = [
-  'https://omedevservicefrontend.onrender.com',
-  'https://doroosee45-lang.github.io',
-  'http://localhost:5173',
-  'http://localhost:3000',
-  process.env.FRONTEND_URL,
-].filter(Boolean);
-
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(null, true); // permissif en attendant domaine custom
-    }
-  },
+// CORS — accepte toutes les origines (répondre aux preflight OPTIONS inclus)
+const corsOptions = {
+  origin: (origin, callback) => callback(null, true),
   credentials: true,
-}));
-app.use(express.json()); // Pour parser le JSON des requêtes
-app.use(express.urlencoded({ extended: true })); // Pour parser les données de formulaire
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // preflight pour toutes les routes
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Servir les fichiers statiques (ex: pour les PDFs générés)
 app.use('/uploads', express.static('uploads'));
