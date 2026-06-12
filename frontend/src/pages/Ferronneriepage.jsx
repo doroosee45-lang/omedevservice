@@ -74,7 +74,7 @@ const ferronnerieCategories = [
       {
         name: 'Portes métalliques',
         description: 'Portes métalliques modernes et portes blindées fabriquées sur mesure selon vos dimensions et finitions souhaitées.',
-        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVC-Ydppn6ibRy7S_LSDWWgJs_HdAvGTXBaw&s',
+        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=85',
       },
       {
         name: 'Portails & Clôtures',

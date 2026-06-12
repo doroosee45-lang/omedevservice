@@ -146,11 +146,11 @@ const FALLBACK_PROJECTS = [
     sector: 'Résidentiel premium',
     badge: 'Réalisé',
     badgeColor: 'green',
-    cover: 'https://www.renaudcreations.fr/wp-content/uploads/2023/06/escalier-fleur-de-lotus.jpg',
+    cover: 'https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=800&q=80',
     gallery: [
-      'https://www.renaudcreations.fr/wp-content/uploads/2023/06/escalier-fleur-de-lotus.jpg',
-      'https://www.renaudcreations.fr/wp-content/uploads/2023/06/escalier-fleur-de-lotus.jpg',
-      'https://www.renaudcreations.fr/wp-content/uploads/2023/06/escalier-fleur-de-lotus.jpg',
+      'https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=800&q=80',
+      'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=800&q=80',
+      'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&q=80',
     ],
     description: 'Escalier droit quart-tournant en acier laqué noir mat avec marches en bois massif chêne huilé. Garde-corps design barreaux verticaux ronds, main courante acier brossé. Intégration parfaite dans une villa contemporaine.',
     details: [
@@ -274,11 +274,11 @@ const FALLBACK_PROJECTS = [
     sector: 'Restauration',
     badge: 'Série',
     badgeColor: 'cyan',
-    cover: 'https://ferronnerieletouque.fr/assets/images/banc-balancelle/ferronnier-art-balancelle-saint-jean-cap-ferrat.webp',
+    cover: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80',
     gallery: [
-      'https://ferronnerieletouque.fr/assets/images/banc-balancelle/ferronnier-art-balancelle-saint-jean-cap-ferrat.webp',
-      'https://ferronnerieletouque.fr/assets/images/banc-balancelle/ferronnier-art-balancelle-saint-jean-cap-ferrat.webp',
-      'https://ferronnerieletouque.fr/assets/images/banc-balancelle/ferronnier-art-balancelle-saint-jean-cap-ferrat.webp',
+      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80',
+      'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80',
+      'https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=800&q=80',
     ],
     description: 'Mobilier extérieur pour restaurant terrasse : 20 tables rondes aluminium laqué blanc, 80 chaises empilables aluminium assise corde nautique. Traitement époxy anti-corrosion adapté à l\'environnement marin.',
     details: [
@@ -306,11 +306,11 @@ const FALLBACK_PROJECTS = [
     sector: 'Immobilier / Promoteur',
     badge: 'Grand chantier',
     badgeColor: 'blue',
-    cover: 'https://www.lmn76.com/photos/ensemble-table-et-chaise-1.jpg',
+    cover: 'https://images.unsplash.com/photo-1523413363574-c40a0cf48a50?w=800&q=80',
     gallery: [
-      'https://www.lmn76.com/photos/ensemble-table-et-chaise-1.jpg',
-      'https://www.lmn76.com/photos/ensemble-table-et-chaise-1.jpg',
-      'https:https://www.lmn76.com/photos/ensemble-table-et-chaise-1.jpg',
+      'https://images.unsplash.com/photo-1523413363574-c40a0cf48a50?w=800&q=80',
+      'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=80',
+      'https://images.unsplash.com/photo-1475275166152-f1e8f80d4b4d?w=800&q=80',
     ],
     description: 'Fourniture et pose de 120 fenêtres et baies vitrées aluminium double vitrage pour un immeuble résidentiel neuf. Profils thermiques à rupture de pont thermique, vitrages 4/16/4 argon, quincaillerie multipoint.',
     details: [
