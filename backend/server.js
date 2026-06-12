@@ -13,10 +13,22 @@ connectDB();
 const app = express();
 
 // Middleware
+const allowedOrigins = [
+  'https://omedevservicefrontend.onrender.com',
+  'https://doroosee45-lang.github.io',
+  'http://localhost:5173',
+  'http://localhost:3000',
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? [process.env.FRONTEND_URL, 'https://doroosee45-lang.github.io'].filter(Boolean)
-    : true,
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, true); // permissif en attendant domaine custom
+    }
+  },
   credentials: true,
 }));
 app.use(express.json()); // Pour parser le JSON des requêtes
