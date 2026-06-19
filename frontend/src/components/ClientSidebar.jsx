@@ -51,7 +51,7 @@ const ClientSidebar = () => {
     localStorage.removeItem('user');
     
     // Rediriger vers login
-    window.location.href = '/login';
+    window.location.href = '/#/login';
   };
 
   // Initiales pour l'avatar

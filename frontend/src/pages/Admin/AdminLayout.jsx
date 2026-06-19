@@ -134,7 +134,7 @@ const AdminLayout = () => {
                   localStorage.removeItem('userName')
                   localStorage.removeItem('userEmail')
                   localStorage.removeItem('userId')
-                  window.location.href = '/login'
+                  window.location.href = '/#/login'
                 }}
                 className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all w-full"
               >
