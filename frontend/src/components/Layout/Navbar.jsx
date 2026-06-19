@@ -15,7 +15,6 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Ferme les menus au changement de route
   useEffect(() => {
     setIsOpen(false);
     setServicesOpen(false);
@@ -23,11 +22,7 @@ const Navbar = () => {
 
   // Bloque le scroll du body quand le menu mobile est ouvert
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    document.body.style.overflow = isOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
   }, [isOpen]);
 
@@ -37,19 +32,19 @@ const Navbar = () => {
     { name: 'Services', path: '/services' },
     { name: 'Solutions', path: '/solutions' },
     { name: 'Plus', path: '/plus', hasDropdown: true },
-    { name: 'Réalisations', path: '/realisations' },
+    { name: 'Realisations', path: '/realisations' },
     { name: 'Tarifs', path: '/tarifs' },
     { name: 'Blog', path: '/blog' },
     { name: 'Contact', path: '/contact' },
   ];
 
   const servicesDropdown = [
-    { name: 'Réseau & Infrastructure', path: '/services/reseau-infrastructure' },
-    { name: 'Sécurité', path: '/services/securite' },
-    { name: 'Développement Digital', path: '/services/developpement-digital' },
-    { name: 'Cloud & Hébergement', path: '/services/cloud-hebergement' },
-    { name: 'Énergie & Équipements', path: '/services/energie-equipements' },
-    { name: 'Vente de Matériel', path: '/services/vente-materiel' },
+    { name: 'Reseau & Infrastructure', path: '/services/reseau-infrastructure' },
+    { name: 'Securite', path: '/services/securite' },
+    { name: 'Developpement Digital', path: '/services/developpement-digital' },
+    { name: 'Cloud & Hebergement', path: '/services/cloud-hebergement' },
+    { name: 'Energie & Equipements', path: '/services/energie-equipements' },
+    { name: 'Vente de Materiel', path: '/services/vente-materiel' },
     { name: 'Formation', path: '/services/formation' },
   ];
 
@@ -57,35 +52,30 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed w-full z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-slate-950/98 backdrop-blur-xl shadow-lg shadow-black/30 border-b border-white/10 py-3'
-          : 'bg-slate-950/80 backdrop-blur-md py-4'
+          ? 'bg-slate-950 shadow-lg shadow-black/40 border-b border-white/8'
+          : 'bg-slate-950/85 backdrop-blur-md'
       }`}
-      style={{
-        paddingLeft:  'max(1rem, env(safe-area-inset-left))',
-        paddingRight: 'max(1rem, env(safe-area-inset-right))',
-        paddingTop:   isScrolled
-          ? 'max(0.75rem, env(safe-area-inset-top))'
-          : 'max(1rem, env(safe-area-inset-top))',
-      }}
     >
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
+      {/* Spacer pour le notch iOS / Android */}
+      <div style={{ height: 'env(safe-area-inset-top, 0px)' }} />
 
-        {/* ── Logo ── */}
-        <Link to="/" className="flex items-center gap-3 group flex-shrink-0">
-          <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center shadow-lg shadow-blue-900/30 group-hover:scale-105 transition-transform">
-            <span className="text-white font-bold text-xl">O</span>
+      {/* Barre principale */}
+      <div className="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 lg:py-4">
+
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
+          <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
+            <span className="text-white font-bold text-xl leading-none">O</span>
           </div>
-          <div>
-            <span className="font-bold text-xl text-white tracking-tight font-syne">
-              Omedev
-            </span>
-            <p className="text-[9px] text-blue-400 -mt-0.5 tracking-widest uppercase">Services</p>
+          <div className="leading-tight">
+            <div className="font-bold text-lg text-white tracking-tight font-syne">Omedev</div>
+            <div className="text-[9px] text-blue-400 tracking-widest uppercase leading-none">Services</div>
           </div>
         </Link>
 
-        {/* ── Desktop Navigation ── */}
+        {/* Navigation desktop */}
         <div className="hidden lg:flex items-center gap-6">
           {navLinks.map((link) => (
             <div key={link.path} className="relative group">
@@ -93,7 +83,7 @@ const Navbar = () => {
                 <button
                   onMouseEnter={() => setServicesOpen(true)}
                   onMouseLeave={() => setServicesOpen(false)}
-                  className="flex items-center gap-1 text-gray-300 hover:text-white font-medium transition-colors py-2 text-sm"
+                  className="flex items-center gap-1 text-gray-300 hover:text-white font-medium text-sm transition-colors py-2"
                 >
                   {link.name}
                   <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover:rotate-180" />
@@ -102,35 +92,32 @@ const Navbar = () => {
                 <Link
                   to={link.path}
                   className={`text-sm font-medium transition-colors py-2 ${
-                    isActive(link.path)
-                      ? 'text-blue-400'
-                      : 'text-gray-300 hover:text-white'
+                    isActive(link.path) ? 'text-blue-400' : 'text-gray-300 hover:text-white'
                   }`}
                 >
                   {link.name}
                 </Link>
               )}
 
-              {/* Dropdown desktop */}
               {link.hasDropdown && (
                 <AnimatePresence>
                   {servicesOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: 8 }}
+                      initial={{ opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 8 }}
-                      transition={{ duration: 0.18 }}
-                      className="absolute top-full left-0 mt-2 w-64 bg-slate-900 border border-white/10 rounded-2xl shadow-xl shadow-black/40 py-2 z-50"
+                      exit={{ opacity: 0, y: 6 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute top-full left-0 mt-1 w-60 bg-slate-900 border border-white/10 rounded-2xl shadow-xl shadow-black/50 py-2 z-50"
                       onMouseEnter={() => setServicesOpen(true)}
                       onMouseLeave={() => setServicesOpen(false)}
                     >
-                      {servicesDropdown.map((service) => (
+                      {servicesDropdown.map((s) => (
                         <Link
-                          key={service.path}
-                          to={service.path}
-                          className="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors rounded-lg mx-1"
+                          key={s.path}
+                          to={s.path}
+                          className="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
                         >
-                          {service.name}
+                          {s.name}
                         </Link>
                       ))}
                     </motion.div>
@@ -142,72 +129,74 @@ const Navbar = () => {
 
           <Link
             to="/login"
-            className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-5 py-2 rounded-xl font-semibold text-sm transition-all hover:scale-105 shadow-lg shadow-blue-900/30"
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl font-semibold text-sm transition-all"
           >
             <User className="w-3.5 h-3.5" />
             Espace client
           </Link>
         </div>
 
-        {/* ── Bouton hamburger mobile ── */}
+        {/* Bouton hamburger — toujours visible sur mobile */}
         <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="lg:hidden p-2.5 text-gray-300 hover:text-white hover:bg-white/10 rounded-xl transition-all"
-          aria-label={isOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
-          style={{ touchAction: 'manipulation' }}
+          type="button"
+          onClick={() => setIsOpen((v) => !v)}
+          className="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl text-white bg-white/10 hover:bg-white/20 transition-colors flex-shrink-0"
+          aria-label="Menu"
         >
-          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          {isOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
 
-      {/* ── Menu Mobile ── */}
+      {/* Menu mobile — panneau plein écran */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -8 }}
+            key="mobile-menu"
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.22, ease: 'easeOut' }}
-            className="lg:hidden fixed inset-0 top-0 bg-slate-950/98 backdrop-blur-xl z-40 overflow-y-auto"
-            style={{
-              paddingTop: 'max(5rem, calc(env(safe-area-inset-top) + 5rem))',
-              paddingBottom: 'max(2rem, env(safe-area-inset-bottom))',
-              paddingLeft: 'max(1.5rem, env(safe-area-inset-left))',
-              paddingRight: 'max(1.5rem, env(safe-area-inset-right))',
-            }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="lg:hidden fixed inset-0 z-40 bg-slate-950 overflow-y-auto"
+            style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom, 0px))' }}
           >
-            {/* Bouton fermeture en haut à droite */}
-            <button
-              onClick={() => setIsOpen(false)}
-              className="absolute top-4 right-4 p-2.5 text-gray-400 hover:text-white hover:bg-white/10 rounded-xl transition-all"
-              style={{
-                top: 'max(1rem, env(safe-area-inset-top))',
-                touchAction: 'manipulation',
-              }}
+            {/* En-tête du menu mobile */}
+            <div
+              className="flex items-center justify-between px-4 sm:px-6 py-3"
+              style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top, 0px))' }}
             >
-              <X className="w-6 h-6" />
-            </button>
-
-            {/* Logo dans le menu mobile */}
-            <div className="mb-8 flex items-center gap-3">
-              <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center">
-                <span className="text-white font-bold text-xl">O</span>
-              </div>
-              <span className="font-bold text-xl text-white font-syne">Omedev</span>
+              <Link to="/" onClick={() => setIsOpen(false)} className="flex items-center gap-2.5">
+                <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center">
+                  <span className="text-white font-bold text-xl leading-none">O</span>
+                </div>
+                <span className="font-bold text-lg text-white font-syne">Omedev</span>
+              </Link>
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center justify-center w-10 h-10 rounded-xl text-white bg-white/10 hover:bg-white/20 transition-colors"
+                aria-label="Fermer"
+              >
+                <X size={22} />
+              </button>
             </div>
 
-            <div className="flex flex-col space-y-1">
+            {/* Liens */}
+            <div className="px-4 sm:px-6 pt-4 pb-6 flex flex-col gap-1">
               {navLinks.map((link) => (
                 <div key={link.path}>
                   {link.hasDropdown ? (
                     <>
                       <button
-                        onClick={() => setServicesOpen(!servicesOpen)}
-                        className="flex justify-between items-center w-full text-left py-3.5 px-4 rounded-xl text-gray-200 hover:text-white hover:bg-white/8 font-medium text-base transition-all"
-                        style={{ touchAction: 'manipulation' }}
+                        type="button"
+                        onClick={() => setServicesOpen((v) => !v)}
+                        className="flex justify-between items-center w-full py-3.5 px-4 rounded-xl text-gray-200 hover:text-white hover:bg-white/5 font-medium text-base transition-colors"
                       >
-                        <span>{link.name}</span>
-                        <ChevronDown className={`w-5 h-5 text-blue-400 transition-transform duration-200 ${servicesOpen ? 'rotate-180' : ''}`} />
+                        {link.name}
+                        <ChevronDown
+                          className={`w-5 h-5 text-blue-400 transition-transform duration-200 ${
+                            servicesOpen ? 'rotate-180' : ''
+                          }`}
+                        />
                       </button>
                       <AnimatePresence>
                         {servicesOpen && (
@@ -216,20 +205,18 @@ const Navbar = () => {
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
                             transition={{ duration: 0.2 }}
-                            className="overflow-hidden"
+                            className="overflow-hidden ml-4 border-l border-blue-500/30 pl-4 mb-1"
                           >
-                            <div className="pl-4 pb-2 space-y-1 border-l border-blue-500/30 ml-4 mt-1">
-                              {servicesDropdown.map((service) => (
-                                <Link
-                                  key={service.path}
-                                  to={service.path}
-                                  className="block py-2.5 px-3 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 text-sm transition-all"
-                                  onClick={() => setIsOpen(false)}
-                                >
-                                  {service.name}
-                                </Link>
-                              ))}
-                            </div>
+                            {servicesDropdown.map((s) => (
+                              <Link
+                                key={s.path}
+                                to={s.path}
+                                onClick={() => setIsOpen(false)}
+                                className="block py-3 text-gray-400 hover:text-white text-sm transition-colors"
+                              >
+                                {s.name}
+                              </Link>
+                            ))}
                           </motion.div>
                         )}
                       </AnimatePresence>
@@ -237,12 +224,12 @@ const Navbar = () => {
                   ) : (
                     <Link
                       to={link.path}
-                      className={`block py-3.5 px-4 rounded-xl font-medium text-base transition-all ${
+                      onClick={() => setIsOpen(false)}
+                      className={`block py-3.5 px-4 rounded-xl font-medium text-base transition-colors ${
                         isActive(link.path)
                           ? 'text-blue-400 bg-blue-500/10'
-                          : 'text-gray-200 hover:text-white hover:bg-white/8'
+                          : 'text-gray-200 hover:text-white hover:bg-white/5'
                       }`}
-                      onClick={() => setIsOpen(false)}
                     >
                       {link.name}
                     </Link>
@@ -250,11 +237,11 @@ const Navbar = () => {
                 </div>
               ))}
 
-              <div className="pt-4 border-t border-white/10 mt-4">
+              <div className="mt-4 pt-4 border-t border-white/10">
                 <Link
                   to="/login"
-                  className="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white px-6 py-3.5 rounded-xl font-semibold text-base transition-all hover:from-blue-700 hover:to-blue-600 shadow-lg shadow-blue-900/30 w-full"
                   onClick={() => setIsOpen(false)}
+                  className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-xl font-semibold text-base transition-all w-full"
                 >
                   <User className="w-4 h-4" />
                   Espace client
