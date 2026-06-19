@@ -32,6 +32,7 @@ import ForgotPassword from './pages/Auth/ForgotPassword'
 import ResetPassword from './pages/Auth/ResetPassword'
 
 // Espace Client
+import ClientLayout from './components/Layout/ClientLayout'
 import ClientDashboard from './pages/Client/ClientDashboard'
 import ClientDemandes from './pages/Client/ClientDemandes'
 import ClientDemandeDetail from './pages/Client/ClientDemandeDetail'
@@ -125,14 +126,17 @@ function App() {
           <Route path="/reset-password/:token" element={<ResetPassword />} />
 
           {/* ========== ESPACE CLIENT ========== */}
-          <Route path="/client/dashboard" element={<ProtectedRoute role="client"><ClientDashboard /></ProtectedRoute>} />
-          <Route path="/client/demandes" element={<ProtectedRoute role="client"><ClientDemandes /></ProtectedRoute>} />
-          <Route path="/client/demandes/:id" element={<ProtectedRoute role="client"><ClientDemandeDetail /></ProtectedRoute>} />
-          <Route path="/client/projets" element={<ProtectedRoute role="client"><ClientProjets /></ProtectedRoute>} />
-          <Route path="/client/historique" element={<ProtectedRoute role="client"><ClientHistorique /></ProtectedRoute>} />
-          <Route path="/client/profil" element={<ProtectedRoute role="client"><ClientProfil /></ProtectedRoute>} />
-          <Route path="/client/paiements" element={<ProtectedRoute role="client"><ClientPaiements /></ProtectedRoute>} />
-          <Route path="/client/messagerie" element={<ProtectedRoute role="client"><ClientMessagerie /></ProtectedRoute>} />
+          <Route path="/client" element={<ClientLayout />}>
+            <Route index element={<Navigate to="/client/dashboard" replace />} />
+            <Route path="dashboard" element={<ClientDashboard />} />
+            <Route path="demandes" element={<ClientDemandes />} />
+            <Route path="demandes/:id" element={<ClientDemandeDetail />} />
+            <Route path="projets" element={<ClientProjets />} />
+            <Route path="historique" element={<ClientHistorique />} />
+            <Route path="profil" element={<ClientProfil />} />
+            <Route path="paiements" element={<ClientPaiements />} />
+            <Route path="messagerie" element={<ClientMessagerie />} />
+          </Route>
 
           {/* ========== ESPACE ADMIN ========== */}
           <Route path="/admin" element={<ProtectedRoute role="admin"><AdminLayout /></ProtectedRoute>}>
