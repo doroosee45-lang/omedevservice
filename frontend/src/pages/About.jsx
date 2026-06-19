@@ -283,7 +283,7 @@ const About = () => {
       name: 'Meya Dorodoro',
       role: 'CEO & Fondateur',
       position: 'Informatique & Full-Stack',
-      bio: "Expert en infrastructure IT et cybersécurité avec plus de 7 ans d'expérience en domaines d'informatique.",
+      bio: "Expert en infrastructure IT et cybersécurité avec plus de 4 ans d'expérience en domaines d'informatique.",
       image: meyaImg,
       gradientBg: 'linear-gradient(135deg, #3b82f6, #06b6d4)',
       number: '01',

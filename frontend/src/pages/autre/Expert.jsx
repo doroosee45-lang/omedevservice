@@ -267,7 +267,7 @@ const Experts = () => {
       name: 'Meya Dorodoro',
       role: 'CEO & Fondateur',
       position: 'Expert en Informatique Appliquée & Développeur Full-Stack',
-      bio: "Plus de 7 ans d'expérience en infrastructure IT et cybersécurité en Afrique centrale. Visionnaire et passionné par l'innovation technologique.",
+      bio: "Plus de 4 ans d'expérience en infrastructure IT et cybersécurité en Afrique centrale. Visionnaire et passionné par l'innovation technologique.",
       image: expert1,
       gradient: 'from-blue-500 to-blue-700',
       posClass: 'pos1',
@@ -396,7 +396,7 @@ const Experts = () => {
   ];
 
   const stats = [
-    { value: '8+',   label: "Années d'expertise", icon: Calendar   },
+    { value: '4+',   label: "Années d'expertise", icon: Calendar   },
     { value: '150+', label: 'Projets réalisés',    icon: Briefcase  },
     { value: '98%',  label: 'Clients satisfaits',  icon: Star       },
     { value: '24/7', label: 'Support technique',   icon: Headphones },

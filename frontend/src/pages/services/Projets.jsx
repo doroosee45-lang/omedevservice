@@ -165,7 +165,7 @@ const categories = [
 const stats = [
   { value: '150+', label: 'Projets réalisés' },
   { value: '120+', label: 'Clients satisfaits' },
-  { value: '8+', label: "Années d'expérience" },
+  { value: '4+', label: "Années d'expérience" },
   { value: '98%', label: 'Taux de recommandation' }
 ];
 
