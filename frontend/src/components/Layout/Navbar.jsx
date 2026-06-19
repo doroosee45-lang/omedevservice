@@ -20,7 +20,6 @@ const Navbar = () => {
     setServicesOpen(false);
   }, [location]);
 
-  // Bloque le scroll du body quand le menu mobile est ouvert
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
@@ -32,136 +31,138 @@ const Navbar = () => {
     { name: 'Services', path: '/services' },
     { name: 'Solutions', path: '/solutions' },
     { name: 'Plus', path: '/plus', hasDropdown: true },
-    { name: 'Realisations', path: '/realisations' },
+    { name: 'Réalisations', path: '/realisations' },
     { name: 'Tarifs', path: '/tarifs' },
     { name: 'Blog', path: '/blog' },
     { name: 'Contact', path: '/contact' },
   ];
 
   const servicesDropdown = [
-    { name: 'Reseau & Infrastructure', path: '/services/reseau-infrastructure' },
-    { name: 'Securite', path: '/services/securite' },
-    { name: 'Developpement Digital', path: '/services/developpement-digital' },
-    { name: 'Cloud & Hebergement', path: '/services/cloud-hebergement' },
-    { name: 'Energie & Equipements', path: '/services/energie-equipements' },
-    { name: 'Vente de Materiel', path: '/services/vente-materiel' },
+    { name: 'Réseau & Infrastructure', path: '/services/reseau-infrastructure' },
+    { name: 'Sécurité', path: '/services/securite' },
+    { name: 'Développement Digital', path: '/services/developpement-digital' },
+    { name: 'Cloud & Hébergement', path: '/services/cloud-hebergement' },
+    { name: 'Énergie & Équipements', path: '/services/energie-equipements' },
+    { name: 'Vente de Matériel', path: '/services/vente-materiel' },
     { name: 'Formation', path: '/services/formation' },
   ];
 
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-slate-950 shadow-lg shadow-black/40 border-b border-white/8'
-          : 'bg-slate-950/85 backdrop-blur-md'
-      }`}
-    >
-      {/* Spacer pour le notch iOS / Android */}
-      <div style={{ height: 'env(safe-area-inset-top, 0px)' }} />
+    <>
+      {/* Barre de navigation fixe */}
+      <nav
+        className={ixed top-0 left-0 right-0 z-50 transition-all duration-300 +${
+          isScrolled
+            ? 'bg-slate-950 shadow-lg shadow-black/40 border-b border-white/8'
+            : 'bg-slate-950/85 backdrop-blur-md'
+        }}
+      >
+        {/* Spacer notch iOS/Android */}
+        <div style={{ height: 'env(safe-area-inset-top, 0px)' }} />
 
-      {/* Barre principale */}
-      <div className="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 lg:py-4">
+        <div className="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 lg:py-4">
 
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
-          <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
-            <span className="text-white font-bold text-xl leading-none">O</span>
-          </div>
-          <div className="leading-tight">
-            <div className="font-bold text-lg text-white tracking-tight font-syne">Omedev</div>
-            <div className="text-[9px] text-blue-400 tracking-widest uppercase leading-none">Services</div>
-          </div>
-        </Link>
-
-        {/* Navigation desktop */}
-        <div className="hidden lg:flex items-center gap-6">
-          {navLinks.map((link) => (
-            <div key={link.path} className="relative group">
-              {link.hasDropdown ? (
-                <button
-                  onMouseEnter={() => setServicesOpen(true)}
-                  onMouseLeave={() => setServicesOpen(false)}
-                  className="flex items-center gap-1 text-gray-300 hover:text-white font-medium text-sm transition-colors py-2"
-                >
-                  {link.name}
-                  <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover:rotate-180" />
-                </button>
-              ) : (
-                <Link
-                  to={link.path}
-                  className={`text-sm font-medium transition-colors py-2 ${
-                    isActive(link.path) ? 'text-blue-400' : 'text-gray-300 hover:text-white'
-                  }`}
-                >
-                  {link.name}
-                </Link>
-              )}
-
-              {link.hasDropdown && (
-                <AnimatePresence>
-                  {servicesOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 6 }}
-                      transition={{ duration: 0.15 }}
-                      className="absolute top-full left-0 mt-1 w-60 bg-slate-900 border border-white/10 rounded-2xl shadow-xl shadow-black/50 py-2 z-50"
-                      onMouseEnter={() => setServicesOpen(true)}
-                      onMouseLeave={() => setServicesOpen(false)}
-                    >
-                      {servicesDropdown.map((s) => (
-                        <Link
-                          key={s.path}
-                          to={s.path}
-                          className="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
-                        >
-                          {s.name}
-                        </Link>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              )}
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
+            <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
+              <span className="text-white font-bold text-xl leading-none">O</span>
             </div>
-          ))}
-
-          <Link
-            to="/login"
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl font-semibold text-sm transition-all"
-          >
-            <User className="w-3.5 h-3.5" />
-            Espace client
+            <div className="leading-tight">
+              <div className="font-bold text-lg text-white tracking-tight font-syne">Omedev</div>
+              <div className="text-[9px] text-blue-400 tracking-widest uppercase leading-none">Services</div>
+            </div>
           </Link>
+
+          {/* Navigation desktop */}
+          <div className="hidden lg:flex items-center gap-6">
+            {navLinks.map((link) => (
+              <div key={link.path} className="relative group">
+                {link.hasDropdown ? (
+                  <button
+                    onMouseEnter={() => setServicesOpen(true)}
+                    onMouseLeave={() => setServicesOpen(false)}
+                    className="flex items-center gap-1 text-gray-300 hover:text-white font-medium text-sm transition-colors py-2"
+                  >
+                    {link.name}
+                    <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover:rotate-180" />
+                  </button>
+                ) : (
+                  <Link
+                    to={link.path}
+                    className={	ext-sm font-medium transition-colors py-2 +${
+                      isActive(link.path) ? 'text-blue-400' : 'text-gray-300 hover:text-white'
+                    }}
+                  >
+                    {link.name}
+                  </Link>
+                )}
+
+                {link.hasDropdown && (
+                  <AnimatePresence>
+                    {servicesOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 6 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute top-full left-0 mt-1 w-60 bg-slate-900 border border-white/10 rounded-2xl shadow-xl shadow-black/50 py-2 z-50"
+                        onMouseEnter={() => setServicesOpen(true)}
+                        onMouseLeave={() => setServicesOpen(false)}
+                      >
+                        {servicesDropdown.map((s) => (
+                          <Link
+                            key={s.path}
+                            to={s.path}
+                            className="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                          >
+                            {s.name}
+                          </Link>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                )}
+              </div>
+            ))}
+
+            <Link
+              to="/login"
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl font-semibold text-sm transition-all"
+            >
+              <User className="w-3.5 h-3.5" />
+              Espace client
+            </Link>
+          </div>
+
+          {/* Bouton hamburger */}
+          <button
+            type="button"
+            onClick={() => setIsOpen((v) => !v)}
+            className="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl text-white bg-white/10 hover:bg-white/20 transition-colors flex-shrink-0"
+            aria-label="Menu"
+          >
+            {isOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
         </div>
+      </nav>
 
-        {/* Bouton hamburger — toujours visible sur mobile */}
-        <button
-          type="button"
-          onClick={() => setIsOpen((v) => !v)}
-          className="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl text-white bg-white/10 hover:bg-white/20 transition-colors flex-shrink-0"
-          aria-label="Menu"
-        >
-          {isOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
-      </div>
-
-      {/* Menu mobile — panneau plein écran */}
+      {/* Menu mobile — EN DEHORS du nav pour eviter le bug backdrop-filter */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             key="mobile-menu"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="lg:hidden fixed inset-0 z-40 bg-slate-950 overflow-y-auto"
-            style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom, 0px))' }}
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="fixed inset-0 z-40 bg-slate-950 overflow-y-auto lg:hidden"
+            style={{ paddingBottom: 'env(safe-area-inset-bottom, 1.5rem)' }}
           >
-            {/* En-tête du menu mobile */}
+            {/* En-tete menu mobile */}
             <div
-              className="flex items-center justify-between px-4 sm:px-6 py-3"
+              className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-white/8"
               style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top, 0px))' }}
             >
               <Link to="/" onClick={() => setIsOpen(false)} className="flex items-center gap-2.5">
@@ -180,7 +181,7 @@ const Navbar = () => {
               </button>
             </div>
 
-            {/* Liens */}
+            {/* Liens de navigation */}
             <div className="px-4 sm:px-6 pt-4 pb-6 flex flex-col gap-1">
               {navLinks.map((link) => (
                 <div key={link.path}>
@@ -193,9 +194,9 @@ const Navbar = () => {
                       >
                         {link.name}
                         <ChevronDown
-                          className={`w-5 h-5 text-blue-400 transition-transform duration-200 ${
+                          className={w-5 h-5 text-blue-400 transition-transform duration-200 +${
                             servicesOpen ? 'rotate-180' : ''
-                          }`}
+                          }}
                         />
                       </button>
                       <AnimatePresence>
@@ -225,11 +226,11 @@ const Navbar = () => {
                     <Link
                       to={link.path}
                       onClick={() => setIsOpen(false)}
-                      className={`block py-3.5 px-4 rounded-xl font-medium text-base transition-colors ${
+                      className={lock py-3.5 px-4 rounded-xl font-medium text-base transition-colors +${
                         isActive(link.path)
                           ? 'text-blue-400 bg-blue-500/10'
                           : 'text-gray-200 hover:text-white hover:bg-white/5'
-                      }`}
+                      }}
                     >
                       {link.name}
                     </Link>
@@ -241,7 +242,7 @@ const Navbar = () => {
                 <Link
                   to="/login"
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-xl font-semibold text-base transition-all w-full"
+                  className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-xl font-semibold text-base w-full transition-all"
                 >
                   <User className="w-4 h-4" />
                   Espace client
@@ -251,7 +252,7 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </>
   );
 };
 
