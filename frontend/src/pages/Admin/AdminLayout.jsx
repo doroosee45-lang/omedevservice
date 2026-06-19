@@ -19,6 +19,7 @@ import {
   Hammer,
   Send,
   ShoppingBag,
+  GraduationCap,
 } from 'lucide-react'
 
 const globalStyles = `
@@ -49,6 +50,7 @@ const AdminLayout = () => {
     { path: '/admin/newsletter',          icon: Send,            label: 'Newsletter — Abonnés'    },
     { path: '/admin/blog',                icon: BookOpen,        label: 'Blog & configuration'    },
     { path: '/admin/vente-materiel',      icon: ShoppingBag,     label: 'Vente de Matériel'       },
+    { path: '/admin/formation',           icon: GraduationCap,   label: 'Formations — Inscriptions' },
   ]
 
   const isActive = (path) => location.pathname === path || location.pathname.startsWith(path + '/')
@@ -60,7 +62,7 @@ const AdminLayout = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
 
         {/* Header */}
-        <header className="bg-white/5 backdrop-blur-sm border-b border-white/10 sticky top-0 z-30">
+        <header className="bg-white/5 backdrop-blur-sm border-b border-white/10 sticky top-0 z-30 lg:ml-64">
           <div className="flex items-center justify-between px-6 py-4">
             <div className="flex items-center gap-4">
               <button
@@ -126,7 +128,14 @@ const AdminLayout = () => {
 
             <div className="pt-4 border-t border-white/10">
               <button
-                onClick={() => window.location.href = '/login'}
+                onClick={() => {
+                  localStorage.removeItem('accessToken')
+                  localStorage.removeItem('userRole')
+                  localStorage.removeItem('userName')
+                  localStorage.removeItem('userEmail')
+                  localStorage.removeItem('userId')
+                  window.location.href = '/login'
+                }}
                 className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all w-full"
               >
                 <LogOut className="w-5 h-5" />
@@ -138,7 +147,7 @@ const AdminLayout = () => {
 
         {/* Overlay mobile */}
         {sidebarOpen && (
-          <div className="fixed inset-0 bg-black/50 z-35 lg:hidden" onClick={() => setSidebarOpen(false)} />
+          <div className="fixed inset-0 bg-black/50 z-[35] lg:hidden" onClick={() => setSidebarOpen(false)} />
         )}
 
         {/* Main content */}
