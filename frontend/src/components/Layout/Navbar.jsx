@@ -49,17 +49,15 @@ const Navbar = () => {
 
   const isActive = (path) => location.pathname === path;
 
+  const navBg = isScrolled
+    ? 'bg-slate-950 shadow-lg shadow-black/40 border-b border-white/8'
+    : 'bg-slate-950/85 backdrop-blur-md';
+
   return (
     <>
-      {/* Barre de navigation fixe */}
-      <nav
-        className={ixed top-0 left-0 right-0 z-50 transition-all duration-300 +${
-          isScrolled
-            ? 'bg-slate-950 shadow-lg shadow-black/40 border-b border-white/8'
-            : 'bg-slate-950/85 backdrop-blur-md'
-        }}
-      >
-        {/* Spacer notch iOS/Android */}
+      {/* -- Barre de navigation fixe -- */}
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBg}`}>
+        {/* Spacer notch iOS / Android */}
         <div style={{ height: 'env(safe-area-inset-top, 0px)' }} />
 
         <div className="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 lg:py-4">
@@ -77,55 +75,55 @@ const Navbar = () => {
 
           {/* Navigation desktop */}
           <div className="hidden lg:flex items-center gap-6">
-            {navLinks.map((link) => (
-              <div key={link.path} className="relative group">
-                {link.hasDropdown ? (
-                  <button
-                    onMouseEnter={() => setServicesOpen(true)}
-                    onMouseLeave={() => setServicesOpen(false)}
-                    className="flex items-center gap-1 text-gray-300 hover:text-white font-medium text-sm transition-colors py-2"
-                  >
-                    {link.name}
-                    <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover:rotate-180" />
-                  </button>
-                ) : (
-                  <Link
-                    to={link.path}
-                    className={	ext-sm font-medium transition-colors py-2 +${
-                      isActive(link.path) ? 'text-blue-400' : 'text-gray-300 hover:text-white'
-                    }}
-                  >
-                    {link.name}
-                  </Link>
-                )}
+            {navLinks.map((link) => {
+              const linkClass = isActive(link.path)
+                ? 'text-sm font-medium py-2 text-blue-400'
+                : 'text-sm font-medium py-2 text-gray-300 hover:text-white transition-colors';
+              return (
+                <div key={link.path} className="relative group">
+                  {link.hasDropdown ? (
+                    <button
+                      onMouseEnter={() => setServicesOpen(true)}
+                      onMouseLeave={() => setServicesOpen(false)}
+                      className="flex items-center gap-1 text-gray-300 hover:text-white font-medium text-sm transition-colors py-2"
+                    >
+                      {link.name}
+                      <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover:rotate-180" />
+                    </button>
+                  ) : (
+                    <Link to={link.path} className={linkClass}>
+                      {link.name}
+                    </Link>
+                  )}
 
-                {link.hasDropdown && (
-                  <AnimatePresence>
-                    {servicesOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 6 }}
-                        transition={{ duration: 0.15 }}
-                        className="absolute top-full left-0 mt-1 w-60 bg-slate-900 border border-white/10 rounded-2xl shadow-xl shadow-black/50 py-2 z-50"
-                        onMouseEnter={() => setServicesOpen(true)}
-                        onMouseLeave={() => setServicesOpen(false)}
-                      >
-                        {servicesDropdown.map((s) => (
-                          <Link
-                            key={s.path}
-                            to={s.path}
-                            className="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
-                          >
-                            {s.name}
-                          </Link>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                )}
-              </div>
-            ))}
+                  {link.hasDropdown && (
+                    <AnimatePresence>
+                      {servicesOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 6 }}
+                          transition={{ duration: 0.15 }}
+                          className="absolute top-full left-0 mt-1 w-60 bg-slate-900 border border-white/10 rounded-2xl shadow-xl shadow-black/50 py-2 z-50"
+                          onMouseEnter={() => setServicesOpen(true)}
+                          onMouseLeave={() => setServicesOpen(false)}
+                        >
+                          {servicesDropdown.map((s) => (
+                            <Link
+                              key={s.path}
+                              to={s.path}
+                              className="block px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                            >
+                              {s.name}
+                            </Link>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  )}
+                </div>
+              );
+            })}
 
             <Link
               to="/login"
@@ -136,7 +134,7 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Bouton hamburger */}
+          {/* Bouton hamburger — toujours visible sur mobile */}
           <button
             type="button"
             onClick={() => setIsOpen((v) => !v)}
@@ -148,7 +146,7 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Menu mobile — EN DEHORS du nav pour eviter le bug backdrop-filter */}
+      {/* -- Menu mobile (en dehors du nav pour éviter le bug backdrop-filter) -- */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -160,7 +158,7 @@ const Navbar = () => {
             className="fixed inset-0 z-40 bg-slate-950 overflow-y-auto lg:hidden"
             style={{ paddingBottom: 'env(safe-area-inset-bottom, 1.5rem)' }}
           >
-            {/* En-tete menu mobile */}
+            {/* En-tête */}
             <div
               className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-white/8"
               style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top, 0px))' }}
@@ -181,62 +179,62 @@ const Navbar = () => {
               </button>
             </div>
 
-            {/* Liens de navigation */}
+            {/* Liens */}
             <div className="px-4 sm:px-6 pt-4 pb-6 flex flex-col gap-1">
-              {navLinks.map((link) => (
-                <div key={link.path}>
-                  {link.hasDropdown ? (
-                    <>
-                      <button
-                        type="button"
-                        onClick={() => setServicesOpen((v) => !v)}
-                        className="flex justify-between items-center w-full py-3.5 px-4 rounded-xl text-gray-200 hover:text-white hover:bg-white/5 font-medium text-base transition-colors"
+              {navLinks.map((link) => {
+                const activeLinkClass = isActive(link.path)
+                  ? 'block py-3.5 px-4 rounded-xl font-medium text-base text-blue-400 bg-blue-500/10'
+                  : 'block py-3.5 px-4 rounded-xl font-medium text-base text-gray-200 hover:text-white hover:bg-white/5 transition-colors';
+                return (
+                  <div key={link.path}>
+                    {link.hasDropdown ? (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => setServicesOpen((v) => !v)}
+                          className="flex justify-between items-center w-full py-3.5 px-4 rounded-xl text-gray-200 hover:text-white hover:bg-white/5 font-medium text-base transition-colors"
+                        >
+                          {link.name}
+                          <ChevronDown
+                            className="w-5 h-5 text-blue-400 transition-transform duration-200"
+                            style={{ transform: servicesOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                          />
+                        </button>
+                        <AnimatePresence>
+                          {servicesOpen && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: 'auto' }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="overflow-hidden ml-4 border-l border-blue-500/30 pl-4 mb-1"
+                            >
+                              {servicesDropdown.map((s) => (
+                                <Link
+                                  key={s.path}
+                                  to={s.path}
+                                  onClick={() => setIsOpen(false)}
+                                  className="block py-3 text-gray-400 hover:text-white text-sm transition-colors"
+                                >
+                                  {s.name}
+                                </Link>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </>
+                    ) : (
+                      <Link
+                        to={link.path}
+                        onClick={() => setIsOpen(false)}
+                        className={activeLinkClass}
                       >
                         {link.name}
-                        <ChevronDown
-                          className={w-5 h-5 text-blue-400 transition-transform duration-200 +${
-                            servicesOpen ? 'rotate-180' : ''
-                          }}
-                        />
-                      </button>
-                      <AnimatePresence>
-                        {servicesOpen && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.2 }}
-                            className="overflow-hidden ml-4 border-l border-blue-500/30 pl-4 mb-1"
-                          >
-                            {servicesDropdown.map((s) => (
-                              <Link
-                                key={s.path}
-                                to={s.path}
-                                onClick={() => setIsOpen(false)}
-                                className="block py-3 text-gray-400 hover:text-white text-sm transition-colors"
-                              >
-                                {s.name}
-                              </Link>
-                            ))}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </>
-                  ) : (
-                    <Link
-                      to={link.path}
-                      onClick={() => setIsOpen(false)}
-                      className={lock py-3.5 px-4 rounded-xl font-medium text-base transition-colors +${
-                        isActive(link.path)
-                          ? 'text-blue-400 bg-blue-500/10'
-                          : 'text-gray-200 hover:text-white hover:bg-white/5'
-                      }}
-                    >
-                      {link.name}
-                    </Link>
-                  )}
-                </div>
-              ))}
+                      </Link>
+                    )}
+                  </div>
+                );
+              })}
 
               <div className="mt-4 pt-4 border-t border-white/10">
                 <Link
