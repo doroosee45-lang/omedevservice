@@ -43,9 +43,9 @@ const Login = () => {
       localStorage.setItem('userId', String(user._id))
 
       if (user.role === 'super_admin' || user.role === 'admin') {
-        navigate('/admin/dashboard', { replace: true })
+        window.location.href = '/#/admin/dashboard'
       } else {
-        navigate('/client/dashboard', { replace: true })
+        window.location.href = '/#/client/dashboard'
       }
     } catch (err) {
       const message = err.response?.data?.message || 'Email ou mot de passe incorrect'
