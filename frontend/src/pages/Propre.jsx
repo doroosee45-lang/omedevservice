@@ -1,4 +1,4 @@
-
+﻿
 import { motion, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useRef, useEffect, useState } from 'react';
@@ -516,7 +516,7 @@ const Propre = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.07 }}
-                className="card-hover p-8">
+                className="card-hover p-5 sm:p-8">
                 <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5" style={{ background: `${service.color}20`, color: service.color }}>
                   <service.icon size={28} />
                 </div>
@@ -559,7 +559,7 @@ const Propre = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {products.map((product, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
-                className="card-hover p-8">
+                className="card-hover p-5 sm:p-8">
                 <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5" style={{ background: `${product.color}20`, color: product.color }}>
                   <product.icon size={28} />
                 </div>

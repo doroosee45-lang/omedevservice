@@ -487,7 +487,7 @@ const Home = () => {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
+              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
             >
               Transformez votre{' '}
               <span className="relative inline-block">
@@ -502,7 +502,7 @@ const Home = () => {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="text-gray-300 text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
+              className="text-gray-300 text-base sm:text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
             >
               ERP · SaaS · Cybersécurité · Développement Web &amp; Mobile.<br />
               Omedev vous accompagne dans votre <strong className="text-white">digitalisation complète</strong>.
@@ -514,10 +514,10 @@ const Home = () => {
               transition={{ duration: 0.7, delay: 0.4 }}
               className="flex flex-wrap gap-4 justify-center mb-12"
             >
-              <Link to="/demander-devis" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
+              <Link to="/demander-devis" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
                 Demander un devis <ArrowRight size={18} className="group-hover:translate-x-1 transition" />
               </Link>
-              <Link to="/solutions" className="group border-2 border-white/30 hover:border-white px-8 py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
+              <Link to="/solutions" className="group border-2 border-white/30 hover:border-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
                 Voir les solutions
               </Link>
               <Link to="/audit-gratuit" className="px-8 py-4 rounded-xl font-semibold text-amber-400 border border-amber-500/30 hover:bg-amber-500/10 transition-all">
@@ -773,7 +773,7 @@ const Home = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.07 }}
-                className="card-hover p-8">
+                className="card-hover p-5 sm:p-8">
                 <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5" style={{ background: `${service.color}20`, color: service.color }}>
                   <service.icon size={28} />
                 </div>
@@ -834,7 +834,7 @@ const Home = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {products.map((product, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
-                className="card-hover p-8">
+                className="card-hover p-5 sm:p-8">
                 <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5" style={{ background: `${product.color}20`, color: product.color }}>
                   <product.icon size={28} />
                 </div>

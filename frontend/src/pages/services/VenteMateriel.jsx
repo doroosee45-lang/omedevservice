@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { venteMateriel as vmApi } from '../../services/api'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -238,7 +238,7 @@ export default function VenteMateriel() {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
+              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
             >
               Le matériel qu'il vous faut,{' '}
               <span className="relative inline-block">
@@ -253,7 +253,7 @@ export default function VenteMateriel() {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="text-gray-300 text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
+              className="text-gray-300 text-base sm:text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
             >
               Ordinateurs, climatiseurs, caméras, serveurs, accessoires… Livraison rapide et support technique inclus.
             </motion.p>
@@ -264,10 +264,10 @@ export default function VenteMateriel() {
               transition={{ duration: 0.7, delay: 0.4 }}
               className="flex flex-wrap gap-4 justify-center"
             >
-              <a href="#catalogue" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
+              <a href="#catalogue" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
                 <ShoppingBag size={18} /> Voir le catalogue
               </a>
-              <a href="#suivi" className="group border-2 border-white/30 hover:border-white px-8 py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all flex items-center gap-2">
+              <a href="#suivi" className="group border-2 border-white/30 hover:border-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all flex items-center gap-2">
                 <Search size={18} /> Suivre ma commande
               </a>
             </motion.div>

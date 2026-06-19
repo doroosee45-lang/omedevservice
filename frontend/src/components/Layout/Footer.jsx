@@ -1,4 +1,4 @@
-// components/Footer.jsx
+﻿// components/Footer.jsx
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Clock, Loader2 } from 'lucide-react';
@@ -142,7 +142,7 @@ const Footer = () => {
           background: rgba(255,255,255,0.06);
           border: 1px solid rgba(255,255,255,0.12);
           border-radius: 10px; color: white;
-          font-size: 0.875rem; font-family: 'Outfit', sans-serif;
+          font-size: 1rem; font-family: 'Outfit', sans-serif;
           outline: none; transition: all 0.25s;
         }
         .newsletter-input::placeholder { color: rgba(255,255,255,0.3); }
@@ -155,7 +155,7 @@ const Footer = () => {
           padding: 11px 22px;
           background: linear-gradient(135deg, #2563eb, #06b6d4);
           color: white; border: none; border-radius: 10px;
-          font-size: 0.875rem; font-weight: 700; font-family: 'Outfit', sans-serif;
+          font-size: 1rem; font-weight: 700; font-family: 'Outfit', sans-serif;
           cursor: pointer; white-space: nowrap; transition: all 0.25s;
           box-shadow: 0 4px 14px rgba(37,99,235,0.3);
         }
@@ -299,6 +299,19 @@ const Footer = () => {
           .footer-main { grid-template-columns: 1fr; gap: 28px; }
           .footer-contact { flex-direction: column; gap: 16px; }
           .brand-stats { grid-template-columns: repeat(4,1fr); }
+        }
+        @media (max-width: 480px) {
+          .footer-newsletter-inner { padding: 0 16px; flex-direction: column; gap: 16px; }
+          .newsletter-form { max-width: 100%; width: 100%; flex-direction: column; }
+          .newsletter-input { font-size: 1rem; padding: 12px 14px; }
+          .newsletter-btn { font-size: 1rem; padding: 12px 20px; width: 100%; }
+          .footer-main { padding: 24px 16px 16px; gap: 24px; }
+          .footer-contact { padding: 12px 16px; gap: 12px; }
+          .footer-bottom { padding: 10px 16px; }
+          .footer-bottom-inner { flex-direction: column; text-align: center; gap: 8px; }
+          .newsletter-text-block { min-width: unset; }
+          .col-link { font-size: 0.95rem; padding: 4px 0; min-height: 36px; }
+          .scroll-top { bottom: 16px; right: 16px; }
         }
       `}</style>
 

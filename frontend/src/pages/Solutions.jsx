@@ -1,4 +1,4 @@
-import { motion, useInView } from 'framer-motion';
+﻿import { motion, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useRef, useEffect, useState } from 'react';
 import {
@@ -487,7 +487,7 @@ const SolutionsPage = () => {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
+              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
             >
               Nos{' '}
               <span className="relative inline-block">
@@ -502,7 +502,7 @@ const SolutionsPage = () => {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="text-gray-300 text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
+              className="text-gray-300 text-base sm:text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
             >
               Des packs complets et prêts à déployer pour <strong className="text-white">accélérer votre croissance</strong>
             </motion.p>
@@ -513,10 +513,10 @@ const SolutionsPage = () => {
               transition={{ duration: 0.7, delay: 0.4 }}
               className="flex flex-wrap gap-4 justify-center"
             >
-              <Link to="/contact" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
+              <Link to="/contact" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
                 Tous nos packs <ArrowRight size={18} className="group-hover:translate-x-1 transition" />
               </Link>
-              <Link to="/audit" className="group border-2 border-white/30 hover:border-white px-8 py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
+              <Link to="/audit" className="group border-2 border-white/30 hover:border-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
                 Audit gratuit
               </Link>
             </motion.div>
@@ -628,7 +628,7 @@ const SolutionsPage = () => {
               <Link to="/contact" className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-8 py-4 rounded-xl font-semibold transition-all hover:scale-105 hover:shadow-xl">
                 Contactez-nous <ArrowRight size={18} />
               </Link>
-              <Link to="/services" className="inline-flex items-center gap-2 border-2 border-white/30 hover:border-white px-8 py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all hover:scale-105">
+              <Link to="/services" className="inline-flex items-center gap-2 border-2 border-white/30 hover:border-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all hover:scale-105">
                 Voir tous les services <ChevronRight size={18} />
               </Link>
             </div>

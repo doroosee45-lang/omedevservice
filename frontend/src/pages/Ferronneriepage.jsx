@@ -1,4 +1,4 @@
-
+﻿
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -848,7 +848,7 @@ const FerronneriePage = () => {
               </Link>
               <a
                 href="tel:+21600000000"
-                className="inline-flex items-center gap-2 border-2 border-white/30 hover:border-white px-8 py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all hover:scale-105"
+                className="inline-flex items-center gap-2 border-2 border-white/30 hover:border-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all hover:scale-105"
               >
                 <Phone size={18} /> Appeler maintenant
               </a>

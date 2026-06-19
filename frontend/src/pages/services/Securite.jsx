@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+﻿import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   Shield,
@@ -259,7 +259,7 @@ const Securite = () => {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
+              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
             >
               Sécurisez votre{' '}
               <span className="relative inline-block">
@@ -274,7 +274,7 @@ const Securite = () => {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="text-gray-300 text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
+              className="text-gray-300 text-base sm:text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
             >
               Cybersécurité, protection des réseaux, sécurité télécom et conformité.
             </motion.p>
@@ -285,10 +285,10 @@ const Securite = () => {
               transition={{ duration: 0.7, delay: 0.4 }}
               className="flex flex-wrap gap-4 justify-center"
             >
-              <Link to="/audit-gratuit" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
+              <Link to="/audit-gratuit" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
                 Audit gratuit <ArrowRight size={18} className="group-hover:translate-x-1 transition" />
               </Link>
-              <Link to="/contact" className="group border-2 border-white/30 hover:border-white px-8 py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
+              <Link to="/contact" className="group border-2 border-white/30 hover:border-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
                 Contacter un expert
               </Link>
             </motion.div>

@@ -1,4 +1,4 @@
-
+﻿
 
 
 import { motion, useInView } from 'framer-motion';
@@ -361,7 +361,7 @@ const ServicesPage = () => {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
+              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
             >
               Nos{' '}
               <span className="relative inline-block">
@@ -376,7 +376,7 @@ const ServicesPage = () => {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="text-gray-300 text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
+              className="text-gray-300 text-base sm:text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
             >
               Des solutions complètes pour la <strong className="text-white">transformation digitale</strong> de votre entreprise
             </motion.p>
@@ -387,10 +387,10 @@ const ServicesPage = () => {
               transition={{ duration: 0.7, delay: 0.4 }}
               className="flex flex-wrap gap-4 justify-center"
             >
-              <Link to="/contact" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
+              <Link to="/contact" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
                 Nous contacter <ArrowRight size={18} className="group-hover:translate-x-1 transition" />
               </Link>
-              <Link to="/realisations" className="group border-2 border-white/30 hover:border-white px-8 py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
+              <Link to="/realisations" className="group border-2 border-white/30 hover:border-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
                 Voir nos réalisations
               </Link>
             </motion.div>
