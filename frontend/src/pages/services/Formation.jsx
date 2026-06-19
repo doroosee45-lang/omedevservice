@@ -171,9 +171,9 @@ const Formation = () => {
 
   // Centres de formation
   const centers = [
-    { city: "Paris", address: "123 avenue des Champs-Élysées, 75008", phone: "+33 1 23 45 67 89", email: "paris@omdeve.com", gradient: "from-blue-500 to-cyan-500" },
-    { city: "Lyon", address: "45 rue de la République, 69002", phone: "+33 4 56 78 90 12", email: "lyon@omdeve.com", gradient: "from-indigo-500 to-purple-500" },
-    { city: "Bordeaux", address: "78 cours de l'Intendance, 33000", phone: "+33 5 67 89 01 23", email: "bordeaux@omdeve.com", gradient: "from-cyan-500 to-blue-500" }
+    { city: "Kinshasa", address: "123 Avenue du Commerce, Gombe, Kinshasa", phone: "+243 81 234 5678", email: "kinshasa@omdeve.com", gradient: "from-blue-500 to-cyan-500" },
+    { city: "Lubumbashi", address: "45 Avenue Kamanyola, Lubumbashi", phone: "+243 97 456 7890", email: "lubumbashi@omdeve.com", gradient: "from-indigo-500 to-purple-500" },
+    { city: "Bulungu", address: "78 Avenue de l'Indépendance, Bulungu, Kwilu", phone: "+243 82 567 8901", email: "bulungu@omdeve.com", gradient: "from-cyan-500 to-blue-500" }
   ]
 
   return (
@@ -490,7 +490,7 @@ const Formation = () => {
                 <GraduationCap className="w-6 h-6 text-white" />
               </motion.div>
               <h3 className="text-2xl font-bold mb-2">Inscription en centre</h3>
-              <p className="text-gray-300 mb-6">Rejoignez nos sessions en présentiel à Paris, Lyon ou Bordeaux.</p>
+              <p className="text-gray-300 mb-6">Rejoignez nos sessions en présentiel à Kinshasa, Lubumbashi ou Bulungu.</p>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                 <Link to="/inscription" className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-xl font-semibold transition">
                   Je m'inscris <ArrowRight size={18} />
@@ -581,7 +581,7 @@ const Formation = () => {
           >
             <iframe
               title="Carte des centres OMDEVE"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.991440608414!2d2.292292615509614!3d48.85837360869918!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e2964e34e2d%3A0x8ddca9ee380ef7e0!2sTour%20Eiffel!5e0!3m2!1sfr!2sfr!4v1647863945678!5m2!1sfr!2sfr"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63800.05399612767!2d15.276786!3d-4.322447!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1a6a33ce0946a6f7%3A0x841c5ce35b8af2fb!2sKinshasa%2C%20R%C3%A9publique%20d%C3%A9mocratique%20du%20Congo!5e0!3m2!1sfr!2scd!4v1647863945678!5m2!1sfr!2scd"
               width="100%"
               height="300"
               style={{ border: 0 }}

@@ -95,7 +95,7 @@ const Inscription = () => {
   }
 
   const formationsList    = ["Réseaux & Infrastructure","Cybersécurité","Cloud & Virtualisation","Développement DevOps","Soft skills IT","Préparation certifications"]
-  const centresList       = ["Paris","Lyon","Bordeaux"]
+  const centresList       = ["Kinshasa","Lubumbashi","Bulungu"]
   const disponibilitesList= ["Matin (9h–12h)","Après-midi (14h–17h)","Soir (18h–21h)","Week-end","Intra-entreprise (dates à définir)"]
   const financementsList  = ["Entreprise (OPCO, plan de formation)","CPF (Compte Personnel de Formation)","Financement personnel","Pôle Emploi / AIF","Je ne sais pas encore"]
 
