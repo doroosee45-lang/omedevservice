@@ -465,7 +465,7 @@ const RealisationsPage = () => {
 
       {/* Hero Section */}
       {/* ==================== HERO SECTION - RÉALISATIONS ==================== */}
-      <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden pt-32 pb-20">
+      <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden pt-32 pb-20 min-h-[550px]">
         <div className="absolute inset-0 opacity-20" style={{
           backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
                             linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`,
