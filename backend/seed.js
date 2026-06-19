@@ -1,10 +1,11 @@
-// seed.js — Crée les comptes de démonstration en base de données
+// seed.js — Crée ou corrige les comptes de démonstration
 // Usage : node seed.js
 const dotenv = require('dotenv');
 dotenv.config();
 
 const connectDB = require('./config/db');
 const User = require('./models/User');
+const bcrypt = require('bcryptjs');
 
 const demoUsers = [
   {
@@ -28,12 +29,22 @@ const seed = async () => {
 
   for (const data of demoUsers) {
     const exists = await User.findOne({ email: data.email });
+
     if (exists) {
-      console.log(`⚠️  Compte déjà présent : ${data.email} (ignoré)`);
-      continue;
+      // Corriger le rôle si nécessaire et réinitialiser le mot de passe
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(data.password, salt);
+
+      await User.findByIdAndUpdate(exists._id, {
+        role:     data.role,
+        password: hashedPassword,
+        isActive: true,
+      });
+      console.log(`🔧 Compte mis à jour : ${data.email} | rôle : ${data.role}`);
+    } else {
+      await User.create(data);
+      console.log(`✅ Compte créé : ${data.email} | rôle : ${data.role}`);
     }
-    await User.create(data);
-    console.log(`✅ Compte créé : ${data.email} | rôle : ${data.role}`);
   }
 
   console.log('\n🎉 Seed terminé.');
