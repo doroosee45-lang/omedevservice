@@ -10,7 +10,7 @@ import { FaLinkedin, FaGithub, FaTwitter, FaInstagram, FaBehance } from 'react-i
 import { MdEmail } from 'react-icons/md';
 
 import expert1 from '/src/assets/images/experts/os5.jpeg';
-import expert2 from '/src/assets/images/experts/os2.jpg';
+import expert2 from '/src/assets/images/experts/ms.jpeg';
 import expert3 from '/src/assets/images/experts/os3.jpeg';
 import expert4 from '/src/assets/images/experts/st.jpeg';
 import expert5 from '/src/assets/images/experts/os1.jpg';
@@ -277,8 +277,8 @@ const Experts = () => {
     },
     {
       id: 2,
-      name: 'Osee Mbongo',
-      role: 'Directrice Technique',
+      name: 'Maswa Arthur ',
+      role: 'Directeur  Technique',
       position: 'Ingénieur Télécoms',
       bio: "Ingénieur en télécommunications, spécialiste des réseaux haut débit et des solutions cloud. Elle pilote l'innovation technique et la R&D.",
       image: expert2,
@@ -343,9 +343,9 @@ const Experts = () => {
     {
       id: 7,
       name: 'Amosi Aristote',
-      role: 'Resp. Climatisation',
-      position: 'Expert en Installation & Maintenance HVAC',
-      bio: "Certifié dans le domaine de la climatisation, il intervient sur l'installation, la maintenance et la réparation des systèmes de climatisation et de réfrigération.",
+      role: 'Resp Climatisation',
+      position: 'Expert en Installation & Maintenance,  Responsable du support technique',
+      bio: "Certifié dans le domaine de la climatisation, il intervient sur l'installation, la maintenance et la réparation des systèmes de climatisation.",
       image: expert7,
       gradient: 'from-sky-500 to-blue-700',
       posClass: 'pos7',
@@ -356,15 +356,15 @@ const Experts = () => {
     {
       id: 8,
       name: 'Rodric Kasway',
-      role: 'Resp. Vidéosurveillance',
-      position: 'Expert en Vidéosurveillance & Configuration Serveurs',
-      bio: "Spécialiste en vidéosurveillance et configuration de serveurs, il conçoit et maintient des systèmes de surveillance robustes et sécurisés pour nos clients.",
+      role: 'chargé technique des l’infrastructures réseau',
+      position: 'Administration et supervision des équipements réseau (routeurs, switchs, firewalls), ',
+      bio: "Spécialiste en Réseaux et configuration de serveurs, il conçoit et maintient des systèmes de surveillance robustes et sécurisés pour nos clients.",
       image: expert8,
       gradient: 'from-indigo-500 to-indigo-700',
       posClass: 'pos8',
       socials: { linkedin: 'https://linkedin.com/in/rodric-kasway', instagram: 'https://instagram.com/rodric.tech', email: 'rodric.kasway@omedev.com' },
-      skills: ['Vidéosurveillance', 'NVR/DVR', 'IP Cameras', 'Configuration réseau', 'Câblage'],
-      certifications: ['Certificat Vidéosurveillance', 'Technicien Sécurité Électronique']
+      skills: ['Création réseau', 'IP Cameras', 'Configuration réseau', 'Câblage'],
+      certifications: ['Certificat Cisco', 'Technicien Sécurité Électronique']
     },
     {
       id: 9,
@@ -379,11 +379,12 @@ const Experts = () => {
       skills: ['Photoshop', 'Illustrator', 'InDesign', 'Identité visuelle', 'Web Design'],
       certifications: ['Adobe Certified', 'Technicien Infographiste', 'Web Designer']
     },
+    
      {
       id: 10,
       name: 'Emanuel Kitoko',
       role: 'Analyste Programmeur ',
-      position: 'un programmeur analyste spécialisé en développement de logiciels et applications web. Il conçoit des solutions informatiques sur mesure pour répondre aux besoins spécifiques de nos clients.',
+      position: 'un programmeur analyste spécialisé en développement de logiciels et applications.',
       bio: "Certifié en informatique de gestion, il conçoit des solutions logicielles personnalisées pour répondre aux besoins spécifiques de nos clients, en assurant performance et fiabilité.",
       image: expert10,
       gradient: 'from-fuchsia-500 to-pink-700',
@@ -434,24 +435,13 @@ const Experts = () => {
 
       {/* ══════════════════════════ HERO ══════════════════════════ */}
       <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden pt-32 pb-20">
-        <div className="absolute inset-0 overflow-hidden">
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110 animate-slow-zoom"
-            style={{
-              backgroundImage: `url('https://img.freepik.com/photos-gratuite/contexte-energie-nucleaire-ia-innovation-future-technologie-rupture_53876-129783.jpg?semt=ais_hybrid&w=740&q=80')`
-            }}
-          />
-          <div className="absolute inset-0 bg-black/70" />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-slate-900/50 to-indigo-900/20" />
-        <div className="absolute inset-0 opacity-30" style={{
+        <div className="absolute inset-0 opacity-20" style={{
           backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
                             linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`,
           backgroundSize: '60px 60px'
         }} />
-        <div className="absolute w-96 h-96 bg-blue-600/20 top-20 -left-48 rounded-full filter blur-[100px] animate-float" />
-        <div className="absolute w-80 h-80 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[100px] animate-float" style={{ animationDelay: '2s' }} />
-        <div className="absolute w-60 h-60 bg-cyan-500/10 top-1/2 left-1/2 -translate-x-1/2 rounded-full filter blur-[100px] animate-float" style={{ animationDelay: '4s' }} />
+        <div className="absolute w-96 h-96 bg-blue-600/20 top-20 -left-20 rounded-full filter blur-[80px] animate-float" />
+        <div className="absolute w-72 h-72 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
@@ -459,63 +449,50 @@ const Experts = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 mb-6 px-5 py-2 rounded-full bg-blue-600/20 border border-blue-500/30 backdrop-blur-sm"
+              className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-blue-600/15 border border-blue-500/30"
             >
-              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse-ring" />
-              <span className="text-blue-300 font-semibold text-sm tracking-wide font-syne">Notre équipe d'élite</span>
+              <Users className="w-4 h-4 text-blue-400" />
+              <span className="text-blue-300 font-semibold text-xs tracking-wide font-syne">Notre équipe d'élite</span>
             </motion.div>
 
             <motion.h1
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold leading-tight mb-6 font-syne"
+              className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
             >
               Des{' '}
               <span className="relative inline-block">
-                <span className="absolute -inset-2 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 blur-2xl opacity-50" />
+                <span className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 blur-2xl opacity-50" />
                 <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
                   experts passionnés
                 </span>
               </span>
             </motion.h1>
 
-            <motion.div
-              initial={{ opacity: 0, scaleX: 0 }}
-              animate={{ opacity: 1, scaleX: 1 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="w-24 h-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 rounded-full mx-auto mb-6"
-            />
-
             <motion.p
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="text-gray-300 text-xl md:text-2xl mb-8 max-w-2xl mx-auto leading-relaxed"
+              className="text-gray-300 text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
             >
               Une équipe multidisciplinaire dédiée à votre réussite technologique et énergétique.
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.4 }}
               className="flex flex-wrap gap-4 justify-center"
             >
-              <Link to="/contact" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all duration-300 hover:scale-105 hover:shadow-xl shadow-lg">
-                Nous contacter <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              <Link to="/contact" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
+                Nous contacter <ArrowRight size={18} className="group-hover:translate-x-1 transition" />
               </Link>
-              <Link to="/realisations" className="group border-2 border-white/30 hover:border-white px-8 py-3 rounded-xl font-semibold text-white hover:bg-white/10 transition-all duration-300 hover:scale-105">
+              <Link to="/realisations" className="group border-2 border-white/30 hover:border-white px-8 py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
                 Voir nos réalisations
               </Link>
             </motion.div>
           </div>
-        </div>
-
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-12 text-slate-950/20">
-            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="currentColor" />
-          </svg>
         </div>
       </section>
 

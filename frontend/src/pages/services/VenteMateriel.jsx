@@ -213,55 +213,63 @@ export default function VenteMateriel() {
       <style>{globalStyles}</style>
 
       {/* ─── HERO ─── */}
-      <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden pt-24 pb-16">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute inset-0 bg-cover bg-center scale-110"
-            style={{ backgroundImage: `url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=1400&fit=crop')` }} />
-          <div className="absolute inset-0 bg-slate-950/80" />
-        </div>
-        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`, backgroundSize: '60px 60px' }} />
+      <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden pt-32 pb-20">
+        <div className="absolute inset-0 opacity-20" style={{
+          backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px'
+        }} />
+        <div className="absolute w-96 h-96 bg-blue-600/20 top-20 -left-20 rounded-full filter blur-[80px] animate-float" />
+        <div className="absolute w-72 h-72 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
 
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 mb-5 px-4 py-2 rounded-full bg-blue-600/15 border border-blue-500/30">
-              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse-ring" />
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-blue-600/15 border border-blue-500/30"
+            >
+              <ShoppingBag className="w-4 h-4 text-blue-400" />
               <span className="text-blue-300 font-semibold text-xs tracking-wide font-syne">Vente de Matériel IT</span>
             </motion.div>
 
-            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-4 font-syne">
+            <motion.h1
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
+            >
               Le matériel qu'il vous faut,{' '}
               <span className="relative inline-block">
                 <span className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 blur-2xl opacity-50" />
-                <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">au meilleur prix</span>
+                <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
+                  au meilleur prix
+                </span>
               </span>
             </motion.h1>
 
-            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }}
-              className="text-gray-300 text-base md:text-lg mb-8 max-w-2xl mx-auto">
-              Ordinateurs, climatiseurs, caméras, serveurs, accessoires… Livraison rapide et support technique inclus sur chaque commande.
+            <motion.p
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+              className="text-gray-300 text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
+            >
+              Ordinateurs, climatiseurs, caméras, serveurs, accessoires… Livraison rapide et support technique inclus.
             </motion.p>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }}
-              className="flex flex-wrap gap-3 justify-center">
-              <a href="#catalogue" className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-semibold text-sm flex items-center gap-2 transition-all shadow-lg hover:shadow-xl">
-                <ShoppingBag size={16} /> Voir le catalogue
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.4 }}
+              className="flex flex-wrap gap-4 justify-center"
+            >
+              <a href="#catalogue" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
+                <ShoppingBag size={18} /> Voir le catalogue
               </a>
-              <a href="#suivi" className="border-2 border-white/30 hover:border-white px-6 py-3 rounded-xl font-semibold text-white hover:bg-white/10 transition-all text-sm flex items-center gap-2">
-                <Search size={16} /> Suivre ma commande
+              <a href="#suivi" className="group border-2 border-white/30 hover:border-white px-8 py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all flex items-center gap-2">
+                <Search size={18} /> Suivre ma commande
               </a>
-            </motion.div>
-
-            {/* Stats */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.5 }}
-              className="mt-12 grid grid-cols-3 gap-4 max-w-md mx-auto">
-              {[{ val: '500+', lbl: 'Produits' }, { val: '48h', lbl: 'Livraison' }, { val: '24/7', lbl: 'Support' }].map(s => (
-                <div key={s.lbl} className="text-center">
-                  <div className="text-2xl font-bold text-blue-400 font-syne">{s.val}</div>
-                  <div className="text-xs text-gray-400 mt-0.5">{s.lbl}</div>
-                </div>
-              ))}
             </motion.div>
           </div>
         </div>

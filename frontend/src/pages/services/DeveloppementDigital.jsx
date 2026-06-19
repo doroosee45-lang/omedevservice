@@ -215,76 +215,44 @@ const DeveloppementDigital = () => {
 
 
 
-      {/* Hero Section - style Contact */}
-{/* Hero Section - Cloud & Hébergement (500px) */}
-<section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden pt-24 pb-12">
-  
-  {/* Image d'arrière-plan avec overlay */}
-  <div className="absolute inset-0 overflow-hidden">
-    <div
-      className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110 animate-slow-zoom"
-      style={{
-        backgroundImage: `url('https://img.freepik.com/photos-gratuite/contexte-energie-nucleaire-ia-innovation-future-technologie-rupture_53876-129783.jpg?semt=ais_hybrid&w=740&q=80')`
-      }}
-    />
-    <div className="absolute inset-0 bg-black/65"></div>
-  </div>
+      {/* Hero Section - Développement Digital */}
+      <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden pt-32 pb-20">
+        <div className="absolute inset-0 opacity-20" style={{
+          backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px'
+        }} />
+        <div className="absolute w-96 h-96 bg-blue-600/20 top-20 -left-20 rounded-full filter blur-[80px] animate-float" />
+        <div className="absolute w-72 h-72 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
 
-  {/* Grille de fond */}
-  <div className="absolute inset-0 opacity-20" style={{
-    backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
-                      linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`,
-    backgroundSize: '60px 60px'
-  }} />
-  
-  {/* Effet lumineux */}
-  <div className="absolute inset-0 bg-[radial-gradient(at_top_right,#3b82f645_0%,transparent_65%)]" />
-  
-  {/* Orbes flottants (ajustés pour 500px) */}
-  <div className="absolute w-72 h-72 bg-cyan-600/20 top-12 -left-20 rounded-full filter blur-[80px] animate-float" />
-  <div className="absolute w-56 h-56 bg-blue-700/15 bottom-12 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
-  <div className="absolute w-36 h-36 bg-cyan-500/10 top-1/2 left-1/2 -translate-x-1/2 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '4s' }} />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-blue-600/15 border border-blue-500/30"
+            >
+              <Code className="w-4 h-4 text-blue-400" />
+              <span className="text-blue-300 font-semibold text-xs tracking-wide font-syne">Développement Digital</span>
+            </motion.div>
 
-  <div className="container mx-auto px-4 relative z-10">
-    <div className="max-w-3xl mx-auto text-center">
-      
-      {/* Badge */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="inline-flex items-center gap-2 mb-4 px-3 py-1.5 rounded-full bg-cyan-600/15 border border-cyan-500/30"
-      >
-        <Cloud className="w-3 h-3 text-cyan-400" />
-        <span className="text-cyan-300 font-semibold text-[10px] tracking-wide font-syne">Cloud & Hébergement</span>
-      </motion.div>
+            <motion.h1
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
+            >
+              Développement{' '}
+              <span className="relative inline-block">
+                <span className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 blur-2xl opacity-50" />
+                <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
+                  Digital
+                </span>
+              </span>
+            </motion.h1>
 
-      {/* Titre */}
-      <motion.h1
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
-        className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight mb-3 font-syne"
-      >
-        Développement{' '}
-        <span className="relative inline-block">
-          <span className="absolute -inset-1 bg-gradient-to-r from-cyan-500 via-blue-400 to-indigo-400 blur-2xl opacity-50" />
-          <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400">
-            Digital 
-          </span>
-        </span>
-      </motion.h1>
-
-      {/* Ligne décorative */}
-      <motion.div
-        initial={{ opacity: 0, scaleX: 0 }}
-        animate={{ opacity: 1, scaleX: 1 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="w-16 h-0.5 bg-gradient-to-r from-cyan-500 via-blue-400 to-indigo-400 rounded-full mx-auto mb-3"
-      />
-
-      {/* Paragraphe */}
-      <motion.p
+            <motion.p
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.3 }}
@@ -299,38 +267,16 @@ const DeveloppementDigital = () => {
               transition={{ duration: 0.7, delay: 0.4 }}
               className="flex flex-wrap gap-4 justify-center"
             >
-
-         <Link to="/contact" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105 hover:shadow-xl">
-                Demander un devis <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              <Link to="/contact" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
+                Demander un devis <ArrowRight size={18} className="group-hover:translate-x-1 transition" />
               </Link>
-              <Link to="/audit" className="group border-2 border-white/30 hover:border-white px-8 py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all hover:scale-105">
-                Audit gratuit <CheckCircle size={18} />
+              <Link to="/audit" className="group border-2 border-white/30 hover:border-white px-8 py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
+                Audit gratuit
               </Link>
             </motion.div>
-
-      {/* Flèche de scroll */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.6 }}
-        className="mt-8 flex justify-center"
-      >
-        <div className="animate-bounce">
-          <div className="w-5 h-8 rounded-full border-2 border-white/30 flex justify-center">
-            <div className="w-1 h-1.5 bg-white/50 rounded-full mt-1.5 animate-pulse" />
           </div>
         </div>
-      </motion.div>
-    </div>
-  </div>
-
-  {/* Vague décorative */}
-  <div className="absolute bottom-0 left-0 right-0 text-white/10">
-    <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-8">
-      <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="currentColor" />
-    </svg>
-  </div>
-</section>
+      </section>
 
 
 

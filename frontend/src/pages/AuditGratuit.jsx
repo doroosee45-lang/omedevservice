@@ -514,7 +514,6 @@ const AuditGratuit = () => {
         }} />
         <div className="absolute w-96 h-96 bg-blue-600/20 top-20 -left-20 rounded-full filter blur-[80px] animate-float" />
         <div className="absolute w-72 h-72 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
-        <div className="absolute w-48 h-48 bg-cyan-500/10 top-1/2 left-1/2 -translate-x-1/2 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '4s' }} />
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
@@ -524,7 +523,7 @@ const AuditGratuit = () => {
               transition={{ duration: 0.5 }}
               className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-blue-600/15 border border-blue-500/30"
             >
-              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse-ring" />
+              <Shield className="w-4 h-4 text-blue-400" />
               <span className="text-blue-300 font-semibold text-xs tracking-wide font-syne">Diagnostic gratuit</span>
             </motion.div>
 
@@ -532,7 +531,7 @@ const AuditGratuit = () => {
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold leading-tight mb-6 font-syne"
+              className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
             >
               Audit{' '}
               <span className="relative inline-block">
@@ -542,13 +541,6 @@ const AuditGratuit = () => {
                 </span>
               </span>
             </motion.h1>
-
-            <motion.div
-              initial={{ opacity: 0, scaleX: 0 }}
-              animate={{ opacity: 1, scaleX: 1 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="w-24 h-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 rounded-full mx-auto mb-6"
-            />
 
             <motion.p
               initial={{ opacity: 0, y: 40 }}
@@ -565,25 +557,19 @@ const AuditGratuit = () => {
               transition={{ duration: 0.7, delay: 0.4 }}
               className="flex flex-wrap gap-4 justify-center"
             >
-              <Link to="/contact" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105 hover:shadow-xl">
-                Nous contacter <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              <Link to="/contact" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
+                Nous contacter <ArrowRight size={18} className="group-hover:translate-x-1 transition" />
               </Link>
-              <Link to="/solutions" className="group border-2 border-white/30 hover:border-white px-8 py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all hover:scale-105">
-                Voir nos solutions <CheckCircle size={18} />
+              <Link to="/solutions" className="group border-2 border-white/30 hover:border-white px-8 py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
+                Voir nos solutions
               </Link>
             </motion.div>
           </div>
         </div>
-
-        <div className="absolute bottom-0 left-0 right-0 text-white/10">
-          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-12">
-            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="currentColor" />
-          </svg>
-        </div>
       </section>
 
       {/* Progress Steps */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 -mt-16 relative z-10 pb-8">
+      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 relative z-10 pb-8">
         <div className="container mx-auto max-w-4xl px-4">
           <div className="flex justify-between items-center relative">
             {steps.map((s, idx) => (

@@ -38,8 +38,10 @@ export default {
         gold: '#f59e0b',
       },
       fontFamily: {
+        syne:    ['Syne', 'sans-serif'],
         display: ['Syne', 'sans-serif'],
-        body: ['DM Sans', 'sans-serif'],
+        sans:    ['DM Sans', 'sans-serif'],
+        body:    ['DM Sans', 'sans-serif'],
       },
       animation: {
         'fade-up': 'fadeUp 0.6s ease forwards',
