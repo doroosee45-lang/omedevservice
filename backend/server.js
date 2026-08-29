@@ -44,6 +44,7 @@ app.use('/api/blog', require('./routes/articleRoutes'));
 app.use('/api/crm', require('./routes/crmRoutes'));
 app.use('/api/tickets', require('./routes/ticketRoutes'));
 app.use('/api/quote-requests', require('./routes/quoteRoutes'));
+app.use('/api/inscriptions', require('./routes/inscriptionRoutes'));
 app.use('/api/audit-requests', require('./routes/auditRoutes'));
 app.use('/api/contact', require('./routes/contactRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));

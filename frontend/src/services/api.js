@@ -175,6 +175,19 @@ export const quoteRequests = {
   exportCSV: (params) => api.get('/quote-requests/export/csv', { params, responseType: 'blob' }),
 };
 
+// ==================== INSCRIPTIONS FORMATIONS ====================
+// Processus indépendant des devis : un étudiant qui s'inscrit à une
+// formation n'est jamais un devis commercial.
+export const inscriptions = {
+  create: (data) => api.post('/inscriptions', data),
+  getAll: (params) => api.get('/inscriptions', { params }),
+  getStats: () => api.get('/inscriptions/stats'),
+  getById: (id) => api.get(`/inscriptions/${id}`),
+  updateStatus: (id, statusData) => api.put(`/inscriptions/${id}/status`, statusData),
+  resendEmail: (id) => api.post(`/inscriptions/${id}/resend-email`),
+  delete: (id) => api.delete(`/inscriptions/${id}`),
+};
+
 // ==================== AUDITS GRATUITS ====================
 export const audits = {
   create: (data) => api.post('/audit-requests', data),

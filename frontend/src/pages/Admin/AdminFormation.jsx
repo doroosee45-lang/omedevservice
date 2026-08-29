@@ -11,8 +11,11 @@ import {
   Phone,
   Users,
   RefreshCw,
+  Mail,
+  MailWarning,
+  Send,
 } from 'lucide-react'
-import { quoteRequests as quoteApi } from '../../services/api'
+import { inscriptions as inscriptionsApi } from '../../services/api'
 import { PageHeader, Button, SearchInput, EmptyState, LoadingState, Pagination, staggerContainer } from '../../components/Admin/ui'
 
 const fadeUp = {
@@ -21,11 +24,16 @@ const fadeUp = {
 }
 
 const STATUS_CONFIG = {
-  pending:   { label: 'En attente',  color: 'bg-amber-500/20 text-amber-400 border-amber-500/30',       icon: Clock },
-  contacted: { label: 'Contacté',   color: 'bg-blue-500/20 text-blue-400 border-blue-500/30',           icon: Phone },
-  quoted:    { label: 'Confirmée',  color: 'bg-purple-500/20 text-purple-400 border-purple-500/30',     icon: GraduationCap },
-  converted: { label: 'Inscrit',    color: 'bg-[#2AACB2]/20 text-[#55DDB5] border-[#2AACB2]/30',  icon: CheckCircle },
-  lost:      { label: 'Annulé',     color: 'bg-red-500/20 text-red-400 border-red-500/30',              icon: X },
+  pending:   { label: 'En attente', color: 'bg-amber-500/20 text-amber-400 border-amber-500/30',      icon: Clock },
+  contacted: { label: 'Contacté',   color: 'bg-blue-500/20 text-blue-400 border-blue-500/30',          icon: Phone },
+  confirmed: { label: 'Confirmée',  color: 'bg-[#2AACB2]/20 text-[#55DDB5] border-[#2AACB2]/30',       icon: CheckCircle },
+  cancelled: { label: 'Annulée',    color: 'bg-red-500/20 text-red-400 border-red-500/30',             icon: X },
+}
+
+const EMAIL_STATUS_CONFIG = {
+  sent:    { label: 'Email envoyé',    color: 'text-[#55DDB5]', icon: Mail },
+  pending: { label: 'Email en attente', color: 'text-amber-400', icon: Clock },
+  failed:  { label: "Échec de l'envoi", color: 'text-red-400',   icon: MailWarning },
 }
 
 const FORMATIONS = [
@@ -37,31 +45,18 @@ const FORMATIONS = [
   'Préparation certifications',
 ]
 
-const parseFormationMessage = (msg) => {
-  if (!msg) return {}
-  const r = {}
-  const m = {
-    formation:     msg.match(/Formation:\s*([^|]+)/),
-    centre:        msg.match(/Centre:\s*([^|]+)/),
-    disponibilite: msg.match(/Disponibilité:\s*([^|]+)/),
-    financement:   msg.match(/Financement:\s*([^\n]+)/),
-  }
-  for (const [k, v] of Object.entries(m)) if (v) r[k] = v[1].trim()
-  const parts = msg.split('\n\n')
-  if (parts.length > 1) r.note = parts.slice(1).join('\n\n').trim()
-  return r
-}
-
-const DetailModal = ({ inscription, onClose, onStatusChange }) => {
+const DetailModal = ({ inscription, onClose, onStatusChange, onEmailResent }) => {
   const [status, setStatus] = useState(inscription.status || 'pending')
   const [notes,  setNotes]  = useState(inscription.notes  || '')
   const [saving, setSaving] = useState(false)
-  const parsed = parseFormationMessage(inscription.message)
+  const [resending, setResending] = useState(false)
+  const [resendError, setResendError] = useState('')
+  const [emailStatus, setEmailStatus] = useState(inscription.emailStatus || 'pending')
 
   const handleSave = async () => {
     setSaving(true)
     try {
-      await quoteApi.updateStatus(inscription._id, { status, notes })
+      await inscriptionsApi.updateStatus(inscription._id, { status, notes })
       onStatusChange(inscription._id, status)
       onClose()
     } catch (err) {
@@ -70,6 +65,25 @@ const DetailModal = ({ inscription, onClose, onStatusChange }) => {
       setSaving(false)
     }
   }
+
+  const handleResendEmail = async () => {
+    setResending(true)
+    setResendError('')
+    try {
+      await inscriptionsApi.resendEmail(inscription._id)
+      setEmailStatus('sent')
+      onEmailResent(inscription._id, 'sent')
+    } catch (err) {
+      setEmailStatus('failed')
+      onEmailResent(inscription._id, 'failed')
+      setResendError(err.response?.data?.message || "L'envoi de l'email a échoué.")
+    } finally {
+      setResending(false)
+    }
+  }
+
+  const emailCfg = EMAIL_STATUS_CONFIG[emailStatus] || EMAIL_STATUS_CONFIG.pending
+  const EmailIcon = emailCfg.icon
 
   return (
     <div className="fixed inset-0 admin-modal-overlay flex items-center justify-center z-50 p-4">
@@ -86,7 +100,7 @@ const DetailModal = ({ inscription, onClose, onStatusChange }) => {
             </div>
             <div>
               <h2 className="text-xl font-bold text-white font-syne">Inscription Formation</h2>
-              <p className="text-sm text-white/50">{inscription.requestNumber || inscription._id}</p>
+              <p className="text-sm text-white/50">{inscription.inscriptionNumber || inscription._id}</p>
             </div>
           </div>
           <button onClick={onClose} className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition">
@@ -100,7 +114,7 @@ const DetailModal = ({ inscription, onClose, onStatusChange }) => {
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div>
                 <p className="text-xs text-white/40">Nom</p>
-                <p className="text-white font-medium">{inscription.fullName || inscription.name}</p>
+                <p className="text-white font-medium">{inscription.fullName}</p>
               </div>
               <div>
                 <p className="text-xs text-white/40">Email</p>
@@ -122,32 +136,54 @@ const DetailModal = ({ inscription, onClose, onStatusChange }) => {
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div>
                 <p className="text-xs text-white/40">Formation</p>
-                <p className="text-[#2AACB2] font-medium">{parsed.formation || inscription.serviceType || '—'}</p>
+                <p className="text-[#2AACB2] font-medium">{inscription.formation || '—'}</p>
               </div>
               <div>
                 <p className="text-xs text-white/40">Centre</p>
-                <p className="text-white">{parsed.centre || '—'}</p>
+                <p className="text-white">{inscription.centre || '—'}</p>
               </div>
               <div>
                 <p className="text-xs text-white/40">Disponibilité</p>
-                <p className="text-white">{parsed.disponibilite || '—'}</p>
+                <p className="text-white">{inscription.disponibilite || '—'}</p>
               </div>
               <div>
                 <p className="text-xs text-white/40">Financement</p>
-                <p className="text-white">{parsed.financement || '—'}</p>
+                <p className="text-white">{inscription.financement || '—'}</p>
               </div>
             </div>
           </div>
 
-          {parsed.note && (
+          {inscription.message && (
             <div className="bg-white/5 rounded-xl p-4">
               <h3 className="text-xs font-semibold text-white/50 uppercase mb-2">Message</h3>
-              <p className="text-white/70 text-sm leading-relaxed">{parsed.note}</p>
+              <p className="text-white/70 text-sm leading-relaxed">{inscription.message}</p>
             </div>
           )}
 
           <div className="bg-white/5 rounded-xl p-4">
-            <h3 className="text-xs font-semibold text-white/50 uppercase mb-3">Statut</h3>
+            <h3 className="text-xs font-semibold text-white/50 uppercase mb-3">Email de confirmation</h3>
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <span className={'flex items-center gap-1.5 text-sm font-medium ' + emailCfg.color}>
+                <EmailIcon className="w-4 h-4" />
+                {emailCfg.label}
+              </span>
+              <button
+                onClick={handleResendEmail}
+                disabled={resending}
+                className="admin-btn admin-btn-outline text-xs px-3 py-1.5 flex items-center gap-1.5"
+              >
+                {resending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
+                Renvoyer l'email
+              </button>
+            </div>
+            {resendError && <p className="text-red-400 text-xs mt-2">{resendError}</p>}
+            {inscription.emailError && emailStatus === 'failed' && !resendError && (
+              <p className="text-white/30 text-xs mt-2 break-words">Dernière erreur : {inscription.emailError}</p>
+            )}
+          </div>
+
+          <div className="bg-white/5 rounded-xl p-4">
+            <h3 className="text-xs font-semibold text-white/50 uppercase mb-3">Statut de l'inscription</h3>
             <div className="flex flex-wrap gap-2 mb-4">
               {Object.entries(STATUS_CONFIG).map(([key, cfg]) => {
                 const StatusIcon = cfg.icon
@@ -209,14 +245,8 @@ const AdminFormation = () => {
   const loadData = async () => {
     setLoading(true)
     try {
-      const res = await quoteApi.getAll()
-      const all = res.data?.data || res.data || []
-      const formations = all.filter(r =>
-        r.service === 'Formation' ||
-        r.serviceType?.includes('Formation') ||
-        (r.message && r.message.includes('Formation:'))
-      )
-      setInscriptions(formations)
+      const res = await inscriptionsApi.getAll()
+      setInscriptions(res.data?.inscriptions || [])
     } catch (err) {
       console.error(err)
     } finally {
@@ -227,10 +257,13 @@ const AdminFormation = () => {
   const handleStatusChange = (id, newStatus) =>
     setInscriptions(prev => prev.map(i => i._id === id ? { ...i, status: newStatus } : i))
 
+  const handleEmailResent = (id, newEmailStatus) =>
+    setInscriptions(prev => prev.map(i => i._id === id ? { ...i, emailStatus: newEmailStatus } : i))
+
   const handleDelete = async (id) => {
     if (!window.confirm('Supprimer cette inscription ?')) return
     try {
-      await quoteApi.delete(id)
+      await inscriptionsApi.delete(id)
       setInscriptions(prev => prev.filter(i => i._id !== id))
     } catch (err) {
       console.error(err)
@@ -239,12 +272,12 @@ const AdminFormation = () => {
 
   const filtered = inscriptions.filter(i => {
     const term = search.toLowerCase()
-    const name  = (i.fullName || i.name || '').toLowerCase()
+    const name  = (i.fullName || '').toLowerCase()
     const email = (i.email || '').toLowerCase()
-    const prog  = (i.serviceType || '').toLowerCase()
+    const prog  = (i.formation || '').toLowerCase()
     const matchSearch  = !search || name.includes(term) || email.includes(term) || prog.includes(term)
     const matchStatus  = statusFilter === 'all' || i.status === statusFilter
-    const matchProgram = programFilter === 'all' || (i.serviceType || '') === programFilter
+    const matchProgram = programFilter === 'all' || (i.formation || '') === programFilter
     return matchSearch && matchStatus && matchProgram
   })
 
@@ -253,21 +286,21 @@ const AdminFormation = () => {
 
   const total      = inscriptions.length
   const pending    = inscriptions.filter(i => !i.status || i.status === 'pending').length
-  const confirmed  = inscriptions.filter(i => i.status === 'converted' || i.status === 'quoted').length
-  const programmes = [...new Set(inscriptions.map(i => i.serviceType).filter(Boolean))].length
+  const confirmed  = inscriptions.filter(i => i.status === 'confirmed').length
+  const emailFailed = inscriptions.filter(i => i.emailStatus === 'failed').length
 
   const stats = [
-    { icon: Users,         label: 'Total inscriptions',   value: total,      color: 'from-[#0B74C1] to-[#2AACB2]' },
-    { icon: Clock,         label: 'En attente',            value: pending,    color: 'from-amber-500 to-orange-500'  },
-    { icon: CheckCircle,   label: 'Confirmées / Inscrites', value: confirmed, color: 'from-[#2AACB2] to-[#2AACB2]'  },
-    { icon: GraduationCap, label: 'Programmes distincts',  value: programmes, color: 'from-blue-500 to-cyan-500'     },
+    { icon: Users,         label: 'Total inscriptions',   value: total,       color: 'from-[#0B74C1] to-[#2AACB2]' },
+    { icon: Clock,         label: 'En attente',            value: pending,     color: 'from-amber-500 to-orange-500'  },
+    { icon: CheckCircle,   label: 'Confirmées',            value: confirmed,   color: 'from-[#2AACB2] to-[#2AACB2]'  },
+    { icon: MailWarning,   label: 'Emails en échec',        value: emailFailed, color: 'from-red-500 to-orange-500'    },
   ]
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Inscriptions Formations"
-        subtitle="Gérez les demandes d'inscription aux formations"
+        subtitle="Gérez les demandes d'inscription aux formations — indépendant des devis commerciaux"
         actions={<Button variant="outline" icon={RefreshCw} onClick={loadData}>Actualiser</Button>}
       />
 
@@ -319,10 +352,11 @@ const AdminFormation = () => {
       ) : (
         <div className="space-y-3">
           {paginated.map((ins, idx) => {
-            const parsed = parseFormationMessage(ins.message)
             const sc = STATUS_CONFIG[ins.status] || STATUS_CONFIG.pending
             const StatusIcon = sc.icon
-            const initial = (ins.fullName || ins.name || '?')[0].toUpperCase()
+            const ec = EMAIL_STATUS_CONFIG[ins.emailStatus] || EMAIL_STATUS_CONFIG.pending
+            const EmailIcon = ec.icon
+            const initial = (ins.fullName || '?')[0].toUpperCase()
             return (
               <motion.div
                 key={ins._id}
@@ -338,17 +372,18 @@ const AdminFormation = () => {
                       <span className="text-white font-bold text-sm">{initial}</span>
                     </div>
                     <div className="min-w-0">
-                      <p className="text-white font-medium text-sm truncate">{ins.fullName || ins.name}</p>
+                      <p className="text-white font-medium text-sm truncate">{ins.fullName}</p>
                       <p className="text-white/50 text-xs truncate">{ins.email}</p>
                     </div>
                   </div>
 
                   <div className="flex-1 hidden md:block px-4">
-                    <p className="text-[#2AACB2] text-sm font-medium truncate">{parsed.formation || ins.serviceType || '—'}</p>
-                    <p className="text-white/40 text-xs">{parsed.centre || '—'} · {parsed.disponibilite || '—'}</p>
+                    <p className="text-[#2AACB2] text-sm font-medium truncate">{ins.formation || '—'}</p>
+                    <p className="text-white/40 text-xs">{ins.centre || '—'} · {ins.disponibilite || '—'}</p>
                   </div>
 
                   <div className="flex items-center gap-3">
+                    <EmailIcon className={'w-4 h-4 ' + ec.color} title={ec.label} />
                     <span className={'flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border ' + sc.color}>
                       <StatusIcon className="w-3 h-3" />
                       {sc.label}
@@ -384,6 +419,7 @@ const AdminFormation = () => {
             inscription={selected}
             onClose={() => setSelected(null)}
             onStatusChange={handleStatusChange}
+            onEmailResent={handleEmailResent}
           />
         )}
       </AnimatePresence>

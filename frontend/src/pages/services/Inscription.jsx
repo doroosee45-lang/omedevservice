@@ -1,7 +1,7 @@
 ﻿import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-import { quoteRequests } from '../../services/api'
+import { inscriptions } from '../../services/api'
 import PublicHero from '../../components/Public/PublicHero'
 import {
   GraduationCap,
@@ -339,6 +339,8 @@ const Inscription = () => {
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [inscriptionNumber, setInscriptionNumber] = useState('')
+  const [emailStatus, setEmailStatus] = useState('')
 
   const handleChange = (e) => {
     setFormData({
@@ -353,19 +355,21 @@ const Inscription = () => {
     setError('')
 
     try {
-      await quoteRequests.create({
+      const response = await inscriptions.create({
         fullName: formData.nom,
         email: formData.email,
         phone: formData.telephone,
-        serviceType: 'formation',
-        description:
-          `Formation: ${formData.formation} | ` +
-          `Centre: ${formData.centre} | ` +
-          `Disponibilité: ${formData.disponibilite} | ` +
-          `Financement: ${formData.financement}\n\n` +
-          `${formData.message}`
+        formation: formData.formation,
+        centre: formData.centre,
+        disponibilite: formData.disponibilite,
+        financement: formData.financement,
+        message: formData.message,
       })
 
+      // La base de données est la source de vérité : on n'arrive ici que si
+      // l'inscription a bien été enregistrée, quel que soit le sort de l'email.
+      setInscriptionNumber(response.data.inscriptionNumber || '')
+      setEmailStatus(response.data.emailStatus || 'pending')
       setSubmitted(true)
 
       setTimeout(() => {
@@ -381,7 +385,7 @@ const Inscription = () => {
           financement: '',
           message: ''
         })
-      }, 4000)
+      }, 6000)
 
     } catch (err) {
       console.error('Erreur inscription formation:', err)
@@ -515,7 +519,7 @@ const Inscription = () => {
                       color: colors.navy
                     }}
                   >
-                    Inscription envoyée !
+                    Inscription enregistrée !
                   </h2>
 
                   <div className="divider mx-auto mb-5" />
@@ -523,11 +527,17 @@ const Inscription = () => {
                   <p className="text-[#25364A]
                     max-w-md mx-auto leading-relaxed"
                   >
-                    Merci pour votre demande.
+                    Merci pour votre demande{inscriptionNumber ? <> — votre numéro d'inscription est <strong style={{ color: colors.blue }}>{inscriptionNumber}</strong></> : ''}.
                     Notre équipe vous recontactera
                     dans les plus brefs délais afin
                     de finaliser votre inscription.
                   </p>
+
+                  {emailStatus === 'failed' || emailStatus === 'pending' ? (
+                    <p className="text-[#B7791F] bg-[#FFF7E6] border border-[#F2C94C]/40 rounded-xl px-4 py-3 max-w-md mx-auto mt-4 text-sm leading-relaxed">
+                      Votre inscription est bien enregistrée. L'email de confirmation n'a pas pu être envoyé pour le moment, mais cela ne remet pas en cause votre inscription — notre équipe vous contactera directement.
+                    </p>
+                  ) : null}
 
                   <Link
                     to="/formation"
