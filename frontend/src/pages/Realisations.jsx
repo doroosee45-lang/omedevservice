@@ -5,50 +5,512 @@ import { useState } from 'react';
 import {
   ArrowRight, CheckCircle, Rocket, Star, Calendar, MapPin, Briefcase, Clock,
   Eye, X, Search, Quote, ThumbsUp, Award, Users,
-  Network, Shield, Code, Cloud, Sun, Monitor, BookOpen,
-  Wifi, GraduationCap, Filter, ChevronRight, Heart, Headphones,
-  Grid, Camera
+  Network, Shield, Code, Cloud, Sun, BookOpen, Camera, Grid
 } from 'lucide-react';
+import PublicHero from '../components/Public/PublicHero';
+import CTASection from '../components/Public/CTASection';
 
+/* ─────────────────────────────────────────────
+   DESIGN SYSTEM — identique à la page About
+   (navy/electric/turquoise/energy)
+   ───────────────────────────────────────────── */
 const globalStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  
-  body {
+  .omedev-realisations {
+    --omedev-navy: #053876;
+    --omedev-blue-dark: #1D5B9B;
+    --omedev-blue: #0B74C1;
+    --omedev-blue-light: #4681B7;
+    --omedev-cyan: #72A5CE;
+    --omedev-cyan-light: #A6C3D7;
+    --omedev-turquoise: #2AACB2;
+    --omedev-energy: #55DDB5;
+    --omedev-white: #F6F6F7;
+    --omedev-gray: #D5DCE1;
+    --omedev-dark: #0B1213;
+    --omedev-text-secondary: #25364A;
+    background: #F6F6F7;
+    color: #0B1213;
     font-family: 'DM Sans', sans-serif;
-    background: #0f172a;
-    color: #e2e8f0;
-    overflow-x: hidden;
+  }
+
+  .omedev-realisations .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .omedev-realisations .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: .5rem 1.1rem;
+    border-radius: 999px;
+    background: rgba(11,116,193,.08);
+    color: #0B74C1;
+    border: 1px solid rgba(11,116,193,.18);
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-realisations .section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -.03em;
+    margin-bottom: 1rem;
+    font-family: 'Syne', sans-serif;
+    color: #053876;
+  }
+
+  .omedev-realisations .section-subtitle {
+    font-size: 1rem;
+    color: #25364A;
+    max-width: 56ch;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .omedev-realisations .divider {
+    width: 64px;
+    height: 4px;
+    background: linear-gradient(90deg, #0B74C1, #2AACB2, #55DDB5);
+    border-radius: 99px;
+    margin: 1rem auto 1.5rem;
+  }
+
+  .omedev-realisations .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    background: linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%);
+    color: #fff;
+    font-size: .9rem;
+    font-weight: 700;
+    padding: .9rem 1.7rem;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: all .3s ease;
+    cursor: pointer;
+    border: none;
+    font-family: 'Syne', sans-serif;
+    box-shadow: 0 10px 28px rgba(11,116,193,.20);
+  }
+
+  .omedev-realisations .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgba(42,172,178,.28);
+  }
+
+  .omedev-realisations .btn-outline-light {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    background: transparent;
+    color: #fff;
+    font-size: .9rem;
+    font-weight: 700;
+    padding: .85rem 1.7rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.3);
+    text-decoration: none;
+    transition: all .3s ease;
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-realisations .btn-outline-light:hover {
+    border-color: rgba(255,255,255,.7);
+    background: rgba(255,255,255,.1);
+    transform: translateY(-3px);
+  }
+
+  .omedev-realisations .btn-soft {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    background: #fff;
+    color: #053876;
+    font-size: .85rem;
+    font-weight: 700;
+    padding: .75rem 1.4rem;
+    border-radius: 999px;
+    border: 1px solid rgba(5,56,118,.14);
+    transition: all .3s ease;
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-realisations .btn-soft:hover {
+    border-color: #2AACB2;
+    color: #0B74C1;
+    background: rgba(85,221,181,.08);
+    transform: translateY(-2px);
+  }
+
+  .omedev-realisations .card-hover {
+    transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+    background: #fff;
+    border: 1px solid rgba(5,56,118,.09);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(5,56,118,.06);
+  }
+
+  .omedev-realisations .card-hover:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 22px 48px rgba(11,116,193,.14);
+    border-color: rgba(42,172,178,.35);
+  }
+
+  .omedev-realisations .omedev-hero {
+    background: linear-gradient(135deg, #053876 0%, #1D5B9B 35%, #4681B7 60%, #72A5CE 80%, #A6C3D7 100%);
+    position: relative;
+  }
+
+  .omedev-realisations .omedev-light-section { background: #F6F6F7; }
+  .omedev-realisations .omedev-white-section { background: #fff; }
+  .omedev-realisations .omedev-dark-section {
+    background: linear-gradient(135deg, #053876 0%, #1D5B9B 55%, #0B74C1 100%);
+  }
+
+  .omedev-realisations .hero-grid {
+    background-image: linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+    background-size: 56px 56px;
   }
 
   @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-16px); }
   }
-  
-  @keyframes pulse-ring {
-    0% { transform: scale(0.8); opacity: 1; }
-    70% { transform: scale(1.3); opacity: 0; }
-    100% { transform: scale(0.8); opacity: 0; }
+  .omedev-realisations .animate-float { animation: float 6s ease-in-out infinite; }
+
+  /* ── Barre de filtres ── */
+  .omedev-realisations .filter-bar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(5,56,118,.08);
   }
-  
-  .animate-float { animation: float 6s ease-in-out infinite; }
-  .animate-pulse-ring { animation: pulse-ring 2s ease-out infinite; }
+
+  .omedev-realisations .filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    font-size: .8rem;
+    font-weight: 700;
+    padding: .55rem 1.05rem;
+    border-radius: 999px;
+    border: 1px solid rgba(5,56,118,.14);
+    background: #fff;
+    color: #25364A;
+    transition: all .25s ease;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .omedev-realisations .filter-pill:hover {
+    border-color: rgba(42,172,178,.4);
+    transform: translateY(-1px);
+  }
+  .omedev-realisations .filter-pill.active {
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 8px 20px rgba(11,116,193,.22);
+  }
+
+  .omedev-realisations .search-input {
+    padding: .6rem .95rem .6rem 2.3rem;
+    border-radius: 999px;
+    font-size: .85rem;
+    background: #F6F6F7;
+    border: 1px solid rgba(5,56,118,.12);
+    color: #0B1213;
+    outline: none;
+    transition: border-color .25s ease;
+  }
+  .omedev-realisations .search-input:focus { border-color: #2AACB2; }
+
+  /* ── Carte projet ── */
+  .omedev-realisations .project-card {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid rgba(5,56,118,.09);
+    box-shadow: 0 10px 30px rgba(5,56,118,.06);
+    transition: all .4s cubic-bezier(.4,0,.2,1);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+  }
+  .omedev-realisations .project-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(42,172,178,.35);
+    box-shadow: 0 22px 48px rgba(11,116,193,.16);
+  }
+  .omedev-realisations .project-photo-wrap {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #D5DCE1;
+  }
+  .omedev-realisations .project-photo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .8s cubic-bezier(.4,0,.2,1);
+  }
+  .omedev-realisations .project-card:hover .project-photo-wrap img { transform: scale(1.08); }
+  .omedev-realisations .project-category-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 3;
+    padding: 5px 12px;
+    border-radius: 50px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    color: white;
+    box-shadow: 0 4px 16px rgba(5,56,118,.25);
+  }
+  .omedev-realisations .project-year-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 3;
+    padding: 4px 10px;
+    border-radius: 50px;
+    font-size: 10px;
+    font-weight: 700;
+    background: rgba(5,56,118,.55);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    backdrop-filter: blur(4px);
+  }
+  .omedev-realisations .project-hover-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(11,116,193,.45), rgba(42,172,178,.45));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity .3s ease;
+  }
+  .omedev-realisations .project-card:hover .project-hover-overlay { opacity: 1; }
+  .omedev-realisations .project-info {
+    padding: 20px 22px 22px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .omedev-realisations .project-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: #053876;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .omedev-realisations .project-desc {
+    font-size: 13px;
+    line-height: 1.65;
+    color: #25364A;
+    margin-bottom: 14px;
+  }
+  .omedev-realisations .tech-tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(11,116,193,.08);
+    color: #0B74C1;
+  }
+  .omedev-realisations .project-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    margin-top: auto;
+    border-top: 1px solid rgba(5,56,118,.08);
+    font-size: 11.5px;
+    color: #25364A;
+  }
+
+  .omedev-realisations .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.75rem;
+  }
+  @media (min-width: 768px) {
+    .omedev-realisations .projects-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .omedev-realisations .projects-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* ── Stat card (section chiffres, sur fond clair) ── */
+  .omedev-realisations .stat-card {
+    padding: 1.6rem 1rem;
+    text-align: center;
+  }
+  .omedev-realisations .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto .9rem;
+  }
+  .omedev-realisations .stat-value {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+    color: #053876;
+    margin-bottom: .2rem;
+  }
+  .omedev-realisations .stat-label {
+    font-size: .82rem;
+    color: #25364A;
+  }
+
+  /* ── Modal ── */
+  .omedev-realisations .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5,15,25,.65);
+    backdrop-filter: blur(6px);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    overflow-y: auto;
+  }
+  .omedev-realisations .modal-card {
+    background: #fff;
+    border-radius: 22px;
+    max-width: 940px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 30px 80px rgba(5,20,40,.35);
+  }
+  .omedev-realisations .modal-stat {
+    text-align: center;
+    padding: .9rem;
+    border-radius: 14px;
+    background: #F6F6F7;
+    border: 1px solid rgba(5,56,118,.08);
+  }
+  .omedev-realisations .modal-info-card {
+    border-radius: 16px;
+    background: #F6F6F7;
+    border: 1px solid rgba(5,56,118,.08);
+    padding: 1.3rem;
+  }
+  .omedev-realisations .modal-testimonial-card {
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(11,116,193,.07), rgba(42,172,178,.07));
+    border: 1px solid rgba(11,116,193,.16);
+    padding: 1.3rem;
+  }
+
+  /* ── Galerie ── */
+  .omedev-realisations .gallery-thumb {
+    position: relative;
+    overflow: hidden;
+    border-radius: 18px;
+    cursor: pointer;
+  }
+  .omedev-realisations .gallery-thumb img {
+    transition: transform .5s ease;
+  }
+  .omedev-realisations .gallery-thumb:hover img { transform: scale(1.08); }
+  .omedev-realisations .gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(5,56,118,.6), transparent 60%);
+    opacity: 0;
+    transition: opacity .3s ease;
+    display: flex;
+    align-items: flex-end;
+    padding: 1rem;
+  }
+  .omedev-realisations .gallery-thumb:hover .gallery-overlay { opacity: 1; }
+
+  @media (max-width: 768px) {
+    .omedev-realisations .container { padding: 0 1rem; }
+  }
 `;
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7 } }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] } },
 };
 const staggerContainer = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.08 } }
+  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
 };
 
-// Données des projets (conservées et corrigées)
+const SectionHeader = ({ badge, title, subtitle, light }) => (
+  <motion.div
+    initial="hidden"
+    whileInView="visible"
+    viewport={{ once: true }}
+    variants={staggerContainer}
+    style={{ textAlign: 'center', marginBottom: '3rem' }}
+  >
+    {badge && (
+      <motion.div variants={fadeUp}>
+        <span
+          className="section-badge"
+          style={light ? { background: 'rgba(255,255,255,.14)', color: '#fff', borderColor: 'rgba(255,255,255,.28)' } : {}}
+        >
+          {badge}
+        </span>
+      </motion.div>
+    )}
+    <motion.h2 variants={fadeUp} className="section-title" style={light ? { color: '#fff' } : {}}>
+      {title}
+    </motion.h2>
+    <motion.div variants={fadeUp} className="divider" />
+    {subtitle && (
+      <motion.p variants={fadeUp} className="section-subtitle" style={light ? { color: 'rgba(255,255,255,.78)' } : {}}>
+        {subtitle}
+      </motion.p>
+    )}
+  </motion.div>
+);
+
+const colors = {
+  navy: '#053876',
+  blueDark: '#1D5B9B',
+  blue: '#0B74C1',
+  blueLight: '#4681B7',
+  cyan: '#72A5CE',
+  turquoise: '#2AACB2',
+  energy: '#55DDB5',
+};
+
+// Données des projets (contenu conservé)
 const projects = [
-  // IT & Réseau -> catégorie 'reseau'
   {
     id: 1,
     title: 'Infrastructure réseau Groupe Congo Telecom',
@@ -118,7 +580,6 @@ const projects = [
       { label: 'Économies', value: '35%' }
     ]
   },
-  // Digital -> catégorie 'developpement'
   {
     id: 3,
     title: 'Plateforme e-commerce AfricaMart',
@@ -171,7 +632,6 @@ const projects = [
       { label: 'Courses/jour', value: '2000+' }
     ]
   },
-  // Énergie -> catégorie 'energie'
   {
     id: 5,
     title: 'Installation solaire Minoterie Kisantu',
@@ -224,7 +684,6 @@ const projects = [
       { label: 'Délai', value: '4 semaines' }
     ]
   },
-  // Sécurité -> catégorie 'securite'
   {
     id: 7,
     title: 'Vidéosurveillance Aéroport Ndjili',
@@ -277,7 +736,6 @@ const projects = [
       { label: 'Temps réponse', value: '< 15min' }
     ]
   },
-  // Formation -> catégorie 'formation'
   {
     id: 9,
     title: 'Certification IT 500 employés',
@@ -332,78 +790,62 @@ const projects = [
   }
 ];
 
-// Catégories
+// Catégories — recolorées avec la palette omedev
 const categories = [
-  { id: 'all', name: 'Tous', icon: CheckCircle, gradient: 'from-gray-500 to-gray-600', bgLight: 'bg-gray-500/10', textLight: 'text-gray-400', borderLight: 'border-gray-500/30' },
-  { id: 'reseau', name: 'Réseau & Télécom', icon: Network, gradient: 'from-blue-500 to-blue-600', bgLight: 'bg-blue-500/10', textLight: 'text-blue-400', borderLight: 'border-blue-500/30' },
-  { id: 'securite', name: 'Sécurité & Surveillance', icon: Shield, gradient: 'from-cyan-500 to-cyan-600', bgLight: 'bg-cyan-500/10', textLight: 'text-cyan-400', borderLight: 'border-cyan-500/30' },
-  { id: 'developpement', name: 'Développement Digital', icon: Code, gradient: 'from-amber-500 to-amber-600', bgLight: 'bg-amber-500/10', textLight: 'text-amber-400', borderLight: 'border-amber-500/30' },
-  { id: 'cloud', name: 'Cloud & Hébergement', icon: Cloud, gradient: 'from-blue-500 to-blue-600', bgLight: 'bg-blue-500/10', textLight: 'text-blue-400', borderLight: 'border-blue-500/30' },
-  { id: 'energie', name: 'Énergie', icon: Sun, gradient: 'from-orange-500 to-orange-600', bgLight: 'bg-orange-500/10', textLight: 'text-orange-400', borderLight: 'border-orange-500/30' },
-  { id: 'formation', name: 'Formation & Accompagnement', icon: BookOpen, gradient: 'from-green-500 to-green-600', bgLight: 'bg-green-500/10', textLight: 'text-green-400', borderLight: 'border-green-500/30' }
+  { id: 'all', name: 'Tous', icon: CheckCircle, hex: colors.navy, gradient: `linear-gradient(135deg, ${colors.navy}, ${colors.blueLight})` },
+  { id: 'reseau', name: 'Réseau & Télécom', icon: Network, hex: colors.blue, gradient: `linear-gradient(135deg, ${colors.blue}, ${colors.blueLight})` },
+  { id: 'securite', name: 'Sécurité & Surveillance', icon: Shield, hex: colors.navy, gradient: `linear-gradient(135deg, ${colors.navy}, ${colors.blueDark})` },
+  { id: 'developpement', name: 'Développement Digital', icon: Code, hex: colors.turquoise, gradient: `linear-gradient(135deg, ${colors.turquoise}, ${colors.energy})` },
+  { id: 'cloud', name: 'Cloud & Hébergement', icon: Cloud, hex: colors.blueLight, gradient: `linear-gradient(135deg, ${colors.blueLight}, ${colors.cyan})` },
+  { id: 'energie', name: 'Énergie', icon: Sun, hex: colors.energy, gradient: `linear-gradient(135deg, ${colors.turquoise}, ${colors.energy})` },
+  { id: 'formation', name: 'Formation & Accompagnement', icon: BookOpen, hex: colors.cyan, gradient: `linear-gradient(135deg, ${colors.blue}, ${colors.cyan})` }
 ];
 
 const ProjectCard = ({ project, index, onOpenModal }) => {
-  const [isHovered, setIsHovered] = useState(false);
   const cat = categories.find(c => c.id === project.category) || categories[0];
 
   return (
     <motion.div
       variants={fadeUp}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
       onClick={() => onOpenModal(project)}
-      className="group bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:border-blue-500/50 hover:bg-white/10 cursor-pointer"
+      className="project-card"
     >
-      <div className="relative overflow-hidden h-56">
-        <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60" />
-        <div className="absolute top-4 left-4">
-          <span className={`px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r ${cat.gradient} text-white shadow-lg`}>
-            {project.categoryName}
-          </span>
+      <div className="project-photo-wrap">
+        <img src={project.image} alt={project.title} />
+        <div className="project-category-badge" style={{ background: cat.gradient }}>
+          {project.categoryName}
         </div>
-        <div className="absolute top-4 right-4">
-          <span className="px-2 py-1 rounded-full bg-black/50 text-white text-xs flex items-center gap-1 backdrop-blur-sm">
-            <Calendar size={12} /> {project.year}
-          </span>
+        <div className="project-year-badge">
+          <Calendar size={11} /> {project.year}
         </div>
-        <div className={`absolute inset-0 bg-blue-600/30 flex items-center justify-center transition-all duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
-          <div className="bg-white text-blue-600 p-3 rounded-full hover:scale-110 transition-transform">
-            <Eye size={24} />
+        <div className="project-hover-overlay">
+          <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center" style={{ color: colors.blue }}>
+            <Eye size={22} />
           </div>
         </div>
       </div>
 
-      <div className="p-6">
-        <h3 className="text-xl font-bold text-white font-syne mb-2 group-hover:text-blue-300 transition-colors">
-          {project.title}
-        </h3>
-        <p className="text-gray-400 text-sm leading-relaxed mb-4">
-          {project.description}
-        </p>
+      <div className="project-info">
+        <h3 className="project-title">{project.title}</h3>
+        <p className="project-desc">{project.description}</p>
 
-        <div className="flex flex-wrap gap-2 mb-5">
+        <div className="flex flex-wrap gap-2 mb-4">
           {project.technologies.slice(0, 3).map((tech, i) => (
-            <span key={i} className="text-xs bg-white/10 text-gray-300 px-2 py-1 rounded-full">
-              {tech}
-            </span>
+            <span key={i} className="tech-tag">{tech}</span>
           ))}
           {project.technologies.length > 3 && (
-            <span className="text-xs bg-white/10 text-gray-300 px-2 py-1 rounded-full">
-              +{project.technologies.length - 3}
-            </span>
+            <span className="tech-tag">+{project.technologies.length - 3}</span>
           )}
         </div>
 
-        <div className="flex items-center justify-between pt-3 border-t border-white/10">
-          <div className="flex items-center gap-2 text-xs text-gray-400">
+        <div className="project-footer">
+          <div className="flex items-center gap-1.5">
             <MapPin size={12} />
             <span>{project.location}</span>
           </div>
-          <div className="flex items-center gap-1 text-amber-400">
-            <Star size={14} fill="currentColor" />
-            <span className="text-xs font-semibold">{project.testimonial.rating}.0</span>
+          <div className="flex items-center gap-1" style={{ color: '#D9A441' }}>
+            <Star size={13} fill="currentColor" />
+            <span className="font-semibold">{project.testimonial.rating}.0</span>
           </div>
         </div>
       </div>
@@ -411,7 +853,7 @@ const ProjectCard = ({ project, index, onOpenModal }) => {
   );
 };
 
-// Composant Download (factice)
+// Icône Download (inline, style lucide)
 const Download = (props) => (
   <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -454,206 +896,84 @@ const RealisationsPage = () => {
     { value: '98%', label: 'Taux de satisfaction', icon: ThumbsUp }
   ];
 
-  // Images pour la galerie (utilisation des 5 premières images des projets)
   const galleryImages = projects.slice(0, 5).map(p => p.image);
   const mainImage = galleryImages[0];
   const thumbnails = galleryImages.slice(1, 5);
 
   return (
-    <>
+    <div className="omedev-realisations">
       <style>{globalStyles}</style>
 
-      {/* Hero Section */}
-      {/* ==================== HERO SECTION - RÉALISATIONS ==================== */}
-      <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden h-[550px] flex flex-col justify-center pt-16">
-        <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px'
-        }} />
-        <div className="absolute w-96 h-96 bg-blue-600/20 top-20 -left-20 rounded-full filter blur-[80px] animate-float" />
-        <div className="absolute w-72 h-72 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
+      {/* ==================== HERO ==================== */}
+      <PublicHero
+        badge="Nos réalisations"
+        title="Nos Réalisations"
+        highlight="Réalisations"
+        subtitle="Découvrez des projets concrets qui ont transformé nos clients en leaders de leur secteur."
+        primaryAction={{ label: 'Nous écrire', to: '/contact' }}
+        secondaryAction={{ label: 'Audit gratuit', to: '/audit' }}
+      />
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-blue-600/15 border border-blue-500/30"
-            >
-              <Rocket className="w-4 h-4 text-blue-400" />
-              <span className="text-blue-300 font-semibold text-xs tracking-wide font-syne">Nos Réalisations</span>
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
-            >
-              Nos{' '}
-              <span className="relative inline-block">
-                <span className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 blur-2xl opacity-50" />
-                <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
-                  Réalisations
-                </span>
-              </span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-              className="text-gray-300 text-base sm:text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
-            >
-              Découvrez des projets concrets qui ont transformé nos clients en <strong className="text-white">leaders de leur secteur</strong>
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 }}
-              className="flex flex-wrap gap-4 justify-center"
-            >
-              <Link to="/contact" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
-                Nous écrire <ArrowRight size={18} className="group-hover:translate-x-1 transition" />
-              </Link>
-              <Link to="/audit" className="group border-2 border-white/30 hover:border-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
-                Audit gratuit
-              </Link>
-            </motion.div>
+      {/* ==================== CHIFFRES CLÉS ==================== */}
+      <section className="omedev-white-section py-24">
+        <div className="container">
+          <SectionHeader badge="Nos résultats" title="OMDEVE en quelques données" subtitle="Une expertise éprouvée sur des projets concrets à travers la RDC" />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {stats.map((stat, i) => {
+              const Icon = stat.icon;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="card-hover stat-card"
+                >
+                  <div className="stat-icon" style={{ background: `linear-gradient(135deg, ${colors.blueLight}, ${colors.navy})` }}>
+                    <Icon size={22} className="text-white" />
+                  </div>
+                  <div className="stat-value">{stat.value}</div>
+                  <div className="stat-label">{stat.label}</div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      {/* Statistiques clés */}
-      <section className="py-12 bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/5 border-b border-white/5">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center"
-          >
-            {stats.map((stat, idx) => {
-              const Icon = stat.icon;
-              return (
-                <motion.div key={idx} variants={fadeUp} className="p-4 rounded-xl bg-white/5 border border-white/10 transition-all duration-300 hover:scale-105 hover:bg-white/10">
-                  <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-blue-500/20 flex items-center justify-center">
-                    <Icon size={24} className="text-blue-400" />
-                  </div>
-                  <div className="text-3xl font-bold text-blue-400 font-syne">{stat.value}</div>
-                  <div className="text-gray-400 text-sm">{stat.label}</div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Filtres et recherche */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 sticky top-0 z-40 py-4 border-b border-white/10 backdrop-blur-xl bg-opacity-80">
-        <div className="container mx-auto px-4">
+      {/* ==================== FILTRES & RECHERCHE ==================== */}
+      <div className="filter-bar py-5">
+        <div className="container">
           <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
             <div className="flex flex-wrap gap-2 justify-center">
               {categories.map((cat) => {
                 const Icon = cat.icon;
+                const isActive = activeFilter === cat.id;
                 return (
                   <button
                     key={cat.id}
                     onClick={() => setActiveFilter(cat.id)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2 ${activeFilter === cat.id
-                        ? `bg-gradient-to-r ${cat.gradient} text-white shadow-lg`
-                        : `${cat.bgLight} ${cat.textLight} border ${cat.borderLight} hover:scale-105 hover:brightness-110`
-                      }`}
+                    className={`filter-pill ${isActive ? 'active' : ''}`}
+                    style={isActive ? { background: cat.gradient } : {}}
                   >
-                    <Icon size={16} />
+                    <Icon size={15} />
                     {cat.name}
                   </button>
                 );
               })}
             </div>
             <div className="relative">
-              <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: colors.blue }} />
               <input
                 type="text"
                 placeholder="Rechercher un projet..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9 pr-3 py-2 rounded-full text-sm bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors"
+                className="search-input"
               />
               {searchTerm && (
-                <button onClick={() => setSearchTerm('')} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white">
+                <button onClick={() => setSearchTerm('')} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#25364A]/60 hover:text-[#053876]">
                   <X size={14} />
                 </button>
               )}
@@ -662,16 +982,16 @@ const RealisationsPage = () => {
         </div>
       </div>
 
-      {/* Grille des projets */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
-        <div className="container mx-auto px-4 py-12">
+      {/* ==================== GRILLE DES PROJETS ==================== */}
+      <section className="omedev-light-section py-16">
+        <div className="container">
           {filteredProjects.length === 0 ? (
             <div className="text-center py-20">
-              <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center">
-                <Search size={40} className="text-gray-400" />
+              <div className="w-24 h-24 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ background: 'rgba(11,116,193,.08)' }}>
+                <Search size={36} style={{ color: colors.blue }} />
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Aucun projet trouvé</h3>
-              <p className="text-gray-400">Aucun projet ne correspond à vos critères de recherche.</p>
+              <h3 className="font-syne text-xl font-bold mb-2" style={{ color: colors.navy }}>Aucun projet trouvé</h3>
+              <p className="text-[#25364A]">Aucun projet ne correspond à vos critères de recherche.</p>
             </div>
           ) : (
             <motion.div
@@ -679,7 +999,7 @@ const RealisationsPage = () => {
               whileInView="visible"
               viewport={{ once: true }}
               variants={staggerContainer}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              className="projects-grid"
             >
               {filteredProjects.map((project, idx) => (
                 <ProjectCard key={project.id} project={project} index={idx} onOpenModal={openModal} />
@@ -687,85 +1007,88 @@ const RealisationsPage = () => {
             </motion.div>
           )}
         </div>
-      </div>
+      </section>
 
-      {/* Modal Détails Projet */}
+      {/* ==================== MODAL DÉTAILS PROJET ==================== */}
       {showModal && selectedProject && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto" onClick={closeModal}>
-          <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="relative h-64 md:h-80">
-              <img src={selectedProject.image} alt={selectedProject.title} className="w-full h-full object-cover rounded-t-2xl" />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent rounded-t-2xl"></div>
-              <button onClick={closeModal} className="absolute top-4 right-4 bg-white/10 backdrop-blur-sm rounded-full p-2 hover:bg-white/20 transition">
-                <X size={24} className="text-white" />
+              <img src={selectedProject.image} alt={selectedProject.title} className="w-full h-full object-cover" style={{ borderRadius: '22px 22px 0 0' }} />
+              <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(5,56,118,.85), transparent 55%)', borderRadius: '22px 22px 0 0' }} />
+              <button onClick={closeModal} className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full p-2 hover:bg-white/30 transition">
+                <X size={22} className="text-white" />
               </button>
-              <div className="absolute bottom-6 left-6">
-                <span className={`px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r ${categories.find(c => c.id === selectedProject.category)?.gradient} text-white shadow-lg`}>
+              <div className="absolute bottom-6 left-6 right-6">
+                <span
+                  className="inline-block px-3 py-1 rounded-full text-xs font-bold text-white mb-2"
+                  style={{ background: (categories.find(c => c.id === selectedProject.category) || categories[0]).gradient }}
+                >
                   {selectedProject.categoryName}
                 </span>
-                <h2 className="text-2xl md:text-3xl font-bold text-white mt-2">{selectedProject.title}</h2>
-                <p className="text-gray-300">{selectedProject.client}</p>
+                <h2 className="text-2xl md:text-3xl font-bold text-white font-syne">{selectedProject.title}</h2>
+                <p className="text-white/80">{selectedProject.client}</p>
               </div>
             </div>
 
             <div className="p-6 md:p-8">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="md:col-span-2">
-                  <h3 className="text-xl font-bold text-white mb-4">Description du projet</h3>
-                  <div className="text-gray-300 whitespace-pre-line mb-6 leading-relaxed">
+                  <h3 className="font-syne text-xl font-bold mb-4" style={{ color: colors.navy }}>Description du projet</h3>
+                  <div className="text-[#25364A] whitespace-pre-line mb-6 leading-relaxed text-sm">
                     {selectedProject.fullDescription}
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-4">Technologies utilisées</h3>
+                  <h3 className="font-syne text-xl font-bold mb-4" style={{ color: colors.navy }}>Technologies utilisées</h3>
                   <div className="flex flex-wrap gap-2 mb-6">
                     {selectedProject.technologies.map((tech, idx) => (
-                      <span key={idx} className="px-3 py-1.5 bg-white/10 text-gray-300 rounded-lg text-sm font-medium">
+                      <span key={idx} className="tech-tag" style={{ fontSize: '12px', padding: '6px 12px' }}>
                         {tech}
                       </span>
                     ))}
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-4">Résultats clés</h3>
+                  <h3 className="font-syne text-xl font-bold mb-4" style={{ color: colors.navy }}>Résultats clés</h3>
                   <div className="grid grid-cols-3 gap-4 mb-6">
                     {selectedProject.stats.map((stat, idx) => (
-                      <div key={idx} className="text-center p-3 bg-white/5 rounded-xl border border-white/10">
-                        <div className="text-2xl font-bold text-blue-400">{stat.value}</div>
-                        <div className="text-xs text-gray-400">{stat.label}</div>
+                      <div key={idx} className="modal-stat">
+                        <div className="text-2xl font-bold font-syne" style={{ color: colors.blue }}>{stat.value}</div>
+                        <div className="text-xs text-[#25364A]">{stat.label}</div>
                       </div>
                     ))}
                   </div>
                 </div>
                 <div>
-                  <div className="bg-white/5 rounded-xl p-5 mb-6 border border-white/10">
-                    <h3 className="font-bold text-white mb-4">Informations client</h3>
+                  <div className="modal-info-card mb-6">
+                    <h3 className="font-syne font-bold mb-4" style={{ color: colors.navy }}>Informations client</h3>
                     <div className="space-y-3">
-                      <div className="flex items-center gap-2 text-sm text-gray-300">
-                        <Briefcase size={16} className="text-blue-400" />
+                      <div className="flex items-center gap-2 text-sm text-[#25364A]">
+                        <Briefcase size={16} style={{ color: colors.blue }} />
                         <span>{selectedProject.client}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-300">
-                        <MapPin size={16} className="text-blue-400" />
+                      <div className="flex items-center gap-2 text-sm text-[#25364A]">
+                        <MapPin size={16} style={{ color: colors.blue }} />
                         <span>{selectedProject.location}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-300">
-                        <Calendar size={16} className="text-blue-400" />
+                      <div className="flex items-center gap-2 text-sm text-[#25364A]">
+                        <Calendar size={16} style={{ color: colors.blue }} />
                         <span>{selectedProject.year}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-300">
-                        <Clock size={16} className="text-blue-400" />
+                      <div className="flex items-center gap-2 text-sm text-[#25364A]">
+                        <Clock size={16} style={{ color: colors.blue }} />
                         <span>Durée: {selectedProject.duration}</span>
                       </div>
                     </div>
                   </div>
-                  <div className="bg-gradient-to-br from-blue-900/30 to-indigo-900/30 rounded-xl p-5 border border-blue-500/20">
+                  <div className="modal-testimonial-card">
                     <div className="flex items-center gap-2 mb-3">
-                      <Quote size={18} className="text-blue-400" />
-                      <h3 className="font-bold text-white">Témoignage client</h3>
+                      <Quote size={18} style={{ color: colors.blue }} />
+                      <h3 className="font-syne font-bold" style={{ color: colors.navy }}>Témoignage client</h3>
                     </div>
-                    <p className="text-gray-300 text-sm italic mb-4">"{selectedProject.testimonial.content}"</p>
+                    <p className="text-[#25364A] text-sm italic mb-4">"{selectedProject.testimonial.content}"</p>
                     <div className="flex items-center gap-3">
-                      <img src={selectedProject.testimonial.avatar} alt={selectedProject.testimonial.author} className="w-10 h-10 rounded-full object-cover border border-blue-500" />
+                      <img src={selectedProject.testimonial.avatar} alt={selectedProject.testimonial.author} className="w-10 h-10 rounded-full object-cover" style={{ border: `2px solid ${colors.blue}` }} />
                       <div>
-                        <div className="font-semibold text-white text-sm">{selectedProject.testimonial.author}</div>
-                        <div className="text-xs text-gray-400">{selectedProject.testimonial.position}</div>
+                        <div className="font-semibold text-sm" style={{ color: colors.navy }}>{selectedProject.testimonial.author}</div>
+                        <div className="text-xs text-[#25364A]">{selectedProject.testimonial.position}</div>
                         <div className="flex gap-0.5 mt-1">
                           {[...Array(selectedProject.testimonial.rating)].map((_, i) => (
                             <Star key={i} size={12} className="fill-yellow-400 text-yellow-400" />
@@ -776,11 +1099,11 @@ const RealisationsPage = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex flex-wrap gap-4 mt-8 pt-6 border-t border-white/10">
-                <Link to="/contact" className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:scale-105 transition-all flex items-center gap-2">
+              <div className="flex flex-wrap gap-4 mt-8 pt-6" style={{ borderTop: '1px solid rgba(5,56,118,.08)' }}>
+                <Link to="/contact" className="btn-primary">
                   Demander un projet similaire <ArrowRight size={18} />
                 </Link>
-                <button className="border border-white/20 text-gray-300 px-6 py-3 rounded-xl font-semibold hover:bg-white/10 transition-all flex items-center gap-2">
+                <button className="btn-soft">
                   Télécharger l'étude de cas <Download size={18} />
                 </button>
               </div>
@@ -789,30 +1112,12 @@ const RealisationsPage = () => {
         </div>
       )}
 
-      {/* ========== NOUVELLE SECTION : GALERIE D'IMAGES (1 droite, 4 gauche) ========== */}
-      <section className="py-20 bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/5">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 mb-4">
-              <Camera size={16} className="text-blue-400" />
-              <span className="text-blue-300 text-sm font-semibold">Notre galerie</span>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-white font-syne mb-3">
-              Dernières réalisations en images
-            </h2>
-            <p className="text-gray-300 max-w-2xl mx-auto">
-              Découvrez en un coup d’œil la qualité de nos interventions.
-            </p>
-          </motion.div>
+      {/* ==================== GALERIE D'IMAGES ==================== */}
+      <section className="omedev-white-section py-24">
+        <div className="container">
+          <SectionHeader badge="Notre galerie" title="Dernières réalisations en images" subtitle="Découvrez en un coup d'œil la qualité de nos interventions" />
 
           <div className="flex flex-col lg:flex-row gap-6 items-stretch">
-            {/* Gauche : grille 2x2 de 4 images */}
             <div className="lg:w-1/2">
               <div className="grid grid-cols-2 gap-4 h-full">
                 {thumbnails.map((img, idx) => (
@@ -822,15 +1127,11 @@ const RealisationsPage = () => {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: idx * 0.1 }}
-                    className="relative group overflow-hidden rounded-2xl aspect-square cursor-pointer"
+                    className="gallery-thumb aspect-square"
                     onClick={() => window.open(img, '_blank')}
                   >
-                    <img
-                      src={img}
-                      alt={`Galerie ${idx + 2}`}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-start p-4">
+                    <img src={img} alt={`Galerie ${idx + 2}`} className="w-full h-full object-cover" />
+                    <div className="gallery-overlay">
                       <Eye size={20} className="text-white" />
                     </div>
                   </motion.div>
@@ -838,32 +1139,26 @@ const RealisationsPage = () => {
               </div>
             </div>
 
-            {/* Droite : grande image principale */}
             <div className="lg:w-1/2">
               <motion.div
                 initial={{ opacity: 0, x: 40 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className="relative group overflow-hidden rounded-2xl h-full min-h-[300px] lg:min-h-full cursor-pointer"
+                className="gallery-thumb h-full min-h-[300px] lg:min-h-full"
                 onClick={() => window.open(mainImage, '_blank')}
               >
-                <img
-                  src={mainImage}
-                  alt="Galerie principale"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-start p-6">
-                  <div className="flex items-center gap-2 text-white">
-                    <Eye size={24} />
-                    <span className="font-semibold">Voir en grand</span>
+                <img src={mainImage} alt="Galerie principale" className="w-full h-full object-cover" />
+                <div className="gallery-overlay">
+                  <div className="flex items-center gap-2 text-white font-semibold">
+                    <Eye size={22} />
+                    <span>Voir en grand</span>
                   </div>
                 </div>
               </motion.div>
             </div>
           </div>
 
-          {/* Boutons de la galerie */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -871,101 +1166,28 @@ const RealisationsPage = () => {
             transition={{ delay: 0.3 }}
             className="flex flex-wrap justify-center gap-4 mt-10"
           >
-            <button className="group bg-white/10 border border-white/20 hover:bg-white/20 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
-              <Grid size={18} />
+            <button className="btn-soft">
+              <Grid size={17} />
               Voir toute la galerie
             </button>
-            <Link
-              to="/contact"
-              className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105"
-            >
-              Demander un devis
-              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            <Link to="/contact" className="btn-primary">
+              Demander un devis <ArrowRight size={18} />
             </Link>
           </motion.div>
         </div>
       </section>
 
-
-
-
-      {/* SECTION CTA DOUBLE : les deux blocs en parallèle */}
-      <section className="py-20 relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
-        {/* Arrière-plan commun */}
-        <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: `radial-gradient(circle at 20% 50%, rgba(59,130,246,0.3) 0%, transparent 50%)`
-        }} />
-        <div className="absolute w-96 h-96 bg-blue-600/20 bottom-0 left-1/2 -translate-x-1/2 rounded-full filter blur-[100px]" />
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-stretch">
-
-            {/* Bloc CTA gauche : Construisons ensemble votre succès */}
-            <div className="flex-1 bg-gradient-to-br from-slate-900/50 via-blue-900/30 to-indigo-900/30 rounded-2xl border border-white/10 backdrop-blur-sm p-8 md:p-10 transition-all duration-300 hover:shadow-2xl hover:border-blue-500/30">
-              <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="text-center"
-              >
-                <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 mb-6 text-amber-300 text-sm font-semibold">
-                  <Rocket size={16} /> Prêt à transformer vos idées ?
-                </div>
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 font-syne">
-                  Construisons ensemble votre succès
-                </h2>
-                <p className="text-white/80 text-base md:text-lg mb-8 max-w-md mx-auto">
-                  Profitez d’un accompagnement sur-mesure et de solutions innovantes adaptées à votre secteur.
-                </p>
-                <div className="flex flex-wrap gap-4 justify-center">
-                  <Link
-                    to="/contact"
-                    className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-all hover:scale-105 hover:shadow-xl"
-                  >
-                    Devenir partenaire <ArrowRight size={18} />
-                  </Link>
-                  <Link
-                    to="/audit"
-                    className="inline-flex items-center gap-2 border-2 border-white/30 hover:border-white text-white px-6 py-3 rounded-xl font-semibold transition-all hover:scale-105 hover:bg-white/10"
-                  >
-                    Audit gratuit <CheckCircle size={18} />
-                  </Link>
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Bloc CTA droite : Vous avez un projet similaire ? */}
-            <div className="flex-1 bg-gradient-to-br from-slate-900/50 via-indigo-900/30 to-blue-900/30 rounded-2xl border border-white/10 backdrop-blur-sm p-8 md:p-10 transition-all duration-300 hover:shadow-2xl hover:border-amber-500/30">
-              <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="text-center"
-              >
-                <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 mb-6 text-amber-300 text-sm font-semibold">
-                  <Rocket size={16} /> Vous avez un projet similaire ?
-                </div>
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 font-syne">
-                  Prêt à donner vie à votre projet ?
-                </h2>
-                <p className="text-white/80 text-base md:text-lg mb-8 max-w-md mx-auto">
-                  Contactez-nous pour discuter de votre besoin et obtenir un devis personnalisé.
-                </p>
-                <Link
-                  to="/projets"
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-6 py-3 rounded-xl font-semibold transition-all hover:scale-105 hover:shadow-xl"
-                >
-                  Voir la Gamerie de nos projets  <ArrowRight size={18} />
-                </Link>
-              </motion.div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-    </>
+      {/* ==================== CTA FINALE ==================== */}
+      <CTASection
+        badge="Prêt à donner vie à votre projet ?"
+        title="Construisons ensemble votre succès"
+        highlight="votre succès"
+        subtitle="Profitez d'un accompagnement sur-mesure et de solutions innovantes adaptées à votre secteur, du premier échange à la livraison."
+        backgroundImage="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1920&q=80"
+        primaryAction={{ label: 'Devenir partenaire', to: '/contact' }}
+        secondaryAction={{ label: 'Voir nos projets', to: '/projets' }}
+      />
+    </div>
   );
 };
 

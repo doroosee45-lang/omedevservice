@@ -11,7 +11,7 @@ try {
 } catch {}
 
 // ── Session store ──────────────────────────────────────────────────────────────
-const sessions    = new Map(); // sessionId → { history: [], lastProduct: null, lang: 'fr' }
+const sessions    = new Map(); // sessionId → { history: [], lastService: null, lang: 'fr' }
 const sessionTs   = new Map();
 const SESSION_TTL = 30 * 60 * 1000;
 
@@ -23,7 +23,7 @@ setInterval(() => {
 }, 5 * 60 * 1000);
 
 const getSession = (sid) => {
-  if (!sessions.has(sid)) sessions.set(sid, { history: [], lastProduct: null, lang: 'fr', askedQuestions: [] });
+  if (!sessions.has(sid)) sessions.set(sid, { history: [], lastService: null, lang: 'fr', askedQuestions: [] });
   sessionTs.set(sid, Date.now());
   return sessions.get(sid);
 };
@@ -35,40 +35,41 @@ const getSession = (sid) => {
 const SYSTEM_PROMPT = `
 Tu es **Omedev Assist** 🤖, l'assistant commercial & technique d'**Omedev Services**.
 
-IDENTITÉ : Expert ferronnerie, mobilier métallique sur mesure, vitrines commerciales et solutions IT/Énergie. Ton professionnel, chaleureux, jamais robotique. Emojis avec modération.
+IDENTITÉ : Expert en solutions IT, cybersécurité, développement digital, cloud, énergie et formation professionnelle. Ton professionnel, chaleureux, jamais robotique. Emojis avec modération.
 
 LANGUES : Détecte automatiquement (Français 🇫🇷, Lingala 🇨🇩, Anglais 🇬🇧) et réponds dans cette langue.
 
-CATALOGUE & PRIX INDICATIFS :
-• Portails coulissants/battants : 800–3 500€ (+400–800€ motorisé)
-• Portes métalliques : 250–1 200€ | Fenêtres alu : 180–600€/unité
-• Escaliers métalliques : 1 500–8 000€ | Garde-corps : 80–250€/ml
-• Salons VIP : 600–2 500€ | Lits modernes : 400–1 200€ | Tables/chaises : 200–800€
-• Vitrines de magasin : 500–2 000€ | Comptoirs : 300–1 500€
-• Audit sécurité : 80€ TTC (rapport sous 48h)
-• Services IT : Web, e-commerce, réseaux, sécurité, cloud, énergie solaire
+NOS SERVICES :
+• Réseau & Infrastructure : câblage structuré, WiFi entreprise, fibre optique haute performance
+• Cybersécurité & Surveillance : firewalls, audits, vidéosurveillance intelligente 24/7
+• Développement Digital : sites web, applications mobiles, ERP sur mesure
+• Cloud & Télécommunications : hébergement cloud, VoIP, solutions télécom intégrées
+• Énergie & Équipements : panneaux solaires, climatisation, maintenance préventive/corrective
+• Vente de matériel : PC, serveurs, écrans, caméras IP, accessoires professionnels
+• Formation & Accompagnement : formations certifiantes et transfert de compétences
 
-QUALIFICATION : Pose max 2-3 questions ciblées (jamais tout d'un coup) :
-- Portail : dimensions, motorisé ?, matière (acier/alu/inox)
-- Escalier : int/ext, marches, rampe ?
-- Garde-corps : longueur, fixation murale/sol
-- Mobilier : type, dimensions, matière/couleur
-- Vitrine : longueur × hauteur, serrure, éclairage
+TARIFICATION : Toutes nos prestations sont sur devis personnalisé, adapté à la taille et aux besoins du client. L'audit initial est offert.
 
-MATIÈRES : Acier (robuste, entretien requis), Alu (léger, anti-corrosion, 0 entretien), Inox (premium, max durabilité), Fer forgé (décoratif classique)
+QUALIFICATION : Pose max 2-3 questions ciblées (jamais tout d'un coup) selon le service demandé :
+- Réseau : taille des locaux, nombre de postes, besoin fibre/WiFi ?
+- Sécurité : nombre de caméras/accès, site déjà équipé ?
+- Développement : type de projet (vitrine, e-commerce, app, ERP), fonctionnalités clés
+- Cloud : nombre d'utilisateurs, migration ou nouvelle infrastructure ?
+- Énergie : surface à équiper, consommation actuelle, autonomie souhaitée
+- Formation : équipe concernée, thématique, niveau
 
-PROCESSUS : Devis gratuit 24h → acompte 30% → fabrication 5–21j → livraison+installation incluses
+PROCESSUS : Audit/diagnostic gratuit → devis détaillé sous 24-48h → planning validé → déploiement → support continu
 
-ESCALADE HUMAIN si : frustration forte, devis >5000€, complexité technique, client le demande.
+ESCALADE HUMAIN si : frustration forte, projet complexe/à fort budget, client le demande explicitement.
 Message : "Cette demande mérite l'œil de notre expert ! 👷 Je transfère votre dossier — contacté sous 30 min. Ça vous va ?"
 
 ACTIONS (une seule, si pertinent, à la fin du message) :
 [ACTION:{"type":"devis_link","label":"Demander un devis gratuit","url":"/demander-devis"}]
-[ACTION:{"type":"audit_link","label":"Réserver un audit","url":"/audit-gratuit"}]
+[ACTION:{"type":"audit_link","label":"Réserver un audit gratuit","url":"/audit-gratuit"}]
 [ACTION:{"type":"contact_link","label":"Contacter notre équipe","url":"/contact"}]
-[ACTION:{"type":"portfolio_link","label":"Voir nos réalisations","url":"/ferronnerie/projets"}]
+[ACTION:{"type":"portfolio_link","label":"Voir nos réalisations","url":"/realisations"}]
 
-RÈGLES : Jamais de prix fournisseurs/marges. Prix = indicatifs. Max 4 phrases/message. Toujours proposer une action concrète.
+RÈGLES : Jamais de prix fournisseurs/marges. Prix = sur devis uniquement. Max 4 phrases/message. Toujours proposer une action concrète.
 `.trim();
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -83,7 +84,7 @@ const LANG_SIGNALS = {
             'bandeko', 'bino', 'wapi', 'penza', 'soki', 'ntango', 'nzoto'],
   english: ['hello', 'hi there', 'how much', 'price', 'cost', 'want', 'need',
             'please', 'thank', 'can you', 'do you', 'what is', 'how do', 'i need',
-            'i want', 'quote', 'estimate', 'material', 'iron', 'aluminum', 'steel'],
+            'i want', 'quote', 'estimate', 'website', 'network', 'security', 'cloud'],
 };
 
 const detectLanguage = (text) => {
@@ -107,15 +108,12 @@ const INTENT_PATTERNS = {
               /appointment/i, /visit/i, /book/i, /schedule/i],
   paiement:  [/pay/i, /payer/i, /paiement/i, /acompte/i, /virement/i, /wave/i,
               /orange money/i, /airtel/i, /carte/i, /facture/i, /invoice/i, /payment/i],
-  materiau:  [/acier/i, /aluminium/i, /alu\b/i, /inox/i, /fer forg/i, /steel/i,
-              /iron/i, /métal/i, /matière/i, /matiere/i, /matériau/i, /materiau/i,
-              /difference/i, /différence/i, /meilleur/i, /compare/i, /avantage/i],
   reclamation:[/problème/i, /probleme/i, /déçu/i, /decu/i, /mauvais/i, /mécontent/i,
               /mecontent/i, /réclamation/i, /reclamation/i, /complaint/i, /issue/i,
-              /pas content/i, /pas satisfait/i, /remboursement/i, /retard/i],
-  garantie:  [/garantie/i, /warranty/i, /sav/i, /après-vente/i, /apres vente/i, /durable/i],
+              /pas content/i, /pas satisfait/i, /remboursement/i, /retard/i, /panne/i],
+  garantie:  [/garantie/i, /warranty/i, /sav/i, /après-vente/i, /apres vente/i, /support/i, /maintenance/i],
   delai:     [/délai/i, /delai/i, /temps/i, /quand/i, /durée/i, /duree/i, /combien de temps/i,
-              /livraison/i, /fabrication/i, /how long/i, /when/i],
+              /livraison/i, /how long/i, /when/i],
   greeting:  [/^(bonjour|bonsoir|salut|coucou|hello|hi|hey|bonne nuit|bonne journée)[\s!,.]*/i,
               /^(malamu|mbote)[\s!,.]*/i, /comment allez/i, /ça va/i, /how are you/i],
   farewell:  [/au revoir/i, /merci/i, /bonne journée/i, /à bientôt/i, /goodbye/i,
@@ -128,31 +126,28 @@ const detectIntent = (text, history) => {
   for (const [intent, patterns] of Object.entries(INTENT_PATTERNS)) {
     if (patterns.some(p => p.test(text))) return intent;
   }
-  // Context fallback: if we were discussing a product, assume devis intent
+  // Context fallback: if we were discussing a service, assume devis intent
   if (history.length > 0) return 'devis';
   return 'general';
 };
 
-// ── Détection de produit ─────────────────────────────────────────────────────
+// ── Détection de service ─────────────────────────────────────────────────────
 
-const PRODUCT_KEYWORDS = {
-  portail:    ['portail', 'gate', 'nzela ya ndako', 'portail coulissant', 'portail battant', 'clôture', 'cloture', 'barrière', 'barriere'],
-  porte:      ['porte métallique', 'porte metal', 'porte blindée', 'porte blindee', 'door', 'porte fer'],
-  escalier:   ['escalier', 'staircase', 'stairs', 'marche', 'escalier métallique'],
-  garde_corps:['garde-corps', 'garde corps', 'balcon', 'balustrade', 'railing', 'rambarde'],
-  fenetre:    ['fenêtre', 'fenetre', 'window', 'menuiserie', 'aluminium', 'vitrage'],
-  salon:      ['salon', 'canapé', 'canape', 'sofa', 'vip', 'salon vip', 'living'],
-  lit:        ['lit', 'chambre', 'bed', 'bedroom'],
-  table:      ['table', 'chaise', 'chair', 'bureau', 'desk', 'mobilier'],
-  vitrine:    ['vitrine', 'showcase', 'magasin', 'boutique', 'shop'],
-  comptoir:   ['comptoir', 'counter', 'accueil', 'reception'],
-  structure:  ['charpente', 'hangar', 'structure métallique', 'structure metal', 'abri'],
+const SERVICE_KEYWORDS = {
+  reseau:     ['réseau', 'reseau', 'câblage', 'cablage', 'wifi', 'fibre', 'infrastructure', 'network', 'switch', 'routeur'],
+  securite:   ['sécurité', 'securite', 'caméra', 'camera', 'vidéosurveillance', 'videosurveillance', 'firewall', 'pare-feu', 'security', 'surveillance'],
+  dev:        ['site web', 'site internet', 'application', 'app mobile', 'erp', 'développement', 'developpement', 'e-commerce', 'ecommerce', 'website', 'software', 'logiciel'],
+  cloud:      ['cloud', 'hébergement', 'hebergement', 'voip', 'télécom', 'telecom', 'serveur cloud', 'hosting'],
+  energie:    ['énergie', 'energie', 'panneau solaire', 'panneaux solaires', 'solaire', 'climatisation', 'climatiseur', 'solar', 'ac'],
+  materiel:   ['ordinateur', 'pc', 'serveur', 'écran', 'ecran', 'matériel', 'materiel', 'équipement', 'equipement', 'computer'],
+  formation:  ['formation', 'formations', 'apprendre', 'certifiant', 'training', 'course'],
+  audit:      ['audit', 'diagnostic'],
 };
 
-const detectProduct = (text) => {
+const detectService = (text) => {
   const t = text.toLowerCase();
-  for (const [product, keywords] of Object.entries(PRODUCT_KEYWORDS)) {
-    if (keywords.some(kw => t.includes(kw))) return product;
+  for (const [service, keywords] of Object.entries(SERVICE_KEYWORDS)) {
+    if (keywords.some(kw => t.includes(kw))) return service;
   }
   return null;
 };
@@ -160,34 +155,22 @@ const detectProduct = (text) => {
 // ── Base de connaissances ────────────────────────────────────────────────────
 
 const KB = {
-  products: {
-    portail:    { label: 'Portail', price: '800 – 3 500€', extra: 'Motorisation : +400 à 800€ en option.', questions: { fr: ['Quelle est la largeur d\'ouverture souhaitée ?', 'Le souhaitez-vous motorisé ?', 'Quelle matière préférez-vous (acier, aluminium, inox) ?', 'Coulissant ou battant ?'], en: ['What is the desired opening width?', 'Do you want it motorized?', 'What material do you prefer (steel, alu, inox)?'], ln: ['Bolai ya nzela ezali nini ?', 'Olingi moteur to te ?', 'Ozali koluka matière nini (acier, alu, inox) ?'] } },
-    porte:      { label: 'Porte métallique', price: '250 – 1 200€', extra: 'Intérieure ou extérieure, blindée sur demande.', questions: { fr: ['Quelles sont les dimensions (largeur × hauteur) ?', 'Intérieure ou extérieure ?', 'Souhaitez-vous un blindage ?'], en: ['What are the dimensions?', 'Interior or exterior?', 'Do you need reinforcement?'], ln: ['Dimensions ezali nini ?', 'Ezali kati to libanda ?'] } },
-    escalier:   { label: 'Escalier métallique', price: '1 500 – 8 000€', extra: 'Intérieur ou extérieur, avec ou sans rampe.', questions: { fr: ['Intérieur ou extérieur ?', 'Quel style souhaitez-vous (moderne, classique) ?', 'Combien de marches approximativement ?'], en: ['Interior or exterior?', 'Modern or classic style?', 'How many steps approximately?'], ln: ['Ezali kati to libanda ?', 'Bolai ya escalier ezali nini ?'] } },
-    garde_corps:{ label: 'Garde-corps', price: '80 – 250€ par mètre linéaire', extra: 'Fixation murale ou au sol.', questions: { fr: ['Quelle est la longueur totale à couvrir (en mètres) ?', 'Fixation murale ou au sol ?', 'Norme PMR requise ?'], en: ['What is the total length to cover?', 'Wall or floor mounting?'], ln: ['Bolai ezali nini (metele) ?', 'Fixation wapi (mur to sol) ?'] } },
-    fenetre:    { label: 'Fenêtre aluminium', price: '180 – 600€ par unité', extra: 'Simple ou double vitrage disponible.', questions: { fr: ['Quelles sont les dimensions souhaitées ?', 'Simple ou double vitrage ?', 'Combien de fenêtres au total ?'], en: ['What are the dimensions?', 'Single or double glazing?', 'How many windows?'], ln: ['Dimensions ezali nini ?', 'Vitrage ya motoba to mibale ?'] } },
-    salon:      { label: 'Salon VIP', price: '600 – 2 500€', extra: '5 ou 7 places, entièrement sur mesure.', questions: { fr: ['5 ou 7 places ?', 'Quelle est la surface de la pièce ?', 'Matière et couleur souhaitées ?'], en: ['5 or 7 seater?', 'Room dimensions?', 'Preferred material and color?'], ln: ['Bilindo 5 to 7 ?', 'Bolai ya salle ezali nini ?'] } },
-    lit:        { label: 'Lit moderne', price: '400 – 1 200€', extra: 'Simple, double ou king size.', questions: { fr: ['Taille souhaitée (simple, double, king size) ?', 'Avec rangements intégrés ?', 'Style souhaité (modern, minimaliste) ?'], en: ['Size (single, double, king)?', 'With built-in storage?', 'Style preference?'], ln: ['Bofuteli nini (simple, double, king) ?', 'Olingi storage kati ?'] } },
-    vitrine:    { label: 'Vitrine commerciale', price: '500 – 2 000€', extra: 'Avec serrure sécurisée et éclairage en option.', questions: { fr: ['Quelles dimensions (longueur × hauteur) ?', 'Avec serrure sécurisée ?', 'Éclairage intégré souhaité ?', 'Type de commerce ?'], en: ['What dimensions?', 'With security lock?', 'Integrated lighting?'], ln: ['Dimensions ezali nini ?', 'Olingi serrure ya sécurité ?'] } },
-    comptoir:   { label: 'Comptoir commercial', price: '300 – 1 500€', extra: 'Sur mesure selon vos dimensions.', questions: { fr: ['Quelle longueur souhaitez-vous ?', 'Avec rangements intégrés ?', 'Matière préférée ?'], en: ['Desired length?', 'With built-in storage?'], ln: ['Bolai ya comptoir ezali nini ?'] } },
-    structure:  { label: 'Structure métallique', price: 'Sur devis', extra: 'Charpente, hangar, abri : sur mesure.', questions: { fr: ['Quel type de structure (hangar, charpente, abri) ?', 'Quelles dimensions approximatives ?', 'Usage prévu ?'], en: ['What type of structure?', 'Approximate dimensions?', 'Intended use?'], ln: ['Structure ya ndenge nini ?'] } },
-  },
-
-  materials: {
-    acier:   { fr: "L'acier est robuste et économique, idéal pour portails lourds et structures. Il nécessite un traitement anti-corrosion (thermolaquage). Excellent rapport qualité/prix 💪", en: "Steel is strong and cost-effective, ideal for heavy gates and structures. Requires anti-corrosion treatment (powder coating). Great value!", ln: "Acier ezali solid mpe na prix malamu. Esengeli traitement anti-rouille. Likambo malamu !" },
-    aluminium:{ fr: "L'aluminium est léger, 100% anti-corrosion et zéro entretien. Parfait pour fenêtres, balcons et vitrines. Un peu plus cher que l'acier mais dure toute une vie ✨", en: "Aluminum is lightweight, 100% corrosion-resistant and maintenance-free. Perfect for windows, balconies and shop displays. Slightly pricier than steel but lasts a lifetime ✨", ln: "Aluminium ezali pete, anti-rouille 100%, entretien te. Malamu na bafenêtre, balcon na vitrines. Prix ezali lisusu moke, kasi ekoba vie mobimba ✨" },
-    inox:    { fr: "L'inox (acier inoxydable) est le haut de gamme : résistance maximale, esthétique premium, zéro rouille garantie. Idéal pour garde-corps design et mobilier luxe 🏆", en: "Stainless steel is premium: maximum resistance, premium aesthetics, zero rust guaranteed. Ideal for designer railings and luxury furniture 🏆", ln: "Inox ezali na qualité ya solo : résistance maximale, beau mpe rouille te. Malamu na garde-corps ya design 🏆" },
-    fer_forge:{ fr: "Le fer forgé apporte une esthétique artisanale et classique. Parfait pour portails décoratifs et mobilier de jardin. Demande un entretien régulier (peinture anti-rouille tous les 3-5 ans)", en: "Wrought iron gives a classic, artisanal look. Great for decorative gates and garden furniture. Requires regular maintenance (anti-rust paint every 3-5 years)", ln: "Fer forgé epesi aspect ya classique. Malamu na portail ya décoratif. Esengeli entretien ya nzela nzela" },
+  services: {
+    reseau:    { label: 'Réseau & Infrastructure', extra: 'Câblage structuré, WiFi entreprise et fibre optique haute performance.', questions: { fr: ['Combien de postes/utilisateurs sont concernés ?', 'Avez-vous déjà une infrastructure réseau en place ?', 'Souhaitez-vous du WiFi, de la fibre, ou les deux ?'], en: ['How many devices/users are involved?', 'Do you already have a network infrastructure?', 'Do you need WiFi, fiber, or both?'], ln: ['Batu boni bakosalela réseau oyo ?', 'Bozali na infrastructure réseau déjà ?'] } },
+    securite:  { label: 'Cybersécurité & Surveillance', extra: 'Firewalls, audits de sécurité et vidéosurveillance intelligente 24/7.', questions: { fr: ['Combien de caméras ou de points d\'accès à sécuriser ?', 'Le site est-il déjà équipé de matériel de sécurité ?', 'S\'agit-il d\'un local professionnel ou résidentiel ?'], en: ['How many cameras or access points need securing?', 'Is the site already equipped?'], ln: ['Camera boni esengeli ?'] } },
+    dev:       { label: 'Développement Digital', extra: 'Sites web, applications mobiles et ERP sur mesure.', questions: { fr: ['Quel type de projet : site vitrine, e-commerce, application ou ERP ?', 'Quelles fonctionnalités principales souhaitez-vous ?', 'Avez-vous déjà une identité visuelle ou une charte graphique ?'], en: ['What type of project: showcase site, e-commerce, app or ERP?', 'What are the key features you need?'], ln: ['Ozali koluka site to application ya ndenge nini ?'] } },
+    cloud:     { label: 'Cloud & Télécommunications', extra: 'Hébergement cloud, VoIP et solutions télécom intégrées.', questions: { fr: ['Combien d\'utilisateurs seront concernés ?', 'S\'agit-il d\'une migration ou d\'une nouvelle infrastructure ?', 'Avez-vous des besoins spécifiques en téléphonie (VoIP) ?'], en: ['How many users will be involved?', 'Is this a migration or a new setup?'], ln: ['Batu boni bakosalela cloud oyo ?'] } },
+    energie:   { label: 'Énergie & Équipements', extra: 'Panneaux solaires, climatisation et maintenance préventive/corrective.', questions: { fr: ['Quelle est la surface ou le site à équiper ?', 'Quelle est votre consommation électrique actuelle ?', 'Souhaitez-vous une autonomie totale ou un complément au réseau ?'], en: ['What is the site or surface to equip?', 'What is your current power consumption?'], ln: ['Esika boni bolingi kotia énergie ?'] } },
+    materiel:  { label: 'Vente de matériel IT', extra: 'PC, serveurs, écrans, caméras IP et accessoires professionnels.', questions: { fr: ['Quel type de matériel recherchez-vous ?', 'Pour combien de postes ou d\'utilisateurs ?', 'Avez-vous un budget indicatif ?'], en: ['What type of equipment are you looking for?', 'For how many users?'], ln: ['Materiel ya ndenge nini oyo boluki ?'] } },
+    formation: { label: 'Formation & Accompagnement', extra: 'Formations certifiantes et transfert de compétences pour vos équipes.', questions: { fr: ['Combien de personnes seront formées ?', 'Sur quelle thématique souhaitez-vous une formation ?', 'Quel est le niveau actuel de l\'équipe ?'], en: ['How many people will be trained?', 'On what topic?'], ln: ['Batu boni bakozwa formation ?'] } },
   },
 
   faq: {
-    delai:    { fr: "Nos délais : 5-7 jours pour une porte simple, 10-15 jours pour un portail, 15-21 jours pour un escalier ou projet complexe ⏱️", en: "Our lead times: 5-7 days for a simple door, 10-15 days for a gate, 15-21 days for stairs or complex projects ⏱️", ln: "Temps ya mosala : 5-7 jours na porte simple, 10-15 jours na portail, 15-21 jours na escalier mpe projet ya mobimba ⏱️" },
-    garantie: { fr: "Nous offrons 2 ans de garantie sur fabrication et installation. Les produits alu et inox sont garantis à vie contre la rouille ✅", en: "We offer 2 years warranty on manufacturing and installation. Aluminum and inox products are lifetime guaranteed against rust ✅", ln: "Toepela garantie ya mbula 2 na fabrication mpe installation. Produits ya alu mpe inox : garantie ya vie oyo te ✅" },
-    livraison:{ fr: "La livraison et l'installation sur site sont incluses dans tous nos prix. Nous intervenons dans toute la région 🚚", en: "Delivery and on-site installation are included in all our prices. We operate throughout the region 🚚", ln: "Livraison mpe installation na site ezali kati ya prix nyonso. Tozali kosala na région mobimba 🚚" },
-    paiement: { fr: "Nous acceptons : carte bancaire, virement, Wave, Orange Money, Airtel Money. Acompte 30% pour lancer la fabrication, solde à la livraison 💳", en: "We accept: bank card, wire transfer, Wave, Orange Money, Airtel Money. 30% deposit to start production, balance on delivery 💳", ln: "Topesa na : carte bancaire, virement, Wave, Orange Money, Airtel Money. Acompte 30% ya kobanda mosala, solde na livraison 💳" },
-    audit:    { fr: "Notre audit sécurité est à 80€ TTC. Rapport écrit détaillé remis sous 48h avec recommandations et priorités d'intervention 🔍", en: "Our security audit is 80€ incl. tax. Detailed written report delivered within 48h with recommendations and action priorities 🔍", ln: "Audit ya sécurité ezali 80€ TTC. Rapport ya bolamu epesami na 48h elongo na recommandations 🔍" },
-    acompte:  { fr: "Un acompte de 30% est demandé pour lancer la fabrication. Le solde est réglé à la livraison ou à la fin du chantier. Reçu automatique envoyé 📄", en: "A 30% deposit is required to start manufacturing. Balance is due at delivery or end of work. Automatic receipt sent 📄", ln: "Acompte ya 30% esengeli ya kobanda mosala. Solde opesa na livraison. Reçu ezali kotindama 📄" },
-    entreprise:{ fr: "Omedev Services est votre partenaire spécialisé en ferronnerie sur mesure, mobilier métallique, vitrines commerciales et solutions IT/Énergie. Disponibles 24h/24, 7j/7 pour tous vos projets 🏢", en: "Omedev Services is your specialist in custom metalwork, metal furniture, commercial displays and IT/Energy solutions. Available 24/7 for all your projects 🏢", ln: "Omedev Services ezali partenaire ya bino na ferronnerie sur mesure, mobilier ya métal, vitrines mpe solutions IT/Énergie. Tozali 24h/24 na bilenge na bino nyonso 🏢" },
+    delai:    { fr: "Nos délais varient selon le projet : quelques jours pour une intervention réseau/sécurité, 2 à 8 semaines pour un développement digital complet. Un planning précis vous est communiqué avec le devis ⏱️", en: "Timelines vary by project: a few days for network/security work, 2-8 weeks for a full digital build. A precise schedule comes with your quote ⏱️", ln: "Temps ekokani na projet — mikolo mingi to baposo mpo na misala minene ⏱️" },
+    garantie: { fr: "Nous offrons un support et une maintenance continue après chaque installation, avec un accompagnement technique 24/7 pour nos clients sous contrat ✅", en: "We provide ongoing support and maintenance after every install, with 24/7 technical assistance for contract clients ✅", ln: "Topesaka support na maintenance sima ya installation ✅" },
+    paiement: { fr: "Nous acceptons : carte bancaire, virement, Wave, Orange Money, Airtel Money. Un acompte est demandé pour lancer certains projets, solde à la livraison 💳", en: "We accept: bank card, wire transfer, Wave, Orange Money, Airtel Money 💳", ln: "Topesa na : carte bancaire, virement, Wave, Orange Money, Airtel Money 💳" },
+    audit:    { fr: "Notre audit initial est gratuit ! Nous analysons vos besoins et vous remettons un rapport avec recommandations sous 48h 🔍", en: "Our initial audit is free! We analyze your needs and deliver a report with recommendations within 48h 🔍", ln: "Audit ya ebandeli ezali ofele ! Rapport epesami na 48h 🔍" },
+    entreprise:{ fr: "Omedev Services est votre partenaire spécialisé en solutions IT, cybersécurité, développement digital, cloud, énergie et formation professionnelle. Disponibles 24h/24, 7j/7 pour tous vos projets 🏢", en: "Omedev Services is your specialist in IT solutions, cybersecurity, digital development, cloud, energy and professional training. Available 24/7 🏢", ln: "Omedev Services ezali partenaire ya bino na solutions IT, cybersécurité, développement digital, énergie mpe formation. Tozali 24h/24 🏢" },
   },
 };
 
@@ -199,7 +182,7 @@ const T = {
   fr: {
     greeting: [
       "Bonjour ! 👋 Je suis Omedev Assist, votre conseiller spécialisé. Comment puis-je vous aider aujourd'hui ?",
-      "Bonjour et bienvenue ! 🤖 Je suis là pour répondre à toutes vos questions sur nos services de ferronnerie, mobilier et solutions IT. Que puis-je faire pour vous ?",
+      "Bonjour et bienvenue ! 🤖 Je suis là pour répondre à toutes vos questions sur nos solutions IT, énergie et digital. Que puis-je faire pour vous ?",
       "Bonjour ! Ravi de vous accueillir chez Omedev Services. Quel projet avez-vous en tête ? 😊",
     ],
     farewell: [
@@ -208,30 +191,30 @@ const T = {
     ],
     devis_generic: [
       "Je serais ravi de vous préparer un devis personnalisé ! Pour commencer, de quel type de projet s'agit-il exactement ?",
-      "Super ! Pour établir un devis précis, dites-moi quel produit ou service vous intéresse et je vous pose quelques questions rapides 🎯",
+      "Super ! Pour établir un devis précis, dites-moi quel service vous intéresse et je vous pose quelques questions rapides 🎯",
     ],
-    devis_product: (product, lang) => {
-      const p = KB.products[product];
-      const q = p.questions[lang][0]; // First qualification question
-      return `Super projet ! 🏗️ Pour votre **${p.label}**, le tarif est généralement de **${p.price}**. ${p.extra}\n\nPour un devis précis : ${q}`;
+    devis_service: (service, lang) => {
+      const s = KB.services[service];
+      const q = s.questions[lang][0];
+      return `Excellent choix ! 🚀 ${s.extra} Ce type de prestation est proposé sur devis personnalisé, adapté à vos besoins.\n\nPour un devis précis : ${q}`;
     },
-    info_generic: "Bien sûr ! Omedev Services est spécialisé en ferronnerie sur mesure (portails, escaliers, garde-corps), mobilier métallique (salons VIP, lits, tables) et vitrines commerciales. Nous proposons aussi des solutions IT et énergie solaire. Sur quel service souhaitez-vous plus d'infos ?",
-    qualification: (product, qIdx, lang) => {
-      const p = KB.products[product];
-      const questions = p.questions[lang] || p.questions.fr;
+    info_generic: "Bien sûr ! Omedev Services propose des solutions en réseau & infrastructure, cybersécurité & surveillance, développement digital, cloud & télécommunications, énergie & équipements, vente de matériel IT et formation. Sur quel service souhaitez-vous plus d'infos ?",
+    qualification: (service, qIdx, lang) => {
+      const s = KB.services[service];
+      const questions = s.questions[lang] || s.questions.fr;
       if (qIdx >= questions.length) return null;
       return `Parfait ! ${questions[qIdx]}`;
     },
     escalade: "Cette demande mérite l'attention de notre équipe d'experts ! 👷 Je transmets votre dossier immédiatement — un conseiller vous contactera sous 30 minutes. Ça vous va ?",
     unknown: [
-      "Je ne suis pas sûr de bien comprendre votre demande. Pourriez-vous préciser ? Je suis là pour vous aider avec nos produits de ferronnerie, mobilier ou services IT 😊",
-      "Hmm, pouvez-vous reformuler ? Je suis spécialisé sur la ferronnerie sur mesure, le mobilier métallique et les solutions IT/Énergie d'Omedev Services.",
+      "Je ne suis pas sûr de bien comprendre votre demande. Pourriez-vous préciser ? Je suis là pour vous aider avec nos solutions IT, énergie et digital 😊",
+      "Hmm, pouvez-vous reformuler ? Je suis spécialisé sur les solutions IT, cybersécurité, cloud et énergie d'Omedev Services.",
     ],
   },
   en: {
     greeting: [
       "Hello! 👋 I'm Omedev Assist, your specialist advisor. How can I help you today?",
-      "Welcome to Omedev Services! 🤖 I'm here for all your questions about metalwork, furniture and IT solutions. What can I do for you?",
+      "Welcome to Omedev Services! 🤖 I'm here for all your questions about IT, energy and digital solutions. What can I do for you?",
     ],
     farewell: [
       "Thank you! Feel free to come back anytime. Have a great day! 👋",
@@ -239,29 +222,29 @@ const T = {
     ],
     devis_generic: [
       "I'd love to prepare a personalized quote! What type of project are you looking for?",
-      "Great! To give you an accurate quote, which product or service are you interested in?",
+      "Great! To give you an accurate quote, which service are you interested in?",
     ],
-    devis_product: (product, lang) => {
-      const p = KB.products[product];
-      const q = (p.questions.en || p.questions.fr)[0];
-      return `Great project! 🏗️ For a **${p.label}**, prices typically range from **${p.price}**. ${p.extra}\n\nTo get an accurate quote: ${q}`;
+    devis_service: (service, lang) => {
+      const s = KB.services[service];
+      const q = (s.questions.en || s.questions.fr)[0];
+      return `Great choice! 🚀 ${s.extra} This service is quoted individually based on your needs.\n\nTo get an accurate quote: ${q}`;
     },
-    info_generic: "Of course! Omedev Services specializes in custom metalwork (gates, stairs, railings), metal furniture (VIP sofas, beds, tables) and commercial displays. We also offer IT and solar energy solutions. Which service would you like to know more about?",
-    qualification: (product, qIdx, lang) => {
-      const p = KB.products[product];
-      const questions = p.questions.en || p.questions.fr;
+    info_generic: "Of course! Omedev Services offers network & infrastructure, cybersecurity & surveillance, digital development, cloud & telecom, energy & equipment, IT equipment sales and professional training. Which service would you like to know more about?",
+    qualification: (service, qIdx, lang) => {
+      const s = KB.services[service];
+      const questions = s.questions.en || s.questions.fr;
       if (qIdx >= questions.length) return null;
       return `Perfect! ${questions[qIdx]}`;
     },
     escalade: "This requires our expert team's attention! 👷 I'm forwarding your file now — a specialist will contact you within 30 minutes. Does that work for you?",
     unknown: [
-      "I'm not sure I understood that. Could you clarify? I specialize in metalwork, furniture and IT solutions for Omedev Services 😊",
+      "I'm not sure I understood that. Could you clarify? I specialize in IT, energy and digital solutions for Omedev Services 😊",
     ],
   },
   ln: {
     greeting: [
       "Mbote! 👋 Ngai Omedev Assist, conseiller ya bino. Nakosuisa yo ndenge nini lelo ?",
-      "Malamu na kobanda ! 🤖 Ngai nazali awa mpo na mituna nyonso na ferronnerie, mobilier mpe IT. Nakosuisa yo na nini ?",
+      "Malamu na kobanda ! 🤖 Ngai nazali awa mpo na mituna nyonso na solutions IT, énergie mpe digital. Nakosuisa yo na nini ?",
     ],
     farewell: [
       "Merci ! Zonga soki ozali na mituna mosusu. Butu malamu ! 👋",
@@ -269,23 +252,23 @@ const T = {
     ],
     devis_generic: [
       "Malamu ! Na kobongola devis ya malamu, projet ya nini ozali koluka ?",
-      "Super ! Koloba ngai projet oyo, mpe nakosukisa bino na mituna moke 🎯",
+      "Super ! Koloba ngai service oyo, mpe nakosukisa bino na mituna moke 🎯",
     ],
-    devis_product: (product, lang) => {
-      const p = KB.products[product];
-      const q = (p.questions.ln || p.questions.fr)[0];
-      return `Projet malamu ! 🏗️ Na **${p.label}** na bino, prix ezali **${p.price}**. ${p.extra}\n\nNa devis ya malamu : ${q}`;
+    devis_service: (service, lang) => {
+      const s = KB.services[service];
+      const q = (s.questions.ln || s.questions.fr)[0];
+      return `Choix ya malamu ! 🚀 ${s.extra} Service oyo ezali sur devis.\n\nNa devis ya malamu : ${q}`;
     },
-    info_generic: "Ezali malamu ! Omedev Services esaleli na ferronnerie sur mesure (portails, escaliers, garde-corps), mobilier ya métal (salons VIP, bilili, mitangá) mpe vitrines ya commerce. Tosaleli lisusu na solutions IT mpe énergie solaire. Service nini olingi koyeba lisusu ?",
-    qualification: (product, qIdx) => {
-      const p = KB.products[product];
-      const questions = p.questions.ln || p.questions.fr;
+    info_generic: "Ezali malamu ! Omedev Services esaleli na réseau & infrastructure, cybersécurité, développement digital, cloud, énergie mpe formation. Service nini olingi koyeba lisusu ?",
+    qualification: (service, qIdx) => {
+      const s = KB.services[service];
+      const questions = s.questions.ln || s.questions.fr;
       if (qIdx >= questions.length) return null;
       return `Malamu ! ${questions[qIdx]}`;
     },
     escalade: "Demande oyo esengeli miso ya expert ya biso ! 👷 Natindeli dossier na bino sik'oyo — conseiller akosambela bino na miniti 30. Ezali malamu ?",
     unknown: [
-      "Nabosani te kolimbola. Okoki kolobela lisusu ? Nasaleli na ferronnerie, mobilier mpe IT ya Omedev Services 😊",
+      "Nabosani te kolimbola. Okoki kolobela lisusu ? Nasaleli na solutions IT, énergie mpe digital ya Omedev Services 😊",
     ],
   },
 };
@@ -295,11 +278,11 @@ const T = {
 const generateLocalResponse = (message, session) => {
   const lang      = session.lang;
   const intent    = detectIntent(message, session.history);
-  const product   = detectProduct(message) || session.lastProduct;
+  const service   = detectService(message) || session.lastService;
   const templates = T[lang] || T.fr;
 
   // Update session context
-  if (product) session.lastProduct = product;
+  if (service) session.lastService = service;
 
   let text   = '';
   let action = null;
@@ -323,42 +306,10 @@ const generateLocalResponse = (message, session) => {
     return { text, action };
   }
 
-  // ── MATÉRIAU ──
-  if (intent === 'materiau') {
-    const t = message.toLowerCase();
-    let mat = null;
-    if (/acier|steel|fer\b/.test(t))       mat = 'acier';
-    else if (/alu|aluminium|aluminum/.test(t)) mat = 'aluminium';
-    else if (/inox|inoxydable|stainless/.test(t)) mat = 'inox';
-    else if (/fer forg|wrought|forg/.test(t))    mat = 'fer_forge';
-
-    if (mat && KB.materials[mat]) {
-      text = KB.materials[mat][lang] || KB.materials[mat].fr;
-      // After explaining material, offer devis if product is known
-      if (product) {
-        const p = KB.products[product];
-        text += `\n\nPour votre **${p.label}**, je vous recommande ${mat === 'acier' ? "l'acier pour sa robustesse" : mat === 'aluminium' ? "l'aluminium pour son faible entretien" : mat === 'inox' ? "l'inox pour sa longévité maximale" : "le fer forgé pour son esthétique"}. Voulez-vous un devis ?`;
-        action = { type: 'devis_link', label: lang === 'en' ? 'Request a free quote' : lang === 'ln' ? 'Kozwa devis ya ofele' : 'Demander un devis gratuit', url: '/demander-devis' };
-      } else {
-        // Ask which product
-        const follow = { fr: "Vous avez un produit spécifique en tête ?", en: "Do you have a specific product in mind?", ln: "Ozali koluka produit ya ndenge nini ?" };
-        text += `\n\n${follow[lang] || follow.fr}`;
-      }
-    } else {
-      // General comparison
-      text = lang === 'en'
-        ? "⚖️ **Steel** = strong, cost-effective (needs coating). **Aluminum** = lightweight, 0 maintenance. **Inox** = premium, lifetime durability. **Wrought iron** = classic look, regular maintenance needed.\n\nWhich suits your project best?"
-        : lang === 'ln'
-        ? "⚖️ **Acier** = solid, prix malamu (esengeli traitement). **Alu** = pete, entretien te. **Inox** = qualité ya haut de gamme. **Fer forgé** = beau, kasi entretien esengeli.\n\nNayebisi yo oyo ekokani na projet ya nini ?"
-        : "⚖️ **Acier** = robuste, économique (traitement requis). **Alu** = léger, zéro entretien. **Inox** = durabilité maximale, premium. **Fer forgé** = esthétique classique, entretien régulier.\n\nLe mieux dépend de votre usage — quel produit avez-vous en tête ?";
-    }
-    return { text, action };
-  }
-
   // ── FAQ : DELAI ──
   if (intent === 'delai') {
     text = KB.faq.delai[lang] || KB.faq.delai.fr;
-    if (product) action = { type: 'devis_link', label: 'Demander un devis', url: '/demander-devis' };
+    if (service) action = { type: 'devis_link', label: 'Demander un devis', url: '/demander-devis' };
     return { text, action };
   }
 
@@ -390,36 +341,36 @@ const generateLocalResponse = (message, session) => {
   // ── INFO ENTREPRISE ──
   if (intent === 'info_ent') {
     text = KB.faq.entreprise[lang] || KB.faq.entreprise.fr;
-    action = { type: 'portfolio_link', label: lang === 'en' ? 'View our work' : lang === 'ln' ? 'Tala misala na biso' : 'Voir nos réalisations', url: '/ferronnerie/projets' };
+    action = { type: 'portfolio_link', label: lang === 'en' ? 'View our work' : lang === 'ln' ? 'Tala misala na biso' : 'Voir nos réalisations', url: '/realisations' };
     return { text, action };
   }
 
-  // ── DEVIS avec produit connu ──
-  if (product) {
-    const p = KB.products[product];
+  // ── DEVIS avec service connu ──
+  if (service) {
+    const s = KB.services[service];
     // Count how many qualification questions we've asked
-    const qIdx = session.askedQuestions.filter(q => q.startsWith(product)).length;
-    session.askedQuestions.push(`${product}_${qIdx}`);
+    const qIdx = session.askedQuestions.filter(q => q.startsWith(service)).length;
+    session.askedQuestions.push(`${service}_${qIdx}`);
 
     if (qIdx === 0) {
-      // First contact: give price range + first question
-      text = typeof templates.devis_product === 'function'
-        ? templates.devis_product(product, lang)
-        : T.fr.devis_product(product, 'fr');
+      // First contact: present service + first question
+      text = typeof templates.devis_service === 'function'
+        ? templates.devis_service(service, lang)
+        : T.fr.devis_service(service, 'fr');
     } else {
       // Follow-up qualification question
       const nextQ = typeof templates.qualification === 'function'
-        ? templates.qualification(product, qIdx, lang)
-        : T.fr.qualification(product, qIdx, lang);
+        ? templates.qualification(service, qIdx, lang)
+        : T.fr.qualification(service, qIdx, lang);
 
       if (nextQ) {
         text = nextQ;
       } else {
         // All questions asked — push to form
         const conclude = {
-          fr: `Merci pour ces informations ! 🎉 J'ai tout ce qu'il faut pour préparer votre devis personnalisé pour ce ${p.label}. Remplissez le formulaire officiel et vous recevrez votre devis sous 24h 📄`,
-          en: `Thank you for all the details! 🎉 I have everything I need to prepare your custom quote for the ${p.label}. Fill out the form and you'll receive your quote within 24h 📄`,
-          ln: `Merci ya bainfo nyonso ! 🎉 Nazali na nyonso mpo nakobongola devis ya bino na ${p.label}. Bongisa formulaire mpe okokeba devis na bino na 24h 📄`,
+          fr: `Merci pour ces informations ! 🎉 J'ai tout ce qu'il faut pour préparer votre devis personnalisé pour ce projet de ${s.label}. Remplissez le formulaire officiel et vous recevrez votre devis sous 24h 📄`,
+          en: `Thank you for all the details! 🎉 I have everything I need to prepare your custom quote for ${s.label}. Fill out the form and you'll receive your quote within 24h 📄`,
+          ln: `Merci ya bainfo nyonso ! 🎉 Nazali na nyonso mpo nakobongola devis ya bino na ${s.label}. Bongisa formulaire mpe okokeba devis na bino na 24h 📄`,
         };
         text   = conclude[lang] || conclude.fr;
         action = { type: 'devis_link', label: lang === 'en' ? 'Get your free quote' : lang === 'ln' ? 'Kozwa devis ya ofele' : 'Demander mon devis gratuit', url: '/demander-devis' };
@@ -428,7 +379,7 @@ const generateLocalResponse = (message, session) => {
     return { text, action };
   }
 
-  // ── DEVIS générique (pas de produit) ──
+  // ── DEVIS générique (pas de service) ──
   if (intent === 'devis') {
     text = pick(templates.devis_generic);
     return { text, action };

@@ -71,20 +71,17 @@ const protect = async (req, res, next) => {
 
       req.user = await User.findById(decoded.id).select('-password');
       if (!req.user) {
-        res.status(401);
-        throw new Error('Utilisateur non trouvé avec ce token');
+        return res.status(401).json({ success: false, message: 'Utilisateur non trouvé avec ce token' });
       }
 
       return next();
     } catch (error) {
       console.error(error);
-      res.status(401);
-      throw new Error('Non autorisé, token invalide');
+      return res.status(401).json({ success: false, message: 'Non autorisé, token invalide' });
     }
   }
 
-  res.status(401);
-  throw new Error('Non autorisé, pas de token');
+  return res.status(401).json({ success: false, message: 'Non autorisé, pas de token' });
 };
 
 // Middleware pour restreindre l'accès à certains rôles

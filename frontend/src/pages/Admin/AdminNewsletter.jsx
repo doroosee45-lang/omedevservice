@@ -2,14 +2,10 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Mail, Users, UserCheck, UserX, Trash2, RefreshCw,
-  Search, Download, Loader2, CheckCircle, TrendingUp,
+  Download, CheckCircle, TrendingUp,
 } from 'lucide-react'
 import { newsletter as newsletterApi } from '../../services/api'
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-}
+import { PageHeader, Card, Button, Modal, SearchInput, EmptyState, LoadingState, fadeUp, staggerContainer } from '../../components/Admin/ui'
 
 const SOURCE_LABELS = {
   footer: 'Footer',
@@ -75,57 +71,42 @@ const AdminNewsletter = () => {
   )
 
   return (
-    <motion.div variants={fadeUp} initial="hidden" animate="visible" className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-white font-syne flex items-center gap-3">
-            <Mail className="w-7 h-7 text-blue-400" /> Newsletter — Abonnés
-          </h1>
-          <p className="text-gray-400 text-sm mt-1">Gestion des abonnés et historique des notifications envoyées</p>
-        </div>
-        <div className="flex gap-2">
-          <button onClick={load} className="p-2 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all">
-            <RefreshCw className="w-4 h-4" />
-          </button>
-          <button onClick={exportCSV} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 transition-all text-sm">
-            <Download className="w-4 h-4" /> Exporter CSV
-          </button>
-        </div>
-      </div>
+    <>
+      <PageHeader
+        title="Newsletter — Abonnés"
+        subtitle="Gestion des abonnés et historique des notifications envoyées"
+        actions={
+          <>
+            <Button variant="outline" size="sm" icon={RefreshCw} onClick={load} />
+            <Button variant="outline" icon={Download} onClick={exportCSV}>Exporter CSV</Button>
+          </>
+        }
+      />
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
         {[
           { label: 'Total abonnés',  val: stats.total    || 0, color: 'text-white',        icon: Users      },
-          { label: 'Actifs',         val: stats.active   || 0, color: 'text-emerald-400',  icon: UserCheck  },
+          { label: 'Actifs',         val: stats.active   || 0, color: 'text-[#55DDB5]',  icon: UserCheck  },
           { label: 'Désabonnés',     val: stats.inactive || 0, color: 'text-red-400',      icon: UserX      },
-          { label: 'Taux activité',  val: stats.total > 0 ? Math.round((stats.active / stats.total) * 100) + '%' : '—', color: 'text-blue-400', icon: TrendingUp },
+          { label: 'Taux activité',  val: stats.total > 0 ? Math.round((stats.active / stats.total) * 100) + '%' : '—', color: 'text-blue-300', icon: TrendingUp },
         ].map((s) => {
           const Icon = s.icon
           return (
-            <div key={s.label} className="bg-white/5 border border-white/10 rounded-xl p-4">
+            <motion.div key={s.label} variants={fadeUp} className="admin-card p-4">
               <div className="flex items-center justify-between mb-2">
                 <Icon className={`w-5 h-5 ${s.color} opacity-70`} />
               </div>
               <p className={`text-2xl font-bold ${s.color} font-syne`}>{s.val}</p>
-              <p className="text-gray-400 text-xs mt-1">{s.label}</p>
-            </div>
+              <p className="text-white/50 text-xs mt-1">{s.label}</p>
+            </motion.div>
           )
         })}
-      </div>
+      </motion.div>
 
       {/* Filters + Search */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-          <input
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Rechercher un email ou un nom…"
-            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder-gray-500 text-sm focus:outline-none focus:border-blue-500/50 transition-all"
-          />
-        </div>
+      <div className="flex flex-col sm:flex-row gap-3 mb-6">
+        <SearchInput value={search} onChange={e => setSearch(e.target.value)} placeholder="Rechercher un email ou un nom…" />
         <div className="flex gap-2">
           {[['all', 'Tous'], ['active', 'Actifs'], ['inactive', 'Désabonnés']].map(([val, label]) => (
             <button
@@ -133,8 +114,8 @@ const AdminNewsletter = () => {
               onClick={() => setFilter(val)}
               className={`px-3 py-2 rounded-xl text-xs font-medium border transition-all ${
                 filter === val
-                  ? 'bg-blue-500/20 text-blue-400 border-blue-500/30'
-                  : 'bg-white/5 text-gray-400 border-white/10 hover:bg-white/10'
+                  ? 'bg-[#2AACB2]/15 text-[#55DDB5] border-[#2AACB2]/30'
+                  : 'bg-white/5 text-white/50 border-white/10 hover:bg-white/10 hover:text-white'
               }`}
             >
               {label}
@@ -145,57 +126,49 @@ const AdminNewsletter = () => {
 
       {/* Table */}
       {loading ? (
-        <div className="flex justify-center items-center py-20">
-          <Loader2 className="w-8 h-8 text-blue-400 animate-spin" />
-        </div>
+        <LoadingState label="Chargement des abonnés…" />
       ) : filtered.length === 0 ? (
-        <div className="text-center py-20 text-gray-500">
-          <Mail className="w-12 h-12 mx-auto mb-3 opacity-30" />
-          <p>Aucun abonné trouvé.</p>
-        </div>
+        <EmptyState icon={Mail} title="Aucun abonné trouvé" />
       ) : (
-        <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
+        <Card className="overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="admin-table">
               <thead>
-                <tr className="border-b border-white/10 text-gray-400 text-xs uppercase">
-                  <th className="text-left px-5 py-3 font-medium">Email</th>
-                  <th className="text-left px-4 py-3 font-medium hidden sm:table-cell">Nom</th>
-                  <th className="text-left px-4 py-3 font-medium hidden md:table-cell">Source</th>
-                  <th className="text-left px-4 py-3 font-medium hidden lg:table-cell">Date</th>
-                  <th className="text-center px-4 py-3 font-medium">Statut</th>
-                  <th className="px-4 py-3" />
+                <tr>
+                  <th>Email</th>
+                  <th className="hidden sm:table-cell">Nom</th>
+                  <th className="hidden md:table-cell">Source</th>
+                  <th className="hidden lg:table-cell">Date</th>
+                  <th className="text-center">Statut</th>
+                  <th />
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((sub, idx) => (
-                  <tr
-                    key={sub._id}
-                    className={`border-b border-white/5 hover:bg-white/5 transition-colors ${idx % 2 === 0 ? '' : 'bg-white/2'}`}
-                  >
-                    <td className="px-5 py-3 text-white font-medium">{sub.email}</td>
-                    <td className="px-4 py-3 text-gray-400 hidden sm:table-cell">{sub.name || '—'}</td>
-                    <td className="px-4 py-3 hidden md:table-cell">
+                {filtered.map((sub) => (
+                  <tr key={sub._id}>
+                    <td className="font-medium">{sub.email}</td>
+                    <td className="hidden sm:table-cell text-white/50">{sub.name || '—'}</td>
+                    <td className="hidden md:table-cell">
                       <span className="text-xs bg-blue-500/10 border border-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full">
                         {SOURCE_LABELS[sub.source] || sub.source}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-gray-500 text-xs hidden lg:table-cell">
+                    <td className="hidden lg:table-cell text-white/40 text-xs">
                       {new Date(sub.subscribedAt).toLocaleDateString('fr-FR')}
                     </td>
-                    <td className="px-4 py-3 text-center">
+                    <td className="text-center">
                       <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${
                         sub.isActive
-                          ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400'
+                          ? 'bg-[#2AACB2]/10 border border-[#2AACB2]/20 text-[#55DDB5]'
                           : 'bg-red-500/10 border border-red-500/20 text-red-400'
                       }`}>
                         {sub.isActive ? <><CheckCircle className="w-3 h-3" /> Actif</> : <><UserX className="w-3 h-3" /> Inactif</>}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="text-right">
                       <button
                         onClick={() => setDeleting(sub)}
-                        className="p-1.5 rounded-lg text-gray-500 hover:text-red-400 hover:bg-red-500/10 transition-all"
+                        className="p-1.5 rounded-lg text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-all"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -205,40 +178,31 @@ const AdminNewsletter = () => {
               </tbody>
             </table>
           </div>
-          <div className="px-5 py-3 border-t border-white/10 text-xs text-gray-500">
+          <div className="px-5 py-3 border-t border-white/10 text-xs text-white/40">
             {filtered.length} abonné{filtered.length > 1 ? 's' : ''} affiché{filtered.length > 1 ? 's' : ''}
           </div>
-        </div>
+        </Card>
       )}
 
       {/* Delete confirm */}
       <AnimatePresence>
         {deleting && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-slate-900 border border-white/10 rounded-2xl p-6 max-w-sm w-full text-center"
-            >
+          <Modal open onClose={() => setDeleting(null)} maxWidth="max-w-sm">
+            <div className="text-center">
               <div className="w-12 h-12 rounded-full bg-red-500/20 border border-red-500/30 flex items-center justify-center mx-auto mb-4">
                 <Trash2 className="w-6 h-6 text-red-400" />
               </div>
-              <h3 className="text-white font-bold mb-2">Supprimer l'abonné ?</h3>
-              <p className="text-gray-400 text-sm mb-5">{deleting.email}</p>
+              <h3 className="text-white font-bold font-syne mb-2">Supprimer l'abonné ?</h3>
+              <p className="text-white/50 text-sm mb-5">{deleting.email}</p>
               <div className="flex gap-3">
-                <button onClick={() => setDeleting(null)} className="flex-1 py-2.5 rounded-xl border border-white/10 text-gray-300 hover:bg-white/5 text-sm transition-all">
-                  Annuler
-                </button>
-                <button onClick={() => handleDelete(deleting._id)} className="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold text-sm transition-all">
-                  Supprimer
-                </button>
+                <Button variant="outline" className="flex-1" onClick={() => setDeleting(null)}>Annuler</Button>
+                <Button variant="danger" className="flex-1" onClick={() => handleDelete(deleting._id)}>Supprimer</Button>
               </div>
-            </motion.div>
-          </div>
+            </div>
+          </Modal>
         )}
       </AnimatePresence>
-    </motion.div>
+    </>
   )
 }
 

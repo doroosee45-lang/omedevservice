@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
 // @route   POST /api/quote-requests
 // @access  Public
 const createQuoteRequest = async (req, res) => {
-  const { fullName, email, phone, company, serviceType, ferronnerieType, dimensions, description, budget, timeline } = req.body;
+  const { fullName, email, phone, company, serviceType, description, budget, timeline } = req.body;
 
   const quoteRequest = await QuoteRequest.create({
     fullName,
@@ -27,8 +27,6 @@ const createQuoteRequest = async (req, res) => {
     phone,
     company,
     serviceType,
-    ferronnerieType,
-    dimensions,
     description,
     budget,
     timeline,
@@ -38,18 +36,19 @@ const createQuoteRequest = async (req, res) => {
   // Envoyer un email de confirmation au client
   try {
     await transporter.sendMail({
-      from: `"OMDEVE Services" <${process.env.EMAIL_USER}>`,
+      from: `"OMEDEV Services" <${process.env.EMAIL_USER}>`,
       to: email,
-      subject: `Confirmation de votre demande de devis - ${quoteRequest.requestNumber}`,
+      subject: `Confirmation de votre demande de devis — ${quoteRequest.requestNumber}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #2563eb;">Merci pour votre demande !</h2>
+          <h2 style="color: #2563eb;">Merci pour votre demande</h2>
           <p>Bonjour ${fullName},</p>
           <p>Nous avons bien reçu votre demande de devis pour <strong>${serviceType}</strong>.</p>
           <p>Votre numéro de dossier est : <strong style="font-size: 18px; color: #2563eb;">${quoteRequest.requestNumber}</strong></p>
           <p>Notre équipe commerciale vous contactera dans les plus brefs délais (sous 24h ouvrées).</p>
+          <p>Cordialement,<br/>L'équipe OMEDEV Services</p>
           <hr style="margin: 20px 0;">
-          <p style="font-size: 12px; color: #666;">OMDEVE Services - Solutions IT, Énergie & Digital</p>
+          <p style="font-size: 12px; color: #666;">OMEDEV Services — Solutions IT, Énergie &amp; Digital</p>
         </div>
       `,
     });
@@ -61,9 +60,9 @@ const createQuoteRequest = async (req, res) => {
   // Envoyer une notification à l'équipe commerciale
   try {
     await transporter.sendMail({
-      from: `"OMDEVE Services" <${process.env.EMAIL_USER}>`,
+      from: `"OMEDEV Services" <${process.env.EMAIL_USER}>`,
       to: process.env.SALES_EMAIL || process.env.EMAIL_USER,
-      subject: `Nouvelle demande de devis - ${quoteRequest.requestNumber}`,
+      subject: `Nouvelle demande de devis — ${quoteRequest.requestNumber}`,
       html: `
         <div style="font-family: Arial, sans-serif;">
           <h2>Nouvelle demande de devis</h2>
@@ -72,8 +71,6 @@ const createQuoteRequest = async (req, res) => {
           <p><strong>Email:</strong> ${email}</p>
           <p><strong>Téléphone:</strong> ${phone}</p>
           <p><strong>Service:</strong> ${serviceType}</p>
-          ${ferronnerieType ? `<p><strong>Type de projet:</strong> ${ferronnerieType}</p>` : ''}
-          ${dimensions ? `<p><strong>Dimensions:</strong> ${dimensions}</p>` : ''}
           <p><strong>Description:</strong> ${description}</p>
           <p><strong>Budget:</strong> ${budget || 'Non spécifié'}</p>
           <p><strong>Délai souhaité:</strong> ${timeline || 'Non spécifié'}</p>
@@ -272,9 +269,9 @@ const updateQuoteRequestStatus = async (req, res) => {
     
     try {
       await transporter.sendMail({
-        from: `"OMDEVE Services" <${process.env.EMAIL_USER}>`,
+        from: `"OMEDEV Services" <${process.env.EMAIL_USER}>`,
         to: quoteRequest.email,
-        subject: `Mise à jour de votre demande de devis - ${quoteRequest.requestNumber}`,
+        subject: `Mise à jour de votre demande de devis — ${quoteRequest.requestNumber}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: ${statusColor};">Mise à jour de votre demande</h2>
@@ -285,8 +282,9 @@ const updateQuoteRequestStatus = async (req, res) => {
             </div>
             <p>Vous pouvez suivre l'évolution de votre demande ici :</p>
             <p><a href="${process.env.FRONTEND_URL}/suivi-devis/${quoteRequest.requestNumber}" style="background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Suivre ma demande</a></p>
+            <p>Cordialement,<br/>L'équipe OMEDEV Services</p>
             <hr style="margin: 20px 0;">
-            <p style="font-size: 12px; color: #666;">OMDEVE Services - Solutions IT, Énergie & Digital</p>
+            <p style="font-size: 12px; color: #666;">OMEDEV Services — Solutions IT, Énergie &amp; Digital</p>
           </div>
         `,
       });

@@ -2,9 +2,9 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { tickets as ticketsApi } from '../../services/api'
-import { 
-  MessageSquare, 
-  Send, 
+import {
+  MessageSquare,
+  Send,
   Paperclip,
   Search,
   User,
@@ -20,31 +20,31 @@ import ClientSidebar from '../../components/ClientSidebar'
 import ClientHeader from '../../components/ClientHeader'
 
 const globalStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  
-  body {
+  .omedev-vm {
+    --omedev-navy: #053876;
+    --omedev-blue-dark: #1D5B9B;
+    --omedev-blue: #0B74C1;
+    --omedev-blue-light: #4681B7;
+    --omedev-cyan: #72A5CE;
+    --omedev-cyan-light: #A6C3D7;
+    --omedev-turquoise: #2AACB2;
+    --omedev-energy: #55DDB5;
+    --omedev-white: #F6F6F7;
+    --omedev-gray: #D5DCE1;
+    --omedev-dark: #0B1213;
+    --omedev-text-secondary: #25364A;
+    background: #F6F6F7;
+    color: #0B1213;
     font-family: 'DM Sans', sans-serif;
-    background: #0f172a;
-    color: #e2e8f0;
     overflow-x: hidden;
   }
+  .omedev-vm * { box-sizing: border-box; }
 
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-  }
-  
-  @keyframes pulse-ring {
-    0% { transform: scale(0.8); opacity: 1; }
-    70% { transform: scale(1.3); opacity: 0; }
-    100% { transform: scale(0.8); opacity: 0; }
-  }
-  
-  .animate-float { animation: float 6s ease-in-out infinite; }
-  .animate-pulse-ring { animation: pulse-ring 2s ease-out infinite; }
-`;
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
+  .omedev-vm .animate-float { animation: float 6s ease-in-out infinite; }
+`
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -59,10 +59,10 @@ const NewConversationModal = ({ isOpen, onClose, onCreateConversation }) => {
 
   const handleSubmit = async () => {
     if (!subject.trim() || !message.trim()) return
-    
+
     setIsSubmitting(true)
     await new Promise(resolve => setTimeout(resolve, 1000))
-    
+
     onCreateConversation({
       id: Date.now(),
       subject,
@@ -71,7 +71,7 @@ const NewConversationModal = ({ isOpen, onClose, onCreateConversation }) => {
       unread: 1,
       avatar: 'N'
     })
-    
+
     setSubject('')
     setMessage('')
     setIsSubmitting(false)
@@ -81,57 +81,57 @@ const NewConversationModal = ({ isOpen, onClose, onCreateConversation }) => {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-[#0B1213]/50 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl w-full max-w-md border border-white/10 shadow-2xl"
+        className="bg-white rounded-2xl w-full max-w-md border border-[rgba(5,56,118,0.12)] shadow-2xl"
       >
-        <div className="flex items-center justify-between p-6 border-b border-white/10">
+        <div className="flex items-center justify-between p-6 border-b border-[rgba(5,56,118,0.1)]">
           <div className="flex items-center gap-2">
-            <MessageSquare className="w-5 h-5 text-blue-400" />
-            <h2 className="text-xl font-bold text-white">Nouvelle conversation</h2>
+            <MessageSquare className="w-5 h-5 text-[#0B74C1]" />
+            <h2 className="text-xl font-bold text-[#053876]">Nouvelle conversation</h2>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-white transition">
+          <button onClick={onClose} className="text-[#25364A]/60 hover:text-[#053876] transition">
             <XCircle className="w-5 h-5" />
           </button>
         </div>
 
         <div className="p-6 space-y-4">
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Sujet *</label>
+            <label className="block text-sm text-[#25364A]/70 mb-1">Sujet *</label>
             <input
               type="text"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
               placeholder="Ex: Demande d'information, Support technique..."
-              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-[rgba(5,56,118,0.18)] text-[#0B1213] placeholder-[#25364A]/45 focus:outline-none focus:border-[#2AACB2] transition-all"
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Message *</label>
+            <label className="block text-sm text-[#25364A]/70 mb-1">Message *</label>
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               rows="5"
               placeholder="Décrivez votre demande..."
-              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all resize-none"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-[rgba(5,56,118,0.18)] text-[#0B1213] placeholder-[#25364A]/45 focus:outline-none focus:border-[#2AACB2] transition-all resize-none"
             />
           </div>
         </div>
 
-        <div className="flex justify-end gap-3 p-6 border-t border-white/10">
+        <div className="flex justify-end gap-3 p-6 border-t border-[rgba(5,56,118,0.1)]">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-white/10 text-gray-400 hover:bg-white/20 transition"
+            className="px-4 py-2 rounded-xl border border-[rgba(5,56,118,0.18)] text-[#25364A] hover:bg-[#F6F6F7] transition"
           >
             Annuler
           </button>
           <button
             onClick={handleSubmit}
             disabled={!subject.trim() || !message.trim() || isSubmitting}
-            className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#0B74C1] via-[#2AACB2] to-[#55DDB5] hover:brightness-110 text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_10px_28px_rgba(11,116,193,0.2)]"
           >
             {isSubmitting ? (
               <div className="flex items-center gap-2">
@@ -223,11 +223,11 @@ const ClientMessagerie = () => {
   }
 
   return (
-    <>
+    <div className="omedev-vm">
       <style>{globalStyles}</style>
-      
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
-        
+
+      <div className="min-h-screen" style={{ background: '#F6F6F7' }}>
+
         {/* Header */}
         <ClientHeader onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
 
@@ -239,21 +239,21 @@ const ClientMessagerie = () => {
 
           {/* Overlay for mobile */}
           {sidebarOpen && (
-            <div className="fixed inset-0 bg-black/50 z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />
+            <div className="fixed inset-0 bg-[#0B1213]/40 z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />
           )}
 
           {/* Main content */}
           <div className="flex-1 lg:ml-64">
             <main className="p-6 md:p-8">
-              
+
               {/* Header Section */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="mb-8"
               >
-                <h1 className="text-2xl md:text-3xl font-bold text-white font-syne">Messagerie</h1>
-                <p className="text-gray-400 mt-1">Échangez avec le support OMDEVE</p>
+                <h1 className="text-2xl md:text-3xl font-bold text-[#053876] font-syne">Messagerie</h1>
+                <p className="text-[#25364A]/70 mt-1">Échangez avec le support OMDEVE</p>
               </motion.div>
 
               <div className="grid lg:grid-cols-3 gap-6">
@@ -262,42 +262,42 @@ const ClientMessagerie = () => {
                   variants={fadeUp}
                   initial="hidden"
                   animate="visible"
-                  className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden"
+                  className="bg-white border border-[rgba(5,56,118,0.09)] rounded-2xl overflow-hidden shadow-[0_10px_30px_rgba(5,56,118,0.06)]"
                 >
-                  <div className="p-4 border-b border-white/10">
+                  <div className="p-4 border-b border-[rgba(5,56,118,0.1)]">
                     <div className="relative">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#25364A]/50" />
                       <input
                         type="text"
                         placeholder="Rechercher..."
-                        className="w-full pl-10 pr-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all"
+                        className="w-full pl-10 pr-4 py-2 rounded-xl bg-white border border-[rgba(5,56,118,0.18)] text-[#0B1213] text-sm placeholder-[#25364A]/45 focus:outline-none focus:border-[#2AACB2] transition-all"
                       />
                     </div>
                   </div>
-                  <div className="divide-y divide-white/10 max-h-[500px] overflow-y-auto">
+                  <div className="divide-y divide-[rgba(5,56,118,0.1)] max-h-[500px] overflow-y-auto">
                     {conversations.map((conv) => (
                       <div
                         key={conv.id}
                         onClick={() => setSelectedConversation(conv.id)}
-                        className={`p-4 cursor-pointer transition-all hover:bg-white/10 ${
-                          selectedConversation === conv.id ? 'bg-blue-500/20 border-l-4 border-blue-500' : ''
+                        className={`p-4 cursor-pointer transition-all hover:bg-[#F6F6F7] ${
+                          selectedConversation === conv.id ? 'bg-[#0B74C1]/10 border-l-4 border-[#0B74C1]' : ''
                         }`}
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center">
+                          <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-[#0B74C1] to-[#2AACB2] flex items-center justify-center">
                             <span className="text-white font-bold text-sm">{conv.avatar}</span>
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between">
-                              <h3 className="font-medium text-white truncate">{conv.subject}</h3>
-                              <span className="text-xs text-gray-500">{conv.date}</span>
+                              <h3 className="font-medium text-[#053876] truncate">{conv.subject}</h3>
+                              <span className="text-xs text-[#25364A]/50">{conv.date}</span>
                             </div>
-                            <p className="text-sm text-gray-400 truncate">{conv.lastMessage}</p>
+                            <p className="text-sm text-[#25364A]/70 truncate">{conv.lastMessage}</p>
                           </div>
                         </div>
                         {conv.unread > 0 && (
                           <div className="mt-2">
-                            <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-blue-500 rounded-full">
+                            <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-[#0B74C1] rounded-full">
                               {conv.unread}
                             </span>
                           </div>
@@ -305,10 +305,10 @@ const ClientMessagerie = () => {
                       </div>
                     ))}
                   </div>
-                  <div className="p-4 border-t border-white/10">
+                  <div className="p-4 border-t border-[rgba(5,56,118,0.1)]">
                     <button
                       onClick={() => setShowNewConversationModal(true)}
-                      className="flex items-center justify-center gap-2 w-full py-2 rounded-xl bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-all"
+                      className="flex items-center justify-center gap-2 w-full py-2 rounded-xl bg-[#0B74C1]/10 text-[#0B74C1] hover:bg-[#0B74C1]/15 transition-all"
                     >
                       <Plus className="w-4 h-4" />
                       Nouvelle conversation
@@ -321,14 +321,14 @@ const ClientMessagerie = () => {
                   variants={fadeUp}
                   initial="hidden"
                   animate="visible"
-                  className="lg:col-span-2 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden flex flex-col"
+                  className="lg:col-span-2 bg-white border border-[rgba(5,56,118,0.09)] rounded-2xl overflow-hidden flex flex-col shadow-[0_10px_30px_rgba(5,56,118,0.06)]"
                   style={{ minHeight: '550px' }}
                 >
                   {selectedConversation ? (
                     <>
                       {/* Messages Header */}
-                      <div className="p-4 border-b border-white/10 bg-white/5">
-                        <h3 className="font-semibold text-white">
+                      <div className="p-4 border-b border-[rgba(5,56,118,0.1)] bg-[#F6F6F7]">
+                        <h3 className="font-semibold text-[#053876]">
                           {conversations.find(c => c.id === selectedConversation)?.subject}
                         </h3>
                       </div>
@@ -346,8 +346,8 @@ const ClientMessagerie = () => {
                             <div className={`max-w-[75%] ${msg.sender === 'client' ? 'order-2' : 'order-1'}`}>
                               <div className={`p-3 rounded-2xl ${
                                 msg.sender === 'client'
-                                  ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white'
-                                  : 'bg-white/10 text-gray-300'
+                                  ? 'bg-gradient-to-r from-[#0B74C1] via-[#2AACB2] to-[#55DDB5] text-white'
+                                  : 'bg-[#F6F6F7] text-[#25364A]'
                               }`}>
                                 <p className="text-sm">{msg.message}</p>
                                 {msg.attachment && (
@@ -357,18 +357,18 @@ const ClientMessagerie = () => {
                                   </div>
                                 )}
                               </div>
-                              <p className="text-xs text-gray-500 mt-1">{msg.time}</p>
+                              <p className="text-xs text-[#25364A]/50 mt-1">{msg.time}</p>
                             </div>
                           </motion.div>
                         ))}
                       </div>
 
                       {/* Message Input */}
-                      <div className="p-4 border-t border-white/10 bg-white/5">
+                      <div className="p-4 border-t border-[rgba(5,56,118,0.1)] bg-[#F6F6F7]">
                         <div className="flex items-center gap-3">
                           <button
                             onClick={handleFileUpload}
-                            className="p-2 rounded-lg bg-white/10 text-gray-400 hover:bg-blue-500/20 hover:text-blue-400 transition-all"
+                            className="p-2 rounded-lg bg-white border border-[rgba(5,56,118,0.15)] text-[#25364A]/60 hover:bg-[#0B74C1]/10 hover:text-[#0B74C1] transition-all"
                           >
                             <Paperclip className="w-5 h-5" />
                           </button>
@@ -384,11 +384,11 @@ const ClientMessagerie = () => {
                             value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
                             onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                            className="flex-1 px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all"
+                            className="flex-1 px-4 py-2 rounded-xl bg-white border border-[rgba(5,56,118,0.18)] text-[#0B1213] placeholder-[#25364A]/45 focus:outline-none focus:border-[#2AACB2] transition-all"
                           />
                           <button
                             onClick={handleSendMessage}
-                            className="p-2 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:scale-105 transition-all"
+                            className="p-2 rounded-lg bg-gradient-to-r from-[#0B74C1] via-[#2AACB2] to-[#55DDB5] hover:brightness-110 text-white transition-all"
                           >
                             <Send className="w-5 h-5" />
                           </button>
@@ -398,12 +398,12 @@ const ClientMessagerie = () => {
                   ) : (
                     <div className="flex-1 flex items-center justify-center">
                       <div className="text-center">
-                        <MessageSquare className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                        <h3 className="text-lg font-medium text-white">Aucune conversation sélectionnée</h3>
-                        <p className="text-gray-500 mt-1">Choisissez une conversation ou créez-en une nouvelle</p>
+                        <MessageSquare className="w-16 h-16 text-[#25364A]/30 mx-auto mb-4" />
+                        <h3 className="text-lg font-medium text-[#053876]">Aucune conversation sélectionnée</h3>
+                        <p className="text-[#25364A]/60 mt-1">Choisissez une conversation ou créez-en une nouvelle</p>
                         <button
                           onClick={() => setShowNewConversationModal(true)}
-                          className="mt-4 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:scale-105 transition-all"
+                          className="mt-4 px-4 py-2 rounded-xl bg-gradient-to-r from-[#0B74C1] via-[#2AACB2] to-[#55DDB5] hover:brightness-110 text-white transition-all shadow-[0_10px_28px_rgba(11,116,193,0.2)]"
                         >
                           Nouvelle conversation
                         </button>
@@ -423,7 +423,7 @@ const ClientMessagerie = () => {
         onClose={() => setShowNewConversationModal(false)}
         onCreateConversation={handleCreateConversation}
       />
-    </>
+    </div>
   )
 }
 

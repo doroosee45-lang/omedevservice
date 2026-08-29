@@ -14,31 +14,31 @@ const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 // ─── EMAIL TEMPLATES ─────────────────────────────────────────────────────────
 
 const confirmationEmail = (name, email, unsubToken) => ({
-  from: `"Omedev Services" <${process.env.EMAIL_USER}>`,
+  from: `"OMEDEV Services" <${process.env.EMAIL_USER}>`,
   to: email,
-  subject: '✅ Vous êtes inscrit à la newsletter Omedev',
+  subject: 'Confirmation de votre inscription à la newsletter OMEDEV',
   html: `
     <div style="font-family:'DM Sans',Arial,sans-serif;max-width:580px;margin:0 auto;background:#0f172a;border-radius:16px;overflow:hidden;">
       <div style="background:linear-gradient(135deg,#1d4ed8,#4338ca);padding:36px 32px;text-align:center;">
         <div style="width:56px;height:56px;background:rgba(255,255,255,0.15);border-radius:14px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;">
-          <span style="font-size:28px;">📬</span>
+          <span style="font-size:17px;font-weight:800;color:#fff;letter-spacing:-0.5px;">OM</span>
         </div>
-        <h1 style="color:white;font-size:22px;font-weight:800;margin:0 0 8px;">Bienvenue dans la newsletter !</h1>
-        <p style="color:rgba(255,255,255,0.7);font-size:14px;margin:0;">Omedev Services • Actualités IT, Énergie & Ferronnerie</p>
+        <h1 style="color:white;font-size:22px;font-weight:800;margin:0 0 8px;">Bienvenue dans la newsletter</h1>
+        <p style="color:rgba(255,255,255,0.7);font-size:14px;margin:0;">OMEDEV Services • Actualités IT, Énergie &amp; Digital</p>
       </div>
       <div style="padding:32px;color:#cbd5e1;">
-        <p style="font-size:15px;margin:0 0 16px;">Bonjour ${name || 'cher abonné'} 👋,</p>
+        <p style="font-size:15px;margin:0 0 16px;">Bonjour ${name || 'cher abonné'},</p>
         <p style="font-size:14px;line-height:1.7;margin:0 0 20px;">
-          Merci de vous être inscrit à notre newsletter ! Vous recevrez désormais nos dernières actualités,
+          Merci de vous être inscrit à notre newsletter. Vous recevrez désormais nos dernières actualités,
           innovations et offres spéciales directement dans votre boîte mail.
         </p>
         <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px 20px;margin-bottom:24px;">
           <p style="margin:0 0 8px;font-size:12px;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;">Ce que vous recevrez</p>
           <ul style="margin:0;padding-left:20px;font-size:14px;line-height:2;">
-            <li>📰 Actualités IT & infrastructure</li>
-            <li>⚡ Nouveautés énergie & équipements</li>
-            <li>🔨 Projets ferronnerie & mobilier</li>
-            <li>🎁 Offres et promotions exclusives</li>
+            <li>Actualités IT &amp; infrastructure</li>
+            <li>Nouveautés énergie &amp; équipements</li>
+            <li>Projets digitaux &amp; solutions cloud</li>
+            <li>Offres et promotions exclusives</li>
           </ul>
         </div>
         <p style="font-size:12px;color:#64748b;text-align:center;margin:0;">
@@ -54,13 +54,13 @@ const articleNotificationEmail = (subscriber, article) => {
   const articleUrl = `${FRONTEND_URL}/blog/${article.slug}`;
   const unsubUrl   = `${FRONTEND_URL}/newsletter/unsubscribe?token=${subscriber.unsubscribeToken}`;
   return {
-    from: `"Omedev Services" <${process.env.EMAIL_USER}>`,
+    from: `"OMEDEV Services" <${process.env.EMAIL_USER}>`,
     to: subscriber.email,
-    subject: `📰 ${article.title} — Omedev Services`,
+    subject: `${article.title} — OMEDEV Services`,
     html: `
       <div style="font-family:'DM Sans',Arial,sans-serif;max-width:580px;margin:0 auto;background:#0f172a;border-radius:16px;overflow:hidden;">
         <div style="background:linear-gradient(135deg,#1d4ed8,#4338ca);padding:28px 32px;">
-          <p style="color:rgba(255,255,255,0.6);font-size:12px;text-transform:uppercase;letter-spacing:1.5px;margin:0 0 8px;">📬 Nouvelle publication</p>
+          <p style="color:rgba(255,255,255,0.6);font-size:12px;text-transform:uppercase;letter-spacing:1.5px;margin:0 0 8px;">Nouvelle publication</p>
           <h1 style="color:white;font-size:22px;font-weight:800;margin:0;line-height:1.3;">${article.title}</h1>
           ${article.category ? `<span style="display:inline-block;margin-top:12px;padding:4px 12px;background:rgba(255,255,255,0.15);border-radius:20px;color:white;font-size:12px;font-weight:600;">${article.category}</span>` : ''}
         </div>
@@ -76,7 +76,7 @@ const articleNotificationEmail = (subscriber, article) => {
 
           <hr style="border:none;border-top:1px solid rgba(255,255,255,0.08);margin:28px 0;" />
           <p style="font-size:12px;color:#475569;text-align:center;margin:0;">
-            Vous recevez cet email car vous êtes inscrit à la newsletter Omedev Services.<br/>
+            Vous recevez cet email car vous êtes inscrit à la newsletter OMEDEV Services.<br/>
             <a href="${unsubUrl}" style="color:#64748b;">Se désabonner</a>
           </p>
         </div>
@@ -103,7 +103,7 @@ const subscribe = async (req, res) => {
       existing.isActive = true;
       existing.name = name || existing.name;
       await existing.save();
-      return res.json({ message: 'Votre inscription a été réactivée ! 🎉' });
+      return res.json({ message: 'Votre inscription a été réactivée avec succès.' });
     }
     return res.json({ message: 'Vous êtes déjà inscrit à notre newsletter.' });
   }
@@ -120,13 +120,13 @@ const subscribe = async (req, res) => {
 
   // Notify admin (non-blocking)
   transporter.sendMail({
-    from: `"Omedev Services" <${process.env.EMAIL_USER}>`,
+    from: `"OMEDEV Services" <${process.env.EMAIL_USER}>`,
     to: process.env.CONTACT_EMAIL || process.env.EMAIL_USER,
-    subject: `📬 Nouveau abonné newsletter : ${email}`,
+    subject: `Nouvel abonné newsletter — ${email}`,
     html: `<p>Nouvel abonné newsletter :<br><strong>${email}</strong>${name ? ` (${name})` : ''}<br>Source : ${source || 'footer'}</p>`,
   }).catch(() => {});
 
-  res.status(201).json({ message: 'Inscription réussie ! Bienvenue 🎉' });
+  res.status(201).json({ message: 'Inscription réussie. Bienvenue chez OMEDEV Services.' });
 };
 
 // @route GET /api/newsletter/unsubscribe/:token

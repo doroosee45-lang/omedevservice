@@ -2,23 +2,15 @@
 import { useState, useMemo, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { projects as projectsApi } from '../../services/api'
-import { 
-  FolderKanban, 
-  Plus, 
-  Search,
-  ChevronLeft,
-  ChevronRight,
-  AlertCircle,
-  Clock,
-  CheckCircle,
+import {
+  Plus,
   User,
   Calendar,
   Flag,
   X,
-  Send,
   Eye,
-  UserCheck
 } from 'lucide-react'
+import { PageHeader, Card, Button } from '../../components/Admin/ui'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -26,10 +18,10 @@ const fadeUp = {
 };
 
 const projectStages = [
-  { id: 'todo',     name: 'À faire',  color: 'from-gray-500 to-gray-600',    bgColor: 'bg-gray-500/10 border-gray-500/30',    textColor: 'text-gray-400'   },
-  { id: 'progress', name: 'En cours', color: 'from-blue-500 to-cyan-500',     bgColor: 'bg-blue-500/10 border-blue-500/30',    textColor: 'text-blue-400'   },
-  { id: 'review',   name: 'Review',   color: 'from-purple-500 to-pink-500',   bgColor: 'bg-purple-500/10 border-purple-500/30', textColor: 'text-purple-400' },
-  { id: 'done',     name: 'Terminé',  color: 'from-emerald-500 to-teal-500',  bgColor: 'bg-emerald-500/10 border-emerald-500/30', textColor: 'text-emerald-400' },
+  { id: 'todo',     name: 'À faire',  color: 'from-gray-500 to-gray-600',    bgColor: 'bg-gray-500/10 border-gray-500/30',    textColor: 'text-white/50'   },
+  { id: 'progress', name: 'En cours', color: 'from-blue-500 to-blue-600',     bgColor: 'bg-blue-500/10 border-blue-500/30',    textColor: 'text-blue-400'   },
+  { id: 'review',   name: 'Review',   color: 'from-purple-500 to-indigo-500',   bgColor: 'bg-purple-500/10 border-purple-500/30', textColor: 'text-purple-400' },
+  { id: 'done',     name: 'Terminé',  color: 'from-[#2AACB2] to-[#2AACB2]',  bgColor: 'bg-[#2AACB2]/10 border-[#2AACB2]/30', textColor: 'text-[#55DDB5]' },
 ]
 
 const initialProjectsData = {
@@ -63,7 +55,7 @@ const defaultMembers = ['Thomas', 'Sophie', 'Marc', 'Julie', 'Pierre']
 
 const getPriorityBadge = (priority) => {
   const badges = {
-    basse:   { label: 'Basse',   color: 'bg-gray-500/20 text-gray-400 border-gray-500/30'       },
+    basse:   { label: 'Basse',   color: 'bg-gray-500/20 text-white/50 border-gray-500/30'       },
     normale: { label: 'Normale', color: 'bg-blue-500/20 text-blue-400 border-blue-500/30'       },
     haute:   { label: 'Haute',   color: 'bg-orange-500/20 text-orange-400 border-orange-500/30' },
     urgente: { label: 'Urgente', color: 'bg-red-500/20 text-red-400 border-red-500/30'          },
@@ -75,8 +67,8 @@ const getStatusBadge = (status) => {
   const badges = {
     open:        { label: 'Ouvert',   color: 'bg-red-500/20 text-red-400 border-red-500/30'             },
     in_progress: { label: 'En cours', color: 'bg-blue-500/20 text-blue-400 border-blue-500/30'          },
-    resolved:    { label: 'Résolu',   color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
-    closed:      { label: 'Fermé',    color: 'bg-gray-500/20 text-gray-400 border-gray-500/30'          },
+    resolved:    { label: 'Résolu',   color: 'bg-[#2AACB2]/20 text-[#55DDB5] border-[#2AACB2]/30' },
+    closed:      { label: 'Fermé',    color: 'bg-gray-500/20 text-white/50 border-gray-500/30'          },
   }
   return badges[status] || badges.open
 }
@@ -87,7 +79,7 @@ const AssigneeInput = ({ value, onChange, suggestions, label = 'Responsable', pl
   const listId = `assignee-list-${label.replace(/\s/g, '-')}`
   return (
     <div>
-      <label className="text-xs text-gray-400 mb-1 block">{label}</label>
+      <label className="text-xs text-white/50 mb-1 block">{label}</label>
       <input
         type="text"
         value={value}
@@ -95,7 +87,7 @@ const AssigneeInput = ({ value, onChange, suggestions, label = 'Responsable', pl
         placeholder={placeholder}
         list={listId}
         autoComplete="off"
-        className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-blue-500/50 transition"
+        className="admin-input text-sm"
       />
       {/* datalist : suggestions natives du navigateur, saisie libre possible */}
       <datalist id={listId}>
@@ -132,50 +124,50 @@ const ModalNouveauProjet = ({ isOpen, onClose, onSave, defaultStage = 'todo', su
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center admin-modal-overlay p-4" onClick={onClose}>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md bg-[#0f172a] border border-white/10 rounded-2xl overflow-hidden shadow-2xl"
+        className="w-full max-w-md admin-modal-panel overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-5 border-b border-white/10">
           <h3 className="text-white font-semibold text-lg">Nouveau projet</h3>
-          <button onClick={onClose} className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition text-gray-400 hover:text-white"><X className="w-4 h-4" /></button>
+          <button onClick={onClose} className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition text-white/50 hover:text-white"><X className="w-4 h-4" /></button>
         </div>
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Nom du projet *</label>
+              <label className="text-xs text-white/50 mb-1 block">Nom du projet *</label>
               <input type="text" value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder="Site E-commerce"
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-blue-500/50 transition" />
+                className="admin-input text-sm" />
               {errors.name && <p className="text-xs text-red-400 mt-1">{errors.name}</p>}
             </div>
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Client *</label>
+              <label className="text-xs text-white/50 mb-1 block">Client *</label>
               <input type="text" value={form.client} onChange={e => setForm({...form, client: e.target.value})} placeholder="ABC Corp"
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-blue-500/50 transition" />
+                className="admin-input text-sm" />
               {errors.client && <p className="text-xs text-red-400 mt-1">{errors.client}</p>}
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Échéance *</label>
+              <label className="text-xs text-white/50 mb-1 block">Échéance *</label>
               <input type="date" value={form.deadline} onChange={e => setForm({...form, deadline: e.target.value})}
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500/50 transition" />
+                className="admin-input text-sm" />
               {errors.deadline && <p className="text-xs text-red-400 mt-1">{errors.deadline}</p>}
             </div>
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Progression (%)</label>
+              <label className="text-xs text-white/50 mb-1 block">Progression (%)</label>
               <input type="number" min="0" max="100" value={form.progress} onChange={e => setForm({...form, progress: e.target.value})}
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500/50 transition" />
+                className="admin-input text-sm" />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Priorité</label>
+              <label className="text-xs text-white/50 mb-1 block">Priorité</label>
               <select value={form.priority} onChange={e => setForm({...form, priority: e.target.value})}
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500/50 transition">
-                {['basse','normale','haute','urgente'].map(p => <option key={p} value={p} className="bg-[#0f172a] capitalize">{p.charAt(0).toUpperCase()+p.slice(1)}</option>)}
+                className="admin-input text-sm">
+                {['basse','normale','haute','urgente'].map(p => <option key={p} value={p} className="bg-[#0B1F3D] capitalize">{p.charAt(0).toUpperCase()+p.slice(1)}</option>)}
               </select>
             </div>
             {/* ✅ Responsable : saisie libre + suggestions clients/membres */}
@@ -191,15 +183,15 @@ const ModalNouveauProjet = ({ isOpen, onClose, onSave, defaultStage = 'todo', su
             </div>
           </div>
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Étape initiale</label>
+            <label className="text-xs text-white/50 mb-1 block">Étape initiale</label>
             <select value={form.stage} onChange={e => setForm({...form, stage: e.target.value})}
-              className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500/50 transition">
-              {projectStages.map(s => <option key={s.id} value={s.id} className="bg-[#0f172a]">{s.name}</option>)}
+              className="admin-input text-sm">
+              {projectStages.map(s => <option key={s.id} value={s.id} className="bg-[#0B1F3D]">{s.name}</option>)}
             </select>
           </div>
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onClose} className="flex-1 py-2 rounded-xl bg-white/5 text-gray-400 hover:bg-white/10 transition text-sm">Annuler</button>
-            <button type="submit" className="flex-1 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:scale-105 transition text-sm font-medium">Enregistrer</button>
+            <button type="button" onClick={onClose} className="admin-btn admin-btn-outline flex-1">Annuler</button>
+            <button type="submit" className="admin-btn admin-btn-primary flex-1">Enregistrer</button>
           </div>
         </form>
       </motion.div>
@@ -214,15 +206,15 @@ const ModalProjetDetails = ({ isOpen, onClose, project, stage }) => {
   const priority = getPriorityBadge(project.priority)
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center admin-modal-overlay p-4" onClick={onClose}>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md bg-[#0f172a] border border-white/10 rounded-2xl overflow-hidden shadow-2xl"
+        className="w-full max-w-md admin-modal-panel overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-5 border-b border-white/10">
           <h3 className="text-white font-semibold">{project.name}</h3>
-          <button onClick={onClose} className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition text-gray-400 hover:text-white"><X className="w-4 h-4" /></button>
+          <button onClick={onClose} className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition text-white/50 hover:text-white"><X className="w-4 h-4" /></button>
         </div>
         <div className="p-5 space-y-3">
           <div className="grid grid-cols-2 gap-3">
@@ -233,31 +225,31 @@ const ModalProjetDetails = ({ isOpen, onClose, project, stage }) => {
               { label: 'Progression', value: `${project.progress || 0}%` },
             ].map(({ label, value }) => (
               <div key={label} className="bg-white/5 rounded-xl p-3 border border-white/10">
-                <p className="text-xs text-gray-500 mb-1">{label}</p>
+                <p className="text-xs text-white/40 mb-1">{label}</p>
                 <p className="text-sm text-white font-medium">{value}</p>
               </div>
             ))}
           </div>
           <div className="flex gap-3">
             <div className="flex-1 bg-white/5 rounded-xl p-3 border border-white/10">
-              <p className="text-xs text-gray-500 mb-1">Priorité</p>
+              <p className="text-xs text-white/40 mb-1">Priorité</p>
               <span className={`text-xs px-2 py-0.5 rounded-full border ${priority.color}`}>{priority.label}</span>
             </div>
             <div className="flex-1 bg-white/5 rounded-xl p-3 border border-white/10">
-              <p className="text-xs text-gray-500 mb-1">Étape</p>
+              <p className="text-xs text-white/40 mb-1">Étape</p>
               <span className={`text-xs px-2 py-0.5 rounded-full ${stageConfig?.textColor}`}>{stageConfig?.name}</span>
             </div>
           </div>
           {(project.progress > 0) && (
             <div className="bg-white/5 rounded-xl p-3 border border-white/10">
-              <p className="text-xs text-gray-500 mb-2">Avancement</p>
+              <p className="text-xs text-white/40 mb-2">Avancement</p>
               <div className="w-full bg-white/10 rounded-full h-2">
-                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full h-2 transition-all" style={{ width: `${project.progress}%` }} />
+                <div className="bg-gradient-to-r from-blue-500 to-[#2AACB2] rounded-full h-2 transition-all" style={{ width: `${project.progress}%` }} />
               </div>
-              <p className="text-xs text-gray-400 mt-1 text-right">{project.progress}%</p>
+              <p className="text-xs text-white/50 mt-1 text-right">{project.progress}%</p>
             </div>
           )}
-          <button onClick={onClose} className="w-full py-2 rounded-xl bg-white/5 text-gray-400 hover:bg-white/10 transition text-sm">Fermer</button>
+          <button onClick={onClose} className="admin-btn admin-btn-outline w-full">Fermer</button>
         </div>
       </motion.div>
     </div>
@@ -287,29 +279,29 @@ const ModalTraiterTicket = ({ isOpen, onClose, ticket, onUpdate, suggestions }) 
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center admin-modal-overlay p-4" onClick={onClose}>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md bg-[#0f172a] border border-white/10 rounded-2xl overflow-hidden shadow-2xl"
+        className="w-full max-w-md admin-modal-panel overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-5 border-b border-white/10">
           <div>
             <h3 className="text-white font-semibold">Traiter : {ticket.id}</h3>
-            <p className="text-xs text-gray-400 mt-0.5">{ticket.subject}</p>
+            <p className="text-xs text-white/50 mt-0.5">{ticket.subject}</p>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition text-gray-400 hover:text-white"><X className="w-4 h-4" /></button>
+          <button onClick={onClose} className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition text-white/50 hover:text-white"><X className="w-4 h-4" /></button>
         </div>
         <div className="p-5 space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Changer le statut</label>
+              <label className="text-xs text-white/50 mb-1 block">Changer le statut</label>
               <select value={newStatus} onChange={e => setNewStatus(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500/50 transition">
-                <option value="open"        className="bg-[#0f172a]">Ouvert</option>
-                <option value="in_progress" className="bg-[#0f172a]">En cours</option>
-                <option value="resolved"    className="bg-[#0f172a]">Résolu</option>
-                <option value="closed"      className="bg-[#0f172a]">Fermé</option>
+                className="admin-input text-sm">
+                <option value="open"        className="bg-[#0B1F3D]">Ouvert</option>
+                <option value="in_progress" className="bg-[#0B1F3D]">En cours</option>
+                <option value="resolved"    className="bg-[#0B1F3D]">Résolu</option>
+                <option value="closed"      className="bg-[#0B1F3D]">Fermé</option>
               </select>
             </div>
             {/* ✅ Réassigner : saisie libre + suggestions clients/membres */}
@@ -322,14 +314,14 @@ const ModalTraiterTicket = ({ isOpen, onClose, ticket, onUpdate, suggestions }) 
             />
           </div>
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Note de traitement</label>
+            <label className="text-xs text-white/50 mb-1 block">Note de traitement</label>
             <textarea value={note} onChange={e => setNote(e.target.value)} rows={3}
               placeholder="Décrivez les actions effectuées..."
-              className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-blue-500/50 transition resize-none" />
+              className="admin-textarea text-sm resize-none" />
           </div>
           <div className="flex gap-3">
-            <button onClick={onClose}  className="flex-1 py-2 rounded-xl bg-white/5 text-gray-400 hover:bg-white/10 transition text-sm">Annuler</button>
-            <button onClick={handleSave} className="flex-1 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:scale-105 transition text-sm font-medium">Enregistrer</button>
+            <button onClick={onClose}  className="admin-btn admin-btn-outline flex-1">Annuler</button>
+            <button onClick={handleSave} className="admin-btn admin-btn-primary flex-1">Enregistrer</button>
           </div>
         </div>
       </motion.div>
@@ -363,29 +355,29 @@ const ModalNouveauTicket = ({ isOpen, onClose, onSave, suggestions }) => {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center admin-modal-overlay p-4" onClick={onClose}>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-sm bg-[#0f172a] border border-white/10 rounded-2xl overflow-hidden shadow-2xl"
+        className="w-full max-w-sm admin-modal-panel overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-5 border-b border-white/10">
           <h3 className="text-white font-semibold">Nouveau ticket</h3>
-          <button onClick={onClose} className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition text-gray-400 hover:text-white"><X className="w-4 h-4" /></button>
+          <button onClick={onClose} className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition text-white/50 hover:text-white"><X className="w-4 h-4" /></button>
         </div>
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Sujet *</label>
+            <label className="text-xs text-white/50 mb-1 block">Sujet *</label>
             <input type="text" value={form.subject} onChange={e => setForm({...form, subject: e.target.value})} placeholder="Problème connexion..."
-              className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-blue-500/50 transition" />
+              className="admin-input text-sm" />
             {errors.subject && <p className="text-xs text-red-400 mt-1">{errors.subject}</p>}
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Priorité</label>
+              <label className="text-xs text-white/50 mb-1 block">Priorité</label>
               <select value={form.priority} onChange={e => setForm({...form, priority: e.target.value})}
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500/50 transition">
-                {['basse','normale','haute','urgente'].map(p => <option key={p} value={p} className="bg-[#0f172a] capitalize">{p.charAt(0).toUpperCase()+p.slice(1)}</option>)}
+                className="admin-input text-sm">
+                {['basse','normale','haute','urgente'].map(p => <option key={p} value={p} className="bg-[#0B1F3D] capitalize">{p.charAt(0).toUpperCase()+p.slice(1)}</option>)}
               </select>
             </div>
             {/* ✅ Assigné : saisie libre + suggestions */}
@@ -401,8 +393,8 @@ const ModalNouveauTicket = ({ isOpen, onClose, onSave, suggestions }) => {
             </div>
           </div>
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onClose} className="flex-1 py-2 rounded-xl bg-white/5 text-gray-400 hover:bg-white/10 transition text-sm">Annuler</button>
-            <button type="submit" className="flex-1 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:scale-105 transition text-sm font-medium">Créer</button>
+            <button type="button" onClick={onClose} className="admin-btn admin-btn-outline flex-1">Annuler</button>
+            <button type="submit" className="admin-btn admin-btn-primary flex-1">Créer</button>
           </div>
         </form>
       </motion.div>
@@ -427,20 +419,20 @@ const ProjectCard = ({ project, stage, onView }) => {
           </span>
         )}
       </div>
-      <p className="text-xs text-gray-400 mb-2">{project.client}</p>
+      <p className="text-xs text-white/50 mb-2">{project.client}</p>
       {project.progress > 0 && (
         <div className="mb-2">
           <div className="w-full bg-white/10 rounded-full h-1.5">
-            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full h-1.5" style={{ width: `${project.progress}%` }} />
+            <div className="bg-gradient-to-r from-blue-500 to-[#2AACB2] rounded-full h-1.5" style={{ width: `${project.progress}%` }} />
           </div>
-          <p className="text-xs text-gray-500 mt-1">{project.progress}%</p>
+          <p className="text-xs text-white/40 mt-1">{project.progress}%</p>
         </div>
       )}
-      <div className="flex items-center gap-2 text-xs text-gray-500">
+      <div className="flex items-center gap-2 text-xs text-white/40">
         <Calendar className="w-3 h-3" />
         <span>{project.deadline}</span>
       </div>
-      <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
+      <div className="flex items-center gap-2 text-xs text-white/40 mt-1">
         <User className="w-3 h-3" />
         <span>{project.assignee}</span>
       </div>
@@ -542,34 +534,27 @@ const AdminProjets = () => {
 
   return (
     <>
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
-      >
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-white font-syne">Projets & tickets</h1>
-          <p className="text-gray-400 mt-1">Gérez vos projets et le support client</p>
-        </div>
-        <div className="flex gap-3">
-          <div className="flex rounded-xl bg-white/10 p-1">
-            <button onClick={() => setView('kanban')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${view === 'kanban' ? 'bg-blue-500 text-white' : 'text-gray-400 hover:text-white'}`}>
-              Kanban
-            </button>
-            <button onClick={() => setView('list')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${view === 'list' ? 'bg-blue-500 text-white' : 'text-gray-400 hover:text-white'}`}>
-              Liste
-            </button>
-          </div>
-          <button
-            onClick={() => { setDefaultStage('todo'); setShowNewProjet(true) }}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:scale-105 transition"
-          >
-            <Plus className="w-4 h-4" /> Nouveau projet
-          </button>
-        </div>
-      </motion.div>
+      <PageHeader
+        title="Projets & tickets"
+        subtitle="Gérez vos projets et le support client"
+        actions={
+          <>
+            <div className="flex rounded-xl bg-white/10 p-1">
+              <button onClick={() => setView('kanban')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${view === 'kanban' ? 'bg-[#2AACB2] text-white' : 'text-white/50 hover:text-white'}`}>
+                Kanban
+              </button>
+              <button onClick={() => setView('list')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${view === 'list' ? 'bg-[#2AACB2] text-white' : 'text-white/50 hover:text-white'}`}>
+                Liste
+              </button>
+            </div>
+            <Button variant="primary" icon={Plus} onClick={() => { setDefaultStage('todo'); setShowNewProjet(true) }}>
+              Nouveau projet
+            </Button>
+          </>
+        }
+      />
 
       {/* ===== VUE KANBAN ===== */}
       {view === 'kanban' ? (
@@ -581,9 +566,9 @@ const AdminProjets = () => {
                   <div className="flex items-center justify-between">
                     <h3 className={`font-semibold ${stage.textColor}`}>{stage.name}</h3>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-gray-400">{projectsData[stage.id]?.length || 0}</span>
+                      <span className="text-xs text-white/50">{projectsData[stage.id]?.length || 0}</span>
                       <button onClick={() => handleAddInStage(stage.id)} className="p-0.5 rounded bg-white/10 hover:bg-white/20 transition">
-                        <Plus className="w-3.5 h-3.5 text-gray-400" />
+                        <Plus className="w-3.5 h-3.5 text-white/50" />
                       </button>
                     </div>
                   </div>
@@ -594,7 +579,7 @@ const AdminProjets = () => {
                   ))}
                   {projectsData[stage.id]?.length === 0 && (
                     <div className="text-center py-6">
-                      <p className="text-xs text-gray-500">Aucun projet</p>
+                      <p className="text-xs text-white/40">Aucun projet</p>
                       <button onClick={() => handleAddInStage(stage.id)} className="mt-1 text-xs text-blue-400 hover:text-blue-300 transition">+ Ajouter</button>
                     </div>
                   )}
@@ -605,42 +590,41 @@ const AdminProjets = () => {
         </div>
       ) : (
         /* ===== VUE LISTE ===== */
-        <motion.div variants={fadeUp} initial="hidden" animate="visible"
-          className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden mb-8"
-        >
+        <motion.div variants={fadeUp} initial="hidden" animate="visible" className="mb-8">
+          <Card className="overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="border-b border-white/10">
-                <tr className="text-left">
+            <table className="admin-table">
+              <thead>
+                <tr>
                   {['Projet','Client','Statut','Progression','Échéance','Responsable','Actions'].map(h => (
-                    <th key={h} className="px-6 py-4 text-sm font-semibold text-gray-400">{h}</th>
+                    <th key={h}>{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/10">
+              <tbody>
                 {allProjects.map((project) => {
                   const stage = projectStages.find(s => s.id === project.stageId)
                   return (
-                    <tr key={project.id} className="hover:bg-white/5 transition-colors">
-                      <td className="px-6 py-4 font-medium text-white">{project.name}</td>
-                      <td className="px-6 py-4 text-gray-300">{project.client}</td>
-                      <td className="px-6 py-4">
+                    <tr key={project.id}>
+                      <td className="font-medium">{project.name}</td>
+                      <td className="text-white/70">{project.client}</td>
+                      <td>
                         <span className={`text-xs px-2 py-1 rounded-full border ${stage?.bgColor} ${stage?.textColor}`}>{stage?.name}</span>
                       </td>
-                      <td className="px-6 py-4">
+                      <td>
                         <div className="flex items-center gap-2">
                           <div className="w-24 bg-white/10 rounded-full h-1.5">
-                            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full h-1.5" style={{ width: `${project.progress || 0}%` }} />
+                            <div className="bg-gradient-to-r from-blue-500 to-[#2AACB2] rounded-full h-1.5" style={{ width: `${project.progress || 0}%` }} />
                           </div>
-                          <span className="text-xs text-gray-400">{project.progress || 0}%</span>
+                          <span className="text-xs text-white/50">{project.progress || 0}%</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-gray-400">{project.deadline}</td>
-                      <td className="px-6 py-4 text-gray-400">{project.assignee}</td>
-                      <td className="px-6 py-4">
+                      <td className="text-white/50">{project.deadline}</td>
+                      <td className="text-white/50">{project.assignee}</td>
+                      <td>
                         <button
                           onClick={() => handleViewProject(project, project.stageId)}
-                          className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 transition"
+                          className="flex items-center gap-1 text-xs text-blue-300 hover:text-blue-200 transition"
                         >
                           <Eye className="w-3 h-3" /> Voir
                         </button>
@@ -651,54 +635,51 @@ const AdminProjets = () => {
               </tbody>
             </table>
           </div>
+          </Card>
         </motion.div>
       )}
 
       {/* ===== TICKETS SUPPORT ===== */}
-      <motion.div variants={fadeUp} initial="hidden" animate="visible"
-        className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden"
-      >
+      <motion.div variants={fadeUp} initial="hidden" animate="visible">
+        <Card className="overflow-hidden">
         <div className="p-6 border-b border-white/10 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-white font-syne flex items-center gap-2">
             <Flag className="w-5 h-5 text-blue-400" />
             Tickets support
           </h2>
-          <button
-            onClick={() => setShowNewTicket(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs hover:scale-105 transition"
-          >
-            <Plus className="w-3.5 h-3.5" /> Nouveau ticket
-          </button>
+          <Button variant="primary" size="sm" icon={Plus} onClick={() => setShowNewTicket(true)}>
+            Nouveau ticket
+          </Button>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="border-b border-white/10">
-              <tr className="text-left">
+          <table className="admin-table">
+            <thead>
+              <tr>
                 {['ID','Sujet','Priorité','Statut','Date','Assigné','Actions'].map(h => (
-                  <th key={h} className="px-6 py-4 text-sm font-semibold text-gray-400">{h}</th>
+                  <th key={h}>{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/10">
+            <tbody>
               {tickets.map((ticket) => {
                 const priority = getPriorityBadge(ticket.priority)
                 const status   = getStatusBadge(ticket.status)
                 return (
-                  <tr key={ticket.id} className="hover:bg-white/5 transition-colors">
-                    <td className="px-6 py-4 font-medium text-white">{ticket.id}</td>
-                    <td className="px-6 py-4 text-gray-300">{ticket.subject}</td>
-                    <td className="px-6 py-4">
+                  <tr key={ticket.id}>
+                    <td className="font-medium">{ticket.id}</td>
+                    <td className="text-white/70">{ticket.subject}</td>
+                    <td>
                       <span className={`text-xs px-2 py-1 rounded-full border ${priority.color}`}>{priority.label}</span>
                     </td>
-                    <td className="px-6 py-4">
+                    <td>
                       <span className={`text-xs px-2 py-1 rounded-full border ${status.color}`}>{status.label}</span>
                     </td>
-                    <td className="px-6 py-4 text-gray-400">{ticket.date}</td>
-                    <td className="px-6 py-4 text-gray-400">{ticket.assignee}</td>
-                    <td className="px-6 py-4">
+                    <td className="text-white/50">{ticket.date}</td>
+                    <td className="text-white/50">{ticket.assignee}</td>
+                    <td>
                       <button
                         onClick={() => setSelectedTicket(ticket)}
-                        className="text-xs text-blue-400 hover:text-blue-300 transition"
+                        className="text-xs text-blue-300 hover:text-blue-200 transition"
                       >
                         Traiter
                       </button>
@@ -709,6 +690,7 @@ const AdminProjets = () => {
             </tbody>
           </table>
         </div>
+        </Card>
       </motion.div>
 
       {/* ===== MODALS ===== */}

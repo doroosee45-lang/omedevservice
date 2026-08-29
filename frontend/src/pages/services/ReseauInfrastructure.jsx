@@ -1,11 +1,14 @@
-﻿import { Link } from 'react-router-dom'
+﻿
+import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { 
-  Server, 
-  Wifi, 
-  Shield, 
-  TrendingUp, 
-  CheckCircle, 
+import PublicHero from '../../components/Public/PublicHero'
+import TestimonialsCarousel from '../../components/Public/TestimonialsCarousel'
+import CTASection from '../../components/Public/CTASection'
+import {
+  Wifi,
+  Shield,
+  TrendingUp,
+  CheckCircle,
   ArrowRight,
   Network,
   Zap,
@@ -13,200 +16,1183 @@ import {
 } from 'lucide-react'
 
 const globalStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap');
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
   body {
     font-family: 'DM Sans', sans-serif;
-    background: #0f172a;
-    color: #e2e8f0;
+    background: #F6F6F7;
+    color: #0B1213;
     overflow-x: hidden;
   }
 
+  .omedev-network {
+    --navy: #053876;
+    --blue: #0B74C1;
+    --blue-light: #4681B7;
+    --turquoise: #2AACB2;
+    --energy: #55DDB5;
+    --white: #F6F6F7;
+    --gray: #D5DCE1;
+    --text: #25364A;
+  }
+
+  .omedev-network .font-syne {
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-network .container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  /* ============================
+     ANIMATIONS
+  ============================ */
+
   @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
+    0%, 100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-18px);
+    }
   }
-  
+
   @keyframes pulse-ring {
-    0% { transform: scale(0.8); opacity: 1; }
-    70% { transform: scale(1.3); opacity: 0; }
-    100% { transform: scale(0.8); opacity: 0; }
+    0% {
+      transform: scale(.8);
+      opacity: .9;
+    }
+
+    70% {
+      transform: scale(1.3);
+      opacity: 0;
+    }
+
+    100% {
+      transform: scale(.8);
+      opacity: 0;
+    }
   }
-  
-  .animate-float { animation: float 6s ease-in-out infinite; }
-  .animate-pulse-ring { animation: pulse-ring 2s ease-out infinite; }
-`;
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .omedev-network .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .omedev-network .animate-pulse-ring {
+    animation: pulse-ring 2s ease-out infinite;
+  }
+
+  .omedev-network .shimmer {
+    background:
+      linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.08),
+        transparent
+      );
+    background-size: 200% 100%;
+    animation: shimmer 2.5s infinite;
+  }
+
+  /* ============================
+     HERO
+  ============================ */
+
+  .omedev-network .hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 610px;
+
+    background:
+      linear-gradient(
+        135deg,
+        #053876 0%,
+        #1D5B9B 35%,
+        #4681B7 60%,
+        #72A5CE 80%,
+        #A6C3D7 100%
+      );
+
+    color: white;
+  }
+
+  .omedev-network .hero-grid {
+    position: absolute;
+    inset: 0;
+    opacity: .20;
+
+    background-image:
+      linear-gradient(
+        rgba(255,255,255,.10) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        rgba(255,255,255,.10) 1px,
+        transparent 1px
+      );
+
+    background-size: 60px 60px;
+  }
+
+  .omedev-network .hero-content {
+    position: relative;
+    z-index: 10;
+  }
+
+  .omedev-network .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+
+    padding: .55rem 1.15rem;
+
+    border-radius: 999px;
+
+    background: rgba(255,255,255,.10);
+    border: 1px solid rgba(255,255,255,.25);
+
+    backdrop-filter: blur(10px);
+
+    color: white;
+
+    font-family: 'Syne', sans-serif;
+    font-size: .70rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  .omedev-network .hero-title {
+    font-family: 'Syne', sans-serif;
+
+    font-size: clamp(
+      2.6rem,
+      6vw,
+      5rem
+    );
+
+    line-height: 1.05;
+    font-weight: 800;
+
+    letter-spacing: -.045em;
+
+    color: white;
+  }
+
+  .omedev-network .hero-gradient-text {
+    position: relative;
+    display: inline-block;
+
+    background:
+      linear-gradient(
+        90deg,
+        #55DDB5,
+        #2AACB2,
+        #72A5CE
+      );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
+  }
+
+  .omedev-network .hero-gradient-text::before {
+    content: '';
+
+    position: absolute;
+    inset: -10px;
+
+    background:
+      linear-gradient(
+        90deg,
+        #55DDB5,
+        #2AACB2,
+        #72A5CE
+      );
+
+    filter: blur(35px);
+    opacity: .28;
+
+    z-index: -1;
+  }
+
+  .omedev-network .hero-divider {
+    width: 64px;
+    height: 4px;
+
+    margin: 1.5rem auto;
+
+    border-radius: 999px;
+
+    background:
+      linear-gradient(
+        90deg,
+        #0B74C1,
+        #2AACB2,
+        #55DDB5
+      );
+  }
+
+  .omedev-network .hero-description {
+    max-width: 760px;
+    margin: 0 auto;
+
+    color: rgba(255,255,255,.82);
+
+    font-size: clamp(
+      1rem,
+      2vw,
+      1.25rem
+    );
+
+    line-height: 1.75;
+  }
+
+  .omedev-network .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    gap: .75rem;
+
+    margin-top: 2rem;
+  }
+
+  .omedev-network .hero-tag {
+    padding: .55rem 1rem;
+
+    border-radius: 999px;
+
+    background: rgba(255,255,255,.10);
+    border: 1px solid rgba(255,255,255,.20);
+
+    color: rgba(255,255,255,.88);
+
+    font-size: .82rem;
+  }
+
+  /* ============================
+     SECTION
+  ============================ */
+
+  .omedev-network .section {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+
+  .omedev-network .section-light {
+    background: #F6F6F7;
+  }
+
+  .omedev-network .section-white {
+    background: white;
+  }
+
+  .omedev-network .section-header {
+    text-align: center;
+    max-width: 760px;
+
+    margin: 0 auto 3.5rem;
+  }
+
+  .omedev-network .section-badge {
+    display: inline-flex;
+
+    padding: .5rem 1.1rem;
+
+    border-radius: 999px;
+
+    background: rgba(11,116,193,.08);
+
+    border: 1px solid rgba(11,116,193,.15);
+
+    color: #0B74C1;
+
+    font-family: 'Syne', sans-serif;
+
+    font-size: .7rem;
+    font-weight: 700;
+
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  .omedev-network .section-title {
+    margin-top: 1rem;
+
+    color: #053876;
+
+    font-family: 'Syne', sans-serif;
+
+    font-size: clamp(
+      2rem,
+      4vw,
+      3.1rem
+    );
+
+    font-weight: 800;
+
+    line-height: 1.12;
+
+    letter-spacing: -.035em;
+  }
+
+  .omedev-network .section-divider {
+    width: 64px;
+    height: 4px;
+
+    margin: 1.4rem auto;
+
+    border-radius: 999px;
+
+    background:
+      linear-gradient(
+        90deg,
+        #0B74C1,
+        #2AACB2,
+        #55DDB5
+      );
+  }
+
+  .omedev-network .section-subtitle {
+    color: #25364A;
+
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  /* ============================
+     FEATURE CARDS
+  ============================ */
+
+  .omedev-network .feature-card {
+    height: 100%;
+
+    padding: 1.75rem;
+
+    background: white;
+
+    border: 1px solid rgba(5,56,118,.08);
+
+    border-radius: 20px;
+
+    box-shadow:
+      0 12px 35px rgba(5,56,118,.06);
+
+    transition:
+      transform .35s ease,
+      box-shadow .35s ease,
+      border-color .35s ease;
+  }
+
+  .omedev-network .feature-card:hover {
+    transform: translateY(-7px);
+
+    border-color:
+      rgba(42,172,178,.30);
+
+    box-shadow:
+      0 22px 50px rgba(11,116,193,.12);
+  }
+
+  .omedev-network .feature-icon {
+    width: 54px;
+    height: 54px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 1.25rem;
+
+    border-radius: 15px;
+
+    background:
+      linear-gradient(
+        135deg,
+        rgba(11,116,193,.10),
+        rgba(42,172,178,.10)
+      );
+
+    color: #0B74C1;
+  }
+
+  .omedev-network .feature-title {
+    color: #053876;
+
+    font-family: 'Syne', sans-serif;
+
+    font-size: 1.15rem;
+    font-weight: 700;
+
+    margin-bottom: .6rem;
+  }
+
+  .omedev-network .feature-description {
+    color: #526579;
+
+    font-size: .92rem;
+
+    line-height: 1.7;
+  }
+
+  /* ============================
+     BENEFITS
+  ============================ */
+
+  .omedev-network .benefits-section {
+    background: #fff;
+    color: #0B1213;
+
+    position: relative;
+    overflow: hidden;
+  }
+
+  .omedev-network .benefits-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: .5rem 1.1rem;
+    border-radius: 999px;
+    background: rgba(11,116,193,.08);
+    border: 1px solid rgba(11,116,193,.18);
+    color: #0B74C1;
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-network .benefits-title {
+    color: #053876;
+
+    font-family: 'Syne', sans-serif;
+
+    font-size: clamp(
+      2rem,
+      4vw,
+      3rem
+    );
+
+    font-weight: 800;
+
+    line-height: 1.15;
+  }
+
+  .omedev-network .benefits-highlight {
+    background: linear-gradient(90deg, #0B74C1, #2AACB2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .omedev-network .benefits-divider {
+    width: 64px;
+    height: 4px;
+
+    margin: 1.4rem 0;
+
+    border-radius: 999px;
+
+    background:
+      linear-gradient(
+        90deg,
+        #0B74C1,
+        #2AACB2,
+        #55DDB5
+      );
+  }
+
+  .omedev-network .benefit-item {
+    display: flex;
+    align-items: flex-start;
+
+    gap: .75rem;
+  }
+
+  .omedev-network .benefit-check {
+    flex-shrink: 0;
+
+    width: 23px;
+    height: 23px;
+
+    color: #2AACB2;
+
+    margin-top: .1rem;
+  }
+
+  .omedev-network .benefit-text {
+    color: #25364A;
+
+    font-size: .95rem;
+    line-height: 1.65;
+  }
+
+  .omedev-network .testimonial-card {
+    position: relative;
+    z-index: 2;
+
+    padding: 2.5rem;
+
+    border-radius: 22px;
+
+    background:
+      linear-gradient(
+        135deg,
+        rgba(255,255,255,.12),
+        rgba(255,255,255,.05)
+      );
+
+    border: 1px solid rgba(255,255,255,.15);
+
+    backdrop-filter: blur(12px);
+
+    box-shadow:
+      0 25px 60px rgba(0,0,0,.15);
+  }
+
+  .omedev-network .testimonial-icon {
+    width: 68px;
+    height: 68px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 1.5rem;
+
+    border-radius: 18px;
+
+    background:
+      rgba(85,221,181,.12);
+
+    color: #55DDB5;
+  }
+
+  .omedev-network .testimonial-text {
+    color: rgba(255,255,255,.84);
+
+    font-size: 1rem;
+
+    line-height: 1.8;
+
+    font-style: italic;
+  }
+
+  .omedev-network .testimonial-author {
+    margin-top: 1.25rem;
+
+    color: rgba(255,255,255,.55);
+
+    font-size: .8rem;
+  }
+
+  /* ============================
+     CTA
+  ============================ */
+
+  .omedev-network .cta-section {
+    padding: 6rem 1rem;
+
+    background: #F6F6F7;
+  }
+
+  .omedev-network .cta-card {
+    position: relative;
+    overflow: hidden;
+
+    max-width: 900px;
+
+    margin: 0 auto;
+
+    padding: 3.5rem 2rem;
+
+    border-radius: 24px;
+
+    text-align: center;
+
+    background:
+      linear-gradient(
+        135deg,
+        #053876,
+        #1D5B9B,
+        #0B74C1
+      );
+
+    box-shadow:
+      0 25px 60px rgba(5,56,118,.18);
+  }
+
+  .omedev-network .cta-card::before {
+    content: '';
+
+    position: absolute;
+
+    width: 300px;
+    height: 300px;
+
+    top: -150px;
+    left: -100px;
+
+    border-radius: 50%;
+
+    background: #55DDB5;
+
+    filter: blur(100px);
+
+    opacity: .12;
+  }
+
+  .omedev-network .cta-card::after {
+    content: '';
+
+    position: absolute;
+
+    width: 300px;
+    height: 300px;
+
+    bottom: -180px;
+    right: -80px;
+
+    border-radius: 50%;
+
+    background: #72A5CE;
+
+    filter: blur(100px);
+
+    opacity: .15;
+  }
+
+  .omedev-network .cta-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .omedev-network .cta-title {
+    color: white;
+
+    font-family: 'Syne', sans-serif;
+
+    font-size: clamp(
+      1.8rem,
+      4vw,
+      2.8rem
+    );
+
+    font-weight: 800;
+
+    line-height: 1.15;
+
+    margin-bottom: 1rem;
+  }
+
+  .omedev-network .cta-description {
+    max-width: 600px;
+
+    margin: 0 auto 2rem;
+
+    color: rgba(255,255,255,.75);
+
+    line-height: 1.7;
+  }
+
+  .omedev-network .primary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: .6rem;
+
+    padding: .95rem 1.5rem;
+
+    border-radius: 12px;
+
+    background:
+      linear-gradient(
+        135deg,
+        #0B74C1,
+        #2AACB2,
+        #55DDB5
+      );
+
+    color: white;
+
+    font-family: 'Syne', sans-serif;
+
+    font-size: .85rem;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    box-shadow:
+      0 10px 28px rgba(11,116,193,.25);
+
+    transition:
+      transform .3s ease,
+      box-shadow .3s ease;
+  }
+
+  .omedev-network .primary-button:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+      0 18px 38px rgba(42,172,178,.30);
+  }
+
+  .omedev-network .secondary-link {
+    display: inline-flex;
+    align-items: center;
+
+    gap: .45rem;
+
+    margin-top: 1.5rem;
+
+    color: #0B74C1;
+
+    font-weight: 700;
+
+    text-decoration: none;
+  }
+
+  .omedev-network .secondary-link:hover {
+    color: #053876;
+  }
+
+  @media (max-width: 768px) {
+    .omedev-network .container {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .omedev-network .hero {
+      min-height: 570px;
+    }
+
+    .omedev-network .section {
+      padding-top: 4.5rem;
+      padding-bottom: 4.5rem;
+    }
+
+    .omedev-network .testimonial-card {
+      padding: 1.75rem;
+    }
+
+    .omedev-network .cta-card {
+      padding: 2.5rem 1.25rem;
+    }
+  }
+`
+
+const fadeUp = {
+  hidden: {
+    opacity: 0,
+    y: 40
+  },
+
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: .7,
+      ease: [0.25, 0.1, 0.25, 1]
+    }
+  }
+}
+
+const staggerContainer = {
+  hidden: {
+    opacity: 0
+  },
+
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: .08
+    }
+  }
+}
 
 const ReseauInfrastructure = () => {
+
   const features = [
-    { icon: Network, title: 'Architecture réseau sur mesure', desc: 'Conception et déploiement de réseaux adaptés à votre structure' },
-    { icon: Shield, title: 'Sécurité avancée', desc: 'Protection contre les intrusions et filtrage de contenu' },
-    { icon: Zap, title: 'Hautes performances', desc: 'Infrastructure optimisée pour la vitesse et la fiabilité' },
-    { icon: HardDrive, title: 'Serveurs virtualisés', desc: 'Virtualisation et gestion centralisée de vos serveurs' },
-    { icon: Wifi, title: 'Wi-Fi professionnel', desc: 'Couverture totale avec roaming et authentification' },
-    { icon: TrendingUp, title: 'Évolutivité', desc: 'Solutions prêtes à grandir avec votre entreprise' }
+    {
+      icon: Network,
+      title: 'Architecture réseau sur mesure',
+      desc: 'Conception et déploiement de réseaux adaptés à votre structure'
+    },
+    {
+      icon: Shield,
+      title: 'Sécurité avancée',
+      desc: 'Protection contre les intrusions et filtrage de contenu'
+    },
+    {
+      icon: Zap,
+      title: 'Hautes performances',
+      desc: 'Infrastructure optimisée pour la vitesse et la fiabilité'
+    },
+    {
+      icon: HardDrive,
+      title: 'Serveurs virtualisés',
+      desc: 'Virtualisation et gestion centralisée de vos serveurs'
+    },
+    {
+      icon: Wifi,
+      title: 'Wi-Fi professionnel',
+      desc: 'Couverture totale avec roaming et authentification'
+    },
+    {
+      icon: TrendingUp,
+      title: 'Évolutivité',
+      desc: 'Solutions prêtes à grandir avec votre entreprise'
+    }
+  ]
+
+  const benefits = [
+    'Ingénieurs certifiés Cisco, MikroTik, Ubiquiti',
+    'Support technique 24/7',
+    'Audit et optimisation de votre réseau existant',
+    'Solutions hybrides (on-premise & cloud)',
+    'Contrats de maintenance adaptés'
   ]
 
   return (
-    <>
+    <div className="omedev-network">
+
       <style>{globalStyles}</style>
-      
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden h-[550px] flex flex-col justify-center pt-16">
-        <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px'
-        }} />
-        <div className="absolute w-96 h-96 bg-blue-600/20 top-20 -left-20 rounded-full filter blur-[80px] animate-float" />
-        <div className="absolute w-72 h-72 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-blue-600/15 border border-blue-500/30"
+
+      {/* =====================================================
+          HERO
+      ===================================================== */}
+
+      <PublicHero
+        badge="Réseau & Infrastructure"
+        title="Infrastructure Hautes Performances"
+        highlight="Hautes Performances"
+        subtitle="Conception, déploiement et maintenance de réseaux d'entreprise robustes, sécurisés et évolutifs."
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.5 }}
+          className="flex flex-wrap gap-2 justify-center mt-6"
+        >
+          {['Architecture réseau', 'Cybersécurité', 'Cloud & Virtualisation', 'Wi-Fi professionnel'].map((tag) => (
+            <span
+              key={tag}
+              className="px-3.5 py-1.5 rounded-full text-xs font-semibold"
+              style={{ background: 'rgba(255,255,255,.10)', border: '1px solid rgba(255,255,255,.22)', color: '#fff' }}
             >
-              <Server className="w-4 h-4 text-blue-400" />
-              <span className="text-blue-300 font-semibold text-xs tracking-wide font-syne">Réseau & Infrastructure</span>
+              {tag}
+            </span>
+          ))}
+        </motion.div>
+      </PublicHero>
+
+      {/* =====================================================
+          FEATURES
+      ===================================================== */}
+
+      <section className="section section-light">
+
+        <div className="container">
+
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{
+              once: true
+            }}
+            variants={staggerContainer}
+            className="section-header"
+          >
+
+            <motion.div variants={fadeUp}>
+
+              <span className="section-badge">
+                Nos solutions
+              </span>
+
             </motion.div>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
+            <motion.h2
+              variants={fadeUp}
+              className="section-title"
             >
-              Infrastructure{' '}
-              <span className="relative inline-block">
-                <span className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 blur-2xl opacity-50" />
-                <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
-                  Hautes Performances
-                </span>
-              </span>
-            </motion.h1>
+              Ce que nous vous apportons
+            </motion.h2>
+
+            <motion.div
+              variants={fadeUp}
+              className="section-divider"
+            />
 
             <motion.p
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-              className="text-gray-300 text-base sm:text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
+              variants={fadeUp}
+              className="section-subtitle"
             >
-              Conception, déploiement et maintenance de réseaux d'entreprise robustes, sécurisés et évolutifs.
+              Une infrastructure pensée pour offrir
+              performance, sécurité, disponibilité
+              et évolutivité à votre organisation.
             </motion.p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 }}
-              className="flex flex-wrap gap-4 justify-center"
-            >
-              <Link to="/devis" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
-                Demander un devis <ArrowRight size={18} className="group-hover:translate-x-1 transition" />
-              </Link>
-              <Link to="/contact" className="group border-2 border-white/30 hover:border-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
-                Contacter un expert
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Grid */}
-      <section className="py-20 bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold font-syne mb-4">Ce que nous vous apportons</h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full mx-auto" />
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-blue-500/50 transition-all hover:-translate-y-1"
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{
+              once: true
+            }}
+            variants={staggerContainer}
+            className="grid grid-cols-1
+              md:grid-cols-2
+              lg:grid-cols-3
+              gap-6"
+          >
+
+            {features.map((feature, index) => {
+
+              const Icon = feature.icon
+
+              return (
+                <motion.div
+                  key={index}
+                  variants={fadeUp}
+                  className="feature-card"
+                >
+
+                  <motion.div
+                    whileHover={{
+                      scale: 1.08,
+                      rotate: 2
+                    }}
+                    className="feature-icon"
+                  >
+
+                    <Icon size={27} />
+
+                  </motion.div>
+
+                  <h3 className="feature-title">
+                    {feature.title}
+                  </h3>
+
+                  <p className="feature-description">
+                    {feature.desc}
+                  </p>
+
+                </motion.div>
+              )
+
+            })}
+
+          </motion.div>
+
+        </div>
+
+      </section>
+
+      {/* =====================================================
+          BENEFITS
+      ===================================================== */}
+
+      <section className="section benefits-section">
+
+        <div
+          className="absolute w-80 h-80
+            bg-cyan-300/10
+            top-0 right-0
+            rounded-full
+            blur-[100px]"
+        />
+
+        <div className="container relative z-10">
+
+          <div
+            className="grid
+              grid-cols-1
+              lg:grid-cols-2
+              gap-12
+              items-center"
+          >
+
+            {/* LEFT */}
+
+            <motion.div
+              initial={{
+                opacity: 0,
+                x: -40
+              }}
+              whileInView={{
+                opacity: 1,
+                x: 0
+              }}
+              viewport={{
+                once: true
+              }}
+              transition={{
+                duration: .7
+              }}
+            >
+
+              <span className="benefits-badge">
+                Notre engagement
+              </span>
+
+              <h2 className="benefits-title mt-5">
+
+                Pourquoi choisir
+                <br />
+
+                <span className="benefits-highlight">
+                  OMDEVE ?
+                </span>
+
+              </h2>
+
+              <div className="benefits-divider" />
+
+              <p
+                className="text-[#25364A]
+                  leading-relaxed
+                  max-w-xl
+                  mb-7"
               >
-                <feature.icon className="w-12 h-12 text-blue-400 mb-4" />
-                <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
-                <p className="text-gray-400">{feature.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Benefits Section */}
-      <section className="py-20 bg-white/5">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-3xl font-bold font-syne mb-4">Pourquoi choisir OMDEVE ?</h2>
-              <div className="w-20 h-1 bg-blue-500 rounded-full mb-6" />
-              <ul className="space-y-4">
-                {[
-                  'Ingénieurs certifiés Cisco, MikroTik, Ubiquiti',
-                  'Support technique 24/7',
-                  'Audit et optimisation de votre réseau existant',
-                  'Solutions hybrides (on-premise & cloud)',
-                  'Contrats de maintenance adaptés'
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-emerald-400 mt-0.5" />
-                    <span className="text-gray-300">{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <Link to="/devis" className="inline-flex items-center gap-2 mt-8 text-blue-400 hover:text-blue-300 font-semibold">
-                En savoir plus <ArrowRight size={16} />
-              </Link>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-2xl p-8 border border-white/10 text-center"
-            >
-              <Server className="w-16 h-16 text-blue-400 mx-auto mb-4" />
-              <p className="text-gray-300 italic">
-                "OMDEVE a transformé notre infrastructure obsolète en un réseau hautement performant. Notre productivité a augmenté de 40%."
+                Nous combinons expertise technique,
+                accompagnement humain et technologies
+                modernes pour construire des infrastructures
+                fiables et durables.
               </p>
-              <p className="text-sm text-gray-400 mt-4">— Directeur IT, Groupe Industriel</p>
+
+              <ul className="space-y-4">
+
+                {benefits.map(
+                  (item, index) => (
+
+                    <motion.li
+                      key={index}
+                      initial={{
+                        opacity: 0,
+                        x: -15
+                      }}
+                      whileInView={{
+                        opacity: 1,
+                        x: 0
+                      }}
+                      viewport={{
+                        once: true
+                      }}
+                      transition={{
+                        delay:
+                          index * .08
+                      }}
+                      className="benefit-item"
+                    >
+
+                      <CheckCircle
+                        className="benefit-check"
+                      />
+
+                      <span className="benefit-text">
+                        {item}
+                      </span>
+
+                    </motion.li>
+
+                  )
+                )}
+
+              </ul>
+
+              <Link
+                to="/demander-devis"
+                className="inline-flex
+                  items-center
+                  gap-2
+                  mt-8
+                  text-[#0B74C1]
+                  font-bold
+                  hover:text-[#053876]
+                  transition-colors"
+              >
+                Demander un devis
+                <ArrowRight size={16} />
+              </Link>
+
             </motion.div>
+
+            {/* RIGHT */}
+
+            <motion.div
+              initial={{
+                opacity: 0,
+                x: 40
+              }}
+              whileInView={{
+                opacity: 1,
+                x: 0
+              }}
+              viewport={{
+                once: true
+              }}
+              transition={{
+                duration: .7,
+                delay: .1
+              }}
+            >
+              <TestimonialsCarousel
+                items={[{
+                  name: 'Directeur IT',
+                  role: 'Groupe Industriel',
+                  content: "OMDEVE a transformé notre infrastructure obsolète en un réseau hautement performant. Notre productivité a augmenté de 40%.",
+                }]}
+                badge={null}
+                title={null}
+              />
+            </motion.div>
+
           </div>
+
         </div>
+
       </section>
 
-      {/* CTA */}
-      <section className="py-20">
-        <div className="container mx-auto px-4 text-center">
-          <div className="max-w-3xl mx-auto bg-gradient-to-r from-blue-600/20 to-cyan-600/20 rounded-2xl p-8 border border-white/10">
-            <h2 className="text-2xl md:text-3xl font-bold font-syne mb-4">Prêt à moderniser votre infrastructure ?</h2>
-            <p className="text-gray-300 mb-6">Obtenez un audit gratuit et un devis personnalisé sous 48h.</p>
-            <Link to="/audit-gratuit" className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition">
-              Audit gratuit <ArrowRight size={18} />
-            </Link>
-          </div>
-        </div>
-      </section>
-    </>
+      {/* ==================== CTA FINALE ==================== */}
+      <CTASection
+        badge="Infrastructure IT"
+        title="Prêt à moderniser votre infrastructure ?"
+        highlight="votre infrastructure"
+        subtitle="Obtenez un audit gratuit et un devis personnalisé sous 48h."
+        backgroundImage="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=1920&q=80"
+        primaryAction={{ label: 'Audit gratuit', to: '/audit-gratuit' }}
+        secondaryAction={{ label: 'Découvrir nos formations', to: '/services/formation' }}
+      />
+    </div>
   )
 }
 
 export default ReseauInfrastructure
+

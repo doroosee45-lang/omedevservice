@@ -33,7 +33,7 @@ const TypingDots = () => (
     {[0, 1, 2].map(i => (
       <motion.span
         key={i}
-        className="w-2 h-2 rounded-full bg-blue-400"
+        className="w-2 h-2 rounded-full bg-[#55DDB5]"
         animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1, 0.8] }}
         transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.2 }}
       />
@@ -53,7 +53,7 @@ const MessageBubble = ({ msg }) => {
       className={`flex gap-2.5 items-end ${isBot ? 'justify-start' : 'justify-end'}`}
     >
       {isBot && (
-        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center flex-shrink-0 mb-0.5 shadow">
+        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#0B74C1] to-[#2AACB2] flex items-center justify-center flex-shrink-0 mb-0.5 shadow">
           <Bot className="w-4 h-4 text-white" />
         </div>
       )}
@@ -63,7 +63,7 @@ const MessageBubble = ({ msg }) => {
           className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm ${
             isBot
               ? 'bg-white/10 border border-white/15 text-gray-100 rounded-tl-sm'
-              : 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white rounded-tr-sm'
+              : 'bg-gradient-to-br from-[#0B74C1] to-[#2AACB2] text-white rounded-tr-sm'
           }`}
         >
           {msg.content}
@@ -79,7 +79,7 @@ const MessageBubble = ({ msg }) => {
           >
             <Link
               to={msg.action.url}
-              className="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white transition-all hover:scale-105 shadow-sm"
+              className="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#0B74C1] to-[#2AACB2] hover:from-[#1D5B9B] hover:to-[#55DDB5] text-white transition-all hover:scale-105 shadow-sm"
             >
               <ExternalLink className="w-3 h-3" />
               {msg.action.label}
@@ -93,7 +93,7 @@ const MessageBubble = ({ msg }) => {
       </div>
 
       {!isBot && (
-        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-slate-500 to-slate-600 flex items-center justify-center flex-shrink-0 mb-0.5 shadow">
+        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#4681B7] to-[#053876] flex items-center justify-center flex-shrink-0 mb-0.5 shadow">
           <User className="w-4 h-4 text-white" />
         </div>
       )}
@@ -117,7 +117,7 @@ const WelcomeScreen = ({ onSuggestion }) => {
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 200 }}
-        className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mb-4 shadow-xl"
+        className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#0B74C1] to-[#2AACB2] flex items-center justify-center mb-4 shadow-xl"
       >
         <Bot className="w-9 h-9 text-white" />
       </motion.div>
@@ -141,7 +141,7 @@ const WelcomeScreen = ({ onSuggestion }) => {
             onClick={() => onSuggestion(s.text)}
             className="flex flex-col items-start gap-1.5 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-left group"
           >
-            <s.icon className="w-4 h-4 text-blue-400 group-hover:text-blue-300 transition-colors" />
+            <s.icon className="w-4 h-4 text-[#55DDB5] group-hover:text-[#72A5CE] transition-colors" />
             <span className="text-gray-300 text-xs leading-tight">{s.text}</span>
           </button>
         ))}
@@ -242,32 +242,32 @@ const ChatWidget = () => {
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
             className="fixed bottom-24 right-4 sm:right-6 z-[9999] w-[340px] sm:w-[380px] h-[520px] flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-white/10"
             style={{
-              background: 'linear-gradient(160deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)',
+              background: 'linear-gradient(160deg, #053876 0%, #0B1213 50%, #053876 100%)',
             }}
           >
             {/* Header */}
             <div
               className="flex-shrink-0 px-4 py-3 flex items-center justify-between border-b border-white/10"
-              style={{ background: 'linear-gradient(90deg, rgba(37,99,235,0.25), rgba(79,70,229,0.25))' }}
+              style={{ background: 'linear-gradient(90deg, rgba(11,116,193,0.25), rgba(42,172,178,0.25))' }}
             >
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#0B74C1] to-[#2AACB2] flex items-center justify-center shadow">
                     <Bot className="w-5 h-5 text-white" />
                   </div>
-                  <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-slate-900" />
+                  <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-[#55DDB5] rounded-full border-2 border-[#053876]" />
                 </div>
                 <div>
                   <p className="text-white font-semibold text-sm font-syne leading-none">Omedev Assist</p>
                   <div className="flex items-center gap-1.5 mt-0.5">
-                    <p className="text-emerald-400 text-[10px]">● En ligne</p>
+                    <p className="text-[#55DDB5] text-[10px]">● En ligne</p>
                     {aiMode && (
                       <motion.span
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         className={`inline-flex items-center gap-0.5 text-[9px] font-medium px-1.5 py-0.5 rounded-full border ${
                           aiMode === 'anthropic'
-                            ? 'bg-violet-500/15 border-violet-500/30 text-violet-300'
+                            ? 'bg-[#1D5B9B]/15 border-[#1D5B9B]/30 text-[#72A5CE]'
                             : 'bg-cyan-500/15 border-cyan-500/30 text-cyan-300'
                         }`}
                       >
@@ -314,7 +314,7 @@ const ChatWidget = () => {
                       animate={{ opacity: 1 }}
                       className="flex items-end gap-2.5"
                     >
-                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center flex-shrink-0">
+                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#0B74C1] to-[#2AACB2] flex items-center justify-center flex-shrink-0">
                         <Bot className="w-4 h-4 text-white" />
                       </div>
                       <div className="bg-white/10 border border-white/15 rounded-2xl rounded-tl-sm">
@@ -329,7 +329,7 @@ const ChatWidget = () => {
 
             {/* Input Area */}
             <div className="flex-shrink-0 px-3 py-3 border-t border-white/10 bg-white/3">
-              <div className="flex items-end gap-2 bg-white/5 border border-white/15 rounded-xl px-3 py-2 focus-within:border-blue-500/50 transition-colors">
+              <div className="flex items-end gap-2 bg-white/5 border border-white/15 rounded-xl px-3 py-2 focus-within:border-[#2AACB2]/50 transition-colors">
                 <textarea
                   ref={inputRef}
                   rows={1}
@@ -348,7 +348,7 @@ const ChatWidget = () => {
                 <button
                   onClick={() => sendMessage()}
                   disabled={loading || !input.trim()}
-                  className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center flex-shrink-0 transition-all hover:scale-105 shadow"
+                  className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#0B74C1] to-[#2AACB2] hover:from-[#1D5B9B] hover:to-[#55DDB5] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center flex-shrink-0 transition-all hover:scale-105 shadow"
                 >
                   {loading
                     ? <Loader2 className="w-4 h-4 text-white animate-spin" />
@@ -370,7 +370,7 @@ const ChatWidget = () => {
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.94 }}
         className="fixed bottom-5 right-4 sm:right-6 z-[9998] w-14 h-14 rounded-2xl shadow-2xl flex items-center justify-center"
-        style={{ background: 'linear-gradient(135deg, #2563eb, #4f46e5)' }}
+        style={{ background: 'linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%)' }}
         aria-label="Ouvrir l'assistant"
       >
         <AnimatePresence mode="wait">
@@ -392,7 +392,7 @@ const ChatWidget = () => {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0 }}
-              className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center border-2 border-slate-950"
+              className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center border-2 border-[#053876]"
             >
               {unread}
             </motion.span>
@@ -403,7 +403,7 @@ const ChatWidget = () => {
         {!open && (
           <motion.span
             className="absolute inset-0 rounded-2xl"
-            style={{ border: '2px solid rgba(99, 102, 241, 0.6)' }}
+            style={{ border: '2px solid rgba(42,172,178,0.6)' }}
             animate={{ scale: [1, 1.35, 1], opacity: [0.6, 0, 0.6] }}
             transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
           />

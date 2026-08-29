@@ -2,7 +2,6 @@
 const express = require('express');
 const router = express.Router();
 const {
-  registerUser,
   loginUser,
   getUserProfile,
   updateUserProfile,
@@ -10,15 +9,18 @@ const {
   changePassword,
   forgotPassword,
   resetPassword,
+  activateAccount,
   refreshToken,
 } = require('../controllers/authController');
 const { protect } = require('../middleware/authMiddleware');
 
 // Routes publiques
-router.post('/register', registerUser);
+// NB : pas d'inscription publique — les comptes sont créés exclusivement
+// par le SuperAdministrateur depuis l'espace d'administration.
 router.post('/login', loginUser);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password', resetPassword);
+router.post('/activate-account', activateAccount);
 router.post('/refresh-token', refreshToken);
 
 // Routes protégées (nécessitent un token JWT)

@@ -3,37 +3,72 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import {
-  ArrowRight, CheckCircle, MapPin, Phone, Mail, MessageCircle, Clock,
-  Shield, Star, Briefcase, Handshake, Calendar, Headphones, FileText
+  ArrowRight, MapPin, Phone, Mail, MessageCircle, Clock,
+  Shield, Star, Briefcase, Handshake, Headphones, FileText
 } from 'lucide-react';
 import api from '../services/api';  // ← Import du service API centralisé
+import PublicHero from '../components/Public/PublicHero';
+import CTASection from '../components/Public/CTASection';
 
 const globalStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&display=swap');
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  
-  body {
+  .omedev-contact {
+    --omedev-navy: #053876;
+    --omedev-blue-dark: #1D5B9B;
+    --omedev-blue: #0B74C1;
+    --omedev-blue-light: #4681B7;
+    --omedev-cyan: #72A5CE;
+    --omedev-cyan-light: #A6C3D7;
+    --omedev-turquoise: #2AACB2;
+    --omedev-energy: #55DDB5;
+    --omedev-white: #F6F6F7;
+    --omedev-gray: #D5DCE1;
+    --omedev-dark: #0B1213;
+    --omedev-text-secondary: #25364A;
+    background: #F6F6F7;
+    color: #0B1213;
+    min-height: 100vh;
     font-family: 'DM Sans', sans-serif;
-    background: #0f172a;
-    color: #e2e8f0;
-    overflow-x: hidden;
   }
 
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
+  .omedev-contact .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+  .omedev-contact .font-syne { font-family: 'Syne', sans-serif; }
+
+  .omedev-contact .section-badge {
+    display: inline-flex; align-items: center; gap: .5rem; font-size: .7rem; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase; padding: .5rem 1.1rem; border-radius: 999px;
+    background: rgba(11,116,193,.08); color: #0B74C1; border: 1px solid rgba(11,116,193,.18);
+    font-family: 'Syne', sans-serif;
   }
-  
-  @keyframes pulse-ring {
-    0% { transform: scale(0.8); opacity: 1; }
-    70% { transform: scale(1.3); opacity: 0; }
-    100% { transform: scale(0.8); opacity: 0; }
-  }
-  
-  .animate-float { animation: float 6s ease-in-out infinite; }
-  .animate-pulse-ring { animation: pulse-ring 2s ease-out infinite; }
+  .omedev-contact .section-title { font-size: clamp(2rem,4vw,3rem); font-weight: 800; line-height: 1.12; letter-spacing: -.03em; margin-bottom: 1rem; font-family: 'Syne',sans-serif; color:#053876; }
+  .omedev-contact .section-subtitle { font-size:1rem; color:#25364A; max-width:52ch; margin:0 auto; line-height:1.7; }
+  .omedev-contact .divider { width:64px; height:4px; background:linear-gradient(90deg,#0B74C1,#2AACB2,#55DDB5); border-radius:99px; margin:1rem auto 1.5rem; }
+  .omedev-contact .btn-primary { display:inline-flex; align-items:center; justify-content:center; gap:.6rem; background:linear-gradient(135deg,#0B74C1 0%,#2AACB2 55%,#55DDB5 100%); color:#fff; font-size:.9rem; font-weight:700; padding:.9rem 1.7rem; border-radius:12px; text-decoration:none; transition:all .3s ease; cursor:pointer; border:none; font-family:'Syne',sans-serif; box-shadow:0 10px 28px rgba(11,116,193,.20); }
+  .omedev-contact .btn-primary:hover { transform:translateY(-3px); box-shadow:0 16px 36px rgba(42,172,178,.28); }
+  .omedev-contact .btn-outline { display:inline-flex; align-items:center; justify-content:center; gap:.6rem; background:#fff; color:#053876; font-size:.9rem; font-weight:700; padding:.85rem 1.7rem; border-radius:12px; border:1px solid rgba(5,56,118,.18); text-decoration:none; transition:all .3s ease; cursor:pointer; font-family:'Syne',sans-serif; }
+  .omedev-contact .btn-outline:hover { border-color:#2AACB2; color:#0B74C1; background:rgba(85,221,181,.08); transform:translateY(-3px); }
+  .omedev-contact .card-hover { transition:transform .35s ease,box-shadow .35s ease,border-color .35s ease; background:#fff; border:1px solid rgba(5,56,118,.09); border-radius:18px; box-shadow:0 10px 30px rgba(5,56,118,.06); }
+  .omedev-contact .card-hover:hover { transform:translateY(-7px); box-shadow:0 22px 48px rgba(11,116,193,.14); border-color:rgba(42,172,178,.35); }
+  .omedev-contact .omedev-hero { background:linear-gradient(135deg,#053876 0%,#1D5B9B 35%,#4681B7 60%,#72A5CE 80%,#A6C3D7 100%); position:relative; }
+  .omedev-contact .light-section { background:#F6F6F7; }
+  .omedev-contact .white-section { background:#fff; }
+  .omedev-contact .dark-section { background:linear-gradient(135deg,#053876 0%,#1D5B9B 55%,#0B74C1 100%); }
+  .omedev-contact .energy-section { background:linear-gradient(135deg,#0B74C1 0%,#2AACB2 55%,#55DDB5 100%); }
+  .omedev-contact .hero-grid { background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px); background-size:56px 56px; }
+  .omedev-contact .info-card { background:#fff; border:1px solid rgba(5,56,118,.09); border-radius:18px; box-shadow:0 10px 30px rgba(5,56,118,.06); transition:all .35s ease; }
+  .omedev-contact .info-card:hover { transform:translateY(-7px); box-shadow:0 22px 48px rgba(11,116,193,.14); border-color:rgba(42,172,178,.35); }
+  .omedev-contact .form-input { width:100%; padding:.85rem 1rem; border-radius:12px; background:#F6F6F7; border:1px solid rgba(5,56,118,.14); color:#0B1213; transition:all .25s ease; outline:none; }
+  .omedev-contact .form-input::placeholder { color:#7A8998; }
+  .omedev-contact .form-input:focus { border-color:#2AACB2; background:#fff; box-shadow:0 0 0 4px rgba(42,172,178,.10); }
+  .omedev-contact .label { display:block; font-size:.7rem; font-weight:700; color:#25364A; text-transform:uppercase; letter-spacing:.06em; margin-bottom:.4rem; }
+  .omedev-contact .side-card { background:#fff; border:1px solid rgba(5,56,118,.09); border-radius:18px; box-shadow:0 10px 30px rgba(5,56,118,.06); }
+  .omedev-contact .map-box { background:linear-gradient(135deg,#D5DCE1,#F6F6F7); border:1px solid rgba(5,56,118,.10); }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
+  .omedev-contact .animate-float { animation:float 6s ease-in-out infinite; }
+  @media (max-width:768px){ .omedev-contact .container{padding:0 1rem;} }
 `;
+
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -110,28 +145,28 @@ const Contact = () => {
       title: 'Adresse',
       content: 'Avenue Kabmabre n°75, Lingwala, Kinshasa',
       link: 'https://maps.google.com/?q=Kinshasa+Lingwala',
-      gradient: 'from-blue-500 to-blue-600'
+      gradient: 'from-[#053876] to-[#1D5B9B]'
     },
     {
       icon: Phone,
       title: 'Téléphone',
       content: '+243 555 503 59',
       link: 'tel:+24355550359',
-      gradient: 'from-green-500 to-green-600'
+      gradient: 'from-[#0B74C1] to-[#4681B7]'
     },
     {
       icon: Mail,
       title: 'Email',
       content: 'omedevservices@gmail.com',
       link: 'mailto:omedevservices@gmail.com',
-      gradient: 'from-orange-500 to-orange-600'
+      gradient: 'from-[#4681B7] to-[#72A5CE]'
     },
     {
       icon: MessageCircle,
       title: 'WhatsApp',
       content: '+243 555 503 59',
       link: 'https://wa.me/24355550359',
-      gradient: 'from-emerald-500 to-emerald-600'
+      gradient: 'from-[#2AACB2] to-[#55DDB5]'
     }
   ];
 
@@ -144,79 +179,27 @@ const Contact = () => {
   const engagements = [
     { icon: Shield, text: '100% confidentiel' },
     { icon: Star, text: '4.9/5 satisfaction client' },
-    { icon: Briefcase, text: '+150 projets IT livrés' },
+    { icon: Briefcase, text: '+15 projets IT livrés' },
     { icon: Handshake, text: 'Accompagnement sans engagement' }
   ];
 
   return (
-    <>
+    <div className="omedev-contact">
       <style>{globalStyles}</style>
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden h-[550px] flex flex-col justify-center pt-16">
-        <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px'
-        }} />
-        <div className="absolute w-96 h-96 bg-blue-600/20 top-20 -left-20 rounded-full filter blur-[80px] animate-float" />
-        <div className="absolute w-72 h-72 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-blue-600/15 border border-blue-500/30"
-            >
-              <Headphones className="w-4 h-4 text-blue-400" />
-              <span className="text-blue-300 font-semibold text-xs tracking-wide font-syne">Contactez-nous</span>
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
-            >
-              On reste{' '}
-              <span className="relative inline-block">
-                <span className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 blur-2xl opacity-50" />
-                <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
-                  en contact
-                </span>
-              </span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-              className="text-gray-300 text-base sm:text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
-            >
-              Une question, un projet ? Notre équipe IT, Énergie & Infrastructure est là pour vous répondre.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 }}
-              className="flex flex-wrap gap-4 justify-center"
-            >
-              <Link to="/services" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
-                Nos services <ArrowRight size={18} className="group-hover:translate-x-1 transition" />
-              </Link>
-              <Link to="/audit" className="group border-2 border-white/30 hover:border-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
-                Audit gratuit
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-      </section>
+      <PublicHero
+        badge="Contactez-nous"
+        title="On reste en contact"
+        highlight="en contact"
+        subtitle="Une question, un projet ? Notre équipe IT, Énergie & Infrastructure est là pour vous répondre."
+        primaryAction={{ label: 'Nos services', to: '/services' }}
+        secondaryAction={{ label: 'Audit gratuit', to: '/audit' }}
+        compact
+      />
 
       {/* Cartes d'informations */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 relative z-10 pb-16">
+      <div className="white-section relative z-10 pb-16">
         <div className="container mx-auto px-4">
           <motion.div
             initial="hidden"
@@ -234,13 +217,13 @@ const Contact = () => {
                   href={info.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group bg-white/5 border border-white/10 rounded-2xl p-6 text-center transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:border-blue-500/50 hover:bg-white/10"
+                  className="info-card group p-6 text-center"
                 >
-                  <div className={`w-14 h-14 mx-auto mb-4 rounded-xl bg-gradient-to-br ${info.gradient} flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110`}>
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-xl flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110" style={{ background: `linear-gradient(135deg, ${i % 2 === 0 ? "#0B74C1" : "#2AACB2"}, ${i % 2 === 0 ? "#053876" : "#55DDB5"})` }}>
                     <Icon size={24} className="text-white" />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-1">{info.title}</h3>
-                  <p className="text-gray-300 text-sm">{info.content}</p>
+                  <h3 className="text-lg font-bold text-[#053876] mb-1 font-syne">{info.title}</h3>
+                  <p className="text-[#25364A] text-sm">{info.content}</p>
                 </motion.a>
               );
             })}
@@ -249,7 +232,7 @@ const Contact = () => {
       </div>
 
       {/* Formulaire + Sidebar */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
+      <div className="light-section">
         <div className="container mx-auto px-4 py-16">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Formulaire */}
@@ -259,23 +242,23 @@ const Contact = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 backdrop-blur-sm"
+                className="card-hover p-6 md:p-8"
               >
                 <div className="mb-6">
-                  <div className="inline-flex items-center gap-1.5 bg-blue-500/20 text-blue-300 border border-blue-500/30 px-3.5 py-1 rounded-full text-[0.7rem] font-bold tracking-wider uppercase mb-3">
+                  <div className="inline-flex items-center gap-1.5 bg-[#0B74C1]/10 text-[#0B74C1] border border-[#0B74C1]/20 px-3.5 py-1 rounded-full text-[0.7rem] font-bold tracking-wider uppercase mb-3">
                     ✉️ Message
                   </div>
-                  <h2 className="text-2xl font-bold text-white font-syne">Parlons de votre projet</h2>
+                  <h2 className="text-2xl font-bold text-[#053876] font-syne">Parlons de votre projet</h2>
                 </div>
 
                 {submitStatus === 'success' && (
-                  <div className="mb-6 p-4 bg-green-500/20 border border-green-500/30 rounded-xl text-sm text-green-300 font-medium transition-all">
+                  <div className="mb-6 p-4 bg-[#55DDB5]/10 border border-[#55DDB5]/30 rounded-xl text-sm text-[#16866d] font-medium transition-all">
                     ✅ Message envoyé avec succès ! Nous vous répondrons sous 24h.
                   </div>
                 )}
 
                 {submitStatus === 'error' && (
-                  <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-xl text-sm text-red-300 font-medium transition-all">
+                  <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600 font-medium transition-all">
                     ❌ {errorMessage || 'Erreur lors de l\'envoi du message'}
                   </div>
                 )}
@@ -283,7 +266,7 @@ const Contact = () => {
                 <form onSubmit={handleSubmit}>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                      <label className="block text-xs font-bold text-gray-300 uppercase tracking-wide mb-1.5">
+                      <label className="label">
                         Nom complet <span className="text-red-400 ml-0.5">*</span>
                       </label>
                       <input
@@ -293,12 +276,12 @@ const Contact = () => {
                         onChange={handleChange}
                         required
                         disabled={isSubmitting}
-                        className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-all"
+                        className="form-input"
                         placeholder="Omedeve Services"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-gray-300 uppercase tracking-wide mb-1.5">
+                      <label className="label">
                         Email <span className="text-red-400 ml-0.5">*</span>
                       </label>
                       <input
@@ -308,7 +291,7 @@ const Contact = () => {
                         onChange={handleChange}
                         required
                         disabled={isSubmitting}
-                        className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-all"
+                        className="form-input"
                         placeholder="omedevservices@gmail.com"
                       />
                     </div>
@@ -316,7 +299,7 @@ const Contact = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
                     <div>
-                      <label className="block text-xs font-bold text-gray-300 uppercase tracking-wide mb-1.5">
+                      <label className="label">
                         Téléphone
                       </label>
                       <input
@@ -325,12 +308,12 @@ const Contact = () => {
                         value={formData.phone}
                         onChange={handleChange}
                         disabled={isSubmitting}
-                        className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-all"
+                        className="form-input"
                         placeholder="+243 555 503 59"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-gray-300 uppercase tracking-wide mb-1.5">
+                      <label className="label">
                         Objet <span className="text-red-400 ml-0.5">*</span>
                       </label>
                       <input
@@ -340,14 +323,14 @@ const Contact = () => {
                         onChange={handleChange}
                         required
                         disabled={isSubmitting}
-                        className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-all"
+                        className="form-input"
                         placeholder="Demande de devis / Support / Partenariat"
                       />
                     </div>
                   </div>
 
                   <div className="mt-4">
-                    <label className="block text-xs font-bold text-gray-300 uppercase tracking-wide mb-1.5">
+                    <label className="label">
                       Message <span className="text-red-400 ml-0.5">*</span>
                     </label>
                     <textarea
@@ -357,7 +340,7 @@ const Contact = () => {
                       required
                       disabled={isSubmitting}
                       rows="5"
-                      className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-all resize-y"
+                      className="form-input resize-y"
                       placeholder="Bonjour, je souhaiterais..."
                     />
                   </div>
@@ -365,7 +348,7 @@ const Contact = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="mt-6 w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3.5 rounded-xl font-semibold transition-all hover:scale-105 hover:shadow-xl flex items-center justify-center gap-2 disabled:opacity-70"
+                    className="btn-primary mt-6 w-full rounded-full py-3.5 disabled:opacity-70"
                   >
                     {isSubmitting ? (
                       <>
@@ -388,22 +371,22 @@ const Contact = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="bg-white/5 border border-white/10 rounded-2xl p-6 relative overflow-hidden"
+                className="side-card p-6 relative overflow-hidden"
               >
                 <div className="absolute -top-10 -right-10 w-36 h-36 bg-blue-600/20 rounded-full blur-2xl" />
-                <div className="flex items-center gap-2 text-white font-bold text-lg mb-4 relative z-10">
-                  <Clock size={20} className="text-blue-400" />
+                <div className="flex items-center gap-2 text-[#053876] font-bold text-lg mb-4 relative z-10">
+                  <Clock size={20} className="text-[#0B74C1]" />
                   Horaires d'ouverture
                 </div>
                 {hours.map((h, i) => (
-                  <div key={i} className="flex justify-between items-center py-2.5 border-b border-white/10 last:border-b-0">
-                    <span className="text-sm text-gray-300 font-medium">{h.day}</span>
-                    <span className={`text-sm font-bold ${h.open ? 'text-white' : 'text-gray-500'}`}>{h.time}</span>
+                  <div key={i} className="flex justify-between items-center py-2.5 border-b border-[#053876]/08 last:border-b-0">
+                    <span className="text-sm text-[#25364A] font-medium">{h.day}</span>
+                    <span className={`text-sm font-bold ${h.open ? 'text-[#2AACB2]' : 'text-[#9AA7B2]'}`}>{h.time}</span>
                   </div>
                 ))}
-                <div className="mt-4 pt-3 border-t border-white/10 text-xs text-gray-400 leading-relaxed">
+                <div className="mt-4 pt-3 border-t border-[#053876]/08 text-xs text-[#667788] leading-relaxed">
                   Assistance technique 24/7<br />
-                  <strong className="text-blue-400">+243 555 503 59</strong>
+                  <strong className="text-[#0B74C1]">+243 555 503 59</strong>
                 </div>
               </motion.div>
 
@@ -413,18 +396,18 @@ const Contact = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="bg-white/5 border border-white/10 rounded-2xl p-6"
+                className="side-card p-6"
               >
-                <div className="flex items-center gap-2 text-white font-bold text-lg mb-4">
-                  <Shield size={20} className="text-blue-400" />
+                <div className="flex items-center gap-2 text-[#053876] font-bold text-lg mb-4">
+                  <Shield size={20} className="text-[#0B74C1]" />
                   Nos engagements
                 </div>
                 {engagements.map((item, i) => {
                   const Icon = item.icon;
                   return (
-                    <div key={i} className="flex items-center gap-3 py-2.5 border-b border-white/10 last:border-b-0">
-                      <Icon size={16} className="text-blue-400" />
-                      <span className="text-sm text-gray-300">{item.text}</span>
+                    <div key={i} className="flex items-center gap-3 py-2.5 border-b border-[#053876]/08 last:border-b-0">
+                      <Icon size={16} className="text-[#0B74C1]" />
+                      <span className="text-sm text-[#25364A]">{item.text}</span>
                     </div>
                   );
                 })}
@@ -436,14 +419,14 @@ const Contact = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="bg-gradient-to-r from-blue-600/20 to-indigo-600/20 border border-blue-500/30 rounded-2xl p-6"
+                className="side-card p-6 border-l-4 !border-l-[#2AACB2]"
               >
-                <div className="flex items-center gap-2 text-white font-bold text-lg mb-2">
+                <div className="flex items-center gap-2 text-[#053876] font-bold text-lg mb-2">
                   ⚡ Réponse rapide
                 </div>
-                <p className="text-gray-300 text-sm leading-relaxed">
+                <p className="text-[#25364A] text-sm leading-relaxed">
                   Notre équipe s'engage à répondre sous{' '}
-                  <strong className="text-blue-400">24h ouvrées</strong>. Pour une urgence, appelez-nous directement.
+                  <strong className="text-[#0B74C1]">24h ouvrées</strong>. Pour une urgence, appelez-nous directement.
                 </p>
               </motion.div>
             </div>
@@ -452,30 +435,30 @@ const Contact = () => {
       </div>
 
       {/* Section Carte */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/10">
+      <div className="white-section border-t border-[#D5DCE1]">
         <div className="container mx-auto px-4 py-16">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 backdrop-blur-sm"
+            className="card-hover p-6 md:p-8"
           >
             <div className="mb-6">
-              <div className="inline-flex items-center gap-1.5 bg-blue-500/20 text-blue-300 border border-blue-500/30 px-3.5 py-1 rounded-full text-[0.7rem] font-bold tracking-wider uppercase mb-3">
+              <div className="inline-flex items-center gap-1.5 bg-[#0B74C1]/10 text-[#0B74C1] border border-[#0B74C1]/20 px-3.5 py-1 rounded-full text-[0.7rem] font-bold tracking-wider uppercase mb-3">
                 🗺️ Nous trouver
               </div>
-              <h2 className="text-2xl font-bold text-white font-syne">Notre siège à Kinshasa</h2>
-              <p className="text-gray-400 mt-1">Avenue Kabmabre n°75, Commune de Lingwala</p>
+              <h2 className="text-2xl font-bold text-[#053876] font-syne">Notre siège à Kinshasa</h2>
+              <p className="text-[#667788] mt-1">Avenue Kabmabre n°75, Commune de Lingwala</p>
             </div>
 
-            <div className="w-full h-[400px] rounded-xl overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900 border border-white/10 mb-6 flex items-center justify-center relative">
+            <div className="map-box w-full h-[400px] rounded-xl overflow-hidden mb-6 flex items-center justify-center relative">
               <div className="text-center">
                 <div className="text-6xl drop-shadow-xl animate-pulse">📍</div>
-                <div className="mt-4 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/20">
-                  <div className="font-bold text-white text-sm">OMDEVE Services</div>
-                  <div className="text-xs text-gray-300">Avenue Kabmabre n°75, Lingwala</div>
-                  <div className="text-xs text-green-400 font-bold mt-1">● Ouvert aujourd'hui</div>
+                <div className="mt-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-xl border border-[#D5DCE1] shadow-lg">
+                  <div className="font-bold text-[#053876] text-sm">OMDEVE Services</div>
+                  <div className="text-xs text-[#25364A]">Avenue Kabmabre n°75, Lingwala</div>
+                  <div className="text-xs text-[#2AACB2] font-bold mt-1">● Ouvert aujourd'hui</div>
                 </div>
               </div>
             </div>
@@ -486,13 +469,13 @@ const Contact = () => {
                 { icon: '🚌', title: 'Transport', desc: 'Bus : arrêt Lingwala (lignes 12, 23)' },
                 { icon: '♿', title: 'Accessibilité', desc: 'Entrée adaptée aux PMR' }
               ].map((item, i) => (
-                <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center text-lg">
+                <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-[#F6F6F7] border border-[#D5DCE1]">
+                  <div className="w-10 h-10 rounded-xl bg-[#0B74C1]/10 flex items-center justify-center text-lg">
                     {item.icon}
                   </div>
                   <div>
-                    <div className="font-bold text-white text-sm">{item.title}</div>
-                    <div className="text-xs text-gray-400">{item.desc}</div>
+                    <div className="font-bold text-[#053876] text-sm">{item.title}</div>
+                    <div className="text-xs text-[#667788]">{item.desc}</div>
                   </div>
                 </div>
               ))}
@@ -501,71 +484,17 @@ const Contact = () => {
         </div>
       </div>
 
-      {/* CTA double */}
-      <section className="py-20 relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/5">
-        <div className="absolute inset-0 opacity-30" style={{
-          backgroundImage: `radial-gradient(circle at 30% 40%, rgba(59,130,246,0.3) 0%, transparent 60%),
-                            radial-gradient(circle at 80% 70%, rgba(6,182,212,0.2) 0%, transparent 60%)`
-        }} />
-        <div className="absolute w-96 h-96 bg-blue-600/20 top-20 left-1/4 rounded-full filter blur-[100px] animate-float" />
-        <div className="absolute w-72 h-72 bg-cyan-500/10 bottom-10 right-1/3 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '3s' }} />
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {/* Carte 1 : Assistance immédiate */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0 }}
-              className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20 hover:border-blue-500/50"
-            >
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/0 via-blue-500/0 to-blue-500/0 opacity-0 transition-all duration-500 group-hover:opacity-100 group-hover:from-blue-500/5 group-hover:via-blue-500/10 group-hover:to-blue-500/5 pointer-events-none" />
-              <div className="relative z-10 text-center">
-                <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110">
-                  <Headphones size={28} className="text-white" />
-                </div>
-                <h3 className="text-2xl md:text-3xl font-bold text-white font-syne mb-3">Assistance immédiate</h3>
-                <p className="text-gray-300 mb-6">
-                  Notre support technique est disponible <strong className="text-blue-400">24h/24 et 7j/7</strong> pour répondre à vos urgences.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <a href="tel:+24355550359" className="inline-flex items-center justify-center gap-2 bg-white/10 border border-white/20 hover:bg-white/20 text-white px-5 py-2.5 rounded-xl font-semibold transition-all hover:scale-105">
-                    <Phone size={16} /> Appeler maintenant
-                  </a>
-                  <a href="https://wa.me/24355550359" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-5 py-2.5 rounded-xl font-semibold transition-all hover:scale-105">
-                    <MessageCircle size={16} /> WhatsApp
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Carte 2 : Devis & Projets */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20 hover:border-blue-500/50"
-            >
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/0 via-blue-500/0 to-blue-500/0 opacity-0 transition-all duration-500 group-hover:opacity-100 group-hover:from-blue-500/5 group-hover:via-blue-500/10 group-hover:to-blue-500/5 pointer-events-none" />
-              <div className="relative z-10 text-center">
-                <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110">
-                  <FileText size={28} className="text-white" />
-                </div>
-                <h3 className="text-2xl md:text-3xl font-bold text-white font-syne mb-3">Un projet sur mesure ?</h3>
-                <p className="text-gray-300 mb-6">
-                  Étudions ensemble votre besoin et obtenez un <strong className="text-amber-400">devis personnalisé</strong> sans engagement.
-                </p>
-                <Link to="/contact" className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 py-2.5 rounded-xl font-semibold transition-all hover:scale-105 group">
-                  Demander un devis <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-    </>
+      {/* ==================== CTA FINALE ==================== */}
+      <CTASection
+        badge="Besoin d'aller plus vite ?"
+        title="Discutons de votre projet dès maintenant"
+        highlight="dès maintenant"
+        subtitle="Recevez une proposition sur mesure ou bénéficiez d'un diagnostic gratuit de vos infrastructures, sans engagement."
+        backgroundImage="https://images.unsplash.com/photo-1423666639041-f56000c27a9a?auto=format&fit=crop&w=1920&q=80"
+        primaryAction={{ label: 'Demander un devis', to: '/demander-devis' }}
+        secondaryAction={{ label: 'Audit gratuit', to: '/audit-gratuit' }}
+      />
+    </div>
   );
 };
 

@@ -233,17 +233,6 @@ export const venteMateriel = {
   getStats: () => api.get('/vente-materiel/orders/stats'),
 };
 
-// ==================== FERRONNERIE PROJETS ====================
-export const ferronnerieProjects = {
-  getPublic: (category) => api.get('/ferronnerie-projects', { params: category && category !== 'Tous' ? { category } : {} }),
-  getById: (id) => api.get(`/ferronnerie-projects/${id}`),
-  getAll: () => api.get('/ferronnerie-projects/admin/all'),
-  create: (data) => api.post('/ferronnerie-projects', data),
-  update: (id, data) => api.put(`/ferronnerie-projects/${id}`, data),
-  delete: (id) => api.delete(`/ferronnerie-projects/${id}`),
-  togglePublish: (id) => api.put(`/ferronnerie-projects/${id}/publish`),
-};
-
 // ==================== HISTORIQUE CLIENT ====================
 export const history = {
   getMyHistory: () => api.get('/history/my-history'),
@@ -258,6 +247,7 @@ export const notifications = {
 export const users = {
   getAll: () => api.get('/users'),
   getById: (id) => api.get(`/users/${id}`),
+  create: (data) => api.post('/users', data),
   update: (id, data) => api.put(`/users/${id}`, data),
   delete: (id) => api.delete(`/users/${id}`),
   toggleStatus: (id) => api.put(`/users/${id}/toggle-status`),

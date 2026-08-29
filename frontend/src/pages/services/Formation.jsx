@@ -1,635 +1,778 @@
-﻿import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
+﻿import React from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import PublicHero from '../../components/Public/PublicHero';
+import TestimonialsCarousel from '../../components/Public/TestimonialsCarousel';
+import CTASection from '../../components/Public/CTASection';
 import {
   GraduationCap,
   Users,
   BookOpen,
   Award,
   Clock,
-  CheckCircle,
-  ArrowRight,
   Calendar,
   Star,
-  Quote,
   Shield,
   Cloud,
   Code,
   MapPin,
   Phone,
-  Mail
-} from 'lucide-react'
+  Mail,
+  ArrowRight,
+} from 'lucide-react';
 
+/* Photo d'étudiants utilisée comme arrière-plan général de la page
+   (fixe, discrète, avec voile clair pour garder tout le contenu lisible). */
+const PAGE_BG_IMAGE =
+  'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1920&q=80';
+
+/* ─────────────────────────────────────────────
+   DESIGN SYSTEM — identique à la page About
+   (navy/electric/turquoise/energy)
+   ───────────────────────────────────────────── */
 const globalStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: #0f172a;
-    color: #e2e8f0;
-    overflow-x: hidden;
+  .omedev-formation {
+    --omedev-navy: #053876;
+    --omedev-blue-dark: #1D5B9B;
+    --omedev-blue: #0B74C1;
+    --omedev-blue-light: #4681B7;
+    --omedev-cyan: #72A5CE;
+    --omedev-cyan-light: #A6C3D7;
+    --omedev-turquoise: #2AACB2;
+    --omedev-energy: #55DDB5;
+    --omedev-white: #F6F6F7;
+    --omedev-gray: #D5DCE1;
+    --omedev-dark: #0B1213;
+    --omedev-text-secondary: #25364A;
+    position: relative;
+    /* Nécessaire pour que le fond absolute ci-dessous se cale sur TOUTE
+       la hauteur de la page (et pas seulement le viewport). */
+    isolation: isolate;
+    color: #0B1213;
+    /* Le fond uni sert de secours tant que l'image de fond n'est pas
+       encore visible (ex. lecteurs sans JS/CSS avancé). */
+    background: #F6F6F7;
+  }
+
+  /* ── Photo d'étudiants en arrière-plan général de la page ──
+     Remarque technique : on utilise position:absolute (calé sur
+     .omedev-formation, qui englobe tout le contenu) plutôt que
+     position:fixed. Avec Framer Motion utilisé un peu partout sur le
+     site, un ancêtre porte presque toujours une transform (même neutre),
+     ce qui casse totalement position:fixed (l'élément se recale sur cet
+     ancêtre au lieu du viewport et devient invisible). absolute + inset:0
+     sur un parent en position:relative n'a pas ce problème. */
+  .omedev-formation .omedev-page-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    /* Hauteur fixe (pas inset:0 sur toute la page) : avec object-fit:cover,
+       étirer une seule photo sur toute la hauteur scrollable (plusieurs
+       milliers de px) force un zoom énorme qui rend l'image quasi
+       invisible (un simple aplat de couleur). On garde donc une bande
+       fixe en haut de page, qui se fond ensuite dans le fond uni. */
+    height: 900px;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .omedev-formation .omedev-page-bg img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+  .omedev-formation .omedev-page-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    /* Voile clair en dégradé : l'image reste identifiable en filigrane en
+       haut de page, puis se fond progressivement dans le fond uni
+       (#F6F6F7) pour ne jamais gêner la lecture du contenu par-dessus. */
+    background: linear-gradient(to bottom, rgba(246, 246, 247, 0.55) 0%, rgba(246, 246, 247, 0.88) 55%, rgba(246, 246, 247, 1) 100%);
+  }
+
+  /* Tout le contenu réel passe au-dessus du fond fixe */
+  .omedev-formation > *:not(.omedev-page-bg) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .omedev-formation .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .omedev-formation .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: .5rem 1.1rem;
+    border-radius: 999px;
+    background: rgba(11,116,193,.08);
+    color: #0B74C1;
+    border: 1px solid rgba(11,116,193,.18);
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-formation .section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -.03em;
+    margin-bottom: 1rem;
+    font-family: 'Syne', sans-serif;
+    color: #053876;
+  }
+
+  .omedev-formation .section-subtitle {
+    font-size: 1rem;
+    color: #25364A;
+    max-width: 52ch;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .omedev-formation .divider {
+    width: 64px;
+    height: 4px;
+    background: linear-gradient(90deg, #0B74C1, #2AACB2, #55DDB5);
+    border-radius: 99px;
+    margin: 1rem auto 1.5rem;
+  }
+
+  .omedev-formation .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    background: linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%);
+    color: #fff;
+    font-size: .9rem;
+    font-weight: 700;
+    padding: .9rem 1.7rem;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all .3s ease;
+    cursor: pointer;
+    border: none;
+    font-family: 'Syne', sans-serif;
+    box-shadow: 0 10px 28px rgba(11,116,193,.20);
+  }
+
+  .omedev-formation .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgba(42,172,178,.28);
+  }
+
+  .omedev-formation .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    background: #fff;
+    color: #053876;
+    font-size: .9rem;
+    font-weight: 700;
+    padding: .85rem 1.7rem;
+    border-radius: 12px;
+    border: 1px solid rgba(5,56,118,.18);
+    text-decoration: none;
+    transition: all .3s ease;
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-formation .btn-outline:hover {
+    border-color: #2AACB2;
+    color: #0B74C1;
+    background: rgba(85,221,181,.08);
+    transform: translateY(-3px);
+  }
+
+  .omedev-formation .btn-ghost-light {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    background: rgba(255,255,255,.10);
+    color: #fff;
+    font-size: .9rem;
+    font-weight: 700;
+    padding: .85rem 1.7rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.28);
+    text-decoration: none;
+    transition: all .3s ease;
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-formation .btn-ghost-light:hover {
+    background: rgba(255,255,255,.18);
+    transform: translateY(-3px);
+  }
+
+  .omedev-formation .card-hover {
+    transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+    background: #fff;
+    border: 1px solid rgba(5,56,118,.09);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(5,56,118,.06);
+  }
+
+  .omedev-formation .card-hover:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 22px 48px rgba(11,116,193,.14);
+    border-color: rgba(42,172,178,.35);
+  }
+
+  .omedev-formation .omedev-hero {
+    background: linear-gradient(135deg, #053876 0%, #1D5B9B 35%, #4681B7 60%, #72A5CE 80%, #A6C3D7 100%);
+    position: relative;
+  }
+
+  /* Sections claires rendues semi-transparentes pour laisser deviner la
+     photo d'étudiants fixée en arrière-plan de la page. */
+  .omedev-formation .omedev-light-section { background: rgba(246, 246, 247, 0.82); }
+  .omedev-formation .omedev-white-section { background: rgba(255, 255, 255, 0.88); }
+  /* La section sombre garde un fond plein : le contraste blanc sur photo
+     serait illisible, on privilégie la lisibilité à cet endroit. */
+  .omedev-formation .omedev-dark-section {
+    background: linear-gradient(135deg, #053876 0%, #1D5B9B 55%, #0B74C1 100%);
+  }
+
+  .omedev-formation .hero-grid {
+    background-image: linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+    background-size: 56px 56px;
   }
 
   @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-16px); }
   }
-  
-  @keyframes pulse-ring {
-    0% { transform: scale(0.8); opacity: 1; }
-    70% { transform: scale(1.3); opacity: 0; }
-    100% { transform: scale(0.8); opacity: 0; }
+  .omedev-formation .animate-float { animation: float 6s ease-in-out infinite; }
+
+  /* ── Carte formation, image + contenu ── */
+  .omedev-formation .formation-card {
+    border-radius: 18px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid rgba(5,56,118,.09);
+    box-shadow: 0 10px 30px rgba(5,56,118,.06);
+    transition: all .4s cubic-bezier(.4,0,.2,1);
+    display: flex;
+    flex-direction: column;
   }
-  
-  @keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+  .omedev-formation .formation-card:hover {
+    transform: translateY(-9px);
+    border-color: rgba(42,172,178,.35);
+    box-shadow: 0 22px 48px rgba(11,116,193,.16);
   }
-  
-  .animate-float { animation: float 6s ease-in-out infinite; }
-  .animate-pulse-ring { animation: pulse-ring 2s ease-out infinite; }
-  .shimmer {
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
-    background-size: 200% 100%;
-    animation: shimmer 2s infinite;
+  .omedev-formation .formation-photo-wrap {
+    position: relative;
+    width: 100%;
+    height: 190px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #D5DCE1;
+  }
+  .omedev-formation .formation-photo-wrap img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .8s cubic-bezier(.4,0,.2,1);
+  }
+  .omedev-formation .formation-card:hover .formation-photo-wrap img { transform: scale(1.08); }
+
+  /* ── Session accélérée ── */
+  .omedev-formation .session-row {
+    background: #fff;
+    border: 1px solid rgba(5,56,118,.09);
+    border-radius: 14px;
+    padding: 1.1rem 1.3rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: .75rem;
+    transition: all .3s ease;
+  }
+  .omedev-formation .session-row:hover {
+    border-color: rgba(42,172,178,.35);
+    box-shadow: 0 14px 32px rgba(11,116,193,.10);
+    transform: translateY(-4px);
+  }
+
+  /* ── Centre de formation ── */
+  .omedev-formation .center-card {
+    background: #fff;
+    border: 1px solid rgba(5,56,118,.09);
+    border-radius: 18px;
+    padding: 1.75rem;
+    transition: all .35s ease;
+  }
+  .omedev-formation .center-card:hover {
+    transform: translateY(-7px);
+    border-color: rgba(42,172,178,.35);
+    box-shadow: 0 22px 48px rgba(11,116,193,.14);
+  }
+
+  .omedev-formation .quote-mark {
+    font-family: 'Syne', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1;
+    color: rgba(11,116,193,.15);
+  }
+
+  .omedev-formation .map-frame {
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(5,56,118,.09);
+    box-shadow: 0 10px 30px rgba(5,56,118,.06);
+  }
+
+  @media (max-width: 768px) {
+    .omedev-formation .container { padding: 0 1rem; }
+    /* background-attachment "fixed" simulé via position:fixed est parfois
+       capricieux sur mobile (barre d'adresse qui bouge) ; on garde le
+       voile un peu plus opaque pour éviter tout souci de lisibilité. */
+    .omedev-formation .omedev-page-bg::after { background: rgba(246, 246, 247, 0.92); }
   }
 `;
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 0.68, 0, 1] } }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] } },
+};
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
 };
 
-const fadeScale = {
-  hidden: { opacity: 0, scale: 0.9 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: [0.22, 0.68, 0, 1] } }
+const SectionHeader = ({ badge, title, subtitle, light }) => (
+  <motion.div
+    initial="hidden"
+    whileInView="visible"
+    viewport={{ once: true }}
+    variants={staggerContainer}
+    style={{ textAlign: 'center', marginBottom: '3rem' }}
+  >
+    {badge && (
+      <motion.div variants={fadeUp}>
+        <span
+          className="section-badge"
+          style={light ? { background: 'rgba(255,255,255,.14)', color: '#fff', borderColor: 'rgba(255,255,255,.28)' } : {}}
+        >
+          {badge}
+        </span>
+      </motion.div>
+    )}
+    <motion.h2 variants={fadeUp} className="section-title" style={light ? { color: '#fff' } : {}}>
+      {title}
+    </motion.h2>
+    <motion.div variants={fadeUp} className="divider" />
+    {subtitle && (
+      <motion.p variants={fadeUp} className="section-subtitle" style={light ? { color: 'rgba(255,255,255,.78)' } : {}}>
+        {subtitle}
+      </motion.p>
+    )}
+  </motion.div>
+);
+
+const colors = {
+  navy: '#053876',
+  blue: '#0B74C1',
+  blueLight: '#4681B7',
+  turquoise: '#2AACB2',
+  energy: '#55DDB5',
 };
 
-const floatVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.6, ease: [0.22, 0.68, 0, 1] }
+/* ─────────────────────────────────────────────
+   DATA
+   ───────────────────────────────────────────── */
+const formationCards = [
+  {
+    title: 'Réseaux & Infrastructure',
+    desc: 'Cisco, MikroTik, conception et dépannage avancé',
+    image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop',
+    icon: BookOpen,
+    color: colors.blue,
   },
-  hover: {
-    y: -8,
-    transition: { duration: 0.3, ease: [0.22, 0.68, 0, 1] }
-  }
-};
+  {
+    title: 'Cybersécurité',
+    desc: 'Protection des données, pare-feu, sensibilisation',
+    image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&h=400&fit=crop',
+    icon: Shield,
+    color: colors.navy,
+  },
+  {
+    title: 'Cloud & Virtualisation',
+    desc: 'AWS, Azure, VMware, Docker',
+    image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=400&fit=crop',
+    icon: Cloud,
+    color: colors.turquoise,
+  },
+  {
+    title: 'Développement DevOps',
+    desc: 'CI/CD, Git, Python, automatisation',
+    image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&h=400&fit=crop',
+    icon: Code,
+    color: colors.blueLight,
+  },
+  {
+    title: 'Soft skills IT',
+    desc: 'Gestion de projet agile, leadership technique',
+    image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=400&fit=crop',
+    icon: Users,
+    color: colors.energy,
+  },
+  {
+    title: 'Préparation certifications',
+    desc: 'CCNA, Security+, Cloud Practitioner',
+    image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&h=400&fit=crop',
+    icon: Award,
+    color: colors.blue,
+  },
+];
+
+const acceleratedTrainings = [
+  { title: 'Bootcamp Réseaux (5 jours)', duration: '40h', price: '1 490€ HT', start: '14 avril 2025', spots: 8 },
+  { title: 'Cybersécurité intensive', duration: '35h', price: '1 790€ HT', start: '5 mai 2025', spots: 6 },
+  { title: 'DevOps en 4 jours', duration: '32h', price: '1 590€ HT', start: '2 juin 2025', spots: 10 },
+];
+
+const testimonials = [
+  {
+    name: 'Sophie Martin',
+    role: 'Responsable Infrastructure',
+    company: 'Groupe Logistique France',
+    photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop',
+    quote: "La formation Réseaux a complètement monté en compétence mon équipe. Les cas pratiques sur du vrai matériel ont fait la différence.",
+    rating: 5,
+  },
+  {
+    name: 'Thomas Lefebvre',
+    role: 'Admin Sys',
+    company: 'Digital Solutions',
+    photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
+    quote: 'Formation Cybersécurité très concrète. Le formateur est un expert du terrain, je recommande vivement.',
+    rating: 5,
+  },
+  {
+    name: 'Amel Benali',
+    role: 'DevOps Engineer',
+    company: 'Startup Innov',
+    photo: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=150&h=150&fit=crop',
+    quote: "Le bootcamp DevOps m'a permis d'être opérationnelle en moins d'une semaine. Un vrai accélérateur de carrière.",
+    rating: 5,
+  },
+];
+
+const stats = [
+  { value: '1 200+', label: 'Élèves formés', icon: Users },
+  { value: '98%', label: 'Taux de satisfaction', icon: Star },
+  { value: '45+', label: 'Sessions par an', icon: Calendar },
+  { value: '15', label: 'Formateurs experts', icon: Award },
+];
+
+const centers = [
+  { city: 'Kinshasa', address: '123 Avenue du Commerce, Gombe, Kinshasa', phone: '+243 81 234 5678', email: 'kinshasa@omdeve.com' },
+  { city: 'Lubumbashi', address: '45 Avenue Kamanyola, Lubumbashi', phone: '+243 97 456 7890', email: 'lubumbashi@omdeve.com' },
+  { city: 'Bulungu', address: "78 Avenue de l'Indépendance, Bulungu, Kwilu", phone: '+243 82 567 8901', email: 'bulungu@omdeve.com' },
+  { city: 'Kikwit', address: '12 Avenue Mama Yemo, Kikwit, Kwilu', phone: '+243 89 123 4567', email: 'kikwit@omdeve.com' },
+  { city: 'Bandundu', address: '34 Avenue du 4 Janvier, Bandundu-Ville', phone: '+243 85 234 5678', email: 'bandundu@omdeve.com' },
+  { city: 'Moanda', address: '9 Avenue du Port, Moanda, Kongo Central', phone: '+243 84 345 6789', email: 'moanda@omdeve.com' },
+  { city: 'Matadi', address: '56 Avenue Lumumba, Matadi, Kongo Central', phone: '+243 83 456 7890', email: 'matadi@omdeve.com' },
+];
 
 const Formation = () => {
-  // Cartes formation avec images
-  const formationCards = [
-    {
-      title: "Réseaux & Infrastructure",
-      desc: "Cisco, MikroTik, conception et dépannage avancé",
-      image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop",
-      icon: BookOpen,
-      gradient: "from-blue-500 to-blue-600"
-    },
-    {
-      title: "Cybersécurité",
-      desc: "Protection des données, pare-feu, sensibilisation",
-      image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&h=400&fit=crop",
-      icon: Shield,
-      gradient: "from-cyan-500 to-cyan-600"
-    },
-    {
-      title: "Cloud & Virtualisation",
-      desc: "AWS, Azure, VMware, Docker",
-      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=400&fit=crop",
-      icon: Cloud,
-      gradient: "from-indigo-500 to-indigo-600"
-    },
-    {
-      title: "Développement DevOps",
-      desc: "CI/CD, Git, Python, automatisation",
-      image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&h=400&fit=crop",
-      icon: Code,
-      gradient: "from-purple-500 to-purple-600"
-    },
-    {
-      title: "Soft skills IT",
-      desc: "Gestion de projet agile, leadership technique",
-      image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=400&fit=crop",
-      icon: Users,
-      gradient: "from-emerald-500 to-emerald-600"
-    },
-    {
-      title: "Préparation certifications",
-      desc: "CCNA, Security+, Cloud Practitioner",
-      image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&h=400&fit=crop",
-      icon: Award,
-      gradient: "from-amber-500 to-amber-600"
-    }
-  ]
-
-  // Formations accélérées
-  const acceleratedTrainings = [
-    { title: "Bootcamp Réseaux (5 jours)", duration: "40h", price: "1 490€ HT", start: "14 avril 2025", spots: 8, gradient: "from-blue-500 to-blue-600" },
-    { title: "Cybersécurité intensive", duration: "35h", price: "1 790€ HT", start: "5 mai 2025", spots: 6, gradient: "from-cyan-500 to-cyan-600" },
-    { title: "DevOps en 4 jours", duration: "32h", price: "1 590€ HT", start: "2 juin 2025", spots: 10, gradient: "from-indigo-500 to-indigo-600" }
-  ]
-
-  // Témoignages
-  const testimonials = [
-    {
-      name: "Sophie Martin",
-      role: "Responsable Infrastructure",
-      company: "Groupe Logistique France",
-      photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop",
-      quote: "La formation Réseaux a complètement monté en compétence mon équipe. Les cas pratiques sur du vrai matériel ont fait la différence.",
-      rating: 5
-    },
-    {
-      name: "Thomas Lefebvre",
-      role: "Admin Sys",
-      company: "Digital Solutions",
-      photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop",
-      quote: "Formation Cybersécurité très concrète. Le formateur est un expert du terrain, je recommande vivement.",
-      rating: 5
-    },
-    {
-      name: "Amel Benali",
-      role: "DevOps Engineer",
-      company: "Startup Innov",
-      photo: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=150&h=150&fit=crop",
-      quote: "Le bootcamp DevOps m'a permis d'être opérationnelle en moins d'une semaine. Un vrai accélérateur de carrière.",
-      rating: 5
-    }
-  ]
-
-  // Statistiques
-  const stats = [
-    { value: "1 200+", label: "Élèves formés", icon: Users, gradient: "from-blue-500 to-cyan-500" },
-    { value: "98%", label: "Taux de satisfaction", icon: Star, gradient: "from-amber-500 to-orange-500" },
-    { value: "45+", label: "Sessions par an", icon: Calendar, gradient: "from-emerald-500 to-teal-500" },
-    { value: "15", label: "Formateurs experts", icon: Award, gradient: "from-purple-500 to-pink-500" }
-  ]
-
-  // Centres de formation
-  const centers = [
-    { city: "Kinshasa", address: "123 Avenue du Commerce, Gombe, Kinshasa", phone: "+243 81 234 5678", email: "kinshasa@omdeve.com", gradient: "from-blue-500 to-cyan-500" },
-    { city: "Lubumbashi", address: "45 Avenue Kamanyola, Lubumbashi", phone: "+243 97 456 7890", email: "lubumbashi@omdeve.com", gradient: "from-indigo-500 to-purple-500" },
-    { city: "Bulungu", address: "78 Avenue de l'Indépendance, Bulungu, Kwilu", phone: "+243 82 567 8901", email: "bulungu@omdeve.com", gradient: "from-cyan-500 to-blue-500" }
-  ]
-
   return (
-    <>
+    <div className="omedev-formation">
       <style>{globalStyles}</style>
 
-      {/* Hero Section - Formation IT */}
-      <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden h-[550px] flex flex-col justify-center pt-16">
-        <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px'
-        }} />
-        <div className="absolute w-96 h-96 bg-blue-600/20 top-20 -left-20 rounded-full filter blur-[80px] animate-float" />
-        <div className="absolute w-72 h-72 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
+      {/* Photo d'étudiants fixée en arrière-plan de toute la page */}
+      <div className="omedev-page-bg" aria-hidden="true">
+        <img src={PAGE_BG_IMAGE} alt="" />
+      </div>
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-blue-600/15 border border-blue-500/30"
-            >
-              <GraduationCap className="w-4 h-4 text-blue-400" />
-              <span className="text-blue-300 font-semibold text-xs tracking-wide font-syne">Formation IT professionnelle</span>
-            </motion.div>
+      {/* ==================== HERO ==================== */}
+      <PublicHero
+        badge="Formation IT professionnelle"
+        title="Montez en compétences avec nos experts"
+        highlight="avec nos experts"
+        subtitle="Formations techniques et soft skills, en présentiel ou à distance, pour vos équipes IT."
+        primaryAction={{ label: 'Voir le catalogue', to: '/formations/catalogue' }}
+        secondaryAction={{ label: 'Parler à un conseiller', to: '/contact' }}
+      />
 
-            <motion.h1
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
-            >
-              Montez en compétences{' '}
-              <span className="relative inline-block">
-                <span className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 blur-2xl opacity-50" />
-                <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
-                  avec nos experts
-                </span>
-              </span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-              className="text-gray-300 text-base sm:text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
-            >
-              Formations techniques et soft skills, en présentiel ou à distance, pour vos équipes IT.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 }}
-              className="flex flex-wrap gap-4 justify-center"
-            >
-              <Link to="/devis" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
-                Demander un catalogue <ArrowRight size={18} className="group-hover:translate-x-1 transition" />
-              </Link>
-              <Link to="/contact" className="group border-2 border-white/30 hover:border-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
-                Parler à un conseiller
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Nos formations - Cartes avec images */}
-      <section className="py-20 bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <div className="inline-flex items-center gap-1.5 bg-blue-500/20 text-blue-300 border border-blue-500/30 px-3.5 py-1 rounded-full text-[0.7rem] font-bold tracking-wider uppercase mb-3">
-              📚 Nos formations
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold font-syne mb-4">Nos formations</h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full mx-auto" />
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {formationCards.map((card, idx) => (
-              <motion.div
-                key={idx}
-                variants={floatVariants}
-                initial="hidden"
-                whileInView="visible"
-                whileHover="hover"
-                viewport={{ once: true }}
-                custom={idx}
-                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-blue-500/50 transition-all duration-500 cursor-pointer group"
-              >
-                <div className="relative overflow-hidden">
-                  <motion.img 
-                    src={card.image} 
-                    alt={card.title} 
-                    className="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                </div>
-                <div className="p-6">
-                  <motion.div 
-                    className={`w-10 h-10 rounded-xl bg-gradient-to-br ${card.gradient} flex items-center justify-center mb-3 shadow-lg`}
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                  >
-                    <card.icon className="w-5 h-5 text-white" />
-                  </motion.div>
-                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">{card.title}</h3>
-                  <p className="text-gray-400 mb-4 group-hover:text-gray-300 transition-colors">{card.desc}</p>
-                  <motion.div whileHover={{ x: 5 }} transition={{ duration: 0.2 }}>
-                    <Link to="/inscription" className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-semibold">
-                      S'inscrire <ArrowRight size={16} />
-                    </Link>
-                  </motion.div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Statistiques élèves formés */}
-      <section className="py-20 bg-white/5">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <div className="inline-flex items-center gap-1.5 bg-blue-500/20 text-blue-300 border border-blue-500/30 px-3.5 py-1 rounded-full text-[0.7rem] font-bold tracking-wider uppercase mb-3">
-              📊 Chiffres clés
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold font-syne mb-4">Nos élèves en chiffres</h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full mx-auto" />
-          </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat, idx) => (
-              <motion.div
-                key={idx}
-                variants={fadeScale}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                whileHover={{ y: -8, scale: 1.03 }}
-                className="bg-white/10 rounded-2xl p-6 text-center backdrop-blur-sm border border-white/10 transition-all duration-300 cursor-pointer group"
-              >
-                <motion.div 
-                  className={`w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center shadow-lg`}
-                  whileHover={{ scale: 1.15, rotate: 5 }}
+      {/* ==================== NOS FORMATIONS ==================== */}
+      <section className="omedev-white-section py-24">
+        <div className="container">
+          <SectionHeader badge="Nos formations" title="Nos formations" subtitle="6 domaines de compétences pour faire évoluer vos équipes IT" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {formationCards.map((card, i) => {
+              const Icon = card.icon;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08 }}
+                  className="formation-card"
                 >
-                  <stat.icon size={22} className="text-white" />
+                  <div className="formation-photo-wrap">
+                    <img src={card.image} alt={card.title} />
+                  </div>
+                  <div className="p-6">
+                    <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-3" style={{ background: `${card.color}20`, color: card.color }}>
+                      <Icon size={20} />
+                    </div>
+                    <h3 className="font-syne font-bold text-lg mb-2" style={{ color: colors.navy }}>{card.title}</h3>
+                    <p className="text-[#25364A] text-sm mb-4">{card.desc}</p>
+                    <Link to="/inscription" className="inline-flex items-center gap-2 text-sm font-bold" style={{ color: colors.blue }}>
+                      S'inscrire <ArrowRight size={14} />
+                    </Link>
+                  </div>
                 </motion.div>
-                <div className="text-4xl font-bold text-white font-syne">{stat.value}</div>
-                <div className="text-gray-400 mt-2">{stat.label}</div>
-              </motion.div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Formations accélérées + image */}
-      <section className="py-20 bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+      {/* ==================== CHIFFRES CLÉS ==================== */}
+      <section className="omedev-dark-section py-20">
+        <div className="container">
+          <SectionHeader badge="Chiffres clés" title="Nos élèves en chiffres" light />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {stats.map((stat, i) => {
+              const Icon = stat.icon;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="p-6 rounded-2xl text-center"
+                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)' }}
+                >
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style={{ background: 'linear-gradient(135deg, #4681B7, #053876)' }}>
+                    <Icon size={22} className="text-white" />
+                  </div>
+                  <div className="text-3xl md:text-4xl font-bold text-white font-syne mb-1">{stat.value}</div>
+                  <div className="text-white/70 text-xs sm:text-sm">{stat.label}</div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== FORMATIONS ACCÉLÉRÉES ==================== */}
+      <section className="omedev-light-section py-24">
+        <div className="container">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
+              initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7, ease: [0.22, 0.68, 0, 1] }}
+              transition={{ duration: 0.6 }}
             >
-              <div className="inline-flex items-center gap-1.5 bg-blue-500/20 text-blue-300 border border-blue-500/30 px-3.5 py-1 rounded-full text-[0.7rem] font-bold tracking-wider uppercase mb-3">
-                ⚡ Accéléré
-              </div>
-              <h2 className="text-3xl font-bold font-syne mb-4">Formations accélérées</h2>
-              <div className="w-20 h-1 bg-cyan-500 rounded-full mb-6" />
-              <p className="text-gray-300 mb-6">
-                Des bootcamps intensifs de 2 à 5 jours pour monter en compétences rapidement. 
+              <span className="section-badge">Accéléré</span>
+              <h2 className="section-title mt-4">Formations accélérées</h2>
+              <div className="divider" style={{ margin: '1rem 0 1.5rem' }} />
+              <p className="text-[#25364A] mb-6 leading-relaxed">
+                Des bootcamps intensifs de 2 à 5 jours pour monter en compétences rapidement.
                 Travaux pratiques sur cas réels, formateurs experts et petit groupe.
               </p>
               <div className="space-y-4">
                 {acceleratedTrainings.map((training, i) => (
-                  <motion.div 
-                    key={i} 
-                    className="bg-white/10 rounded-xl p-4 flex flex-wrap justify-between items-center gap-3 group cursor-pointer"
-                    whileHover={{ scale: 1.02, x: 5 }}
-                    transition={{ duration: 0.2 }}
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.08 }}
+                    className="session-row"
                   >
                     <div>
-                      <h4 className="font-bold text-white group-hover:text-blue-300 transition-colors">{training.title}</h4>
-                      <div className="flex gap-3 text-sm text-gray-400">
-                        <span className="flex items-center gap-1"><Clock size={14}/> {training.duration}</span>
-                        <span className="flex items-center gap-1"><Calendar size={14}/> {training.start}</span>
+                      <h4 className="font-syne font-bold" style={{ color: colors.navy }}>{training.title}</h4>
+                      <div className="flex flex-wrap gap-3 text-sm text-[#25364A] mt-1">
+                        <span className="flex items-center gap-1"><Clock size={14} /> {training.duration}</span>
+                        <span className="flex items-center gap-1"><Calendar size={14} /> {training.start}</span>
                         <span>{training.spots} places</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-4">
-                      <span className="text-blue-300 font-bold">{training.price}</span>
-                      <motion.div whileHover={{ x: 5 }}>
-                        <Link to="/inscription" className="text-blue-400 hover:text-blue-300">
-                          <ArrowRight size={18} />
-                        </Link>
-                      </motion.div>
+                      <span className="font-bold" style={{ color: colors.blue }}>{training.price}</span>
+                      <Link to="/inscription" style={{ color: colors.blue }}>
+                        <ArrowRight size={18} />
+                      </Link>
                     </div>
                   </motion.div>
                 ))}
               </div>
-              <motion.div whileHover={{ x: 5 }} transition={{ duration: 0.2 }}>
-                <Link to="/formations-accelerees" className="inline-flex items-center gap-2 mt-8 text-blue-400 hover:text-blue-300 font-semibold">
-                  Voir toutes nos sessions <ArrowRight size={16} />
-                </Link>
-              </motion.div>
+              <Link to="/formations-accelerees" className="btn-primary mt-8">
+                Voir toutes nos sessions <ArrowRight size={16} />
+              </Link>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: 40 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.7, ease: [0.22, 0.68, 0, 1] }}
-              className="rounded-2xl overflow-hidden shadow-2xl border border-white/10 group"
+              transition={{ duration: 0.6, delay: 0.15 }}
+              className="card-hover overflow-hidden"
             >
-              <motion.img 
-                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=600&fit=crop" 
+              <img
+                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=600&fit=crop"
                 alt="Session de formation en présentiel"
-                className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
+                className="w-full h-auto object-cover"
               />
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Témoignages */}
-      <section className="py-20 bg-white/5">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <div className="inline-flex items-center gap-1.5 bg-blue-500/20 text-blue-300 border border-blue-500/30 px-3.5 py-1 rounded-full text-[0.7rem] font-bold tracking-wider uppercase mb-3">
-              🗣️ Témoignages
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold font-syne mb-4">Ils ont suivi nos formations</h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full mx-auto" />
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((t, idx) => (
-              <motion.div
-                key={idx}
-                variants={floatVariants}
-                initial="hidden"
-                whileInView="visible"
-                whileHover="hover"
-                viewport={{ once: true }}
-                custom={idx}
-                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 transition-all duration-300 hover:border-blue-500/50"
-              >
-                <Quote className="w-10 h-10 text-blue-400/50 mb-4" />
-                <motion.p 
-                  className="text-gray-300 italic mb-6"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  "{t.quote}"
-                </motion.p>
-                <div className="flex items-center gap-4">
-                  <motion.img 
-                    src={t.photo} 
-                    alt={t.name} 
-                    className="w-12 h-12 rounded-full object-cover border-2 border-blue-400"
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                  />
-                  <div>
-                    <div className="font-bold text-white">{t.name}</div>
-                    <div className="text-sm text-gray-400">{t.role}, {t.company}</div>
-                    <div className="flex gap-1 mt-1">
-                      {[...Array(t.rating)].map((_, i) => (
-                        <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+      {/* ==================== TÉMOIGNAGES ==================== */}
+      <section className="omedev-white-section py-24">
+        <div className="container">
+          <TestimonialsCarousel
+            badge="Témoignages"
+            title="Ils ont suivi nos formations"
+            subtitle="La réussite de nos apprenants, notre meilleure référence"
+            items={testimonials.map((t) => ({
+              name: t.name,
+              role: `${t.role}, ${t.company}`,
+              content: t.quote,
+              avatar: t.photo,
+              rating: t.rating,
+            }))}
+          />
         </div>
       </section>
 
-      {/* CTA double : inscription centre + catalogue */}
-      <section className="py-20 bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      {/* ==================== CTA DOUBLE : INSCRIPTION + CATALOGUE ==================== */}
+      <section className="omedev-light-section py-24">
+        <div className="container">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0 }}
-              whileHover={{ y: -8 }}
-              className="bg-gradient-to-r from-blue-600/20 to-cyan-600/20 rounded-2xl p-8 text-center border border-white/10 hover:border-blue-500/50 transition-all duration-300"
+              transition={{ duration: 0.6 }}
+              className="card-hover p-8 text-center"
             >
-              <motion.div 
-                className="w-12 h-12 mx-auto mb-4 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg"
-                whileHover={{ scale: 1.1, rotate: 5 }}
-              >
-                <GraduationCap className="w-6 h-6 text-white" />
-              </motion.div>
-              <h3 className="text-2xl font-bold mb-2">Inscription en centre</h3>
-              <p className="text-gray-300 mb-6">Rejoignez nos sessions en présentiel à Kinshasa, Lubumbashi ou Bulungu.</p>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                <Link to="/inscription" className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-xl font-semibold transition">
-                  Je m'inscris <ArrowRight size={18} />
-                </Link>
-              </motion.div>
+              <div className="w-14 h-14 mx-auto mb-4 rounded-xl flex items-center justify-center" style={{ background: `${colors.blue}20`, color: colors.blue }}>
+                <GraduationCap size={26} />
+              </div>
+              <h3 className="font-syne text-2xl font-bold mb-2" style={{ color: colors.navy }}>Inscription en centre</h3>
+              <p className="text-[#25364A] mb-6 text-sm">Rejoignez nos sessions en présentiel à Kinshasa, Lubumbashi ou Bulungu.</p>
+              <Link to="/inscription" className="btn-primary">
+                Je m'inscris <ArrowRight size={18} />
+              </Link>
             </motion.div>
+
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              whileHover={{ y: -8 }}
-              className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-2xl p-8 text-center border border-white/10 hover:border-purple-500/50 transition-all duration-300"
+              transition={{ duration: 0.6, delay: 0.15 }}
+              className="card-hover p-8 text-center"
             >
-              <motion.div 
-                className="w-12 h-12 mx-auto mb-4 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg"
-                whileHover={{ scale: 1.1, rotate: 5 }}
-              >
-                <BookOpen className="w-6 h-6 text-white" />
-              </motion.div>
-              <h3 className="text-2xl font-bold mb-2">Catalogue complet</h3>
-              <p className="text-gray-300 mb-6">Recevez toutes nos formations par email.</p>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                <Link to="/devis" className="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-xl font-semibold transition">
-                  Télécharger <ArrowRight size={18} />
-                </Link>
-              </motion.div>
+              <div className="w-14 h-14 mx-auto mb-4 rounded-xl flex items-center justify-center" style={{ background: `${colors.turquoise}20`, color: colors.turquoise }}>
+                <BookOpen size={26} />
+              </div>
+              <h3 className="font-syne text-2xl font-bold mb-2" style={{ color: colors.navy }}>Catalogue complet</h3>
+              <p className="text-[#25364A] mb-6 text-sm">Consultez la liste complète de nos formations en ligne.</p>
+              <Link to="/formations/catalogue" className="btn-primary">
+                Voir le catalogue <ArrowRight size={18} />
+              </Link>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Localisation des centres */}
-      <section className="py-20 bg-white/5">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <div className="inline-flex items-center gap-1.5 bg-blue-500/20 text-blue-300 border border-blue-500/30 px-3.5 py-1 rounded-full text-[0.7rem] font-bold tracking-wider uppercase mb-3">
-              📍 Nous trouver
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold font-syne mb-4">Nos centres de formation</h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full mx-auto" />
-          </motion.div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {centers.map((center, idx) => (
+      {/* ==================== NOS CENTRES DE FORMATION ==================== */}
+      <section className="omedev-white-section py-24">
+        <div className="container">
+          <SectionHeader badge="Nous trouver" title="Nos centres de formation" subtitle="Sept centres répartis en République Démocratique du Congo" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {centers.map((center, i) => (
               <motion.div
-                key={idx}
-                variants={floatVariants}
-                initial="hidden"
-                whileInView="visible"
-                whileHover="hover"
+                key={i}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                custom={idx}
-                className="bg-white/10 rounded-2xl p-6 border border-white/10 hover:border-blue-500/50 transition-all duration-300"
+                transition={{ delay: i * 0.1 }}
+                className="center-card"
               >
-                <motion.div 
-                  className={`w-12 h-12 mb-3 rounded-xl bg-gradient-to-br ${center.gradient} flex items-center justify-center shadow-lg`}
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                >
-                  <MapPin className="w-6 h-6 text-white" />
-                </motion.div>
-                <h3 className="text-xl font-bold text-white">{center.city}</h3>
-                <p className="text-gray-400 text-sm mt-2">{center.address}</p>
+                <div className="w-12 h-12 mb-3 rounded-xl flex items-center justify-center" style={{ background: `${colors.blue}20`, color: colors.blue }}>
+                  <MapPin size={22} />
+                </div>
+                <h3 className="font-syne font-bold text-lg" style={{ color: colors.navy }}>{center.city}</h3>
+                <p className="text-[#25364A] text-sm mt-2">{center.address}</p>
                 <div className="mt-4 space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-gray-300 group cursor-pointer">
-                    <Phone size={14} className="text-blue-400 group-hover:text-blue-300 transition-colors" /> 
-                    <span className="group-hover:text-white transition-colors">{center.phone}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-300 group cursor-pointer">
-                    <Mail size={14} className="text-blue-400 group-hover:text-blue-300 transition-colors" /> 
-                    <span className="group-hover:text-white transition-colors">{center.email}</span>
-                  </div>
+                  <a href={`tel:${center.phone.replace(/\s/g, '')}`} className="flex items-center gap-2 text-sm" style={{ color: colors.blue }}>
+                    <Phone size={14} /> <span>{center.phone}</span>
+                  </a>
+                  <a href={`mailto:${center.email}`} className="flex items-center gap-2 text-sm" style={{ color: colors.blue }}>
+                    <Mail size={14} /> <span>{center.email}</span>
+                  </a>
                 </div>
               </motion.div>
             ))}
           </div>
-          {/* Carte Google Maps */}
-          <motion.div 
-            className="mt-12 rounded-2xl overflow-hidden border border-white/10 shadow-xl group"
+
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
+            className="map-frame mt-12"
           >
             <iframe
               title="Carte des centres OMDEVE"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63800.05399612767!2d15.276786!3d-4.322447!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1a6a33ce0946a6f7%3A0x841c5ce35b8af2fb!2sKinshasa%2C%20R%C3%A9publique%20d%C3%A9mocratique%20du%20Congo!5e0!3m2!1sfr!2scd!4v1647863945678!5m2!1sfr!2scd"
               width="100%"
               height="300"
-              style={{ border: 0 }}
+              style={{ border: 0, display: 'block' }}
               allowFullScreen=""
               loading="lazy"
-              className="grayscale group-hover:grayscale-0 transition-all duration-700"
             ></iframe>
           </motion.div>
         </div>
       </section>
 
-      {/* Call to Action final */}
-      <section className="py-20 bg-white/5 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-30" style={{
-          backgroundImage: `radial-gradient(circle at 30% 40%, rgba(59,130,246,0.2) 0%, transparent 60%)`
-        }} />
-        
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 mb-6 text-amber-300 text-sm font-semibold">
-              🚀 Besoin d'un service personnalisé ?
-            </div>
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 font-syne">Prêt à faire évoluer vos compétences ?</h2>
-            <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">
-              Recevez notre catalogue complet et un devis personnalisé sous 24h.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                <Link to="/devis" className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition">
-                  Devis gratuit <ArrowRight size={18} />
-                </Link>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                <Link to="/contact" className="inline-flex items-center gap-2 border border-white/30 hover:bg-white/10 px-6 py-3 rounded-xl font-semibold transition">
-                  Contacter un expert
-                </Link>
-              </motion.div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-    </>
-  )
-}
+      {/* ==================== CTA FINALE ==================== */}
+      <CTASection
+        badge="Prêt à vous lancer ?"
+        title="Développez vos compétences dès aujourd'hui"
+        highlight="compétences"
+        subtitle="Choisissez une formation adaptée à vos objectifs et préparez-vous aux opportunités du monde professionnel."
+        primaryAction={{ label: 'Voir le catalogue', to: '/formations/catalogue' }}
+        secondaryAction={{ label: 'Contacter un expert', to: '/contact' }}
+      />
+    </div>
+  );
+};
 
-export default Formation
+export default Formation;

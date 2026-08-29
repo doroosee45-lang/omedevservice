@@ -64,15 +64,15 @@ const ClientSidebar = () => {
 
   return (
     <aside
-      className={`bg-gradient-to-b from-gray-900 to-gray-800 text-white transition-all duration-300 flex flex-col
+      className={`bg-gradient-to-b from-[#053876] to-[#0B1213] text-white transition-all duration-300 flex flex-col
         ${isCollapsed ? 'w-20' : 'w-64'} 
         min-h-screen sticky top-0 overflow-hidden`}
     >
       {/* Logo + Bouton collapse */}
-      <div className={`p-6 border-b border-gray-700 flex items-center justify-between ${isCollapsed ? 'flex-col gap-4' : ''}`}>
+      <div className={`p-6 border-b border-white/10 flex items-center justify-between ${isCollapsed ? 'flex-col gap-4' : ''}`}>
         {!isCollapsed && (
           <NavLink to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-r from-[#0B74C1] to-[#2AACB2] rounded-lg flex items-center justify-center">
               <span className="font-bold text-white text-sm">OM</span>
             </div>
             <span className="font-bold text-white text-lg">OMDEVE</span>
@@ -80,14 +80,14 @@ const ClientSidebar = () => {
         )}
         {isCollapsed && (
           <NavLink to="/" className="hover:opacity-80 transition-opacity">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-r from-[#0B74C1] to-[#2AACB2] rounded-lg flex items-center justify-center">
               <span className="font-bold text-white text-sm">OM</span>
             </div>
           </NavLink>
         )}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-2 rounded-lg hover:bg-gray-700 transition-colors"
+          className="p-2 rounded-lg hover:bg-white/10 hover:text-[#55DDB5] transition-colors"
           title={isCollapsed ? 'Agrandir' : 'Réduire'}
         >
           {isCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
@@ -101,27 +101,27 @@ const ClientSidebar = () => {
             key={item.path}
             to={item.path}
             className={({ isActive }) =>
-              `flex items-center ${isCollapsed ? 'justify-center' : 'space-x-3'} 
+              `flex items-center ${isCollapsed ? 'justify-center' : 'space-x-3'}
                px-4 py-3 rounded-xl mb-1.5 transition-all duration-200 group
                ${isActive
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                  ? 'bg-gradient-to-r from-[#0B74C1] to-[#2AACB2] text-white shadow-md shadow-[#0B74C1]/30'
+                  : 'text-white/70 hover:bg-white/5 hover:text-[#55DDB5] hover:translate-x-0.5'
                }`
             }
             title={isCollapsed ? item.label : undefined}
           >
-            <item.icon className="w-5 h-5 flex-shrink-0" />
+            <item.icon className="w-5 h-5 flex-shrink-0 transition-colors" />
             {!isCollapsed && <span className="font-medium">{item.label}</span>}
           </NavLink>
         ))}
       </nav>
 
       {/* Déconnexion */}
-      <div className="p-4 border-t border-gray-700">
+      <div className="p-4 border-t border-white/10">
         <button
           onClick={handleLogout}
           className={`flex items-center ${isCollapsed ? 'justify-center' : 'space-x-3'} 
-                     w-full px-4 py-3 rounded-xl text-gray-300 
+                     w-full px-4 py-3 rounded-xl text-white/70 
                      hover:bg-red-600 hover:text-white transition-all duration-200`}
           title={isCollapsed ? 'Déconnexion' : undefined}
         >
@@ -132,14 +132,14 @@ const ClientSidebar = () => {
 
       {/* User Info */}
       {!isCollapsed && (
-        <div className="p-4 border-t border-gray-700 bg-gray-800/50">
+        <div className="p-4 border-t border-white/10 bg-white/5">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center flex-shrink-0">
+            <div className="w-10 h-10 bg-gradient-to-r from-[#0B74C1] to-[#2AACB2] rounded-full flex items-center justify-center flex-shrink-0">
               <span className="text-white font-bold text-sm">{getInitials()}</span>
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-white truncate">{userName}</p>
-              <p className="text-xs text-gray-400 truncate">{userEmail || 'client@omdeve.com'}</p>
+              <p className="text-xs text-white/50 truncate">{userEmail || 'client@omdeve.com'}</p>
             </div>
           </div>
         </div>
@@ -147,8 +147,8 @@ const ClientSidebar = () => {
 
       {/* Mini user info pour mode collapsed */}
       {isCollapsed && (
-        <div className="p-4 border-t border-gray-700 flex justify-center">
-          <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
+        <div className="p-4 border-t border-white/10 flex justify-center">
+          <div className="w-10 h-10 bg-gradient-to-r from-[#0B74C1] to-[#2AACB2] rounded-full flex items-center justify-center">
             <User className="w-5 h-5 text-white" />
           </div>
         </div>

@@ -33,9 +33,9 @@ const sendContactMessage = async (req, res) => {
   try {
     // Email de confirmation au client
     await transporter.sendMail({
-      from: `"Omedev Services" <${process.env.EMAIL_USER}>`,
+      from: `"OMEDEV Services" <${process.env.EMAIL_USER}>`,
       to: email,
-      subject: `Confirmation de votre message - Omedev Services`,
+      subject: `Confirmation de votre message — OMEDEV Services`,
       html: `
         <!DOCTYPE html><html><head><meta charset="UTF-8">
         <style>
@@ -49,7 +49,7 @@ const sendContactMessage = async (req, res) => {
         </style></head>
         <body>
           <div class="container">
-            <div class="header"><h1>Omedev Services</h1></div>
+            <div class="header"><h1>OMEDEV Services</h1></div>
             <div class="content">
               <h2>Bonjour ${nom},</h2>
               <p>Nous avons bien reçu votre message et nous vous remercions de nous avoir contactés.</p>
@@ -58,9 +58,9 @@ const sendContactMessage = async (req, res) => {
                 <p style="font-style:italic;">"${message.substring(0, 200)}${message.length > 200 ? '...' : ''}"</p>
               </div>
               <p>Notre équipe va étudier votre demande et vous répondra dans les plus brefs délais <strong>(sous 24h ouvrées)</strong>.</p>
-              <p>Cordialement,<br><strong>L'équipe Omedev Services</strong></p>
+              <p>Cordialement,<br><strong>L'équipe OMEDEV Services</strong></p>
             </div>
-            <div class="footer"><p>Omedev Services - Solutions IT, Énergie & Digital</p></div>
+            <div class="footer"><p>OMEDEV Services — Solutions IT, Énergie &amp; Digital</p></div>
           </div>
         </body></html>
       `,
@@ -68,9 +68,9 @@ const sendContactMessage = async (req, res) => {
 
     // Email de notification à l'équipe
     await transporter.sendMail({
-      from: `"Formulaire Contact OMDEVE" <${process.env.EMAIL_USER}>`,
+      from: `"Formulaire Contact OMEDEV" <${process.env.EMAIL_USER}>`,
       to: process.env.CONTACT_EMAIL || process.env.EMAIL_USER,
-      subject: `Nouveau message de contact - ${objet}`,
+      subject: `Nouveau message de contact — ${objet}`,
       html: `
         <!DOCTYPE html><html><head><meta charset="UTF-8">
         <style>
@@ -83,14 +83,14 @@ const sendContactMessage = async (req, res) => {
         </style></head>
         <body>
           <div class="container">
-            <div class="header"><h2>📬 Nouveau message depuis le site</h2></div>
+            <div class="header"><h2>Nouveau message depuis le site</h2></div>
             <div class="content">
               <div class="info">
-                <p><span class="label">👤 Nom :</span> ${nom}</p>
-                <p><span class="label">📧 Email :</span> ${email}</p>
-                <p><span class="label">📞 Téléphone :</span> ${phone || 'Non renseigné'}</p>
-                <p><span class="label">📝 Objet :</span> ${objet}</p>
-                <p><span class="label">💬 Message :</span></p>
+                <p><span class="label">Nom :</span> ${nom}</p>
+                <p><span class="label">Email :</span> ${email}</p>
+                <p><span class="label">Téléphone :</span> ${phone || 'Non renseigné'}</p>
+                <p><span class="label">Objet :</span> ${objet}</p>
+                <p><span class="label">Message :</span></p>
                 <p style="background:white;padding:10px;border-left:3px solid #2563eb;margin-top:5px;">${message}</p>
               </div>
               <p style="margin-top:20px;font-size:12px;color:#64748b;">Message reçu le ${new Date().toLocaleString('fr-FR')}</p>

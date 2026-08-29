@@ -4,77 +4,205 @@ import { Link } from 'react-router-dom';
 import {
   Users, Award, Target, Globe, Zap, Shield, Lightbulb, TrendingUp,
   ArrowRight, Headphones, CheckCircle, Rocket, Heart, Briefcase,
-  Calendar, MapPin, Star, Phone, Mail, Handshake
+  Calendar, MapPin, Star, Phone, Mail, Handshake, ChevronRight
 } from 'lucide-react';
 
+import PublicHero from '../components/Public/PublicHero';
+import CTASection from '../components/Public/CTASection';
 import meyaImg from '../assets/images/experts/os5.jpeg';
 import oseeImg from '../assets/images/experts/mab.jpeg';
 import paulImg from '../assets/images/experts/ro.jpeg';
 import claireImg from '../assets/images/experts/st.jpeg';
 
+/* ─────────────────────────────────────────────
+   DESIGN SYSTEM — identique à la page Home
+   (navy/electric/turquoise/energy)
+   ───────────────────────────────────────────── */
 const globalStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: #0f172a;
-    color: #e2e8f0;
-    overflow-x: hidden;
+  .omedev-about {
+    --omedev-navy: #053876;
+    --omedev-blue-dark: #1D5B9B;
+    --omedev-blue: #0B74C1;
+    --omedev-blue-light: #4681B7;
+    --omedev-cyan: #72A5CE;
+    --omedev-cyan-light: #A6C3D7;
+    --omedev-turquoise: #2AACB2;
+    --omedev-energy: #55DDB5;
+    --omedev-white: #F6F6F7;
+    --omedev-gray: #D5DCE1;
+    --omedev-dark: #0B1213;
+    --omedev-text-secondary: #25364A;
+    background: #F6F6F7;
+    color: #0B1213;
   }
 
-  .font-syne { font-family: 'Syne', sans-serif; }
+  .omedev-about .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .omedev-about .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: .5rem 1.1rem;
+    border-radius: 999px;
+    background: rgba(11,116,193,.08);
+    color: #0B74C1;
+    border: 1px solid rgba(11,116,193,.18);
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-about .section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -.03em;
+    margin-bottom: 1rem;
+    font-family: 'Syne', sans-serif;
+    color: #053876;
+  }
+
+  .omedev-about .section-subtitle {
+    font-size: 1rem;
+    color: #25364A;
+    max-width: 52ch;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .omedev-about .divider {
+    width: 64px;
+    height: 4px;
+    background: linear-gradient(90deg, #0B74C1, #2AACB2, #55DDB5);
+    border-radius: 99px;
+    margin: 1rem auto 1.5rem;
+  }
+
+  .omedev-about .btn-primary,
+  .omedev-about .btn-accent {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    background: linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%);
+    color: #fff;
+    font-size: .9rem;
+    font-weight: 700;
+    padding: .9rem 1.7rem;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all .3s ease;
+    cursor: pointer;
+    border: none;
+    font-family: 'Syne', sans-serif;
+    box-shadow: 0 10px 28px rgba(11,116,193,.20);
+  }
+
+  .omedev-about .btn-primary:hover,
+  .omedev-about .btn-accent:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgba(42,172,178,.28);
+  }
+
+  .omedev-about .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    background: #fff;
+    color: #053876;
+    font-size: .9rem;
+    font-weight: 700;
+    padding: .85rem 1.7rem;
+    border-radius: 12px;
+    border: 1px solid rgba(5,56,118,.18);
+    text-decoration: none;
+    transition: all .3s ease;
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-about .btn-outline:hover {
+    border-color: #2AACB2;
+    color: #0B74C1;
+    background: rgba(85,221,181,.08);
+    transform: translateY(-3px);
+  }
+
+  .omedev-about .card-hover {
+    transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+    background: #fff;
+    border: 1px solid rgba(5,56,118,.09);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(5,56,118,.06);
+  }
+
+  .omedev-about .card-hover:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 22px 48px rgba(11,116,193,.14);
+    border-color: rgba(42,172,178,.35);
+  }
+
+  .omedev-about .omedev-hero {
+    background: linear-gradient(135deg, #053876 0%, #1D5B9B 35%, #4681B7 60%, #72A5CE 80%, #A6C3D7 100%);
+    position: relative;
+  }
+
+  .omedev-about .omedev-light-section { background: #F6F6F7; }
+  .omedev-about .omedev-white-section { background: #fff; }
+  .omedev-about .omedev-energy-section {
+    background: linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%);
+  }
+  .omedev-about .omedev-dark-section {
+    background: linear-gradient(135deg, #053876 0%, #1D5B9B 55%, #0B74C1 100%);
+  }
+
+  .omedev-about .hero-grid {
+    background-image: linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
 
   @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-16px); }
   }
-  @keyframes pulse-ring {
-    0% { transform: scale(0.8); opacity: 1; }
-    70% { transform: scale(1.3); opacity: 0; }
-    100% { transform: scale(0.8); opacity: 0; }
-  }
-  @keyframes slow-zoom {
-    0% { transform: scale(1); }
-    100% { transform: scale(1.1); }
-  }
+  .omedev-about .animate-float { animation: float 6s ease-in-out infinite; }
 
-  .animate-float { animation: float 6s ease-in-out infinite; }
-  .animate-pulse-ring { animation: pulse-ring 2s ease-out infinite; }
-  .animate-slow-zoom { animation: slow-zoom 20s ease-out forwards; }
-
-  /* ===================================================
-     TEAM CARD
-  =================================================== */
-  .team-card {
+  /* ── Carte équipe, déclinée en version claire ── */
+  .omedev-about .team-card {
     position: relative;
-    border-radius: 20px;
+    border-radius: 18px;
     overflow: hidden;
-    background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-    border: 1px solid rgba(255,255,255,0.08);
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #fff;
+    border: 1px solid rgba(5,56,118,.09);
+    box-shadow: 0 10px 30px rgba(5,56,118,.06);
+    transition: all .4s cubic-bezier(.4,0,.2,1);
     display: flex;
     flex-direction: column;
   }
-  .team-card:hover {
-    transform: translateY(-12px);
-    border-color: rgba(99,179,237,0.4);
-    box-shadow: 0 40px 70px -15px rgba(0,0,0,0.6), 0 0 0 1px rgba(99,179,237,0.15);
+  .omedev-about .team-card:hover {
+    transform: translateY(-9px);
+    border-color: rgba(42,172,178,.35);
+    box-shadow: 0 22px 48px rgba(11,116,193,.16);
   }
-
-  /* ── Photo : ratio-box 1:1 — carré parfait sur toutes les tailles ── */
-  .team-photo-wrap {
+  .omedev-about .team-photo-wrap {
     position: relative;
     width: 100%;
-    aspect-ratio: 1 / 1;   /* carré garanti */
+    aspect-ratio: 1 / 1;
     overflow: hidden;
     flex-shrink: 0;
-    background: #1e293b;
+    background: #D5DCE1;
   }
-
-  /* L'image remplit exactement le carré */
-  .team-photo-wrap img {
+  .omedev-about .team-photo-wrap img {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -82,57 +210,21 @@ const globalStyles = `
     object-fit: cover;
     object-position: center top;
     display: block;
-    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s ease;
-    filter: saturate(0.85) brightness(0.92);
+    transition: transform .8s cubic-bezier(.4,0,.2,1);
   }
-  .team-card:hover .team-photo-wrap img {
-    transform: scale(1.07);
-    filter: saturate(1.05) brightness(1);
-  }
-
-  /* Fallback initiale (même ratio) */
-  .team-photo-fallback {
+  .omedev-about .team-card:hover .team-photo-wrap img { transform: scale(1.07); }
+  .omedev-about .team-photo-fallback {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
     display: none;
     align-items: center;
     justify-content: center;
     font-family: 'Syne', sans-serif;
-    font-size: 64px;
+    font-size: 56px;
     font-weight: 800;
-    color: rgba(255,255,255,0.3);
+    color: rgba(255,255,255,.75);
   }
-
-  /* Dégradé bas — fondu photo → corps carte */
-  .team-photo-wrap::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 90px;
-    background: linear-gradient(to top, #111827 0%, transparent 100%);
-    pointer-events: none;
-    z-index: 2;
-  }
-
-  /* Overlay dégradé au survol */
-  .team-photo-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(15,23,42,0) 35%,
-      rgba(15,23,42,0.45) 65%,
-      rgba(15,23,42,0.92) 100%
-    );
-    transition: opacity 0.4s ease;
-    z-index: 1;
-    pointer-events: none;
-  }
-
-  /* Badge rôle */
-  .team-role-badge {
+  .omedev-about .team-role-badge {
     position: absolute;
     top: 14px;
     left: 14px;
@@ -141,141 +233,148 @@ const globalStyles = `
     border-radius: 50px;
     font-size: 9.5px;
     font-weight: 700;
-    letter-spacing: 0.06em;
+    letter-spacing: .06em;
     text-transform: uppercase;
     color: white;
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.25);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    box-shadow: 0 4px 16px rgba(5,56,118,.25);
   }
-
-  /* Numéro décoratif */
-  .team-number {
+  .omedev-about .team-number {
     position: absolute;
-    bottom: 10px;
+    bottom: 8px;
     right: 14px;
     z-index: 3;
     font-family: 'Syne', sans-serif;
-    font-size: 56px;
+    font-size: 52px;
     font-weight: 800;
-    color: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,.55);
     line-height: 1;
     pointer-events: none;
-    transition: color 0.4s ease;
     user-select: none;
   }
-  .team-card:hover .team-number {
-    color: rgba(255,255,255,0.10);
-  }
-
-  /* Barre colorée bas de carte */
-  .team-bottom-bar {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+  .omedev-about .team-bottom-bar {
     height: 3px;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    z-index: 4;
+    width: 100%;
   }
-  .team-card:hover .team-bottom-bar {
-    opacity: 1;
-  }
-
-  /* Corps texte */
-  .team-info {
+  .omedev-about .team-info {
     padding: 18px 20px 22px;
-    position: relative;
     flex: 1;
     display: flex;
     flex-direction: column;
   }
-  .team-info::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 20px;
-    right: 20px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent);
-  }
-  .team-name {
+  .omedev-about .team-name {
     font-family: 'Syne', sans-serif;
     font-size: 17px;
     font-weight: 700;
-    color: #f1f5f9;
+    color: #053876;
     margin-bottom: 3px;
-    letter-spacing: -0.01em;
   }
-  .team-position {
+  .omedev-about .team-position {
     font-size: 10.5px;
-    font-weight: 600;
-    color: #60a5fa;
+    font-weight: 700;
+    color: #0B74C1;
     margin-bottom: 10px;
-    letter-spacing: 0.04em;
+    letter-spacing: .04em;
     text-transform: uppercase;
   }
-  .team-bio {
+  .omedev-about .team-bio {
     font-size: 12.5px;
     line-height: 1.65;
-    color: rgba(148, 163, 184, 0.8);
+    color: #25364A;
   }
 
-  /* Grille team : 4 colonnes sur large, toutes les cartes alignées */
-  .team-grid {
+  .omedev-about .team-grid {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     gap: 1.5rem;
-    align-items: start;
   }
   @media (min-width: 640px) {
-    .team-grid { grid-template-columns: repeat(2, 1fr); }
+    .omedev-about .team-grid { grid-template-columns: repeat(2, 1fr); }
   }
   @media (min-width: 1024px) {
-    .team-grid { grid-template-columns: repeat(4, 1fr); }
+    .omedev-about .team-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    .omedev-about .container { padding: 0 1rem; }
   }
 `;
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7 } }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] } },
 };
-
 const staggerContainer = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.08 } }
+  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
+};
+
+const SectionHeader = ({ badge, title, subtitle, light }) => (
+  <motion.div
+    initial="hidden"
+    whileInView="visible"
+    viewport={{ once: true }}
+    variants={staggerContainer}
+    style={{ textAlign: 'center', marginBottom: '3rem' }}
+  >
+    {badge && (
+      <motion.div variants={fadeUp}>
+        <span
+          className="section-badge"
+          style={light ? { background: 'rgba(255,255,255,.14)', color: '#fff', borderColor: 'rgba(255,255,255,.28)' } : {}}
+        >
+          {badge}
+        </span>
+      </motion.div>
+    )}
+    <motion.h2 variants={fadeUp} className="section-title" style={light ? { color: '#fff' } : {}}>
+      {title}
+    </motion.h2>
+    <motion.div variants={fadeUp} className="divider" />
+    {subtitle && (
+      <motion.p variants={fadeUp} className="section-subtitle" style={light ? { color: 'rgba(255,255,255,.78)' } : {}}>
+        {subtitle}
+      </motion.p>
+    )}
+  </motion.div>
+);
+
+const colors = {
+  navy: '#053876',
+  blue: '#0B74C1',
+  blueLight: '#4681B7',
+  turquoise: '#2AACB2',
+  energy: '#55DDB5',
 };
 
 const About = () => {
 
   const valeurs = [
-    { icon: Target, title: 'Excellence', text: "Nous visons l'excellence dans chaque projet, avec des standards internationaux.", gradient: 'from-blue-500 to-blue-600' },
-    { icon: Shield, title: 'Sécurité', text: 'La protection de vos données et infrastructures est notre priorité absolue.', gradient: 'from-emerald-500 to-emerald-600' },
-    { icon: Lightbulb, title: 'Innovation', text: 'Nous anticipons les besoins futurs pour vous offrir des solutions modernes et évolutives.', gradient: 'from-amber-500 to-amber-600' },
-    { icon: Users, title: 'Proximité', text: 'Un accompagnement humain et personnalisé, proche de vos réalités terrain.', gradient: 'from-purple-500 to-purple-600' }
+    { icon: Target, title: 'Excellence', text: "Nous visons l'excellence dans chaque projet, avec des standards internationaux.", color: colors.blue },
+    { icon: Shield, title: 'Sécurité', text: 'La protection de vos données et infrastructures est notre priorité absolue.', color: colors.navy },
+    { icon: Lightbulb, title: 'Innovation', text: 'Nous anticipons les besoins futurs pour vous offrir des solutions modernes et évolutives.', color: colors.turquoise },
+    { icon: Users, title: 'Proximité', text: 'Un accompagnement humain et personnalisé, proche de vos réalités terrain.', color: colors.blueLight },
   ];
 
   const expertises = [
-    { icon: Globe, title: "Réseau & Infrastructure", desc: "Câblage, WiFi pro, VLAN, parcs informatiques", gradient: "from-blue-500 to-blue-600" },
-    { icon: Shield, title: "Cybersécurité", desc: "Audit, vidéosurveillance, firewalls, formations", gradient: "from-cyan-500 to-cyan-600" },
-    { icon: Zap, title: "Développement Digital", desc: "Sites web, e-commerce, apps mobiles, ERP", gradient: "from-amber-500 to-amber-600" },
-    { icon: TrendingUp, title: "Cloud & Hébergement", desc: "Solutions haute disponibilité et migration", gradient: "from-indigo-500 to-indigo-600" },
-    { icon: Lightbulb, title: "Énergie Solaire", desc: "Panneaux photovoltaïques et optimisation énergétique", gradient: "from-orange-500 to-orange-600" },
-    { icon: Award, title: "Formation & Coaching", desc: "Formations certifiantes et e-learning", gradient: "from-green-500 to-green-600" },
+    { icon: Globe, title: 'Réseau & Infrastructure', desc: 'Câblage, WiFi pro, VLAN, parcs informatiques', color: colors.blue },
+    { icon: Shield, title: 'Cybersécurité', desc: 'Audit, vidéosurveillance, firewalls, formations', color: colors.blueLight },
+    { icon: Zap, title: 'Développement Digital', desc: 'Sites web, e-commerce, apps mobiles, ERP', color: colors.turquoise },
+    { icon: TrendingUp, title: 'Cloud & Hébergement', desc: 'Solutions haute disponibilité et migration', color: colors.navy },
+    { icon: Lightbulb, title: 'Énergie Solaire', desc: 'Panneaux photovoltaïques et optimisation énergétique', color: colors.energy },
+    { icon: Award, title: 'Formation & Coaching', desc: 'Formations certifiantes et e-learning', color: colors.blue },
   ];
 
   const stats = [
     { value: '4+', label: "Années d'expertise", icon: Calendar },
-    { value: '5+', label: 'Projets réalisés', icon: Briefcase },
+    { value: '15+', label: 'Projets réalisés', icon: Briefcase },
     { value: '95%', label: 'Clients satisfaits', icon: Star },
     { value: '24/7', label: 'Support technique', icon: Headphones },
   ];
 
   const engagements = [
-    { icon: Award, title: 'Qualité Certifiée', desc: 'Solutions conformes aux meilleures pratiques internationales.', gradient: 'from-green-500 to-green-600' },
-    { icon: Target, title: 'Résultats Mesurables', desc: 'Nous nous engageons sur des objectifs concrets et vérifiables.', gradient: 'from-blue-500 to-blue-600' },
-    { icon: Users, title: 'Accompagnement Continu', desc: 'Support technique et formation tout au long de votre projet.', gradient: 'from-amber-500 to-amber-600' },
+    { icon: Award, title: 'Qualité Certifiée', desc: 'Solutions conformes aux meilleures pratiques internationales.', color: colors.turquoise },
+    { icon: Target, title: 'Résultats Mesurables', desc: 'Nous nous engageons sur des objectifs concrets et vérifiables.', color: colors.blue },
+    { icon: Users, title: 'Accompagnement Continu', desc: 'Support technique et formation tout au long de votre projet.', color: colors.blueLight },
   ];
 
   const team = [
@@ -285,7 +384,7 @@ const About = () => {
       position: 'Informatique & Full-Stack',
       bio: "Expert en infrastructure IT et cybersécurité avec plus de 4 ans d'expérience en domaines d'informatique.",
       image: meyaImg,
-      gradientBg: 'linear-gradient(135deg, #3b82f6, #06b6d4)',
+      gradientBg: 'linear-gradient(135deg, #0B74C1, #2AACB2)',
       number: '01',
       initial: 'M',
     },
@@ -293,9 +392,9 @@ const About = () => {
       name: 'Maboko Alida',
       role: 'Directrice Technique',
       position: 'Experte réseaux & cloud',
-      bio: "Spécialiste des réseaux haut débit et des solutions cloud.",
+      bio: 'Spécialiste des réseaux haut débit et des solutions cloud.',
       image: oseeImg,
-      gradientBg: 'linear-gradient(135deg, #06b6d4, #14b8a6)',
+      gradientBg: 'linear-gradient(135deg, #2AACB2, #55DDB5)',
       number: '02',
       initial: 'O',
     },
@@ -303,9 +402,9 @@ const About = () => {
       name: 'Kasway Rodrick',
       role: 'Responsable de parcs',
       position: 'Ingénieur en maintenance',
-      bio: "Ingénieur en maintenance Informatique.",
+      bio: 'Ingénieur en maintenance Informatique.',
       image: paulImg,
-      gradientBg: 'linear-gradient(135deg, #f59e0b, #f97316)',
+      gradientBg: 'linear-gradient(135deg, #4681B7, #053876)',
       number: '03',
       initial: 'P',
     },
@@ -313,251 +412,197 @@ const About = () => {
       name: 'Stephane',
       role: 'Lead Développement',
       position: 'Développeuse Full-Stack',
-      bio: "Développeuse full-stack, elle conçoit des applications web et mobiles sur mesure.",
+      bio: 'Développeuse full-stack, elle conçoit des applications web et mobiles sur mesure.',
       image: claireImg,
-      gradientBg: 'linear-gradient(135deg, #a855f7, #ec4899)',
+      gradientBg: 'linear-gradient(135deg, #053876, #1D5B9B)',
       number: '04',
       initial: 'C',
-    }
+    },
   ];
 
   return (
-    <>
+    <div className="omedev-about">
       <style>{globalStyles}</style>
 
       {/* ==================== HERO ==================== */}
-      <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden h-[550px] flex flex-col justify-center pt-16">
-        <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px'
-        }} />
-        <div className="absolute w-96 h-96 bg-blue-600/20 top-20 -left-20 rounded-full filter blur-[80px] animate-float" />
-        <div className="absolute w-72 h-72 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
+      <PublicHero
+        badge="Qui sommes-nous ?"
+        title="À propos d'omedev services"
+        highlight="d'omedev services"
+        subtitle="Leader en solutions IT, énergétiques et digitales en République Démocratique du Congo."
+        primaryAction={{ label: 'Nous contacter', to: '/contact' }}
+        secondaryAction={{ label: 'Voir nos réalisations', to: '/realisations' }}
+      />
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
+      {/* ==================== HISTOIRE & MISSION ==================== */}
+      <section className="omedev-white-section py-24">
+        <div className="container">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-blue-600/15 border border-blue-500/30"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="card-hover p-8 sm:p-10"
             >
-              <Users className="w-4 h-4 text-blue-400" />
-              <span className="text-blue-300 font-semibold text-xs tracking-wide font-syne">Qui sommes-nous ?</span>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: `${colors.blue}20`, color: colors.blue }}>
+                  <Calendar size={24} />
+                </div>
+                <h2 className="font-syne text-2xl md:text-3xl font-bold" style={{ color: colors.navy }}>Notre histoire</h2>
+              </div>
+              <div className="space-y-4 text-[#25364A] leading-relaxed text-sm sm:text-base">
+                <p>Fondée en 2022 à Kinshasa, <strong style={{ color: colors.blue }}>omedev Services</strong> est née de la volonté de répondre aux défis numériques et énergétiques de la RDC.</p>
+                <p>En 2022, nous avons élargi nos compétences aux énergies renouvelables, puis au développement digital en 2024. Aujourd'hui, nous accompagnons plus de 5 entreprises congolaises dans leur transformation technologique.</p>
+                <p>Notre mot d'ordre : <strong style={{ color: colors.blue }}>innovation locale, standards internationaux</strong>.</p>
+              </div>
             </motion.div>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
-            >
-              À propos{' '}
-              <span className="relative inline-block">
-                <span className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 blur-2xl opacity-50" />
-                <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
-                  de omedev services
-                </span>
-              </span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-              className="text-gray-300 text-base sm:text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
-            >
-              Leader en solutions IT, énergétiques et digitales en République Démocratique du Congo.
-            </motion.p>
-
             <motion.div
               initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 }}
-              className="flex flex-wrap gap-4 justify-center"
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.15 }}
+              className="card-hover p-8 sm:p-10"
             >
-              <Link to="/contact" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
-                Nous contacter <ArrowRight size={18} className="group-hover:translate-x-1 transition" />
-              </Link>
-              <Link to="/realisations" className="group border-2 border-white/30 hover:border-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
-                Voir nos réalisations
-              </Link>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: `${colors.turquoise}20`, color: colors.turquoise }}>
+                  <Target size={24} />
+                </div>
+                <h2 className="font-syne text-2xl md:text-3xl font-bold" style={{ color: colors.navy }}>Notre mission</h2>
+              </div>
+              <div className="space-y-4 text-[#25364A] leading-relaxed text-sm sm:text-base">
+                <p><strong style={{ color: colors.turquoise }}>Accélérer la digitalisation et la transition énergétique des entreprises congolaises</strong> en leur fournissant des solutions fiables, sécurisées et adaptées à leur environnement.</p>
+                <p>Nous croyons que la technologie doit être accessible à tous. C'est pourquoi nous proposons des services sur mesure, avec un accompagnement de proximité et une veille technologique constante.</p>
+                <p>Notre engagement : <strong style={{ color: colors.turquoise }}>zéro panne non anticipée, zéro vulnérabilité négligée, zéro projet sans formation</strong>.</p>
+              </div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* ==================== HISTOIRE & MISSION ==================== */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
-        <div className="container mx-auto px-4 py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
-              className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center">
-                  <Calendar size={24} className="text-white" />
-                </div>
-                <h2 className="text-2xl md:text-3xl font-bold text-white font-syne">Notre histoire</h2>
-              </div>
-              <div className="space-y-4 text-gray-300 leading-relaxed">
-                <p>Fondée en 2022 à Kinshasa, <strong className="text-blue-400">omedev Services</strong> est née de la volonté de répondre aux défis numériques et énergétiques de la RDC.</p>
-                <p>En 2022, nous avons élargi nos compétences aux énergies renouvelables, puis au développement digital en 2024. Aujourd'hui, nous accompagnons plus de 5 entreprises congolaises dans leur transformation technologique.</p>
-                <p>Notre mot d'ordre : <strong className="text-blue-400">innovation locale, standards internationaux</strong>.</p>
-              </div>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center">
-                  <Target size={24} className="text-white" />
-                </div>
-                <h2 className="text-2xl md:text-3xl font-bold text-white font-syne">Notre mission</h2>
-              </div>
-              <div className="space-y-4 text-gray-300 leading-relaxed">
-                <p><strong className="text-amber-400">Accélérer la digitalisation et la transition énergétique des entreprises congolaises</strong> en leur fournissant des solutions fiables, sécurisées et adaptées à leur environnement.</p>
-                <p>Nous croyons que la technologie doit être accessible à tous. C'est pourquoi nous proposons des services sur mesure, avec un accompagnement de proximité et une veille technologique constante.</p>
-                <p>Notre engagement : <strong className="text-amber-400">zéro panne non anticipée, zéro vulnérabilité négligée, zéro projet sans formation</strong>.</p>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </div>
-
-
-
       {/* ==================== CHIFFRES CLÉS ==================== */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/10">
-        <div className="container mx-auto px-4 py-16">
-          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-blue-500/20 border border-blue-500/30 rounded-full px-4 py-2 mb-4">
-              <TrendingUp size={16} className="text-blue-400" />
-              <span className="text-blue-300 text-sm font-semibold">Quelques chiffres</span>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-white font-syne">OMDEVE en quelques données</h2>
-          </motion.div>
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer} className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <section className="omedev-dark-section py-20">
+        <div className="container">
+          <SectionHeader badge="Quelques chiffres" title="OMDEVE en quelques données" light />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {stats.map((stat, i) => {
               const Icon = stat.icon;
               return (
-                <motion.div key={i} variants={fadeUp} className="bg-white/5 border border-white/10 rounded-2xl p-6 text-center transition-all hover:-translate-y-2 hover:border-blue-500/50">
-                  <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-blue-500/20 flex items-center justify-center">
-                    <Icon size={20} className="text-blue-400" />
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="p-6 rounded-2xl text-center"
+                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)' }}
+                >
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style={{ background: 'linear-gradient(135deg, #4681B7, #053876)' }}>
+                    <Icon size={22} className="text-white" />
                   </div>
-                  <div className="text-2xl md:text-3xl font-bold text-white font-syne">{stat.value}</div>
-                  <div className="text-xs text-gray-400 mt-1">{stat.label}</div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </div>
-      </div>
-
-      {/* ==================== NOS VALEURS ==================== */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/10">
-        <div className="container mx-auto px-4 py-16">
-          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-blue-500/20 border border-blue-500/30 rounded-full px-4 py-2 mb-4">
-              <Heart size={16} className="text-blue-400" />
-              <span className="text-blue-300 text-sm font-semibold">Nos piliers</span>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-white font-syne">Nos valeurs</h2>
-          </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {valeurs.map((v, i) => {
-              const Icon = v.icon;
-              return (
-                <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                  className="bg-white/5 border border-white/10 rounded-2xl p-6 text-center transition-all hover:-translate-y-2 hover:border-blue-500/50">
-                  <div className={`w-14 h-14 mx-auto mb-4 rounded-xl bg-gradient-to-r ${v.gradient} flex items-center justify-center`}>
-                    <Icon size={24} className="text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-2">{v.title}</h3>
-                  <p className="text-gray-300 text-sm">{v.text}</p>
+                  <div className="text-3xl md:text-4xl font-bold text-white font-syne mb-1">{stat.value}</div>
+                  <div className="text-white/70 text-xs sm:text-sm">{stat.label}</div>
                 </motion.div>
               );
             })}
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* ==================== NOS VALEURS ==================== */}
+      <section className="omedev-white-section py-24">
+        <div className="container">
+          <SectionHeader badge="Nos piliers" title="Nos valeurs" subtitle="Les principes qui guident chacune de nos décisions" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {valeurs.map((v, i) => {
+              const Icon = v.icon;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="card-hover p-6 text-center"
+                >
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-xl flex items-center justify-center" style={{ background: `${v.color}20`, color: v.color }}>
+                    <Icon size={24} />
+                  </div>
+                  <h3 className="font-syne font-bold text-lg mb-2" style={{ color: colors.navy }}>{v.title}</h3>
+                  <p className="text-[#25364A] text-sm leading-relaxed">{v.text}</p>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
       {/* ==================== NOTRE EXPERTISE ==================== */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/10">
-        <div className="container mx-auto px-4 py-16">
-          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-blue-500/20 border border-blue-500/30 rounded-full px-4 py-2 mb-4">
-              <Zap size={16} className="text-blue-400" />
-              <span className="text-blue-300 text-sm font-semibold">Notre savoir-faire</span>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-white font-syne">Notre expertise</h2>
-            <p className="text-gray-400 mt-3">7 domaines de compétences au service de votre croissance</p>
-          </motion.div>
+      <section className="omedev-light-section py-24">
+        <div className="container">
+          <SectionHeader badge="Notre savoir-faire" title="Notre expertise" subtitle="6 domaines de compétences au service de votre croissance" />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {expertises.map((exp, i) => {
               const Icon = exp.icon;
               return (
-                <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
-                  className="group bg-white/5 border border-white/10 rounded-2xl p-6 transition-all hover:-translate-y-2 hover:border-blue-500/50">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${exp.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                    <Icon size={22} className="text-white" />
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.06 }}
+                  className="card-hover p-6"
+                >
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ background: `${exp.color}20`, color: exp.color }}>
+                    <Icon size={22} />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-2">{exp.title}</h3>
-                  <p className="text-gray-400 text-sm">{exp.desc}</p>
+                  <h3 className="font-syne font-bold text-lg mb-2" style={{ color: colors.navy }}>{exp.title}</h3>
+                  <p className="text-[#25364A] text-sm">{exp.desc}</p>
                 </motion.div>
               );
             })}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* ==================== NOS ENGAGEMENTS ==================== */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/10">
-        <div className="container mx-auto px-4 py-16">
-          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-blue-500/20 border border-blue-500/30 rounded-full px-4 py-2 mb-4">
-              <Award size={16} className="text-blue-400" />
-              <span className="text-blue-300 text-sm font-semibold">Nos promesses</span>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-white font-syne">Notre engagement</h2>
-          </motion.div>
+      <section className="omedev-white-section py-24">
+        <div className="container">
+          <SectionHeader badge="Nos promesses" title="Notre engagement" subtitle="Ce sur quoi vous pouvez compter à chaque étape" />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {engagements.map((eng, i) => {
               const Icon = eng.icon;
               return (
-                <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                  className="bg-white/5 border border-white/10 rounded-2xl p-6 transition-all hover:-translate-y-2 hover:border-blue-500/50">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${eng.gradient} flex items-center justify-center mb-4`}>
-                    <Icon size={22} className="text-white" />
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="card-hover p-6"
+                >
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ background: `${eng.color}20`, color: eng.color }}>
+                    <Icon size={22} />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-2">{eng.title}</h3>
-                  <p className="text-gray-400 text-sm">{eng.desc}</p>
+                  <h3 className="font-syne font-bold text-lg mb-2" style={{ color: colors.navy }}>{eng.title}</h3>
+                  <p className="text-[#25364A] text-sm">{eng.desc}</p>
                 </motion.div>
               );
             })}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* ==================== NOTRE ÉQUIPE ==================== */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/10">
-        <div className="container mx-auto px-4 py-20">
+      <section className="omedev-light-section py-24">
+        <div className="container">
+          <SectionHeader
+            badge="Notre équipe"
+            title="Des experts passionnés"
+            subtitle="Une équipe multidisciplinaire unie par une seule mission : votre réussite technologique."
+          />
 
-          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 bg-blue-500/20 border border-blue-500/30 rounded-full px-4 py-2 mb-4">
-              <Users size={14} className="text-blue-400" />
-              <span className="text-blue-300 text-xs font-semibold tracking-wider uppercase">Notre équipe</span>
-            </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white font-syne mb-4">
-              Des experts{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">passionnés</span>
-            </h2>
-            <p className="text-gray-400 max-w-xl mx-auto text-sm">
-              Une équipe multidisciplinaire unie par une seule mission : votre réussite technologique.
-            </p>
-          </motion.div>
-
-          {/* ── Grille 4 cartes ── */}
           <div className="team-grid">
             {team.map((member, i) => (
               <motion.div
@@ -568,7 +613,6 @@ const About = () => {
                 transition={{ duration: 0.5, delay: i * 0.12 }}
                 className="team-card"
               >
-                {/* ── Zone photo : ratio 1:1 ── */}
                 <div className="team-photo-wrap">
                   <img
                     src={member.image}
@@ -581,17 +625,14 @@ const About = () => {
                   <div className="team-photo-fallback" style={{ background: member.gradientBg }}>
                     {member.initial}
                   </div>
-                  <div className="team-photo-overlay" />
                   <div className="team-role-badge" style={{ background: member.gradientBg }}>
                     {member.role}
                   </div>
                   <div className="team-number">{member.number}</div>
                 </div>
 
-                {/* Barre colorée bas */}
                 <div className="team-bottom-bar" style={{ background: member.gradientBg }} />
 
-                {/* Infos */}
                 <div className="team-info">
                   <div className="team-name">{member.name}</div>
                   <div className="team-position">{member.position}</div>
@@ -601,46 +642,52 @@ const About = () => {
             ))}
           </div>
 
-          {/* CTA équipe */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5 }}
-            className="flex justify-center mt-14">
-            <Link to="/experts"
-              className="group inline-flex items-center gap-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg shadow-amber-500/25">
-              <Rocket size={20} className="group-hover:rotate-12 transition-transform duration-300" />
-              <span>Rencontrer toute l'équipe</span>
-              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.5 }}
+            className="flex justify-center mt-14"
+          >
+            <Link to="/experts" className="btn-primary">
+              <Rocket size={18} /> Rencontrer toute l'équipe <ArrowRight size={16} />
             </Link>
           </motion.div>
         </div>
-      </div>
+      </section>
 
       {/* ==================== CONTACT INFO CARD ==================== */}
-      <div className="relative bg-gradient-to-br from-slate-950 via-slate-900 to-black border-t border-white/10 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-white/5 blur-[120px] rounded-full pointer-events-none" />
-        <div className="container relative mx-auto px-4 py-24">
-          <motion.div initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} viewport={{ once: true }}
-            className="backdrop-blur-xl bg-white/5 rounded-3xl border border-white/10 overflow-hidden shadow-2xl">
+      <section className="omedev-white-section py-24">
+        <div className="container">
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            viewport={{ once: true }}
+            className="card-hover overflow-hidden"
+          >
             <div className="grid md:grid-cols-2">
-
               {/* LEFT */}
               <div className="p-10 md:p-14">
-                <h2 className="text-3xl md:text-4xl font-bold text-white font-syne mb-10 tracking-tight">Contactez-nous</h2>
+                <h2 className="font-syne text-3xl md:text-4xl font-bold mb-10 tracking-tight" style={{ color: colors.navy }}>
+                  Contactez-nous
+                </h2>
                 <div className="space-y-6">
                   {[
                     { icon: Phone, label: 'Téléphone', value: '+243 816 590 788', link: 'tel:+243816590788' },
                     { icon: Mail, label: 'Email', value: 'omedevservices@gmail.com', link: 'mailto:omedevservices@gmail.com' },
                     { icon: MapPin, label: 'Adresse', value: 'Avenue Kabmabre n°75, Lingwala, Kinshasa, RDC' },
                   ].map(({ icon: Icon, label, value, link }) => (
-                    <div key={label + value} className="group flex items-center gap-4 p-4 rounded-xl hover:bg-white/5 transition">
-                      <div className="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-white/10 transition">
-                        <Icon size={18} className="text-gray-300 group-hover:scale-110 transition-transform" />
+                    <div key={label + value} className="group flex items-center gap-4 p-4 rounded-xl hover:bg-[#F6F6F7] transition">
+                      <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: `${colors.blue}15`, color: colors.blue }}>
+                        <Icon size={18} />
                       </div>
                       <div>
-                        <p className="text-gray-500 text-xs uppercase tracking-wider">{label}</p>
+                        <p className="text-[#25364A]/70 text-xs uppercase tracking-wider">{label}</p>
                         {link ? (
-                          <a href={link} className="text-white font-medium text-lg hover:opacity-70 transition break-words">{value}</a>
+                          <a href={link} className="font-medium text-lg hover:opacity-70 transition break-words" style={{ color: colors.navy }}>{value}</a>
                         ) : (
-                          <p className="text-white font-medium text-lg break-words">{value}</p>
+                          <p className="font-medium text-lg break-words" style={{ color: colors.navy }}>{value}</p>
                         )}
                       </div>
                     </div>
@@ -649,60 +696,37 @@ const About = () => {
               </div>
 
               {/* RIGHT */}
-              <div className="relative p-10 md:p-14 flex flex-col justify-center bg-white/5 border-l border-white/10">
-                <div className="absolute inset-0 bg-black/20" />
+              <div
+                className="relative p-10 md:p-14 flex flex-col justify-center"
+                style={{ background: 'linear-gradient(135deg, #053876 0%, #0B74C1 55%, #2AACB2 100%)' }}
+              >
                 <div className="relative z-10 space-y-6">
                   <div className="text-4xl md:text-5xl font-bold text-white font-syne tracking-tight leading-tight">
-                    <a href="tel:+243816590788" className="hover:opacity-70 transition">+243 816 590 788</a>
+                    <a href="tel:+243816590788" className="hover:opacity-80 transition">+243 816 590 788</a>
                   </div>
-                  <div className="text-lg text-gray-300">Kinshasa, RDC</div>
-                  <p className="text-gray-400 text-sm leading-relaxed">
+                  <div className="text-lg text-white/85">Kinshasa, RDC</div>
+                  <p className="text-white/70 text-sm leading-relaxed">
                     Disponible du lundi au vendredi<br />
                     <span className="text-white font-medium">8h - 18h</span>
                   </p>
                 </div>
               </div>
-
             </div>
           </motion.div>
         </div>
-      </div>
+      </section>
 
       {/* ==================== CTA FINALE ==================== */}
-      <section className="py-20 relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/5">
-        <div className="absolute inset-0 opacity-30" style={{
-          backgroundImage: `radial-gradient(circle at 30% 40%, rgba(59,130,246,0.3) 0%, transparent 60%),
-                            radial-gradient(circle at 80% 70%, rgba(6,182,212,0.2) 0%, transparent 60%)`
-        }} />
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
-              className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20 hover:border-blue-500/50 text-center">
-              <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                <Target size={28} className="text-white" />
-              </div>
-              <h3 className="text-2xl md:text-3xl font-bold text-white font-syne mb-3">Audit gratuit</h3>
-              <p className="text-gray-300 mb-6">Bénéficiez d'un diagnostic complet de vos infrastructures sans engagement.</p>
-              <Link to="/audit-gratuit" className="inline-flex items-center gap-2 bg-white/10 border border-white/20 hover:bg-white/20 text-white px-6 py-2.5 rounded-xl font-semibold transition-all hover:scale-105">
-                Demander un audit <ArrowRight size={16} />
-              </Link>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }}
-              className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-amber-500/20 hover:border-amber-500/50 text-center">
-              <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                <Handshake size={28} className="text-white" />
-              </div>
-              <h3 className="text-2xl md:text-3xl font-bold text-white font-syne mb-3">Devis personnalisé</h3>
-              <p className="text-gray-300 mb-6">Recevez une proposition sur mesure adaptée à vos besoins et votre budget.</p>
-              <Link to="/demander-devis" className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 py-2.5 rounded-xl font-semibold transition-all hover:scale-105">
-                Demander un devis <ArrowRight size={16} />
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-    </>
+      <CTASection
+        badge="Envie de collaborer ?"
+        title="Faisons connaissance et parlons de votre projet"
+        highlight="votre projet"
+        subtitle="Bénéficiez d'un diagnostic gratuit de vos infrastructures ou recevez une proposition sur mesure adaptée à vos besoins."
+        backgroundImage="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1920&q=80"
+        primaryAction={{ label: 'Demander un devis', to: '/demander-devis' }}
+        secondaryAction={{ label: 'Audit gratuit', to: '/audit-gratuit' }}
+      />
+    </div>
   );
 };
 

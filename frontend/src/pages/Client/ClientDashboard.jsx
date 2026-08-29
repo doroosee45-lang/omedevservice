@@ -20,32 +20,95 @@ import ClientSidebar from '../../components/ClientSidebar'
 import ClientHeader from '../../components/ClientHeader'
 import { clientDashboard as dashApi } from '../../services/api'
 
+/* ─────────────────────────────────────────────
+   DESIGN SYSTEM — identique aux pages About / VenteMateriel
+   (navy/electric/turquoise/energy)
+   ───────────────────────────────────────────── */
 const globalStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  
-  body {
+  .omedev-vm {
+    --omedev-navy: #053876;
+    --omedev-blue-dark: #1D5B9B;
+    --omedev-blue: #0B74C1;
+    --omedev-blue-light: #4681B7;
+    --omedev-cyan: #72A5CE;
+    --omedev-cyan-light: #A6C3D7;
+    --omedev-turquoise: #2AACB2;
+    --omedev-energy: #55DDB5;
+    --omedev-white: #F6F6F7;
+    --omedev-gray: #D5DCE1;
+    --omedev-dark: #0B1213;
+    --omedev-text-secondary: #25364A;
+    background: #F6F6F7;
+    color: #0B1213;
     font-family: 'DM Sans', sans-serif;
-    background: #0f172a;
-    color: #e2e8f0;
     overflow-x: hidden;
   }
 
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
+  .omedev-vm * { box-sizing: border-box; }
+
+  .omedev-vm .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: .5rem 1.1rem;
+    border-radius: 999px;
+    background: rgba(11,116,193,.08);
+    color: #0B74C1;
+    border: 1px solid rgba(11,116,193,.18);
+    font-family: 'Syne', sans-serif;
   }
-  
-  @keyframes pulse-ring {
-    0% { transform: scale(0.8); opacity: 1; }
-    70% { transform: scale(1.3); opacity: 0; }
-    100% { transform: scale(0.8); opacity: 0; }
+
+  .omedev-vm .section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -.03em;
+    margin-bottom: 1rem;
+    font-family: 'Syne', sans-serif;
+    color: #053876;
   }
-  
-  .animate-float { animation: float 6s ease-in-out infinite; }
-  .animate-pulse-ring { animation: pulse-ring 2s ease-out infinite; }
-`;
+
+  .omedev-vm .divider {
+    width: 64px;
+    height: 4px;
+    background: linear-gradient(90deg, #0B74C1, #2AACB2, #55DDB5);
+    border-radius: 99px;
+    margin: 1rem auto 1.5rem;
+  }
+
+  .omedev-vm .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    background: linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%);
+    color: #fff;
+    font-size: .9rem;
+    font-weight: 700;
+    padding: .9rem 1.7rem;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all .3s ease;
+    cursor: pointer;
+    border: none;
+    font-family: 'Syne', sans-serif;
+    box-shadow: 0 10px 28px rgba(11,116,193,.20);
+  }
+
+  .omedev-vm .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgba(42,172,178,.28);
+  }
+
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
+  .omedev-vm .animate-float { animation: float 6s ease-in-out infinite; }
+`
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -60,31 +123,31 @@ const staggerContainer = {
 const StatCard = ({ icon: Icon, title, value, color, trend, trendValue }) => {
   const getColorClasses = () => {
     switch (color) {
-      case 'blue': return 'from-blue-500 to-cyan-500';
-      case 'green': return 'from-emerald-500 to-teal-500';
-      case 'orange': return 'from-orange-500 to-amber-500';
-      case 'purple': return 'from-purple-500 to-pink-500';
-      default: return 'from-blue-500 to-cyan-500';
+      case 'blue':   return 'from-[#0B74C1] to-[#2AACB2]'
+      case 'green':  return 'from-[#2AACB2] to-[#55DDB5]'
+      case 'orange': return 'from-[#4681B7] to-[#72A5CE]'
+      case 'purple': return 'from-[#053876] to-[#2AACB2]'
+      default:       return 'from-[#0B74C1] to-[#2AACB2]'
     }
   }
 
   return (
     <motion.div
       variants={fadeUp}
-      className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-6 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:border-blue-500/50 hover:bg-white/15"
+      className="bg-white border border-[rgba(5,56,118,0.09)] rounded-2xl p-6 shadow-[0_10px_30px_rgba(5,56,118,0.06)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_22px_48px_rgba(11,116,193,0.14)] hover:border-[rgba(42,172,178,0.35)]"
     >
       <div className="flex items-center justify-between mb-4">
         <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${getColorClasses()} flex items-center justify-center shadow-lg`}>
           <Icon className="w-6 h-6 text-white" />
         </div>
         {trend && (
-          <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/20 px-2 py-1 rounded-full">
+          <span className="text-xs font-semibold text-[#2AACB2] bg-[#2AACB2]/15 px-2 py-1 rounded-full">
             +{trendValue}%
           </span>
         )}
       </div>
-      <div className="text-2xl font-bold text-white font-syne">{value}</div>
-      <div className="text-gray-400 text-sm mt-1">{title}</div>
+      <div className="text-2xl font-bold text-[#053876] font-syne">{value}</div>
+      <div className="text-[#25364A]/70 text-sm mt-1">{title}</div>
     </motion.div>
   )
 }
@@ -128,20 +191,20 @@ const ClientDashboard = () => {
   ]
 
   const quickLinks = [
-    { icon: FileText, label: 'Mes demandes', path: '/client/demandes', color: 'from-blue-500 to-cyan-500' },
-    { icon: Briefcase, label: 'Mes projets', path: '/client/projets', color: 'from-emerald-500 to-teal-500' },
-    { icon: History, label: 'Historique', path: '/client/historique', color: 'from-purple-500 to-pink-500' },
-    { icon: User, label: 'Mon profil', path: '/client/profil', color: 'from-orange-500 to-amber-500' },
-    { icon: CreditCard, label: 'Paiements', path: '/client/paiements', color: 'from-indigo-500 to-purple-500' },
-    { icon: MessageSquare, label: 'Support', path: '/client/support', color: 'from-cyan-500 to-blue-500' },
+    { icon: FileText, label: 'Mes demandes', path: '/client/demandes', color: 'from-[#0B74C1] to-[#2AACB2]' },
+    { icon: Briefcase, label: 'Mes projets', path: '/client/projets', color: 'from-[#2AACB2] to-[#55DDB5]' },
+    { icon: History, label: 'Historique', path: '/client/historique', color: 'from-[#053876] to-[#4681B7]' },
+    { icon: User, label: 'Mon profil', path: '/client/profil', color: 'from-[#4681B7] to-[#72A5CE]' },
+    { icon: CreditCard, label: 'Paiements', path: '/client/paiements', color: 'from-[#1D5B9B] to-[#2AACB2]' },
+    { icon: MessageSquare, label: 'Support', path: '/client/support', color: 'from-[#2AACB2] to-[#0B74C1]' },
   ]
 
   const getStatusBadge = (status) => {
     const badges = {
-      pending: { label: 'En attente', color: 'bg-amber-500/20 text-amber-400 border-amber-500/30' },
-      approved: { label: 'Approuvé', color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
-      completed: { label: 'Terminé', color: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
-      in_progress: { label: 'En cours', color: 'bg-purple-500/20 text-purple-400 border-purple-500/30' },
+      pending:     { label: 'En attente', color: 'bg-amber-100 text-amber-700 border-amber-300/50' },
+      approved:    { label: 'Approuvé',    color: 'bg-[#55DDB5]/15 text-[#1D5B9B] border-[#55DDB5]/50' },
+      completed:   { label: 'Terminé',     color: 'bg-blue-100 text-blue-700 border-blue-300/50' },
+      in_progress: { label: 'En cours',    color: 'bg-[#0B74C1]/10 text-[#0B74C1] border-[#0B74C1]/30' },
     }
     return badges[status] || badges.pending
   }
@@ -152,10 +215,10 @@ const ClientDashboard = () => {
   }
 
   return (
-    <>
+    <div className="omedev-vm">
       <style>{globalStyles}</style>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
+      <div className="min-h-screen" style={{ background: '#F6F6F7' }}>
 
         {/* Header */}
         <ClientHeader onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
@@ -168,7 +231,7 @@ const ClientDashboard = () => {
 
           {/* Overlay for mobile */}
           {sidebarOpen && (
-            <div className="fixed inset-0 bg-black/50 z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />
+            <div className="fixed inset-0 bg-[#0B1213]/40 z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />
           )}
 
           {/* Main content */}
@@ -181,14 +244,14 @@ const ClientDashboard = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="mb-8"
               >
-                <h1 className="text-2xl md:text-3xl font-bold text-white font-syne">
+                <h1 className="text-2xl md:text-3xl font-bold text-[#053876] font-syne">
                   Bonjour, {userName} ! 👋
                 </h1>
-                <p className="text-gray-400 mt-1">
+                <p className="text-[#25364A]/70 mt-1">
                   Bienvenue sur votre espace client OMDEVE Services
                 </p>
                 {userEmail && (
-                  <p className="text-xs text-gray-500 mt-1">{userEmail}</p>
+                  <p className="text-xs text-[#25364A]/50 mt-1">{userEmail}</p>
                 )}
               </motion.div>
 
@@ -210,37 +273,37 @@ const ClientDashboard = () => {
                   variants={fadeUp}
                   initial="hidden"
                   animate="visible"
-                  className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-blue-500/50 transition-all"
+                  className="bg-white border border-[rgba(5,56,118,0.09)] rounded-2xl overflow-hidden shadow-[0_10px_30px_rgba(5,56,118,0.06)] hover:border-[rgba(42,172,178,0.35)] transition-all"
                 >
-                  <div className="p-6 border-b border-white/10">
+                  <div className="p-6 border-b border-[rgba(5,56,118,0.1)]">
                     <div className="flex items-center justify-between">
-                      <h2 className="text-lg font-semibold text-white">Dernières demandes</h2>
-                      <Link to="/client/demandes" className="text-blue-400 text-sm font-medium hover:text-blue-300 transition-colors">
+                      <h2 className="text-lg font-semibold text-[#053876]">Dernières demandes</h2>
+                      <Link to="/client/demandes" className="text-[#0B74C1] text-sm font-medium hover:text-[#053876] transition-colors">
                         Voir tout
                       </Link>
                     </div>
                   </div>
-                  <div className="divide-y divide-white/10">
+                  <div className="divide-y divide-[rgba(5,56,118,0.1)]">
                     {recentDemandes.map((demande, idx) => {
                       const status = getStatusBadge(demande.status)
                       return (
                         <motion.div
                           key={demande.id}
-                          className="p-4 hover:bg-white/5 transition cursor-pointer"
+                          className="p-4 hover:bg-[#F6F6F7] transition cursor-pointer"
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: idx * 0.1 }}
                         >
                           <div className="flex items-center justify-between mb-2">
-                            <span className="font-medium text-white">{demande.id}</span>
+                            <span className="font-medium text-[#053876]">{demande.id}</span>
                             <span className={`px-2 py-1 rounded-full text-xs font-medium border ${status.color}`}>
                               {status.label}
                             </span>
                           </div>
-                          <p className="text-sm text-gray-400">{demande.service}</p>
+                          <p className="text-sm text-[#25364A]/70">{demande.service}</p>
                           <div className="flex items-center justify-between mt-2 text-sm">
-                            <span className="text-gray-500">{demande.date}</span>
-                            <span className="font-medium text-blue-400">{demande.amount}</span>
+                            <span className="text-[#25364A]/50">{demande.date}</span>
+                            <span className="font-medium text-[#2AACB2]">{demande.amount}</span>
                           </div>
                         </motion.div>
                       )
@@ -253,10 +316,10 @@ const ClientDashboard = () => {
                   variants={fadeUp}
                   initial="hidden"
                   animate="visible"
-                  className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-blue-500/50 transition-all"
+                  className="bg-white border border-[rgba(5,56,118,0.09)] rounded-2xl overflow-hidden shadow-[0_10px_30px_rgba(5,56,118,0.06)] hover:border-[rgba(42,172,178,0.35)] transition-all"
                 >
-                  <div className="p-6 border-b border-white/10">
-                    <h2 className="text-lg font-semibold text-white">Projets en cours</h2>
+                  <div className="p-6 border-b border-[rgba(5,56,118,0.1)]">
+                    <h2 className="text-lg font-semibold text-[#053876]">Projets en cours</h2>
                   </div>
                   <div className="p-6 space-y-6">
                     {activeProjects.map((project, idx) => (
@@ -267,18 +330,18 @@ const ClientDashboard = () => {
                         transition={{ delay: idx * 0.1 }}
                       >
                         <div className="flex items-center justify-between mb-2">
-                          <h3 className="font-medium text-white">{project.name}</h3>
-                          <span className="text-sm font-medium text-blue-400">{project.progress}%</span>
+                          <h3 className="font-medium text-[#053876]">{project.name}</h3>
+                          <span className="text-sm font-medium text-[#2AACB2]">{project.progress}%</span>
                         </div>
-                        <div className="w-full bg-white/10 rounded-full h-2">
+                        <div className="w-full bg-[#E8EDF1] rounded-full h-2">
                           <motion.div
-                            className="bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full h-2"
+                            className="bg-gradient-to-r from-[#2AACB2] to-[#55DDB5] rounded-full h-2"
                             initial={{ width: 0 }}
                             animate={{ width: `${project.progress}%` }}
                             transition={{ duration: 0.8, delay: 0.3 }}
                           />
                         </div>
-                        <p className="text-xs text-gray-500 mt-2">{project.nextMilestone}</p>
+                        <p className="text-xs text-[#25364A]/50 mt-2">{project.nextMilestone}</p>
                       </motion.div>
                     ))}
                   </div>
@@ -292,7 +355,7 @@ const ClientDashboard = () => {
                 animate="visible"
                 className="mt-8"
               >
-                <h2 className="text-lg font-semibold text-white mb-4">Accès rapides</h2>
+                <h2 className="text-lg font-semibold text-[#053876] mb-4">Accès rapides</h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
                   {quickLinks.map((link, idx) => (
                     <motion.div
@@ -303,12 +366,12 @@ const ClientDashboard = () => {
                     >
                       <Link
                         to={link.path}
-                        className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-blue-500/50 transition-all hover:-translate-y-1 group"
+                        className="flex flex-col items-center gap-2 p-4 rounded-xl bg-white border border-[rgba(5,56,118,0.09)] hover:border-[rgba(42,172,178,0.4)] transition-all hover:-translate-y-1 group"
                       >
                         <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${link.color} flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110`}>
                           <link.icon className="w-5 h-5 text-white" />
                         </div>
-                        <span className="text-xs text-gray-400 group-hover:text-white transition-colors">{link.label}</span>
+                        <span className="text-xs text-[#25364A]/70 group-hover:text-[#053876] transition-colors">{link.label}</span>
                       </Link>
                     </motion.div>
                   ))}
@@ -320,18 +383,18 @@ const ClientDashboard = () => {
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
-                className="mt-8 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 rounded-2xl p-6 border border-white/10"
+                className="mt-8 bg-gradient-to-r from-[#0B74C1]/8 to-[#55DDB5]/8 rounded-2xl p-6 border border-[rgba(11,116,193,0.18)]"
               >
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                   <div>
-                    <h3 className="text-xl font-bold text-white font-syne mb-1">Besoin d'un nouveau service ?</h3>
-                    <p className="text-gray-400">Demandez un devis gratuitement en quelques clics</p>
+                    <h3 className="text-xl font-bold text-[#053876] font-syne mb-1">Besoin d'un nouveau service ?</h3>
+                    <p className="text-[#25364A]/70">Demandez un devis gratuitement en quelques clics</p>
                   </div>
                   <Link to="/demander-devis">
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.98 }}
-                      className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all shadow-lg"
+                      className="bg-gradient-to-r from-[#0B74C1] via-[#2AACB2] to-[#55DDB5] hover:brightness-110 text-white px-6 py-3 rounded-full font-semibold flex items-center gap-2 transition-all duration-300 shadow-[0_10px_28px_rgba(11,116,193,0.2)] hover:shadow-[0_16px_36px_rgba(42,172,178,0.28)]"
                     >
                       Nouvelle demande
                       <ArrowRight className="w-4 h-4" />
@@ -344,7 +407,7 @@ const ClientDashboard = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

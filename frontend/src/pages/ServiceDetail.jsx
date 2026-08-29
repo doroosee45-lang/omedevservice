@@ -19,8 +19,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import PublicHero from '../components/Public/PublicHero';
 import {
   ArrowRight,
+  ChevronRight,
   CheckCircle,
   Wifi,
   Shield,
@@ -82,7 +85,7 @@ const ServiceDetailPage = () => {
       category: 'Réseau & Infrastructure',
       categoryId: 'reseau-infrastructure',
       icon: Network,
-      color: 'blue',
+      color: '#0B74C1',
       shortDescription: 'Câblage structuré, switches, routeurs professionnels pour une infrastructure réseau fiable et performante.',
       fullDescription: 'Nous installons des réseaux informatiques complets adaptés à vos besoins. Notre équipe d\'experts assure une conception sur mesure, une mise en œuvre professionnelle et une documentation détaillée de votre infrastructure réseau.',
       features: [
@@ -120,7 +123,7 @@ const ServiceDetailPage = () => {
       category: 'Réseau & Infrastructure',
       categoryId: 'reseau-infrastructure',
       icon: Wifi,
-      color: 'blue',
+      color: '#0B74C1',
       shortDescription: 'Création et déploiement d\'antennes WiFi professionnelles pour une couverture optimale.',
       fullDescription: 'Nous déployons des solutions WiFi professionnelles couvrant parfaitement vos locaux. Étude de couverture, choix des équipements, installation et optimisation pour une connexion sans fil fiable et sécurisée.',
       features: [
@@ -157,7 +160,7 @@ const ServiceDetailPage = () => {
       category: 'Réseau & Infrastructure',
       categoryId: 'reseau-infrastructure',
       icon: Server,
-      color: 'blue',
+      color: '#0B74C1',
       shortDescription: 'Configuration VLAN et segmentation réseau pour isoler et sécuriser vos flux de données.',
       fullDescription: 'Nous mettons en place des VLAN (Virtual Local Area Networks) pour segmenter votre réseau, améliorer la sécurité et optimiser les performances. Isolation des services, QoS et gestion avancée des flux.',
       features: [
@@ -194,7 +197,7 @@ const ServiceDetailPage = () => {
       category: 'Réseau & Infrastructure',
       categoryId: 'reseau-infrastructure',
       icon: HardDrive,
-      color: 'blue',
+      color: '#0B74C1',
       shortDescription: 'Installation et maintenance complète de parcs informatiques pour entreprises.',
       fullDescription: 'Nous assurons la maintenance préventive et corrective de votre parc informatique. Support N1/N2, gestion des stocks, déploiement de postes et assistance utilisateur.',
       features: [
@@ -233,7 +236,7 @@ const ServiceDetailPage = () => {
       category: 'Sécurité',
       categoryId: 'securite',
       icon: Eye,
-      color: 'purple',
+      color: '#053876',
       shortDescription: 'Installation de systèmes de vidéosurveillance haute définition pour protéger vos locaux.',
       fullDescription: 'Nous installons des systèmes de vidéosurveillance complets : caméras IP 4K, enregistreurs NVR, vision nocturne et accès mobile. Solution sur mesure pour surveillance intérieure et extérieure.',
       features: [
@@ -270,7 +273,7 @@ const ServiceDetailPage = () => {
       category: 'Sécurité',
       categoryId: 'securite',
       icon: Shield,
-      color: 'purple',
+      color: '#053876',
       shortDescription: 'Audit de cybersécurité complet et tests d\'intrusion pour identifier vos vulnérabilités.',
       fullDescription: 'Nous réalisons des audits de cybersécurité approfondis : tests d\'intrusion, analyse de vulnérabilités, audit de conformité. Un rapport détaillé avec préconisations vous est fourni.',
       features: [
@@ -307,7 +310,7 @@ const ServiceDetailPage = () => {
       category: 'Sécurité',
       categoryId: 'securite',
       icon: Lock,
-      color: 'purple',
+      color: '#053876',
       shortDescription: 'Mise en place de firewalls nouvelle génération et protection réseau avancée.',
       fullDescription: 'Nous installons et configurons des firewalls nouvelle génération (NGFW) : inspection applicative, IPS/IDS, filtrage web, VPN. Protection complète de votre périmètre réseau.',
       features: [
@@ -344,7 +347,7 @@ const ServiceDetailPage = () => {
       category: 'Sécurité',
       categoryId: 'securite',
       icon: GraduationCap,
-      color: 'purple',
+      color: '#053876',
       shortDescription: 'Formation cybersécurité pour sensibiliser et former vos équipes aux bonnes pratiques.',
       fullDescription: 'Nous proposons des formations cybersécurité adaptées à tous les niveaux : sensibilisation pour tous, formation technique pour administrateurs, ateliers pratiques et certifications.',
       features: [
@@ -383,7 +386,7 @@ const ServiceDetailPage = () => {
       category: 'Développement Digital',
       categoryId: 'developpement-digital',
       icon: Code,
-      color: 'green',
+      color: '#2AACB2',
       shortDescription: 'Création de sites web vitrines et institutionnels modernes, responsives et optimisés SEO.',
       fullDescription: 'Nous concevons des sites web professionnels sur mesure : vitrine, institutionnel, catalogue produit. Design moderne, responsive, CMS facile à utiliser et SEO optimisé.',
       features: [
@@ -420,7 +423,7 @@ const ServiceDetailPage = () => {
       category: 'Développement Digital',
       categoryId: 'developpement-digital',
       icon: ShoppingCart,
-      color: 'green',
+      color: '#2AACB2',
       shortDescription: 'Développement de plateformes e-commerce performantes avec paiement intégré.',
       fullDescription: 'Nous développons des boutiques en ligne complètes : catalogue produits, panier, paiement sécurisé, gestion des stocks, expédition. Solutions sur mesure ou sur Shopify/PrestaShop.',
       features: [
@@ -457,7 +460,7 @@ const ServiceDetailPage = () => {
       category: 'Développement Digital',
       categoryId: 'developpement-digital',
       icon: Smartphone,
-      color: 'green',
+      color: '#2AACB2',
       shortDescription: 'Développement d\'applications mobiles iOS et Android natives ou cross-platform.',
       fullDescription: 'Nous développons des applications mobiles pour iOS et Android : natives (Swift/Kotlin) ou cross-platform (React Native). UI/UX soignée, API backend, publication sur stores.',
       features: [
@@ -494,7 +497,7 @@ const ServiceDetailPage = () => {
       category: 'Développement Digital',
       categoryId: 'developpement-digital',
       icon: Database,
-      color: 'green',
+      color: '#2AACB2',
       shortDescription: 'ERP sur mesure adapté à vos besoins métiers spécifiques et évolutifs.',
       fullDescription: 'Nous concevons des ERP personnalisés intégrant tous vos processus métier : ventes, achats, stocks, production, RH, comptabilité. Solution web et mobile, évolutive et sécurisée.',
       features: [
@@ -531,7 +534,7 @@ const ServiceDetailPage = () => {
       category: 'Développement Digital',
       categoryId: 'developpement-digital',
       icon: Cloud,
-      color: 'green',
+      color: '#2AACB2',
       shortDescription: 'Solutions SaaS multi-tenant évolutives pour une commercialisation simplifiée.',
       fullDescription: 'Nous développons des plateformes SaaS prêtes à être commercialisées : architecture multi-tenant, gestion des abonnements, portail client, dashboard admin, paiement intégré.',
       features: [
@@ -570,7 +573,7 @@ const ServiceDetailPage = () => {
       category: 'Cloud & Hébergement',
       categoryId: 'cloud-hebergement',
       icon: Server,
-      color: 'cyan',
+      color: '#4681B7',
       shortDescription: 'Hébergement web haute disponibilité sur AWS/Vercel pour une performance optimale.',
       fullDescription: 'Nous proposons des solutions d\'hébergement cloud haute performance : uptime 99.9%, CDN mondial, sauvegardes automatiques, monitoring et support 24/7.',
       features: [
@@ -607,7 +610,7 @@ const ServiceDetailPage = () => {
       category: 'Cloud & Hébergement',
       categoryId: 'cloud-hebergement',
       icon: Cloud,
-      color: 'cyan',
+      color: '#4681B7',
       shortDescription: 'Migration et gestion de solutions cloud pour moderniser votre infrastructure.',
       fullDescription: 'Nous accompagnons la migration de votre infrastructure vers le cloud : AWS, Azure, Google Cloud. Migration sans downtime, optimisation des coûts, formation de vos équipes.',
       features: [
@@ -644,7 +647,7 @@ const ServiceDetailPage = () => {
       category: 'Cloud & Hébergement',
       categoryId: 'cloud-hebergement',
       icon: Database,
-      color: 'cyan',
+      color: '#4681B7',
       shortDescription: 'Sauvegarde automatique et plan de reprise d\'activité pour protéger vos données.',
       fullDescription: 'Nous mettons en place des solutions de sauvegarde cloud automatisées : backup quotidien, restauration rapide, plan de reprise d\'activité (PRA), chiffrement des données.',
       features: [
@@ -681,7 +684,7 @@ const ServiceDetailPage = () => {
       category: 'Cloud & Hébergement',
       categoryId: 'cloud-hebergement',
       icon: Eye,
-      color: 'cyan',
+      color: '#4681B7',
       shortDescription: 'Maintenance préventive et monitoring 24/7 pour anticiper les incidents.',
       fullDescription: 'Nous supervisons votre infrastructure 24h/24 et 7j/7 : monitoring des serveurs, alertes temps réel, intervention préventive, rapports hebdomadaires.',
       features: [
@@ -725,7 +728,7 @@ const ServiceDetailPage = () => {
       category: 'Énergie & Équipements',
       categoryId: 'energie-equipements',
       icon: Sun,
-      color: 'orange',
+      color: '#55DDB5',
       shortDescription: 'Étude et installation de panneaux photovoltaïques pour une énergie verte et économique.',
       fullDescription: 'Nous réalisons l\'étude, la fourniture et l\'installation de panneaux photovoltaïques pour les professionnels. Autoconsommation ou revente, nous vous accompagnons dans votre transition énergétique.',
       features: [
@@ -762,7 +765,7 @@ const ServiceDetailPage = () => {
       category: 'Énergie & Équipements',
       categoryId: 'energie-equipements',
       icon: Thermometer,
-      color: 'orange',
+      color: '#55DDB5',
       shortDescription: 'Installation et réparation de climatisation split system pour votre confort.',
       fullDescription: 'Nous installons et entretenons des systèmes de climatisation split system (mono-split, multi-split). Marques premium, installation soignée, SAV réactif.',
       features: [
@@ -799,7 +802,7 @@ const ServiceDetailPage = () => {
       category: 'Formation',
       categoryId: 'formation',
       icon: BookOpen,
-      color: 'indigo',
+      color: '#72A5CE',
       shortDescription: 'Centre de formation en nouvelles technologies avec nos domaines d\'expertise.',
       fullDescription: 'Notre centre de formation propose des cursus complets en nouvelles technologies : réseau, sécurité, développement, cloud, data. Formations éligibles au CPF, certifications reconnues.',
       features: [
@@ -850,7 +853,7 @@ const ServiceDetailPage = () => {
   }, [id]);
 
   const handleQuoteRequest = () => {
-    setShowModal(true);
+    setShowQuoteModal(true);
   };
 
   const handleInputChange = (e) => {
@@ -861,7 +864,7 @@ const ServiceDetailPage = () => {
     e.preventDefault();
     console.log('Demande de devis:', formData, 'pour service:', service?.name);
     alert(`✅ Demande de devis envoyée pour :\n${service?.name}\n\n📧 Un email de confirmation a été envoyé à ${formData.email}\n📞 Notre équipe vous contactera sous 24h.`);
-    setShowModal(false);
+    setShowQuoteModal(false);
     setFormData({ name: '', email: '', phone: '', company: '', budget: '', message: '' });
   };
 
@@ -871,10 +874,10 @@ const ServiceDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#F6F6F7] flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Chargement du service...</p>
+          <div className="w-16 h-16 border-4 border-[#0B74C1] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-[#25364A]">Chargement du service...</p>
         </div>
       </div>
     );
@@ -882,14 +885,14 @@ const ServiceDetailPage = () => {
 
   if (!service) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#F6F6F7] flex items-center justify-center">
         <div className="text-center max-w-md mx-auto px-4">
           <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <X size={48} className="text-red-500" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Service non trouvé</h2>
-          <p className="text-gray-600 mb-6">Le service que vous recherchez n'existe pas ou a été déplacé.</p>
-          <Link to="/services" className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+          <h2 className="text-2xl font-bold text-[#053876] mb-2 font-syne">Service non trouvé</h2>
+          <p className="text-[#25364A] mb-6">Le service que vous recherchez n'existe pas ou a été déplacé.</p>
+          <Link to="/services" className="inline-flex items-center gap-2 text-white px-6 py-3 rounded-full font-semibold transition-all hover:-translate-y-0.5" style={{ background: 'linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%)' }}>
             Voir tous nos services <ArrowRight size={18} />
           </Link>
         </div>
@@ -900,36 +903,36 @@ const ServiceDetailPage = () => {
   const IconComponent = service.icon;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section avec gradient */}
-      <section className={`relative bg-gradient-to-r from-${service.color}-900 to-${service.color}-800 text-white overflow-hidden`}>
-        <div className="absolute inset-0 bg-black opacity-30"></div>
-        <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-          <div className="max-w-4xl">
-            <div className="flex items-center gap-2 text-sm text-${service.color}-200 mb-4">
-              <Link to="/services" className="hover:text-white transition">Services</Link>
-              <span>/</span>
-              <Link to={`/services#${service.categoryId}`} className="hover:text-white transition">{service.category}</Link>
-              <span>/</span>
-              <span className="text-white">{service.name}</span>
-            </div>
-            <div className={`inline-flex items-center gap-2 ${service.imageBg} text-${service.color}-800 px-4 py-2 rounded-full text-sm font-semibold mb-6`}>
-              {IconComponent && <IconComponent size={18} />}
-              {service.category}
-            </div>
-            <h1 className="text-3xl md:text-5xl font-bold mb-6">{service.name}</h1>
-            <p className="text-xl text-${service.color}-100 mb-8 max-w-2xl">{service.shortDescription}</p>
-            <div className="flex flex-wrap gap-4">
-              <button onClick={handleQuoteRequest} className="bg-white text-gray-900 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all flex items-center gap-2">
-                Demander un devis <ArrowRight size={18} />
-              </button>
-              <button className="bg-transparent border-2 border-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-gray-900 transition-all flex items-center gap-2">
-                Audit gratuit <CheckCircle size={18} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+    <div className="min-h-screen bg-[#F6F6F7]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <style>{`
+        .card-hover {
+          background: #fff; border: 1px solid rgba(5,56,118,.09); border-radius: 18px;
+          box-shadow: 0 10px 30px rgba(5,56,118,.06);
+          transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+        }
+        .card-hover:hover {
+          box-shadow: 0 20px 44px rgba(11,116,193,.14); border-color: rgba(42,172,178,.35);
+        }
+      `}</style>
+      {/* Hero Section */}
+      <PublicHero
+        breadcrumb={
+          <>
+            <Link to="/services">Services</Link>
+            <ChevronRight size={12} />
+            <Link to={`/services#${service.categoryId}`}>{service.category}</Link>
+            <ChevronRight size={12} />
+            <span style={{ color: '#fff' }}>{service.name}</span>
+          </>
+        }
+        badge={service.category}
+        title={service.name}
+        subtitle={service.shortDescription}
+        primaryAction={{ label: 'Demander un devis', onClick: handleQuoteRequest }}
+        secondaryAction={{ label: 'Audit gratuit', to: '/audit-gratuit', icon: <CheckCircle size={18} /> }}
+        align="left"
+        compact
+      />
 
       {/* Contenu principal */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -937,96 +940,101 @@ const ServiceDetailPage = () => {
           {/* Colonne principale - Description détaillée */}
           <div className="lg:col-span-2">
             {/* Description complète */}
-            <div className="bg-white rounded-2xl p-8 shadow-sm mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Présentation du service</h2>
-              <p className="text-gray-700 leading-relaxed mb-6">{service.fullDescription}</p>
-              
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="card-hover p-8 mb-8"
+            >
+              <h2 className="text-2xl font-bold text-[#053876] mb-4 font-syne">Présentation du service</h2>
+              <p className="text-[#25364A] leading-relaxed mb-6">{service.fullDescription}</p>
+
               {/* Features */}
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Ce que nous proposons</h3>
+              <h3 className="text-xl font-bold text-[#053876] mb-4 font-syne">Ce que nous proposons</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
                 {service.features.map((feature, idx) => (
                   <div key={idx} className="flex items-start gap-2">
-                    <CheckCircle size={18} className="text-green-500 mt-0.5 flex-shrink-0" />
-                    <span className="text-gray-700">{feature}</span>
+                    <CheckCircle size={18} className="text-[#55DDB5] mt-0.5 flex-shrink-0" />
+                    <span className="text-[#25364A]">{feature}</span>
                   </div>
                 ))}
               </div>
 
               {/* Avantages */}
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Avantages</h3>
+              <h3 className="text-xl font-bold text-[#053876] mb-4 font-syne">Avantages</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                 {service.benefits.map((benefit, idx) => (
-                  <div key={idx} className={`bg-${service.color}-50 rounded-xl p-4`}>
-                    <div className={`w-10 h-10 rounded-lg bg-${service.color}-100 flex items-center justify-center mb-3`}>
-                      <CheckCircle size={20} className={`text-${service.color}-600`} />
+                  <div key={idx} className="rounded-xl p-4" style={{ background: `${service.color}0D` }}>
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style={{ background: `${service.color}22` }}>
+                      <CheckCircle size={20} style={{ color: service.color }} />
                     </div>
-                    <h4 className="font-bold text-gray-900 mb-1">{benefit.title}</h4>
-                    <p className="text-sm text-gray-600">{benefit.description}</p>
+                    <h4 className="font-bold text-[#053876] mb-1">{benefit.title}</h4>
+                    <p className="text-sm text-[#25364A]">{benefit.description}</p>
                   </div>
                 ))}
               </div>
 
               {/* Processus */}
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Notre processus</h3>
+              <h3 className="text-xl font-bold text-[#053876] mb-4 font-syne">Notre processus</h3>
               <div className="space-y-4 mb-8">
                 {service.process.map((step) => (
                   <div key={step.step} className="flex gap-4">
-                    <div className={`w-10 h-10 rounded-full bg-${service.color}-100 text-${service.color}-700 flex items-center justify-center font-bold flex-shrink-0`}>
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0 text-white" style={{ background: `linear-gradient(135deg, ${service.color}, #2AACB2)` }}>
                       {step.step}
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900">{step.title}</h4>
-                      <p className="text-gray-600 text-sm">{step.description}</p>
+                      <h4 className="font-semibold text-[#053876]">{step.title}</h4>
+                      <p className="text-[#25364A] text-sm">{step.description}</p>
                     </div>
                   </div>
                 ))}
               </div>
 
               {/* FAQ */}
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Questions fréquentes</h3>
+              <h3 className="text-xl font-bold text-[#053876] mb-4 font-syne">Questions fréquentes</h3>
               <div className="space-y-4">
                 {service.faq.map((item, idx) => (
-                  <div key={idx} className="border-b border-gray-200 pb-3">
-                    <h4 className="font-semibold text-gray-900 mb-1">{item.q}</h4>
-                    <p className="text-gray-600 text-sm">{item.a}</p>
+                  <div key={idx} className="border-b border-[#053876]/10 pb-3">
+                    <h4 className="font-semibold text-[#053876] mb-1">{item.q}</h4>
+                    <p className="text-[#25364A] text-sm">{item.a}</p>
                   </div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* Colonne latérale - Informations et CTA */}
           <div className="lg:col-span-1">
             {/* Carte d'informations */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm mb-6 sticky top-24">
-              <div className={`w-16 h-16 rounded-2xl ${service.imageBg} flex items-center justify-center mx-auto mb-4`}>
-                {IconComponent && <IconComponent size={32} className={`text-${service.color}-600`} />}
+            <div className="card-hover p-6 mb-6 sticky top-24">
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: `${service.color}18` }}>
+                {IconComponent && <IconComponent size={32} style={{ color: service.color }} />}
               </div>
-              <h3 className="text-xl font-bold text-center text-gray-900 mb-4">{service.name}</h3>
-              
+              <h3 className="text-xl font-bold text-center text-[#053876] mb-4 font-syne">{service.name}</h3>
+
               <div className="space-y-3 mb-6">
-                <div className="flex justify-between items-center pb-2 border-b border-gray-100">
-                  <span className="text-gray-500">📅 Durée estimée</span>
-                  <span className="font-semibold text-gray-900">{service.duration}</span>
+                <div className="flex justify-between items-center pb-2 border-b border-[#053876]/10">
+                  <span className="text-[#25364A]/70">📅 Durée estimée</span>
+                  <span className="font-semibold text-[#053876]">{service.duration}</span>
                 </div>
-                <div className="flex justify-between items-center pb-2 border-b border-gray-100">
-                  <span className="text-gray-500">💰 Tarif</span>
-                  <span className="font-semibold text-blue-600">{service.price}</span>
+                <div className="flex justify-between items-center pb-2 border-b border-[#053876]/10">
+                  <span className="text-[#25364A]/70">💰 Tarif</span>
+                  <span className="font-semibold text-[#0B74C1]">{service.price}</span>
                 </div>
               </div>
 
-              <button onClick={handleQuoteRequest} className={`w-full bg-${service.color}-600 text-white py-3 rounded-xl font-semibold hover:bg-${service.color}-700 transition-all flex items-center justify-center gap-2 mb-3`}>
+              <button onClick={handleQuoteRequest} className="w-full text-white py-3 rounded-full font-semibold hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 mb-3 shadow-lg" style={{ background: 'linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%)' }}>
                 Demander un devis <ArrowRight size={18} />
               </button>
-              <button className="w-full border-2 border-gray-300 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-50 transition-all flex items-center justify-center gap-2">
+              <Link to="/audit-gratuit" className="w-full border border-[#053876]/20 text-[#053876] py-3 rounded-full font-semibold hover:border-[#2AACB2] hover:text-[#0B74C1] transition-all flex items-center justify-center gap-2">
                 Audit gratuit <CheckCircle size={18} />
-              </button>
+              </Link>
             </div>
 
             {/* Services connexes */}
             {service.relatedServices && service.relatedServices.length > 0 && (
-              <div className="bg-white rounded-2xl p-6 shadow-sm">
-                <h3 className="font-bold text-gray-900 mb-4">Services connexes</h3>
+              <div className="card-hover p-6">
+                <h3 className="font-bold text-[#053876] mb-4 font-syne">Services connexes</h3>
                 <div className="space-y-3">
                   {service.relatedServices.map((relatedId, idx) => {
                     const relatedService = allServices[relatedId];
@@ -1036,16 +1044,16 @@ const ServiceDetailPage = () => {
                       <Link
                         key={idx}
                         to={`/services/${relatedId}`}
-                        className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition group"
+                        className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#F6F6F7] transition group"
                       >
-                        <div className={`w-10 h-10 rounded-lg bg-${relatedService.color}-100 flex items-center justify-center`}>
-                          {RelatedIcon && <RelatedIcon size={18} className={`text-${relatedService.color}-600`} />}
+                        <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: `${relatedService.color}18` }}>
+                          {RelatedIcon && <RelatedIcon size={18} style={{ color: relatedService.color }} />}
                         </div>
                         <div className="flex-1">
-                          <h4 className="font-medium text-gray-900 group-hover:text-blue-600 transition">{relatedService.name}</h4>
-                          <p className="text-xs text-gray-500">{relatedService.category}</p>
+                          <h4 className="font-medium text-[#053876] group-hover:text-[#0B74C1] transition">{relatedService.name}</h4>
+                          <p className="text-xs text-[#25364A]/60">{relatedService.category}</p>
                         </div>
-                        <ArrowRight size={16} className="text-gray-400 group-hover:text-blue-600 transition" />
+                        <ArrowRight size={16} className="text-[#25364A]/40 group-hover:text-[#0B74C1] transition" />
                       </Link>
                     );
                   })}
@@ -1057,38 +1065,43 @@ const ServiceDetailPage = () => {
       </div>
 
       {/* Modal Demande de devis */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto animate-fade-in-up">
-            <div className="sticky top-0 bg-white border-b border-gray-200 p-5 flex justify-between items-center rounded-t-2xl">
+      {showQuoteModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.94, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.25 }}
+            className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+          >
+            <div className="sticky top-0 bg-white border-b border-[#053876]/10 p-5 flex justify-between items-center rounded-t-2xl">
               <div>
-                <h3 className="text-xl font-bold text-gray-900">Demander un devis</h3>
-                <p className="text-sm text-gray-500">{service?.name}</p>
+                <h3 className="text-xl font-bold text-[#053876] font-syne">Demander un devis</h3>
+                <p className="text-sm text-[#25364A]/70">{service?.name}</p>
               </div>
-              <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100 transition">
+              <button onClick={() => setShowQuoteModal(false)} className="text-[#25364A]/50 hover:text-[#053876] p-1 rounded-full hover:bg-[#F6F6F7] transition">
                 <X size={24} />
               </button>
             </div>
             <form onSubmit={handleSubmitQuote} className="p-6 space-y-4">
               <div>
-                <label className="block text-gray-700 font-medium mb-1 text-sm">Nom complet *</label>
-                <input type="text" name="name" required value={formData.name} onChange={handleInputChange} placeholder="Jean Dupont" className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                <label className="block text-[#053876] font-medium mb-1 text-sm">Nom complet *</label>
+                <input type="text" name="name" required value={formData.name} onChange={handleInputChange} placeholder="Jean Dupont" className="w-full px-4 py-2 rounded-lg border border-[#053876]/15 focus:border-[#2AACB2] focus:outline-none focus:ring-1 focus:ring-[#2AACB2]" />
               </div>
               <div>
-                <label className="block text-gray-700 font-medium mb-1 text-sm">Email *</label>
-                <input type="email" name="email" required value={formData.email} onChange={handleInputChange} placeholder="contact@entreprise.com" className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                <label className="block text-[#053876] font-medium mb-1 text-sm">Email *</label>
+                <input type="email" name="email" required value={formData.email} onChange={handleInputChange} placeholder="contact@entreprise.com" className="w-full px-4 py-2 rounded-lg border border-[#053876]/15 focus:border-[#2AACB2] focus:outline-none focus:ring-1 focus:ring-[#2AACB2]" />
               </div>
               <div>
-                <label className="block text-gray-700 font-medium mb-1 text-sm">Téléphone *</label>
-                <input type="tel" name="phone" required value={formData.phone} onChange={handleInputChange} placeholder="+243 XXX XXX XXX" className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                <label className="block text-[#053876] font-medium mb-1 text-sm">Téléphone *</label>
+                <input type="tel" name="phone" required value={formData.phone} onChange={handleInputChange} placeholder="+243 XXX XXX XXX" className="w-full px-4 py-2 rounded-lg border border-[#053876]/15 focus:border-[#2AACB2] focus:outline-none focus:ring-1 focus:ring-[#2AACB2]" />
               </div>
               <div>
-                <label className="block text-gray-700 font-medium mb-1 text-sm">Entreprise</label>
-                <input type="text" name="company" value={formData.company} onChange={handleInputChange} placeholder="Nom de votre entreprise" className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" />
+                <label className="block text-[#053876] font-medium mb-1 text-sm">Entreprise</label>
+                <input type="text" name="company" value={formData.company} onChange={handleInputChange} placeholder="Nom de votre entreprise" className="w-full px-4 py-2 rounded-lg border border-[#053876]/15 focus:border-[#2AACB2] focus:outline-none focus:ring-1 focus:ring-[#2AACB2]" />
               </div>
               <div>
-                <label className="block text-gray-700 font-medium mb-1 text-sm">Budget estimé</label>
-                <select name="budget" value={formData.budget} onChange={handleInputChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none">
+                <label className="block text-[#053876] font-medium mb-1 text-sm">Budget estimé</label>
+                <select name="budget" value={formData.budget} onChange={handleInputChange} className="w-full px-4 py-2 rounded-lg border border-[#053876]/15 focus:border-[#2AACB2] focus:outline-none">
                   <option value="">Sélectionnez une fourchette</option>
                   <option value="<1000€">Moins de 1 000€</option>
                   <option value="1000-5000€">1 000€ - 5 000€</option>
@@ -1097,26 +1110,16 @@ const ServiceDetailPage = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-gray-700 font-medium mb-1 text-sm">Message / Détails</label>
-                <textarea name="message" rows="3" value={formData.message} onChange={handleInputChange} placeholder="Décrivez votre projet..." className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none resize-none"></textarea>
+                <label className="block text-[#053876] font-medium mb-1 text-sm">Message / Détails</label>
+                <textarea name="message" rows="3" value={formData.message} onChange={handleInputChange} placeholder="Décrivez votre projet..." className="w-full px-4 py-2 rounded-lg border border-[#053876]/15 focus:border-[#2AACB2] focus:outline-none resize-none"></textarea>
               </div>
-              <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
+              <button type="submit" className="w-full text-white py-3 rounded-full font-semibold transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2" style={{ background: 'linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%)' }}>
                 Envoyer la demande <ArrowRight size={18} />
               </button>
             </form>
-          </div>
+          </motion.div>
         </div>
       )}
-
-      <style jsx>{`
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in-up {
-          animation: fadeInUp 0.3s ease-out;
-        }
-      `}</style>
     </div>
   );
 };

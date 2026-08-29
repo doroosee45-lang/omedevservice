@@ -52,7 +52,7 @@
   }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb {
-    background: rgba(99, 102, 241, 0.35);
+    background: rgba(16, 185, 129, 0.35);
     border-radius: 99px;
   }
 }
@@ -64,37 +64,73 @@
   }
 
   .btn-primary {
-    @apply bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all;
+    @apply text-white font-semibold py-3 px-6 rounded-full hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300;
+    background: linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%);
+    box-shadow: 0 10px 28px rgba(11,116,193,0.20);
     touch-action: manipulation;
+  }
+  .btn-primary:hover {
+    box-shadow: 0 16px 36px rgba(42,172,178,0.28);
   }
   .btn-secondary {
-    @apply bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 px-6 rounded-xl transition-all;
-    touch-action: manipulation;
+    @apply text-white font-semibold py-3 px-6 rounded-full hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 transition-all duration-300;
+    background: #0B74C1;
+  }
+  .btn-secondary:hover {
+    background: #1D5B9B;
+    box-shadow: 0 12px 28px rgba(11,116,193,0.30);
   }
   .btn-outline {
-    @apply border-2 border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white font-semibold py-2.5 px-5 rounded-xl transition-all;
+    @apply border-2 border-white/25 text-white hover:border-[#2AACB2] hover:text-[#72A5CE] hover:bg-[#55DDB5]/10 font-semibold py-2.5 px-5 rounded-full transition-all duration-300;
     touch-action: manipulation;
   }
 
   .card {
-    @apply rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden;
+    @apply rounded-2xl shadow-lg hover:shadow-2xl hover:shadow-[#2AACB2]/10 hover:-translate-y-1 hover:border-[#2AACB2]/30 transition-all duration-300 overflow-hidden;
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,255,255,0.07);
   }
 
   .section-title {
-    @apply text-3xl md:text-4xl font-bold text-center mb-4;
+    @apply font-syne text-3xl md:text-4xl font-extrabold text-center mb-4 tracking-tight;
   }
   .section-subtitle {
-    @apply text-lg text-slate-400 text-center max-w-3xl mx-auto mb-12;
+    @apply text-lg text-[#25364A] text-center max-w-3xl mx-auto mb-12;
   }
 
   .input-field {
     @apply w-full px-4 py-3 border border-slate-700 rounded-xl bg-slate-800 text-white
-           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all;
+           focus:outline-none focus:ring-2 focus:ring-[#2AACB2] focus:border-transparent transition-all;
     -webkit-appearance: none;
     appearance: none;
     font-size: 16px; /* iOS: évite le zoom auto sur les inputs < 16px */
+  }
+
+  /* Lien avec soulignement animé au survol */
+  .link-underline {
+    @apply relative;
+  }
+  .link-underline::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: -2px;
+    width: 0; height: 2px;
+    background: linear-gradient(90deg, #2AACB2, #0B74C1);
+    border-radius: 99px;
+    transition: width 0.25s ease;
+  }
+  .link-underline:hover::after { width: 100%; }
+
+  /* Pastille/label discret au-dessus des titres */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-[#55DDB5];
+  }
+  .eyebrow::before {
+    content: '';
+    width: 20px; height: 2px;
+    background: linear-gradient(90deg, #55DDB5, #0B74C1);
+    border-radius: 99px;
+    display: inline-block;
   }
 
   /* Safe-area helpers pour les éléments fixed */

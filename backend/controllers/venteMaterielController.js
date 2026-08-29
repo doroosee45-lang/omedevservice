@@ -130,12 +130,12 @@ const createOrder = async (req, res) => {
 
     // Email client
     sendMail({
-      from:    `"OMDEVE Services" <${process.env.EMAIL_USER}>`,
+      from:    `"OMEDEV Services" <${process.env.EMAIL_USER}>`,
       to:      email,
-      subject: `Confirmation de commande ${order.orderNumber}`,
+      subject: `Confirmation de commande — ${order.orderNumber}`,
       html: `
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
-          <h2 style="color:#2563eb">Commande confirmée !</h2>
+          <h2 style="color:#2563eb">Commande confirmée</h2>
           <p>Bonjour ${fullName},</p>
           <p>Votre commande a été enregistrée avec succès.</p>
           <table style="width:100%;border-collapse:collapse;margin:16px 0">
@@ -149,15 +149,16 @@ const createOrder = async (req, res) => {
                 <td style="padding:8px">${totalPrice.toLocaleString('fr-FR')} €</td></tr>
           </table>
           <p>Notre équipe vous contactera sous 24h pour finaliser la livraison.</p>
+          <p>Cordialement,<br/>L'équipe OMEDEV Services</p>
           <hr style="margin:20px 0">
-          <p style="font-size:12px;color:#666">OMDEVE Services</p>
+          <p style="font-size:12px;color:#666">OMEDEV Services</p>
         </div>
       `,
     });
 
     // Email admin
     sendMail({
-      from:    `"OMDEVE Services" <${process.env.EMAIL_USER}>`,
+      from:    `"OMEDEV Services" <${process.env.EMAIL_USER}>`,
       to:      process.env.CONTACT_EMAIL || process.env.EMAIL_USER,
       subject: `Nouvelle commande — ${order.orderNumber}`,
       html:    `<p><strong>${order.orderNumber}</strong> | ${fullName} | ${email} | ${phone}</p><p>Produit: ${product.name} × ${qty} = ${totalPrice} €</p><p>Livraison: ${address}, ${city}, ${country || 'RDC'}</p>`,

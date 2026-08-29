@@ -1,4 +1,7 @@
-// seed.js — Crée ou corrige les comptes de démonstration
+// seed.js — Crée ou corrige le compte SuperAdministrateur unique.
+// Il n'existe plus de comptes de démonstration : l'inscription publique est
+// désactivée, seul le SuperAdministrateur peut créer de nouveaux comptes
+// depuis l'espace d'administration.
 // Usage : node seed.js
 const dotenv = require('dotenv');
 dotenv.config();
@@ -7,51 +10,40 @@ const connectDB = require('./config/db');
 const User = require('./models/User');
 const bcrypt = require('bcryptjs');
 
-const demoUsers = [
-  {
-    name:     'Admin Démo',
-    email:    'admin@omdeve.com',
-    phone:    '+243 81 000 0001',
-    password: 'admin123',
-    role:     'admin',
-  },
-  {
-    name:     'Client Démo',
-    email:    'client@omdeve.com',
-    phone:    '+243 81 000 0002',
-    password: 'client123',
-    role:     'client',
-  },
-];
+const superAdmin = {
+  name:     'Super Administrateur',
+  email:    'oseedoro@gmail.com',
+  phone:    '+243 555 503 59',
+  password: 'meya1212',
+  role:     'super_admin',
+};
 
 const seed = async () => {
   await connectDB();
 
-  for (const data of demoUsers) {
-    const exists = await User.findOne({ email: data.email });
+  const exists = await User.findOne({ email: superAdmin.email });
 
-    if (exists) {
-      // Corriger le rôle si nécessaire et réinitialiser le mot de passe
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(data.password, salt);
+  if (exists) {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(superAdmin.password, salt);
 
-      await User.findByIdAndUpdate(exists._id, {
-        role:     data.role,
-        password: hashedPassword,
-        isActive: true,
-      });
-      console.log(`🔧 Compte mis à jour : ${data.email} | rôle : ${data.role}`);
-    } else {
-      await User.create(data);
-      console.log(`✅ Compte créé : ${data.email} | rôle : ${data.role}`);
-    }
+    await User.findByIdAndUpdate(exists._id, {
+      name:     superAdmin.name,
+      role:     'super_admin',
+      password: hashedPassword,
+      isActive: true,
+    });
+    console.log(`Compte SuperAdministrateur mis à jour : ${superAdmin.email}`);
+  } else {
+    await User.create(superAdmin);
+    console.log(`Compte SuperAdministrateur créé : ${superAdmin.email}`);
   }
 
-  console.log('\n🎉 Seed terminé.');
+  console.log('Seed terminé.');
   process.exit(0);
 };
 
 seed().catch(err => {
-  console.error('❌ Erreur seed :', err);
+  console.error('Erreur seed :', err);
   process.exit(1);
 });

@@ -25,6 +25,7 @@ import {
   X,
   AlertCircle
 } from 'lucide-react'
+import { PageHeader, Button } from '../../components/Admin/ui'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -32,11 +33,11 @@ const fadeUp = {
 };
 
 const stages = [
-  { id: 'lead', name: 'Lead', color: 'from-blue-500 to-cyan-500', bgColor: 'bg-blue-500/10 border-blue-500/30', textColor: 'text-blue-400' },
-  { id: 'contact', name: 'Contact', color: 'from-amber-500 to-orange-500', bgColor: 'bg-amber-500/10 border-amber-500/30', textColor: 'text-amber-400' },
-  { id: 'proposition', name: 'Proposition', color: 'from-purple-500 to-pink-500', bgColor: 'bg-purple-500/10 border-purple-500/30', textColor: 'text-purple-400' },
-  { id: 'negociation', name: 'Négociation', color: 'from-orange-500 to-red-500', bgColor: 'bg-orange-500/10 border-orange-500/30', textColor: 'text-orange-400' },
-  { id: 'signe', name: 'Signé', color: 'from-emerald-500 to-teal-500', bgColor: 'bg-emerald-500/10 border-emerald-500/30', textColor: 'text-emerald-400' },
+  { id: 'lead', name: 'Lead', color: 'from-blue-500 to-blue-600', bgColor: 'bg-blue-500/10 border-blue-500/30', textColor: 'text-blue-400' },
+  { id: 'contact', name: 'Contact', color: 'from-amber-500 to-amber-600', bgColor: 'bg-amber-500/10 border-amber-500/30', textColor: 'text-amber-400' },
+  { id: 'proposition', name: 'Proposition', color: 'from-purple-500 to-indigo-500', bgColor: 'bg-purple-500/10 border-purple-500/30', textColor: 'text-purple-400' },
+  { id: 'negociation', name: 'Négociation', color: 'from-red-500 to-red-600', bgColor: 'bg-red-500/10 border-red-500/30', textColor: 'text-red-400' },
+  { id: 'signe', name: 'Signé', color: 'from-[#2AACB2] to-[#2AACB2]', bgColor: 'bg-[#2AACB2]/10 border-[#2AACB2]/30', textColor: 'text-[#55DDB5]' },
 ]
 
 const initialProspectsData = {
@@ -86,7 +87,7 @@ const recentInteractions = [
 
 const getStatusConfig = (status) => {
   const configs = {
-    operational: { label: 'Opérationnel', color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30', icon: Activity },
+    operational: { label: 'Opérationnel', color: 'bg-[#2AACB2]/20 text-[#55DDB5] border-[#2AACB2]/30', icon: Activity },
     warning: { label: 'Alerte', color: 'bg-amber-500/20 text-amber-400 border-amber-500/30', icon: AlertCircle },
     critical: { label: 'Critique', color: 'bg-red-500/20 text-red-400 border-red-500/30', icon: AlertCircle },
   }
@@ -95,12 +96,12 @@ const getStatusConfig = (status) => {
 
 const getActionColor = (action) => {
   const colors = {
-    'Appel commercial': 'from-blue-500 to-cyan-500',
-    'Envoi devis': 'from-emerald-500 to-teal-500',
-    'Réunion': 'from-purple-500 to-pink-500',
-    'Relance téléphonique': 'from-amber-500 to-orange-500',
+    'Appel commercial': 'from-blue-500 to-blue-600',
+    'Envoi devis': 'from-[#2AACB2] to-[#2AACB2]',
+    'Réunion': 'from-purple-500 to-indigo-500',
+    'Relance téléphonique': 'from-amber-500 to-amber-600',
     'Visite technique': 'from-indigo-500 to-purple-500',
-    'Signature contrat': 'from-emerald-500 to-green-500',
+    'Signature contrat': 'from-[#2AACB2] to-green-500',
   }
   return colors[action] || 'from-gray-500 to-gray-600'
 }
@@ -131,81 +132,81 @@ const ModalNouveauProspect = ({ isOpen, onClose, onSave }) => {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center admin-modal-overlay p-4" onClick={onClose}>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md bg-[#0f172a] border border-white/10 rounded-2xl overflow-hidden shadow-2xl"
+        className="w-full max-w-md admin-modal-panel overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-5 border-b border-white/10">
           <h3 className="text-white font-semibold text-lg">Nouveau prospect</h3>
-          <button onClick={onClose} className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition text-gray-400 hover:text-white">
+          <button onClick={onClose} className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition text-white/50 hover:text-white">
             <X className="w-4 h-4" />
           </button>
         </div>
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Société *</label>
+              <label className="text-xs text-white/50 mb-1 block">Société *</label>
               <input
                 type="text" value={form.name} onChange={e => setForm({...form, name: e.target.value})}
                 placeholder="Société ABC"
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-blue-500/50 transition"
+                className="admin-input text-sm"
               />
               {errors.name && <p className="text-xs text-red-400 mt-1">{errors.name}</p>}
             </div>
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Contact *</label>
+              <label className="text-xs text-white/50 mb-1 block">Contact *</label>
               <input
                 type="text" value={form.contact} onChange={e => setForm({...form, contact: e.target.value})}
                 placeholder="Jean Martin"
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-blue-500/50 transition"
+                className="admin-input text-sm"
               />
               {errors.contact && <p className="text-xs text-red-400 mt-1">{errors.contact}</p>}
             </div>
           </div>
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Email *</label>
+            <label className="text-xs text-white/50 mb-1 block">Email *</label>
             <input
               type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})}
               placeholder="jean@societe.com"
-              className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-blue-500/50 transition"
+              className="admin-input text-sm"
             />
             {errors.email && <p className="text-xs text-red-400 mt-1">{errors.email}</p>}
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Téléphone</label>
+              <label className="text-xs text-white/50 mb-1 block">Téléphone</label>
               <input
                 type="tel" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})}
                 placeholder="+243 555 000 000"
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-blue-500/50 transition"
+                className="admin-input text-sm"
               />
             </div>
             <div>
-              <label className="text-xs text-gray-400 mb-1 block">Valeur estimée</label>
+              <label className="text-xs text-white/50 mb-1 block">Valeur estimée</label>
               <input
                 type="text" value={form.value} onChange={e => setForm({...form, value: e.target.value})}
                 placeholder="10 000€"
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-blue-500/50 transition"
+                className="admin-input text-sm"
               />
             </div>
           </div>
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Étape</label>
+            <label className="text-xs text-white/50 mb-1 block">Étape</label>
             <select
               value={form.stage} onChange={e => setForm({...form, stage: e.target.value})}
-              className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500/50 transition"
+              className="admin-select text-sm"
             >
-              {stages.map(s => <option key={s.id} value={s.id} className="bg-[#0f172a]">{s.name}</option>)}
+              {stages.map(s => <option key={s.id} value={s.id} className="bg-[#0B1F3D]">{s.name}</option>)}
             </select>
           </div>
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onClose} className="flex-1 py-2 rounded-xl bg-white/5 text-gray-400 hover:bg-white/10 transition text-sm">
+            <button type="button" onClick={onClose} className="admin-btn admin-btn-outline flex-1">
               Annuler
             </button>
-            <button type="submit" className="flex-1 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:scale-105 transition text-sm font-medium">
+            <button type="submit" className="admin-btn admin-btn-primary flex-1">
               Enregistrer
             </button>
           </div>
@@ -219,16 +220,16 @@ const ModalNouveauProspect = ({ isOpen, onClose, onSave }) => {
 const ModalDeplacer = ({ isOpen, onClose, prospect, currentStage, onMove }) => {
   if (!isOpen || !prospect) return null
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center admin-modal-overlay p-4" onClick={onClose}>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-sm bg-[#0f172a] border border-white/10 rounded-2xl overflow-hidden shadow-2xl"
+        className="w-full max-w-sm admin-modal-panel overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-5 border-b border-white/10">
           <h3 className="text-white font-semibold">Déplacer : {prospect.name}</h3>
-          <button onClick={onClose} className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition text-gray-400 hover:text-white">
+          <button onClick={onClose} className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition text-white/50 hover:text-white">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -267,39 +268,39 @@ const ModalRelancer = ({ isOpen, onClose, interaction }) => {
   if (!isOpen || !interaction) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center admin-modal-overlay p-4" onClick={onClose}>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md bg-[#0f172a] border border-white/10 rounded-2xl overflow-hidden shadow-2xl"
+        className="w-full max-w-md admin-modal-panel overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-5 border-b border-white/10">
           <h3 className="text-white font-semibold">Relancer : {interaction.prospect}</h3>
-          <button onClick={onClose} className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition text-gray-400 hover:text-white">
+          <button onClick={onClose} className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition text-white/50 hover:text-white">
             <X className="w-4 h-4" />
           </button>
         </div>
         <form onSubmit={handleSend} className="p-5 space-y-4">
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Destinataire</label>
+            <label className="text-xs text-white/50 mb-1 block">Destinataire</label>
             <p className="text-sm text-white px-3 py-2 rounded-lg bg-white/5 border border-white/10">{interaction.email}</p>
           </div>
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Message de relance</label>
+            <label className="text-xs text-white/50 mb-1 block">Message de relance</label>
             <textarea
               value={message}
               onChange={e => setMessage(e.target.value)}
               placeholder={`Bonjour,\n\nJe me permets de vous recontacter suite à notre ${interaction.action?.toLowerCase()}...`}
               rows={4}
-              className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-blue-500/50 transition resize-none"
+              className="admin-textarea text-sm resize-none"
             />
           </div>
           <div className="flex gap-3">
-            <button type="button" onClick={onClose} className="flex-1 py-2 rounded-xl bg-white/5 text-gray-400 hover:bg-white/10 transition text-sm">
+            <button type="button" onClick={onClose} className="admin-btn admin-btn-outline flex-1">
               Annuler
             </button>
-            <button type="submit" className="flex-1 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:scale-105 transition text-sm font-medium flex items-center justify-center gap-2">
+            <button type="submit" className="admin-btn admin-btn-primary flex-1">
               {sent ? '✓ Envoyé !' : <><Send className="w-3 h-3" /> Envoyer</>}
             </button>
           </div>
@@ -317,21 +318,21 @@ const ModalInfraDetails = ({ isOpen, onClose, infra }) => {
   const Icon = infra.icon
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center admin-modal-overlay p-4" onClick={onClose}>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md bg-[#0f172a] border border-white/10 rounded-2xl overflow-hidden shadow-2xl"
+        className="w-full max-w-md admin-modal-panel overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-5 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-lg bg-gradient-to-r from-blue-500 to-[#2AACB2] flex items-center justify-center">
               <Icon className="w-5 h-5 text-white" />
             </div>
             <h3 className="text-white font-semibold">{infra.name}</h3>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition text-gray-400 hover:text-white">
+          <button onClick={onClose} className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition text-white/50 hover:text-white">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -344,20 +345,20 @@ const ModalInfraDetails = ({ isOpen, onClose, infra }) => {
               { label: 'Dernière vérif.', value: infra.lastCheck },
             ].map(({ label, value }) => (
               <div key={label} className="bg-white/5 rounded-xl p-3 border border-white/10">
-                <p className="text-xs text-gray-500 mb-1">{label}</p>
+                <p className="text-xs text-white/40 mb-1">{label}</p>
                 <p className="text-sm text-white font-medium">{value}</p>
               </div>
             ))}
           </div>
           <div className="flex items-center justify-between bg-white/5 rounded-xl p-3 border border-white/10">
-            <span className="text-sm text-gray-400">Statut actuel</span>
+            <span className="text-sm text-white/50">Statut actuel</span>
             <span className={`text-xs px-2 py-0.5 rounded-full border flex items-center gap-1 ${status.color}`}>
               <StatusIcon className="w-3 h-3" /> {status.label}
             </span>
           </div>
           <button
             onClick={onClose}
-            className="w-full py-2 rounded-xl bg-white/5 text-gray-400 hover:bg-white/10 transition text-sm"
+            className="admin-btn admin-btn-outline w-full"
           >
             Fermer
           </button>
@@ -388,7 +389,7 @@ const ProspectCard = ({ prospect, stage, onMove }) => {
     <>
       <motion.div
         variants={fadeUp}
-        className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden hover:border-blue-500/50 transition-all hover:-translate-y-1 cursor-pointer group"
+        className="admin-card admin-card-hover overflow-hidden cursor-pointer group"
         onClick={handleCardClick}
       >
         <div className="relative">
@@ -403,7 +404,7 @@ const ProspectCard = ({ prospect, stage, onMove }) => {
               </div>
               <span className={`text-xs font-bold ${stageConfig.textColor}`}>{prospect.value}</span>
             </div>
-            <div className="flex items-center gap-2 text-xs text-gray-400">
+            <div className="flex items-center gap-2 text-xs text-white/50">
               <User className="w-3 h-3" />
               <span>{prospect.contact}</span>
             </div>
@@ -411,7 +412,7 @@ const ProspectCard = ({ prospect, stage, onMove }) => {
         </div>
 
         <div className="p-4 pt-2">
-          <div className="flex items-center gap-2 text-xs text-gray-500 mb-3">
+          <div className="flex items-center gap-2 text-xs text-white/40 mb-3">
             <Clock className="w-3 h-3" />
             <span>Dernier contact: {prospect.lastContact}</span>
           </div>
@@ -427,17 +428,17 @@ const ProspectCard = ({ prospect, stage, onMove }) => {
                 <a
                   href={`mailto:${prospect.email}`}
                   onClick={handleContactClick}
-                  className="text-xs text-gray-400 truncate hover:text-blue-400 transition"
+                  className="text-xs text-white/50 truncate hover:text-blue-400 transition"
                 >
                   {prospect.email}
                 </a>
               </div>
               <div className="flex items-center gap-2">
-                <Phone className="w-3 h-3 text-emerald-400" />
+                <Phone className="w-3 h-3 text-[#55DDB5]" />
                 <a
                   href={`tel:${prospect.phone}`}
                   onClick={handleContactClick}
-                  className="text-xs text-gray-400 hover:text-emerald-400 transition"
+                  className="text-xs text-white/50 hover:text-[#55DDB5] transition"
                 >
                   {prospect.phone}
                 </a>
@@ -454,7 +455,7 @@ const ProspectCard = ({ prospect, stage, onMove }) => {
                 {/* ✅ Déplacer → ouvre la modal de déplacement */}
                 <button
                   onClick={handleMoveClick}
-                  className="flex-1 text-xs py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 transition"
+                  className="flex-1 text-xs py-1.5 rounded-lg bg-[#2AACB2]/20 text-[#55DDB5] hover:bg-[#2AACB2]/30 transition"
                 >
                   Déplacer
                 </button>
@@ -464,7 +465,7 @@ const ProspectCard = ({ prospect, stage, onMove }) => {
 
           {!showDetails && (
             <div className="text-center pt-1">
-              <span className="text-[10px] text-gray-500 group-hover:text-blue-400 transition">Cliquez pour plus de détails</span>
+              <span className="text-[10px] text-white/40 group-hover:text-blue-400 transition">Cliquez pour plus de détails</span>
             </div>
           )}
         </div>
@@ -484,7 +485,7 @@ const ProspectCard = ({ prospect, stage, onMove }) => {
 // ==================== STAGE COLUMN ====================
 const StageColumn = ({ stage, prospects, onAddProspect, onMove }) => {
   return (
-    <div className="flex-shrink-0 w-80 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden">
+    <div className="flex-shrink-0 w-80 admin-card overflow-hidden">
       <div className={`p-4 border-b border-white/10 ${stage.bgColor}`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -493,7 +494,7 @@ const StageColumn = ({ stage, prospects, onAddProspect, onMove }) => {
             </div>
             <div>
               <h3 className={`font-semibold ${stage.textColor}`}>{stage.name}</h3>
-              <p className="text-xs text-gray-500">{prospects.length} prospects</p>
+              <p className="text-xs text-white/40">{prospects.length} prospects</p>
             </div>
           </div>
           {/* ✅ Bouton + colonne → ouvre le formulaire avec l'étape pré-sélectionnée */}
@@ -501,7 +502,7 @@ const StageColumn = ({ stage, prospects, onAddProspect, onMove }) => {
             onClick={() => onAddProspect(stage.id)}
             className="p-1 rounded-lg bg-white/10 hover:bg-white/20 transition"
           >
-            <Plus className="w-4 h-4 text-gray-400" />
+            <Plus className="w-4 h-4 text-white/50" />
           </button>
         </div>
       </div>
@@ -511,7 +512,7 @@ const StageColumn = ({ stage, prospects, onAddProspect, onMove }) => {
         ))}
         {prospects.length === 0 && (
           <div className="text-center py-8">
-            <p className="text-xs text-gray-500">Aucun prospect</p>
+            <p className="text-xs text-white/40">Aucun prospect</p>
             {/* ✅ Lien + Ajouter dans colonne vide */}
             <button
               onClick={() => onAddProspect(stage.id)}
@@ -537,16 +538,16 @@ const InfrastructureCard = ({ infra }) => {
     <>
       <motion.div
         variants={fadeUp}
-        className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:border-blue-500/50 transition-all hover:-translate-y-1 cursor-pointer group"
+        className="admin-card admin-card-hover p-4 cursor-pointer group"
       >
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-blue-500 to-[#2AACB2] flex items-center justify-center shadow-lg">
               <Icon className="w-5 h-5 text-white" />
             </div>
             <div>
               <h4 className="font-semibold text-white text-sm">{infra.name}</h4>
-              <p className="text-xs text-gray-400">{infra.type}</p>
+              <p className="text-xs text-white/50">{infra.type}</p>
             </div>
           </div>
           <span className={`text-xs px-2 py-0.5 rounded-full border ${status.color}`}>
@@ -555,15 +556,15 @@ const InfrastructureCard = ({ infra }) => {
           </span>
         </div>
         <div className="grid grid-cols-2 gap-2 text-xs">
-          <div className="flex items-center gap-1 text-gray-500">
+          <div className="flex items-center gap-1 text-white/40">
             <MapPin className="w-3 h-3" />
             <span>{infra.location}</span>
           </div>
-          <div className="flex items-center gap-1 text-gray-500">
+          <div className="flex items-center gap-1 text-white/40">
             <Activity className="w-3 h-3" />
             <span>Uptime: {infra.uptime}</span>
           </div>
-          <div className="flex items-center gap-1 text-gray-500 col-span-2">
+          <div className="flex items-center gap-1 text-white/40 col-span-2">
             <Clock className="w-3 h-3" />
             <span>Dernière vérif: {infra.lastCheck}</span>
           </div>
@@ -593,7 +594,7 @@ const InteractionCard = ({ interaction }) => {
     <>
       <motion.div
         variants={fadeUp}
-        className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden hover:border-blue-500/50 transition-all hover:-translate-y-1 group"
+        className="admin-card admin-card-hover overflow-hidden group"
       >
         <div className="relative">
           <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${actionColor}`} />
@@ -605,15 +606,15 @@ const InteractionCard = ({ interaction }) => {
                 </div>
                 <div>
                   <h4 className="font-semibold text-white text-sm">{interaction.prospect}</h4>
-                  <p className="text-xs text-gray-400">{interaction.action}</p>
+                  <p className="text-xs text-white/50">{interaction.action}</p>
                 </div>
               </div>
-              <span className="text-xs text-gray-500">{interaction.date}</span>
+              <span className="text-xs text-white/40">{interaction.date}</span>
             </div>
 
-            <p className="text-xs text-gray-400 mb-3 line-clamp-2">{interaction.description}</p>
+            <p className="text-xs text-white/50 mb-3 line-clamp-2">{interaction.description}</p>
 
-            <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
+            <div className="flex items-center gap-3 text-xs text-white/40 mb-3">
               <div className="flex items-center gap-1">
                 <User className="w-3 h-3" />
                 <span>{interaction.user}</span>
@@ -631,7 +632,7 @@ const InteractionCard = ({ interaction }) => {
               {/* ✅ Appeler → ouvre le téléphone */}
               <a
                 href={`tel:${interaction.phone}`}
-                className="flex-1 flex items-center justify-center gap-1 text-xs py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 transition"
+                className="flex-1 flex items-center justify-center gap-1 text-xs py-1.5 rounded-lg bg-[#2AACB2]/20 text-[#55DDB5] hover:bg-[#2AACB2]/30 transition"
               >
                 <Phone className="w-3 h-3" /> Appeler
               </a>
@@ -712,23 +713,15 @@ const AdminCRM = () => {
 
   return (
     <>
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
-      >
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-white font-syne">CRM - Pipeline commercial</h1>
-          <p className="text-gray-400 mt-1">Gérez vos prospects et suivez votre pipeline</p>
-        </div>
-        {/* ✅ Nouveau prospect → ouvre le formulaire */}
-        <button
-          onClick={() => { setDefaultStage('lead'); setShowNewProspect(true) }}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:scale-105 transition"
-        >
-          <Plus className="w-4 h-4" /> Nouveau prospect
-        </button>
-      </motion.div>
+      <PageHeader
+        title="CRM - Pipeline commercial"
+        subtitle="Gérez vos prospects et suivez votre pipeline"
+        actions={
+          <Button variant="primary" icon={Plus} onClick={() => { setDefaultStage('lead'); setShowNewProspect(true) }}>
+            Nouveau prospect
+          </Button>
+        }
+      />
 
       {/* Kanban Pipeline */}
       <div className="overflow-x-auto pb-4">
@@ -753,7 +746,7 @@ const AdminCRM = () => {
               <Server className="w-5 h-5 text-blue-400" />
               Infrastructures récentes
             </h2>
-            <p className="text-sm text-gray-400">État des serveurs, réseaux et équipements</p>
+            <p className="text-sm text-white/50">État des serveurs, réseaux et équipements</p>
           </div>
           {/* ✅ Voir tout → scroll vers le bas de la section */}
           <button
@@ -778,7 +771,7 @@ const AdminCRM = () => {
               <MessageSquare className="w-5 h-5 text-blue-400" />
               Interactions récentes
             </h2>
-            <p className="text-sm text-gray-400">Derniers échanges avec vos prospects</p>
+            <p className="text-sm text-white/50">Derniers échanges avec vos prospects</p>
           </div>
           {/* ✅ Voir tout → scroll vers la section */}
           <button

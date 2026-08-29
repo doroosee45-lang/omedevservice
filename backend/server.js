@@ -44,7 +44,6 @@ app.use('/api/contact', require('./routes/contactRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/settings', require('./routes/settingRoutes'));
 app.use('/api/history', require('./routes/historyRoutes'));
-app.use('/api/ferronnerie-projects', require('./routes/ferronnerieProjectRoutes'));
 app.use('/api/assistant', require('./routes/assistantRoutes'));
 app.use('/api/newsletter', require('./routes/newsletterRoutes'));
 app.use('/api/vente-materiel', require('./routes/venteMaterielRoutes'));

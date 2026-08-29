@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useForm } from 'react-hook-form'
-import { Lock, Eye, EyeOff, CheckCircle, AlertCircle, ArrowLeft } from 'lucide-react'
+import { KeyRound, Lock, Eye, EyeOff, CheckCircle, AlertCircle, ArrowLeft } from 'lucide-react'
 import api from '../../services/api'
 
 const globalStyles = `
@@ -14,7 +14,7 @@ const globalStyles = `
 const heroBg = 'linear-gradient(135deg, #053876 0%, #1D5B9B 35%, #4681B7 60%, #72A5CE 80%, #A6C3D7 100%)'
 
 // Avec HashRouter, une query string ajoutée après le fragment
-// (ex. /#/reset-password?token=...) se retrouve dans window.location.hash
+// (ex. /#/activate-account?token=...) se retrouve dans window.location.hash
 // et n'est pas exposée par useSearchParams. On l'extrait donc manuellement.
 const getTokenFromHash = () => {
   const hash = window.location.hash || ''
@@ -24,7 +24,7 @@ const getTokenFromHash = () => {
   return params.get('token')
 }
 
-const ResetPassword = () => {
+const ActivateAccount = () => {
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -47,14 +47,14 @@ const ResetPassword = () => {
     setIsLoading(true)
     setError('')
     try {
-      await api.post('/auth/reset-password', {
+      await api.post('/auth/activate-account', {
         token,
         newPassword: data.password,
       })
       setIsSuccess(true)
       setTimeout(() => navigate('/login'), 3000)
     } catch (err) {
-      const message = err.response?.data?.message || 'Token invalide ou expiré'
+      const message = err.response?.data?.message || 'Lien invalide ou expiré'
       setError(message)
     } finally {
       setIsLoading(false)
@@ -92,18 +92,13 @@ const ResetPassword = () => {
             <div className="w-20 h-20 mx-auto bg-red-500/20 rounded-full flex items-center justify-center mb-6">
               <AlertCircle className="w-10 h-10 text-red-400" />
             </div>
-            <h2 className="text-2xl font-bold font-syne text-white mb-2">Lien invalide</h2>
+            <h2 className="text-2xl font-bold font-syne text-white mb-2">Lien d'activation invalide</h2>
             <p className="text-white/80 mb-6">
-              Le lien de réinitialisation est invalide ou a expiré.
+              Ce lien d'activation est invalide ou a expiré. Contactez votre administrateur pour en recevoir un nouveau.
             </p>
-            <Link to="/forgot-password" className="inline-block px-6 py-2.5 text-white rounded-full font-semibold transition-all duration-300 hover:-translate-y-0.5 shadow-lg" style={{ background: 'linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%)' }}>
-              Nouvelle demande
+            <Link to="/login" className="inline-block px-6 py-2.5 text-white rounded-full font-semibold transition-all duration-300 hover:-translate-y-0.5 shadow-lg" style={{ background: 'linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%)' }}>
+              Retour à la connexion
             </Link>
-            <div className="mt-4">
-              <Link to="/login" className="text-sm text-white/50 hover:text-[#55DDB5] transition-colors">
-                Retour à la connexion
-              </Link>
-            </div>
           </motion.div>
         </div>
       </>
@@ -129,8 +124,8 @@ const ResetPassword = () => {
             <div className="w-20 h-20 mx-auto bg-[#55DDB5]/20 rounded-full flex items-center justify-center mb-6">
               <CheckCircle className="w-10 h-10 text-[#55DDB5]" />
             </div>
-            <h2 className="text-2xl font-bold font-syne text-white mb-2">Mot de passe modifié</h2>
-            <p className="text-white/80 mb-4">Votre mot de passe a été mis à jour avec succès.</p>
+            <h2 className="text-2xl font-bold font-syne text-white mb-2">Compte activé</h2>
+            <p className="text-white/80 mb-4">Votre mot de passe a été défini avec succès. Votre compte est maintenant actif.</p>
             <p className="text-sm text-white/50">Redirection vers la page de connexion...</p>
             <Link to="/login" className="inline-block mt-6 text-[#55DDB5] hover:text-[#55DDB5] link-underline transition-colors">
               Se connecter maintenant →
@@ -161,10 +156,10 @@ const ResetPassword = () => {
             >
               <div className="text-center mb-8">
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#55DDB5]/15 border border-[#55DDB5]/30 mb-4">
-                  <Lock className="w-8 h-8 text-[#55DDB5]" />
+                  <KeyRound className="w-8 h-8 text-[#55DDB5]" />
                 </div>
-                <h1 className="text-2xl font-bold font-syne">Nouveau mot de passe</h1>
-                <p className="text-white/50 text-sm mt-1">Choisissez un mot de passe sécurisé</p>
+                <h1 className="text-2xl font-bold font-syne">Activez votre compte</h1>
+                <p className="text-white/50 text-sm mt-1">Définissez votre mot de passe pour continuer</p>
               </div>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -175,7 +170,7 @@ const ResetPassword = () => {
                 )}
 
                 <div>
-                  <label className="block text-sm font-medium text-white/80 mb-1">Nouveau mot de passe</label>
+                  <label className="block text-sm font-medium text-white/80 mb-1">Mot de passe</label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
                     <input
@@ -224,7 +219,7 @@ const ResetPassword = () => {
                 >
                   {isLoading
                     ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    : <><span>Réinitialiser le mot de passe</span> <CheckCircle size={18} /></>
+                    : <><span>Activer mon compte</span> <CheckCircle size={18} /></>
                   }
                 </button>
 
@@ -237,7 +232,7 @@ const ResetPassword = () => {
             </motion.div>
 
             <div className="text-center mt-6 text-xs text-white/40">
-              🔒 Utilisez un mot de passe unique et difficile à deviner
+              Utilisez un mot de passe unique et difficile à deviner
             </div>
           </div>
         </div>
@@ -246,4 +241,4 @@ const ResetPassword = () => {
   )
 }
 
-export default ResetPassword
+export default ActivateAccount

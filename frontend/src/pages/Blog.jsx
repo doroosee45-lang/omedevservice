@@ -1,7 +1,4 @@
-﻿
-
-
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
@@ -9,12 +6,176 @@ import {
   TrendingUp, ChevronRight, ChevronLeft, Share2, Copy, Check
 } from 'lucide-react';
 import api from '../services/api';
+import PublicHero from '../components/Public/PublicHero';
+import CTASection from '../components/Public/CTASection';
 
 const globalStyles = `
+
+  /* ── OMDEVE ABOUT DESIGN SYSTEM ── */
+  :root {
+    --omedev-navy: #053876;
+    --omedev-blue-dark: #1D5B9B;
+    --omedev-blue: #0B74C1;
+    --omedev-blue-light: #4681B7;
+    --omedev-cyan: #72A5CE;
+    --omedev-cyan-light: #A6C3D7;
+    --omedev-turquoise: #2AACB2;
+    --omedev-energy: #55DDB5;
+    --omedev-white: #F6F6F7;
+    --omedev-gray: #D5DCE1;
+    --omedev-dark: #0B1213;
+    --omedev-text-secondary: #25364A;
+  }
+
+  .omedev-blog {
+    background: #F6F6F7;
+    color: #0B1213;
+    min-height: 100vh;
+  }
+
+  .omedev-blog .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: .5rem 1.1rem;
+    border-radius: 999px;
+    background: rgba(11,116,193,.08);
+    color: #0B74C1;
+    border: 1px solid rgba(11,116,193,.18);
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-blog .about-card {
+    background: #fff;
+    border: 1px solid rgba(5,56,118,.09);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(5,56,118,.06);
+    transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+  }
+
+  .omedev-blog .about-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 22px 48px rgba(11,116,193,.14);
+    border-color: rgba(42,172,178,.35);
+  }
+
+  .omedev-blog .about-gradient {
+    background: linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%);
+  }
+
+  .omedev-blog .about-divider {
+    width: 64px;
+    height: 4px;
+    background: linear-gradient(90deg, #0B74C1, #2AACB2, #55DDB5);
+    border-radius: 99px;
+  }
+
+  .omedev-blog .blog-light-section {
+    background: #F6F6F7;
+  }
+
+  .omedev-blog .blog-white-section {
+    background: #fff;
+  }
+
+  .omedev-blog .blog-dark-section {
+    background: linear-gradient(135deg, #053876 0%, #1D5B9B 55%, #0B74C1 100%);
+  }
+
+  .omedev-blog .blog-hero {
+    background: linear-gradient(135deg, #053876 0%, #1D5B9B 35%, #4681B7 60%, #72A5CE 80%, #A6C3D7 100%);
+    position: relative;
+  }
+
+  .omedev-blog .hero-grid {
+    background-image:
+      linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+
+  .omedev-blog .blog-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    letter-spacing: -.03em;
+  }
+
+  .omedev-blog .blog-content {
+    color: #25364A;
+  }
+
+  .omedev-blog .blog-input {
+    background: #fff;
+    color: #0B1213;
+    border: 1px solid rgba(5,56,118,.14);
+    border-radius: 12px;
+    transition: all .25s ease;
+  }
+
+  .omedev-blog .blog-input::placeholder {
+    color: #718096;
+  }
+
+  .omedev-blog .blog-input:focus {
+    outline: none;
+    border-color: #2AACB2;
+    box-shadow: 0 0 0 4px rgba(42,172,178,.10);
+  }
+
+  .omedev-blog .category-pill {
+    border-radius: 999px;
+    transition: all .3s ease;
+  }
+
+  .omedev-blog .article-card {
+    background: #fff;
+    border: 1px solid rgba(5,56,118,.09);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(5,56,118,.06);
+    transition: transform .4s cubic-bezier(.4,0,.2,1),
+                box-shadow .4s ease,
+                border-color .4s ease;
+  }
+
+  .omedev-blog .article-card:hover {
+    transform: translateY(-9px);
+    border-color: rgba(42,172,178,.35);
+    box-shadow: 0 22px 48px rgba(11,116,193,.16);
+  }
+
+  .omedev-blog .article-card h3 {
+    color: #053876;
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-blog .article-card p {
+    color: #25364A;
+  }
+
+  .omedev-blog .article-meta {
+    color: #718096;
+  }
+
+  .omedev-blog .share-bar {
+    border-top: 1px solid rgba(5,56,118,.09);
+  }
+
+  @media (max-width: 768px) {
+    .omedev-blog .blog-container {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
+
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'DM Sans', sans-serif; background: #0f172a; color: #e2e8f0; overflow-x: hidden; }
+  body { font-family: 'DM Sans', sans-serif; background: #F6F6F7; color: #0B1213; overflow-x: hidden; }
 
   @keyframes float      { 0%,100%{transform:translateY(0)}  50%{transform:translateY(-20px)} }
   @keyframes pulse-ring { 0%{transform:scale(.8);opacity:1} 70%{transform:scale(1.3);opacity:0} 100%{transform:scale(.8);opacity:0} }
@@ -90,8 +251,8 @@ const ShareButtons = ({ article }) => {
         title="Partager cet article"
         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all duration-200 ${
           open
-            ? 'bg-blue-500/20 border-blue-500/40 text-blue-300'
-            : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10 hover:text-white hover:border-white/20'
+            ? 'bg-blue-500/20 border-[#0B74C1]/40 text-[#4681B7]'
+            : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/15 hover:text-white hover:border-white/20'
         }`}
       >
         <Share2 size={13} />
@@ -113,46 +274,46 @@ const ShareButtons = ({ article }) => {
               animate={{ opacity: 1, scale: 1,    y: 0 }}
               exit={  { opacity: 0, scale: 0.92, y: 6 }}
               transition={{ duration: 0.15, ease: 'easeOut' }}
-              className="absolute bottom-full left-0 mb-2 z-50 min-w-[168px] bg-slate-900/95 backdrop-blur-sm border border-white/10 rounded-xl p-1.5 shadow-2xl shadow-black/50"
+              className="absolute bottom-full left-0 mb-2 z-50 min-w-[168px] bg-white backdrop-blur-sm border border-[#D5DCE1] rounded-xl p-1.5 shadow-2xl shadow-black/50"
             >
               {/* WhatsApp */}
               <button
                 onClick={shareWhatsApp}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 transition-all duration-150 group"
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[#25364A] hover:bg-[#2AACB2]/10 hover:text-[#2AACB2] transition-all duration-150 group"
               >
-                <span className="text-emerald-500 group-hover:scale-110 transition-transform shrink-0">
+                <span className="text-[#2AACB2] group-hover:scale-110 transition-transform shrink-0">
                   <WhatsAppIcon size={15} />
                 </span>
                 WhatsApp
               </button>
 
               {/* Séparateur */}
-              <div className="h-px bg-white/5 mx-2 my-1" />
+              <div className="h-px bg-[#053876]/10 mx-2 my-1" />
 
               {/* LinkedIn */}
               <button
                 onClick={shareLinkedIn}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-300 hover:bg-blue-500/10 hover:text-blue-400 transition-all duration-150 group"
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[#25364A] hover:bg-[#0B74C1]/10 hover:text-[#0B74C1] transition-all duration-150 group"
               >
-                <span className="text-blue-500 group-hover:scale-110 transition-transform shrink-0">
+                <span className="text-[#0B74C1] group-hover:scale-110 transition-transform shrink-0">
                   <LinkedInIcon size={15} />
                 </span>
                 LinkedIn
               </button>
 
               {/* Séparateur */}
-              <div className="h-px bg-white/5 mx-2 my-1" />
+              <div className="h-px bg-[#053876]/10 mx-2 my-1" />
 
               {/* Copier le lien */}
               <button
                 onClick={copyLink}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-150 group ${
                   copied
-                    ? 'bg-emerald-500/10 text-emerald-400'
-                    : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                    ? 'bg-[#2AACB2]/10 text-[#2AACB2]'
+                    : 'text-[#25364A] hover:bg-[#F6F6F7] hover:text-[#053876]'
                 }`}
               >
-                <span className={`group-hover:scale-110 transition-transform shrink-0 ${copied ? 'text-emerald-400' : 'text-gray-500'}`}>
+                <span className={`group-hover:scale-110 transition-transform shrink-0 ${copied ? 'text-[#2AACB2]' : 'text-[#25364A]/60'}`}>
                   {copied ? <Check size={15} /> : <Copy size={15} />}
                 </span>
                 {copied ? 'Lien copié !' : 'Copier le lien'}
@@ -215,74 +376,22 @@ const Blog = () => {
   const goToPage   = (page) => { setCurrentPage(page); window.scrollTo({ top: 0, behavior: 'smooth' }); };
 
   return (
-    <>
+    <div className="omedev-blog">
       <style>{globalStyles}</style>
 
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden pt-32 pb-20 min-h-[550px]">
-        <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px'
-        }} />
-        <div className="absolute w-96 h-96 bg-blue-600/20 top-20 -left-20 rounded-full filter blur-[80px] animate-float" />
-        <div className="absolute w-72 h-72 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-blue-600/15 border border-blue-500/30"
-            >
-              <TrendingUp className="w-4 h-4 text-blue-400" />
-              <span className="text-blue-300 font-semibold text-xs tracking-wide font-syne">Blog & Actualités</span>
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
-            >
-              Blog{' '}
-              <span className="relative inline-block">
-                <span className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 blur-2xl opacity-50" />
-                <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
-                  OMDEVE
-                </span>
-              </span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-              className="text-gray-300 text-base sm:text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
-            >
-              Découvrez nos articles sur la digitalisation, la cybersécurité, l'énergie solaire et les meilleures pratiques IT en Afrique Centrale.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 }}
-              className="flex flex-wrap gap-4 justify-center"
-            >
-              <Link to="/contact" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
-                Demander un conseil <ArrowRight size={18} className="group-hover:translate-x-1 transition" />
-              </Link>
-              <Link to="/tarifs" className="group border-2 border-white/30 hover:border-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
-                Voir nos tarifs
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-      </section>
+      <PublicHero
+        badge="Blog & Actualités"
+        title="Blog OMDEVE"
+        highlight="OMDEVE"
+        subtitle="Découvrez nos articles sur la digitalisation, la cybersécurité, l'énergie solaire et les meilleures pratiques IT en Afrique Centrale."
+        primaryAction={{ label: 'Demander un conseil', to: '/contact' }}
+        secondaryAction={{ label: 'Voir nos tarifs', to: '/tarifs' }}
+        compact
+      />
 
       {/* ── Filtres ──────────────────────────────────────────── */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 sticky top-0 z-40 py-4 border-b border-white/10 backdrop-blur-xl">
+      <div className="blog-hero sticky top-0 z-40 py-4 border-b border-white/10 backdrop-blur-xl">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row gap-4 justify-between items-center">
             <div className="relative w-full lg:w-96">
@@ -303,7 +412,7 @@ const Blog = () => {
                 <button key={cat} onClick={() => { setSelectedCategory(cat); setCurrentPage(1); }}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                     selectedCategory === cat
-                      ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg'
+                      ? 'bg-gradient-to-r from-[#0B74C1] to-[#1D5B9B] text-white shadow-lg'
                       : 'bg-white/10 text-gray-300 border border-white/20 hover:bg-white/20 hover:scale-105'
                   }`}>
                   {cat}
@@ -315,13 +424,13 @@ const Blog = () => {
       </div>
 
       {/* ── Grille ───────────────────────────────────────────── */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
-        <div className="container mx-auto px-4 py-16">
+      <div className="blog-light-section">
+        <div className="container mx-auto px-4 py-16 blog-container">
           <div className="flex justify-between items-center mb-10">
-            <h2 className="text-2xl md:text-3xl font-bold text-white font-syne">
+            <h2 className="text-2xl md:text-3xl font-bold font-syne" style={{ color: '#053876' }}>
               {selectedCategory === 'Tous' ? 'Tous les articles' : selectedCategory}
             </h2>
-            <p className="text-gray-400 text-sm">{totalArticles} article{totalArticles > 1 ? 's' : ''}</p>
+            <p className="text-[#25364A] text-sm">{totalArticles} article{totalArticles > 1 ? 's' : ''}</p>
           </div>
 
           {/* Chargement */}
@@ -335,7 +444,7 @@ const Blog = () => {
           {!loading && error && (
             <div className="text-center py-20">
               <p className="text-red-400 mb-4">{error}</p>
-              <button onClick={() => setCurrentPage(1)} className="text-blue-400 hover:text-blue-300 underline">Réessayer</button>
+              <button onClick={() => setCurrentPage(1)} className="text-[#0B74C1] hover:text-[#4681B7] underline">Réessayer</button>
             </div>
           )}
 
@@ -345,10 +454,10 @@ const Blog = () => {
               <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center">
                 <Search size={40} className="text-gray-400" />
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Aucun article trouvé</h3>
-              <p className="text-gray-400">Aucun article ne correspond à vos critères.</p>
+              <h3 className="text-xl font-semibold mb-2" style={{ color: '#053876' }}>Aucun article trouvé</h3>
+              <p className="text-[#25364A]">Aucun article ne correspond à vos critères.</p>
               <button onClick={() => { setSearchTerm(''); setSelectedCategory('Tous'); setCurrentPage(1); }}
-                className="mt-6 text-blue-400 hover:text-blue-300 underline">
+                className="mt-6 text-[#0B74C1] hover:text-[#4681B7] underline">
                 Réinitialiser les filtres
               </button>
             </div>
@@ -361,16 +470,16 @@ const Blog = () => {
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {articles.map((article) => (
                   <motion.div key={article._id ?? article.id} variants={fadeUp}
-                    className="group bg-white/5 border border-white/10 rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:border-blue-500/50 hover:bg-white/10 flex flex-col">
+                    className="group article-card transition-all duration-500 hover:-translate-y-2 flex flex-col">
 
                     {/* Image */}
                     <Link to={`/blog/${article.slug}`} className="block">
                       <div className="relative overflow-hidden h-56">
                         <img src={article.image} alt={article.title}
                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#053876] via-transparent to-transparent opacity-60" />
                         <div className="absolute top-4 left-4">
-                          <span className="px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg">
+                          <span className="px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-[#0B74C1] to-[#1D5B9B] text-white shadow-lg">
                             {article.category}
                           </span>
                         </div>
@@ -385,24 +494,24 @@ const Blog = () => {
                     {/* Contenu */}
                     <div className="p-6 flex flex-col flex-1">
                       <Link to={`/blog/${article.slug}`} className="block flex-1">
-                        <div className="flex items-center gap-3 text-xs text-gray-400 mb-3">
+                        <div className="flex items-center gap-3 text-xs article-meta mb-3">
                           <span className="flex items-center gap-1"><Calendar size={12} />
                             {new Date(article.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
                           </span>
                           <span className="flex items-center gap-1"><User size={12} />{article.author}</span>
                         </div>
-                        <h3 className="text-xl font-bold text-white font-syne mb-3 group-hover:text-blue-300 transition-colors line-clamp-2">
+                        <h3 className="text-xl font-bold mb-3 group-hover:text-[#2AACB2] transition-colors line-clamp-2">
                           {article.title}
                         </h3>
-                        <p className="text-gray-400 text-sm leading-relaxed line-clamp-3">{article.excerpt}</p>
-                        <div className="mt-4 flex items-center text-blue-400 text-sm font-medium">
+                        <p className="text-sm leading-relaxed line-clamp-3">{article.excerpt}</p>
+                        <div className="mt-4 flex items-center text-[#2AACB2] text-sm font-medium">
                           Lire la suite <ArrowRight size={14} className="ml-1 group-hover:translate-x-1 transition-transform" />
                         </div>
                       </Link>
 
                       {/* ── Barre de partage ── */}
-                      <div className="mt-5 pt-4 border-t border-white/10 flex items-center justify-between">
-                        <span className="text-xs text-gray-500 select-none">Partager cet article</span>
+                      <div className="mt-5 pt-4 share-bar flex items-center justify-between">
+                        <span className="text-xs text-[#718096] select-none">Partager cet article</span>
                         <ShareButtons article={article} />
                       </div>
                     </div>
@@ -414,21 +523,21 @@ const Blog = () => {
               {totalPages > 1 && (
                 <div className="flex justify-center mt-12 gap-2 flex-wrap">
                   <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1}
-                    className="p-2 rounded-lg bg-white/10 border border-white/20 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/20 transition">
+                    className="p-2 rounded-lg bg-white border border-[#D5DCE1] text-[#053876] disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#F6F6F7] transition">
                     <ChevronLeft size={20} />
                   </button>
                   {[...Array(totalPages)].map((_, i) => (
                     <button key={i} onClick={() => goToPage(i + 1)}
                       className={`px-4 py-2 rounded-lg font-medium transition ${
                         currentPage === i + 1
-                          ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg'
-                          : 'bg-white/10 border border-white/20 hover:bg-white/20'
+                          ? 'bg-gradient-to-r from-[#0B74C1] to-[#1D5B9B] text-white shadow-lg'
+                          : 'bg-white border border-[#D5DCE1] text-[#053876] hover:bg-[#F6F6F7]'
                       }`}>
                       {i + 1}
                     </button>
                   ))}
                   <button onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages}
-                    className="p-2 rounded-lg bg-white/10 border border-white/20 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/20 transition">
+                    className="p-2 rounded-lg bg-white border border-[#D5DCE1] text-[#053876] disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#F6F6F7] transition">
                     <ChevronRight size={20} />
                   </button>
                 </div>
@@ -438,56 +547,16 @@ const Blog = () => {
         </div>
       </div>
 
-      {/* ── Newsletter + CTA ─────────────────────────────────── */}
-      <section className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/5 py-20">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-            {/* Newsletter */}
-            <motion.div initial={{ opacity:0, y:40 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} transition={{ duration:.6 }}
-              className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20 hover:border-blue-500/50">
-              <div className="relative z-10 text-center md:text-left">
-                <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 mb-6">
-                  <TrendingUp size={16} className="text-blue-400" />
-                  <span className="text-blue-300 text-sm font-semibold">Ne rien manquer</span>
-                </div>
-                <h2 className="text-3xl md:text-4xl font-bold text-white font-syne mb-4">Restez informé</h2>
-                <p className="text-gray-300 mb-8 max-w-md mx-auto md:mx-0">
-                  Recevez nos meilleurs articles et conseils technologiques directement dans votre boîte mail.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto md:mx-0">
-                  <input type="email" placeholder="Votre adresse email"
-                    className="flex-1 px-6 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-all" />
-                  <button className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-3 rounded-xl font-semibold transition-all hover:scale-105 hover:shadow-lg">
-                    S'abonner
-                  </button>
-                </div>
-                <p className="text-xs text-gray-500 mt-4">Nous respectons votre vie privée. Désabonnement en 1 clic.</p>
-              </div>
-            </motion.div>
-
-            {/* CTA */}
-            <motion.div initial={{ opacity:0, y:40 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} transition={{ duration:.6, delay:.2 }}
-              className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20 hover:border-blue-500/50 text-center md:text-right">
-              <div className="absolute inset-0 opacity-30 rounded-2xl -z-10" style={{
-                backgroundImage: `radial-gradient(circle at 70% 30%, rgba(59,130,246,0.4) 0%, transparent 60%)`
-              }} />
-              <div className="relative z-10">
-                <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 font-syne">Vous avez un projet ?</h2>
-                <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto md:ml-auto md:mr-0">
-                  Discutons de vos besoins et trouvons ensemble la solution la plus adaptée.
-                </p>
-                <Link to="/contact"
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all hover:scale-105 hover:shadow-xl">
-                  Prendre rendez-vous <ArrowRight size={18} />
-                </Link>
-              </div>
-            </motion.div>
-
-          </div>
-        </div>
-      </section>
-    </>
+      {/* ==================== CTA FINALE ==================== */}
+      <CTASection
+        badge="Envie d'échanger ?"
+        title="Vous avez un projet ?"
+        highlight="un projet"
+        subtitle="Discutons de vos besoins et trouvons ensemble la solution la plus adaptée."
+        backgroundImage="https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1920&q=80"
+        primaryAction={{ label: 'Prendre rendez-vous', to: '/contact' }}
+      />
+    </div>
   );
 };
 

@@ -1,66 +1,72 @@
-﻿
 
 
-import { motion, useInView } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { useRef, useEffect, useState } from 'react';
 import {
-  ArrowRight, Server, Shield, Code, Cloud, Zap, GraduationCap,
-  CheckCircle, Users, Clock, Award, Star, Quote, Briefcase, Globe,
-  Cpu, Camera, Wifi, Wrench, Phone, ThermometerSun, Monitor,
-  ChevronRight, Sparkles, TrendingUp, Rocket, TrendingDown, FileText,
-  Lock, AlertTriangle, BarChart3, Mail, ShoppingBag, Database,
-  Network, Eye, Fingerprint, Sun, Battery, Headphones, BookOpen,
-  Hammer
+  ArrowRight, Shield, Code, Cloud, CheckCircle,
+  Monitor, Rocket, Sun, Network, BookOpen
 } from 'lucide-react';
+import PublicHero from '../components/Public/PublicHero';
+import CTASection from '../components/Public/CTASection';
 
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: #0f172a;
-    color: #e2e8f0;
-    overflow-x: hidden;
+  .omedev-services .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+
+  .omedev-services .section-badge {
+    display: inline-flex; align-items: center; gap: .5rem;
+    font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    padding: .5rem 1.1rem; border-radius: 999px;
+    background: rgba(11,116,193,.08); color: #0B74C1; border: 1px solid rgba(11,116,193,.18);
+    font-family: 'Syne', sans-serif;
   }
 
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
+  .omedev-services .section-title {
+    font-size: clamp(1.9rem, 3.6vw, 2.75rem); font-weight: 800; line-height: 1.12;
+    letter-spacing: -.03em; font-family: 'Syne', sans-serif; color: #053876;
   }
-  
-  @keyframes pulse-ring {
-    0% { transform: scale(0.8); opacity: 1; }
-    70% { transform: scale(1.3); opacity: 0; }
-    100% { transform: scale(0.8); opacity: 0; }
+
+  .omedev-services .divider {
+    width: 56px; height: 4px; background: linear-gradient(90deg, #0B74C1, #2AACB2, #55DDB5);
+    border-radius: 99px; margin: .9rem 0 0;
   }
-  
-  .animate-float { animation: float 6s ease-in-out infinite; }
-  .animate-pulse-ring { animation: pulse-ring 2s ease-out infinite; }
+
+  .omedev-services .card-hover {
+    transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+    background: #fff; border: 1px solid rgba(5,56,118,.09); border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(5,56,118,.06);
+  }
+  .omedev-services .card-hover:hover {
+    transform: translateY(-6px); box-shadow: 0 20px 44px rgba(11,116,193,.14);
+    border-color: rgba(42,172,178,.35);
+  }
+
+  .omedev-services .hero-grid {
+    background-image: linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
+  .omedev-services .animate-float { animation: float 6s ease-in-out infinite; }
+
+  @media (max-width: 768px) { .omedev-services .container { padding: 0 1rem; } }
 `;
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7 } }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] } }
 };
 const staggerContainer = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.08 } }
 };
 
-// Données des services par catégorie
+// Données des services par catégorie — palette brand OMEDEV
 const serviceCategories = [
   {
-    id: 'reseau',
-    name: 'Réseau & Infrastructure',
-    icon: Network,
-    color: 'blue',
-    gradient: 'from-blue-500 to-blue-600',
-    bgLight: 'bg-blue-500/10',
-    textLight: 'text-blue-400',
-    borderLight: 'border-blue-500/30',
+    id: 'reseau', name: 'Réseau & Infrastructure', icon: Network, hex: '#0B74C1',
     description: 'Des infrastructures réseau robustes et performantes pour connecter votre entreprise',
     services: [
       { name: 'Câblage structuré', description: 'Installation de câblage cuivre et fibre optique pour une infrastructure réseau fiable', price: 'Sur devis' },
@@ -70,14 +76,7 @@ const serviceCategories = [
     ]
   },
   {
-    id: 'securite',
-    name: 'Sécurité & Surveillance',
-    icon: Shield,
-    color: 'cyan',
-    gradient: 'from-cyan-500 to-cyan-600',
-    bgLight: 'bg-cyan-500/10',
-    textLight: 'text-cyan-400',
-    borderLight: 'border-cyan-500/30',
+    id: 'securite', name: 'Sécurité & Surveillance', icon: Shield, hex: '#1D5B9B',
     description: 'Protection avancée de vos données et surveillance intelligente de vos sites',
     services: [
       { name: 'Cybersécurité', description: 'Protection avancée contre les cyberattaques et les intrusions', price: 'Sur devis' },
@@ -87,14 +86,7 @@ const serviceCategories = [
     ]
   },
   {
-    id: 'developpement',
-    name: 'Développement Digital',
-    icon: Code,
-    color: 'amber',
-    gradient: 'from-amber-500 to-amber-600',
-    bgLight: 'bg-amber-500/10',
-    textLight: 'text-amber-400',
-    borderLight: 'border-amber-500/30',
+    id: 'developpement', name: 'Développement Digital', icon: Code, hex: '#2AACB2',
     description: 'Des solutions digitales sur mesure pour booster votre activité',
     services: [
       { name: 'Sites web & e-commerce', description: 'Création de sites vitrine, boutiques en ligne sur mesure', price: 'Sur devis' },
@@ -104,14 +96,7 @@ const serviceCategories = [
     ]
   },
   {
-    id: 'cloud',
-    name: 'Cloud & Hébergement',
-    icon: Cloud,
-    color: 'blue',
-    gradient: 'from-blue-500 to-blue-600',
-    bgLight: 'bg-blue-500/10',
-    textLight: 'text-blue-400',
-    borderLight: 'border-blue-500/30',
+    id: 'cloud', name: 'Cloud & Hébergement', icon: Cloud, hex: '#4681B7',
     description: 'Infrastructures cloud scalable et sécurisées pour votre entreprise',
     services: [
       { name: 'Hébergement cloud', description: 'Hébergement sécurisé haute disponibilité 99.9% uptime', price: 'Sur devis' },
@@ -121,14 +106,7 @@ const serviceCategories = [
     ]
   },
   {
-    id: 'energie',
-    name: 'Énergie & Équipements',
-    icon: Sun,
-    color: 'orange',
-    gradient: 'from-orange-500 to-orange-600',
-    bgLight: 'bg-orange-500/10',
-    textLight: 'text-orange-400',
-    borderLight: 'border-orange-500/30',
+    id: 'energie', name: 'Énergie & Équipements', icon: Sun, hex: '#55DDB5',
     description: 'Solutions énergétiques durables et équipements haute performance',
     services: [
       { name: 'Panneaux solaires', description: 'Installation de systèmes photovoltaïques pour entreprises', price: 'Sur devis' },
@@ -138,14 +116,7 @@ const serviceCategories = [
     ]
   },
   {
-    id: 'materiel',
-    name: 'Vente de Matériel',
-    icon: Monitor,
-    color: 'purple',
-    gradient: 'from-purple-500 to-purple-600',
-    bgLight: 'bg-purple-500/10',
-    textLight: 'text-purple-400',
-    borderLight: 'border-purple-500/30',
+    id: 'materiel', name: 'Vente de Matériel', icon: Monitor, hex: '#72A5CE',
     description: 'Matériel IT professionnel des meilleures marques',
     services: [
       { name: 'Ordinateurs & serveurs', description: 'PC, laptops, serveurs haute performance', price: 'Sur devis' },
@@ -155,14 +126,7 @@ const serviceCategories = [
     ]
   },
   {
-    id: 'formation',
-    name: 'Formation & Accompagnement',
-    icon: BookOpen,
-    color: 'green',
-    gradient: 'from-green-500 to-green-600',
-    bgLight: 'bg-green-500/10',
-    textLight: 'text-green-400',
-    borderLight: 'border-green-500/30',
+    id: 'formation', name: 'Formation & Accompagnement', icon: BookOpen, hex: '#053876',
     description: 'Formation et support pour maîtriser vos outils digitaux',
     services: [
       { name: 'Formation IT', description: 'Formations certifiantes en développement, réseau, sécurité', price: 'Sur devis' },
@@ -171,311 +135,145 @@ const serviceCategories = [
       { name: 'Maintenance', description: 'Contrats de maintenance pour vos équipements et logiciels', price: 'Sur devis' },
     ]
   },
-  // ── Ferronnerie Métallique ──
-  {
-    id: 'ferronnerie-metallique',
-    name: 'Ferronnerie Métallique',
-    icon: Hammer,
-    color: 'rose',
-    gradient: 'from-rose-500 to-orange-500',
-    bgLight: 'bg-rose-500/10',
-    textLight: 'text-rose-400',
-    borderLight: 'border-rose-500/30',
-    description: 'Fabrication et installation sur mesure de portes, portails, fenêtres, escaliers et structures métalliques',
-    dedicatedPage: '/ferronnerie',
-    services: [
-      { name: 'Portes métalliques', description: 'Portes métalliques modernes et blindées fabriquées sur mesure selon vos dimensions et finitions souhaitées', price: 'Sur devis' },
-      { name: 'Portails & Clôtures', description: 'Portails coulissants et battants, clôtures et barrières robustes pour sécuriser tous vos espaces extérieurs', price: 'Sur devis' },
-      { name: 'Fenêtres aluminium', description: 'Fenêtres aluminium et fer forgé, simples ou double vitrage, coulissantes ou à la française sur mesure', price: 'Sur devis' },
-      { name: 'Escaliers & Garde-corps', description: 'Escaliers métalliques design et garde-corps élégants alliant sécurité et esthétique contemporaine', price: 'Sur devis' },
-      { name: 'Structures métalliques', description: 'Réalisation de structures métalliques pour charpentes, hangars et bâtiments industriels ou commerciaux', price: 'Sur devis' },
-    ],
-  },
-  // ── Mobilier Moderne ──
-  {
-    id: 'mobilier-moderne',
-    name: 'Mobilier Moderne',
-    icon: Wrench,
-    color: 'amber',
-    gradient: 'from-amber-500 to-yellow-500',
-    bgLight: 'bg-amber-500/10',
-    textLight: 'text-amber-400',
-    borderLight: 'border-amber-500/30',
-    description: 'Conception et fabrication de mobilier métallique haut de gamme pour particuliers et professionnels',
-    dedicatedPage: '/ferronnerie',
-    services: [
-      { name: 'Salons VIP', description: 'Salons VIP et salons de bureau raffinés, disponibles en 5 et 7 places, entièrement sur mesure', price: 'Sur devis' },
-      { name: 'Lits & Chambres', description: 'Lits modernes simples, doubles et king size, avec ou sans rangements, chambres complètes disponibles', price: 'Sur devis' },
-      { name: 'Tables', description: 'Tables à manger, tables de conférence et tables basses au design contemporain et épuré', price: 'Sur devis' },
-      { name: 'Chaises design', description: 'Chaises modernes, chaises de bureau, restaurant et VIP fabriquées sur mesure selon votre style', price: 'Sur devis' },
-      { name: 'Mobilier professionnel', description: 'Tout type de mobilier métallique professionnel adapté à vos locaux commerciaux ou tertiaires', price: 'Sur devis' },
-    ],
-  },
-  // ── Vitrines Commerciales ──
-  {
-    id: 'vitrines-commerciales',
-    name: 'Vitrines Commerciales',
-    icon: Eye,
-    color: 'cyan',
-    gradient: 'from-cyan-500 to-teal-500',
-    bgLight: 'bg-cyan-500/10',
-    textLight: 'text-cyan-400',
-    borderLight: 'border-cyan-500/30',
-    description: 'Solutions de vitrine et d\'agencement commercial pour valoriser vos produits et renforcer votre image',
-    dedicatedPage: '/ferronnerie',
-    services: [
-      { name: 'Vitrines de magasins', description: 'Vitrines sur mesure pour boutiques et commerces de détail, alliant esthétique et fonctionnalité', price: 'Sur devis' },
-      { name: 'Vitrines pharmacies & bijouteries', description: 'Vitrines sécurisées pour pharmacies, bijouteries et commerces de luxe avec fermetures renforcées', price: 'Sur devis' },
-      { name: 'Comptoirs commerciaux', description: 'Comptoirs d\'accueil et de vente en aluminium et verre, fabriqués selon vos dimensions précises', price: 'Sur devis' },
-      { name: 'Structures aluminium & verre', description: 'Façades et structures aluminium et verre pour une image professionnelle et moderne de votre commerce', price: 'Sur devis' },
-    ],
-  },
 ];
 
-const ServiceCard = ({ service, gradient, index }) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.05 }}
-      className="group bg-white/5 border border-white/10 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:border-blue-500/50 hover:bg-white/10 cursor-pointer"
-    >
-      <div className="flex justify-between items-start mb-4">
-        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110`}>
-          <CheckCircle size={22} className="text-white" />
-        </div>
-        <span className="text-xs font-semibold text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full">{service.price}</span>
+const ServiceCard = ({ service, hex, index }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 30 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ delay: index * 0.05 }}
+    className="card-hover p-6 cursor-pointer group"
+  >
+    <div className="flex justify-between items-start mb-4">
+      <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110" style={{ background: `linear-gradient(135deg, ${hex}, #2AACB2)` }}>
+        <CheckCircle size={22} className="text-white" />
       </div>
-      <h3 className="text-xl font-bold text-white mb-2 font-syne group-hover:text-blue-300 transition-colors">{service.name}</h3>
-      <p className="text-gray-400 text-sm leading-relaxed mb-5 group-hover:text-gray-300 transition-colors">{service.description}</p>
-      <Link
-        to="/demander-devis"
-        className="inline-flex items-center gap-2 text-blue-400 text-sm font-semibold group-hover:text-blue-300 transition-all group-hover:gap-3"
-      >
-        Demander un devis <ArrowRight size={14} />
-      </Link>
-    </motion.div>
-  );
-};
+      <span className="text-xs font-semibold px-3 py-1 rounded-full" style={{ color: hex, background: `${hex}18` }}>{service.price}</span>
+    </div>
+    <h3 className="text-xl font-bold text-[#053876] mb-2 font-syne transition-colors">{service.name}</h3>
+    <p className="text-[#25364A] text-sm leading-relaxed mb-5">{service.description}</p>
+    <Link
+      to="/demander-devis"
+      className="inline-flex items-center gap-2 text-sm font-semibold transition-all group-hover:gap-3"
+      style={{ color: '#0B74C1' }}
+    >
+      Demander un devis <ArrowRight size={14} />
+    </Link>
+  </motion.div>
+);
 
-const CategorySection = ({ category, index }) => {
-  return (
-    <section className="py-16 border-b border-white/10 last:border-0">
-      <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: index * 0.1 }}
-          className="mb-10"
-        >
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-3">
-            <div className="flex items-center gap-4">
-              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${category.bgLight} ${category.textLight} transition-all duration-300 hover:scale-110`}>
-                <category.icon size={28} />
-              </div>
-              <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-white font-syne">{category.name}</h2>
-                <div className={`w-12 h-0.5 bg-gradient-to-r ${category.gradient} rounded-full mt-2`} />
-              </div>
+const CategorySection = ({ category, index }) => (
+  <section className={`py-16 ${index % 2 === 1 ? 'bg-[#F6F6F7]' : 'bg-white'}`}>
+    <div className="container">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.05 }}
+        className="mb-10"
+      >
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-3">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 hover:scale-110" style={{ background: `${category.hex}18`, color: category.hex }}>
+              <category.icon size={28} />
             </div>
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-500">{category.services.length} services disponibles</span>
-              {category.dedicatedPage && (
-                <Link
-                  to={category.dedicatedPage}
-                  className={`inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-full ${category.bgLight} ${category.textLight} border ${category.borderLight} hover:scale-105 transition-all`}
-                >
-                  Page dédiée <ArrowRight size={12} />
-                </Link>
-              )}
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold text-[#053876] font-syne">{category.name}</h2>
+              <div className="w-12 h-1 rounded-full mt-2" style={{ background: `linear-gradient(90deg, ${category.hex}, #55DDB5)` }} />
             </div>
           </div>
-          <p className="text-gray-400 text-base max-w-3xl">{category.description}</p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {category.services.map((service, idx) => (
-            <ServiceCard key={idx} service={service} gradient={category.gradient} index={idx} />
-          ))}
+          <span className="text-sm text-[#25364A]/70">{category.services.length} services disponibles</span>
         </div>
+        <p className="text-[#25364A] text-base max-w-3xl">{category.description}</p>
+      </motion.div>
 
-        {/* CTA dédié ferronnerie */}
-        {category.dedicatedPage && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mt-8 p-6 rounded-2xl bg-gradient-to-r from-rose-500/10 to-orange-500/10 border border-rose-500/20 flex flex-col md:flex-row items-center justify-between gap-4"
-          >
-            <div className="flex items-center gap-3">
-              <Hammer size={22} className="text-rose-400" />
-              <div>
-                <p className="text-white font-semibold">Page complète — Ferronnerie & Mobilier Moderne</p>
-                <p className="text-gray-400 text-sm">Portes, portails, mobilier, vitrines — tout sur mesure avec devis en ligne</p>
-              </div>
-            </div>
-            <Link
-              to={category.dedicatedPage}
-              className="shrink-0 inline-flex items-center gap-2 bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white px-5 py-2.5 rounded-xl font-semibold transition-all hover:scale-105 text-sm"
-            >
-              Voir la page Ferronnerie <ArrowRight size={16} />
-            </Link>
-          </motion.div>
-        )}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {category.services.map((service, idx) => (
+          <ServiceCard key={idx} service={service} hex={category.hex} index={idx} />
+        ))}
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
 const ServicesPage = () => {
   return (
-    <>
+    <div className="omedev-services">
       <style>{globalStyles}</style>
 
-      {/* Hero Section */}
-      {/* ==================== HERO SECTION - SERVICES ==================== */}
-      <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden pt-32 pb-20 min-h-[550px]">
-        <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px'
-        }} />
-        <div className="absolute w-96 h-96 bg-blue-600/20 top-20 -left-20 rounded-full filter blur-[80px] animate-float" />
-        <div className="absolute w-72 h-72 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
+      {/* ==================== HERO SECTION ==================== */}
+      <PublicHero
+        badge="Expertise & Innovation"
+        title="Nos Services"
+        highlight="Services"
+        subtitle={<>Des solutions complètes pour la <strong className="text-white font-semibold">transformation digitale</strong> de votre entreprise</>}
+        primaryAction={{ label: 'Nous contacter', to: '/contact' }}
+        secondaryAction={{ label: 'Voir nos réalisations', to: '/realisations' }}
+        compact
+      />
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-blue-600/15 border border-blue-500/30"
-            >
-              <Briefcase className="w-4 h-4 text-blue-400" />
-              <span className="text-blue-300 font-semibold text-xs tracking-wide font-syne">Expertise & Innovation</span>
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
-            >
-              Nos{' '}
-              <span className="relative inline-block">
-                <span className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 blur-2xl opacity-50" />
-                <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
-                  Services
-                </span>
-              </span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-              className="text-gray-300 text-base sm:text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
-            >
-              Des solutions complètes pour la <strong className="text-white">transformation digitale</strong> de votre entreprise
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 }}
-              className="flex flex-wrap gap-4 justify-center"
-            >
-              <Link to="/contact" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
-                Nous contacter <ArrowRight size={18} className="group-hover:translate-x-1 transition" />
-              </Link>
-              <Link to="/realisations" className="group border-2 border-white/30 hover:border-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
-                Voir nos réalisations
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-       
-      {/* Statistiques clés */}
-      <section className="py-12 bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/5 border-b border-white/5">
-        <div className="container mx-auto px-4">
+      {/* ==================== STATISTIQUES CLÉS ==================== */}
+      <section className="py-16" style={{ background: 'linear-gradient(135deg, #053876 0%, #1D5B9B 55%, #0B74C1 100%)' }}>
+        <div className="container">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div className="p-4 rounded-xl bg-white/5 border border-white/10 transition-all duration-300 hover:scale-105 hover:bg-white/10">
-              <div className="text-3xl font-bold text-blue-400 font-syne">10+</div>
-              <div className="text-gray-400 text-sm">Catégories de services</div>
-            </div>
-            <div className="p-4 rounded-xl bg-white/5 border border-white/10 transition-all duration-300 hover:scale-105 hover:bg-white/10">
-              <div className="text-3xl font-bold text-cyan-400 font-syne">41+</div>
-              <div className="text-gray-400 text-sm">Services proposés</div>
-            </div>
-            <div className="p-4 rounded-xl bg-white/5 border border-white/10 transition-all duration-300 hover:scale-105 hover:bg-white/10">
-              <div className="text-3xl font-bold text-amber-400 font-syne">98%</div>
-              <div className="text-gray-400 text-sm">Des  satisfaactions</div>
-            </div>
-            <div className="p-4 rounded-xl bg-white/5 border border-white/10 transition-all duration-300 hover:scale-105 hover:bg-white/10">
-              <div className="text-3xl font-bold text-emerald-400 font-syne">24/7</div>
-              <div className="text-gray-400 text-sm">Support technique</div>
-            </div>
+            {[
+              { value: '7', label: 'Catégories de services' },
+              { value: '28+', label: 'Services proposés' },
+              { value: '98%', label: 'Satisfaction client' },
+              { value: '24/7', label: 'Support technique' },
+            ].map((s, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className="p-5 rounded-2xl backdrop-blur-md transition-all duration-300 hover:-translate-y-1"
+                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)' }}
+              >
+                <div className="text-3xl font-extrabold text-white font-syne">{s.value}</div>
+                <div className="text-white/70 text-sm mt-1">{s.label}</div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Catégories de services */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
-        <div className="container mx-auto px-4 py-8">
-          {/* Navigation rapide */}
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
+      {/* ==================== NAVIGATION RAPIDE + CATÉGORIES ==================== */}
+      <div className="bg-white py-10">
+        <div className="container">
+          <div className="flex flex-wrap justify-center gap-3">
             {serviceCategories.map((cat, idx) => (
               <a
                 key={idx}
                 href={`#${cat.id}`}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${cat.bgLight} ${cat.textLight} border ${cat.borderLight} hover:scale-105 hover:brightness-110`}
+                className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 border hover:scale-105"
+                style={{ background: `${cat.hex}12`, color: cat.hex, borderColor: `${cat.hex}40` }}
               >
                 {cat.name}
               </a>
             ))}
           </div>
-
-          {/* Sections des catégories */}
-          {serviceCategories.map((category, idx) => (
-            <div key={idx} id={category.id}>
-              <CategorySection category={category} index={idx} />
-            </div>
-          ))}
         </div>
       </div>
 
-      {/* CTA Section */}
-      <section className="py-20 relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/5">
-        <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: `radial-gradient(circle at 20% 50%, rgba(59,130,246,0.3) 0%, transparent 50%)`
-        }} />
-        
-        <div className="absolute w-96 h-96 bg-blue-600/20 bottom-0 left-1/2 -translate-x-1/2 rounded-full filter blur-[100px]" />
-        
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 mb-6 text-amber-300 text-sm font-semibold">
-              <Rocket size={16} /> Besoin d'un service personnalisé ?
-            </div>
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 font-syne">Vous avez un projet spécifique ?</h2>
-            <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">
-              Notre équipe d'experts est à votre écoute pour étudier votre besoin et vous proposer une solution sur mesure.
-            </p>
-            <Link to="/contact" className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-8 py-4 rounded-xl font-semibold transition-all hover:scale-105 hover:shadow-xl">
-              Contactez-nous <ArrowRight size={18} />
-            </Link>
-          </motion.div>
+      {serviceCategories.map((category, idx) => (
+        <div key={idx} id={category.id}>
+          <CategorySection category={category} index={idx} />
         </div>
-      </section>
-    </>
+      ))}
+
+      {/* ==================== CTA FINALE ==================== */}
+      <CTASection
+        badge="Besoin d'un service personnalisé ?"
+        title="Un projet ? Parlons-en."
+        highlight="Parlons-en."
+        subtitle="Notre équipe est prête à vous accompagner dans la réalisation de vos projets."
+        backgroundImage="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1920&q=80"
+        primaryAction={{ label: 'Nous contacter', to: '/contact' }}
+      />
+    </div>
   );
 };
 

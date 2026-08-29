@@ -51,7 +51,7 @@ const ClientHeader = ({ onMenuClick }) => {
         </button>
 
         {/* Search */}
-        <div className="hidden md:flex items-center bg-gray-50 rounded-lg px-4 py-2 max-w-md flex-1 mx-4">
+        <div className="hidden md:flex items-center bg-gray-50 rounded-lg px-4 py-2 max-w-md flex-1 mx-4 focus-within:ring-2 focus-within:ring-[#2AACB2]/40 transition-all">
           <Search className="w-5 h-5 text-gray-400" />
           <input
             type="text"
@@ -66,7 +66,7 @@ const ClientHeader = ({ onMenuClick }) => {
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setShowNotifications(!showNotifications)}
-              className="relative p-2 rounded-lg hover:bg-gray-100 transition"
+              className="relative p-2 rounded-lg hover:bg-[#2AACB2]/10 transition-colors"
             >
               <Bell className="w-5 h-5 text-gray-600" />
               {unreadCount > 0 && (
@@ -88,9 +88,9 @@ const ClientHeader = ({ onMenuClick }) => {
                   ) : notifications.map((notif) => (
                     <div
                       key={notif.id}
-                      className={`p-4 border-b last:border-0 hover:bg-gray-50 cursor-pointer transition-colors ${!notif.read ? 'bg-blue-50' : ''}`}
+                      className={`p-4 border-b last:border-0 hover:bg-gray-50 cursor-pointer transition-colors ${!notif.read ? 'bg-[#2AACB2]/10' : ''}`}
                     >
-                      {!notif.read && <span className="inline-block w-1.5 h-1.5 bg-blue-500 rounded-full mr-1.5 mb-0.5" />}
+                      {!notif.read && <span className="inline-block w-1.5 h-1.5 bg-[#2AACB2]/100 rounded-full mr-1.5 mb-0.5" />}
                       <p className="font-medium text-sm text-gray-800">{notif.title}</p>
                       <p className="text-xs text-gray-500 mt-1 line-clamp-2">{notif.message}</p>
                       <p className="text-xs text-gray-400 mt-1.5">{notif.time}</p>
@@ -98,7 +98,7 @@ const ClientHeader = ({ onMenuClick }) => {
                   ))}
                 </div>
                 <div className="p-3 text-center border-t">
-                  <a href="/client/messagerie" className="text-sm text-blue-600 hover:underline">
+                  <a href="/client/messagerie" className="text-sm text-[#0B74C1] hover:text-[#2AACB2] hover:underline transition-colors">
                     Voir tous les messages →
                   </a>
                 </div>
@@ -108,7 +108,7 @@ const ClientHeader = ({ onMenuClick }) => {
 
           {/* User avatar */}
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+            <div className="w-10 h-10 bg-gradient-to-r from-[#0B74C1] to-[#2AACB2] rounded-full flex items-center justify-center text-white font-bold text-sm">
               {initials || '?'}
             </div>
             <div className="hidden md:block">

@@ -9,13 +9,10 @@ import ChatWidget from './components/Chat/ChatWidget'
 // Pages Publiques
 import Home from './pages/Home'
 import Services from './pages/Services'
-import Ferronneriepage from './pages/Ferronneriepage'
-import FerronnerieProjets from './pages/services/FerronnerieProjets'
 // import ServiceDetail from './pages/ServiceDetail'
 import Solutions from './pages/Solutions'
 // import SolutionDetail from './pages/SolutionDetail'
 import Realisations from './pages/Realisations'
-// import RealisationDetail from './pages/RealisationDetail'
 import Tarifs from './pages/Tarifs'
 import About from './pages/About'
 import Blog from './pages/Blog'
@@ -27,9 +24,9 @@ import Expert from './pages/autre/Expert'
 
 // Authentification
 import Login from './pages/Auth/Login'
-import Register from './pages/Auth/Register'
 import ForgotPassword from './pages/Auth/ForgotPassword'
 import ResetPassword from './pages/Auth/ResetPassword'
+import ActivateAccount from './pages/Auth/ActivateAccount'
 
 // Espace Client
 import ClientLayout from './components/Layout/ClientLayout'
@@ -53,7 +50,6 @@ import AdminBlog from './pages/Admin/AdminBlog'
 import AdminAudits from './pages/Admin/AdminAudits'
 import AdminContacts from './pages/Admin/AdminContacts'
 import AdminDemandesDevis from './pages/Admin/AdminDemandesDevis'
-import AdminFerronnerieProjects from './pages/Admin/AdminFerronnerieProjects'
 import AdminNewsletter from './pages/Admin/AdminNewsletter'
 import AdminVenteMateriel from './pages/Admin/AdminVenteMateriel'
 import AdminFormation from './pages/Admin/AdminFormation'
@@ -67,6 +63,7 @@ import CloudHebergement from './pages/services/CloudHebergement'
 import EnergieEquipements from './pages/services/EnergieEquipements'
 import VenteMateriel from './pages/services/VenteMateriel'
 import Formation from './pages/services/Formation'
+import CatalogueFormations from './pages/services/CatalogueFormations'
 import Inscription from './pages/services/Inscription'
 import DevisCloud from './pages/services/DevisCloud';
 import Projets from './pages/services/Projets'
@@ -96,7 +93,6 @@ function App() {
           <Route path="/solutions" element={<Solutions />} />
           {/* <Route path="/solutions/:slug" element={<SolutionDetail />} /> */}
           <Route path="/realisations" element={<Realisations />} />
-          {/* <Route path="/realisations/:slug" element={<RealisationDetail />} /> */}
           <Route path="/tarifs" element={<Tarifs />} />
           <Route path="/about" element={<About />} />
           <Route path="/blog" element={<Blog />} />
@@ -106,7 +102,6 @@ function App() {
           <Route path="/demander-devis" element={<DemanderDevis />} />
           <Route path="/inscription" element={<Inscription />} />
           <Route path="/experts" element={<Expert />} />
-          <Route path="/ferronnerie" element={<Ferronneriepage />} />
           {/* ========== SERVICES ========== */}
           <Route path="/services/reseau-infrastructure" element={<ReseauInfrastructure />} />
           <Route path="/services/securite" element={<Securite />} />
@@ -115,15 +110,15 @@ function App() {
           <Route path="/services/energie-equipements" element={<EnergieEquipements />} />
           <Route path="/services/vente-materiel" element={<VenteMateriel />} />
           <Route path="/services/formation" element={<Formation />} />
+          <Route path="/formations/catalogue" element={<CatalogueFormations />} />
           <Route path="/devis-cloud" element={<DevisCloud />} />
-          <Route path="/ferronnerie/projets" element={<FerronnerieProjets />} />
           <Route path="/newsletter/unsubscribe" element={<NewsletterUnsubscribe />} />
 
           {/* ========== AUTHENTIFICATION ========== */}
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/activate-account" element={<ActivateAccount />} />
 
           {/* ========== ESPACE CLIENT ========== */}
           <Route path="/client" element={<ClientLayout />}>
@@ -149,7 +144,6 @@ function App() {
             <Route path="demandes-devis" element={<AdminDemandesDevis />} />
             <Route path="audits" element={<AdminAudits />} />
             <Route path="contacts" element={<AdminContacts />} />
-            <Route path="ferronnerie-projets" element={<AdminFerronnerieProjects />} />
             <Route path="newsletter" element={<AdminNewsletter />} />
             <Route path="blog" element={<AdminBlog />} />
             <Route path="vente-materiel" element={<AdminVenteMateriel />} />

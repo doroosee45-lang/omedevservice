@@ -1,13 +1,15 @@
-﻿import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef, useEffect, useState } from 'react';
+import { motion, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { 
+import {
   Users, Award, Target, ArrowRight, Headphones, Briefcase,
-  Calendar, Star, Handshake
+  Calendar, Star, Handshake, ChevronRight
 } from 'lucide-react';
 
 import { FaLinkedin, FaGithub, FaTwitter, FaInstagram, FaBehance } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
+import PublicHero from '../../components/Public/PublicHero';
+import CTASection from '../../components/Public/CTASection';
 
 import expert1 from '/src/assets/images/experts/os5.jpeg';
 import expert2 from '/src/assets/images/experts/ms.jpeg';
@@ -21,31 +23,246 @@ import expert8 from '/src/assets/images/experts/ro.jpeg';
 import expert9 from '/src/assets/images/experts/glo.jpeg';
 import expert10 from '/src/assets/images/experts/ops.jpeg';
 
+/* ─────────────────────────────────────────────
+   DESIGN SYSTEM — identique à Home (navy/electric/gold)
+   Le bloc `.omedev-home` ci-dessous reprend exactement
+   les tokens (couleurs, boutons, cards, sections, animations)
+   définis sur la page Home pour garantir une cohérence visuelle totale.
+   ───────────────────────────────────────────── */
 const globalStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: #0f172a;
-    color: #e2e8f0;
-    overflow-x: hidden;
+  .omedev-home {
+    --omedev-navy: #053876;
+    --omedev-blue-dark: #1D5B9B;
+    --omedev-blue: #0B74C1;
+    --omedev-blue-light: #4681B7;
+    --omedev-cyan: #72A5CE;
+    --omedev-cyan-light: #A6C3D7;
+    --omedev-turquoise: #2AACB2;
+    --omedev-energy: #55DDB5;
+    --omedev-white: #F6F6F7;
+    --omedev-gray: #D5DCE1;
+    --omedev-dark: #0B1213;
+    --omedev-text-secondary: #25364A;
+    background: #F6F6F7;
+    color: #0B1213;
+    overflow: hidden;
   }
+
+  .omedev-home .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .omedev-home .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: .5rem 1.1rem;
+    border-radius: 999px;
+    background: rgba(11,116,193,.08);
+    color: #0B74C1;
+    border: 1px solid rgba(11,116,193,.18);
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-home .section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -.03em;
+    margin-bottom: 1rem;
+    font-family: 'Syne', sans-serif;
+    color: #053876;
+  }
+
+  .omedev-home .section-subtitle {
+    font-size: 1rem;
+    color: #25364A;
+    max-width: 52ch;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .omedev-home .divider {
+    width: 64px;
+    height: 4px;
+    background: linear-gradient(90deg, #0B74C1, #2AACB2, #55DDB5);
+    border-radius: 99px;
+    margin: 1rem auto 1.5rem;
+  }
+
+  .omedev-home .btn-primary,
+  .omedev-home .btn-accent {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    background: linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%);
+    color: #fff;
+    font-size: .9rem;
+    font-weight: 700;
+    padding: .9rem 1.7rem;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all .3s ease;
+    cursor: pointer;
+    border: none;
+    font-family: 'Syne', sans-serif;
+    box-shadow: 0 10px 28px rgba(11,116,193,.20);
+  }
+
+  .omedev-home .btn-primary:hover,
+  .omedev-home .btn-accent:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgba(42,172,178,.28);
+  }
+
+  .omedev-home .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    background: #fff;
+    color: #053876;
+    font-size: .9rem;
+    font-weight: 700;
+    padding: .85rem 1.7rem;
+    border-radius: 12px;
+    border: 1px solid rgba(5,56,118,.18);
+    text-decoration: none;
+    transition: all .3s ease;
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-home .btn-outline:hover {
+    border-color: #2AACB2;
+    color: #0B74C1;
+    background: rgba(85,221,181,.08);
+    transform: translateY(-3px);
+  }
+
+  .omedev-home .card-hover {
+    transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+    background: #fff;
+    border: 1px solid rgba(5,56,118,.09);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(5,56,118,.06);
+  }
+
+  .omedev-home .card-hover:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 22px 48px rgba(11,116,193,.14);
+    border-color: rgba(42,172,178,.35);
+  }
+
+  .omedev-home .grid-bg {
+    background-image: linear-gradient(rgba(11,116,193,.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(11,116,193,.055) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .omedev-home .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .omedev-home .omedev-hero {
+    background: linear-gradient(135deg, #053876 0%, #1D5B9B 35%, #4681B7 60%, #72A5CE 80%, #A6C3D7 100%);
+    position: relative;
+  }
+
+  .omedev-home .omedev-light-section {
+    background: #F6F6F7;
+  }
+
+  .omedev-home .omedev-white-section {
+    background: #fff;
+  }
+
+  .omedev-home .omedev-energy-section {
+    background: linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%);
+  }
+
+  .omedev-home .omedev-dark-section {
+    background: linear-gradient(135deg, #053876 0%, #1D5B9B 55%, #0B74C1 100%);
+  }
+
+  .omedev-home .hero-grid {
+    background-image: linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+
+  .omedev-home .hero-glass {
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.28);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 24px 60px rgba(5,56,118,.25);
+  }
+
+  .omedev-home .hero-glass-item {
+    background: rgba(255,255,255,.10);
+    border: 1px solid rgba(255,255,255,.20);
+    backdrop-filter: blur(10px);
+  }
+
+  .omedev-home .energy-icon {
+    background: rgba(85,221,181,.14);
+    color: #2AACB2;
+    border: 1px solid rgba(42,172,178,.20);
+  }
+
+  .omedev-home .light-card {
+    background: #fff;
+    border: 1px solid rgba(5,56,118,.08);
+    box-shadow: 0 14px 36px rgba(5,56,118,.07);
+  }
+
+  .omedev-home .dark-section .text-white,
+  .omedev-home .omedev-dark-section .text-white,
+  .omedev-home .omedev-energy-section .text-white,
+  .omedev-home .omedev-hero .text-white { color: #fff !important; }
+
+  .omedev-home .light-content .text-white,
+  .omedev-home .omedev-light-section .text-white,
+  .omedev-home .omedev-white-section .text-white { color: #0B1213 !important; }
+
+  .omedev-home .light-content .text-[#25364A],
+  .omedev-home .omedev-light-section .text-[#25364A],
+  .omedev-home .omedev-white-section .text-[#25364A] { color: #25364A !important; }
+
+  .omedev-home .light-content .text-blue-400,
+  .omedev-home .omedev-light-section .text-blue-400,
+  .omedev-home .omedev-white-section .text-blue-400 { color: #0B74C1 !important; }
 
   @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50%       { transform: translateY(-20px); }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-16px); }
   }
-  @keyframes pulse-ring {
-    0%   { transform: scale(0.8); opacity: 1; }
-    70%  { transform: scale(1.3); opacity: 0; }
-    100% { transform: scale(0.8); opacity: 0; }
+  .omedev-home .animate-float { animation: float 6s ease-in-out infinite; }
+
+  @media (max-width: 768px) {
+    .omedev-home .container { padding: 0 1rem; }
   }
-  @keyframes slow-zoom {
-    0%   { transform: scale(1);   }
-    100% { transform: scale(1.1); }
-  }
+
+  /* ═══════════════════════════════════════════
+     SPÉCIFIQUE PAGE EXPERT — cartes équipe
+     Adapté au système Home : cards claires (#fff),
+     bordures/ombres navy, accents énergie/turquoise.
+  ═══════════════════════════════════════════ */
+
   @keyframes shimmer {
     0%   { background-position: -1000px 0; }
     100% { background-position:  1000px 0; }
@@ -60,31 +277,22 @@ const globalStyles = `
     100% { transform: rotate(360deg); }
   }
 
-  .animate-float      { animation: float      6s  ease-in-out infinite; }
-  .animate-pulse-ring { animation: pulse-ring 2s  ease-out   infinite; }
-  .animate-slow-zoom  { animation: slow-zoom  20s ease-out   forwards; }
-
   .shimmer {
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
     background-size: 1000px 100%;
     animation: shimmer 2s infinite;
   }
 
-  /* ═══════════════════════════════════════════
-     PHOTO CONTAINER — hauteur fixe, image carrée
-  ═══════════════════════════════════════════ */
-
-  /* Ratio-box : toujours 1:1 peu importe la largeur de la carte */
+  /* Photo carrée */
   .expert-image-wrapper {
     position: relative;
     width: 100%;
-    aspect-ratio: 1 / 1;   /* carré parfait */
+    aspect-ratio: 1 / 1;
     overflow: hidden;
     flex-shrink: 0;
-    background: #1e293b;
+    background: #053876;
   }
 
-  /* L'image remplit exactement le carré */
   .expert-image {
     position: absolute;
     inset: 0;
@@ -95,10 +303,9 @@ const globalStyles = `
     object-position: center 15%;
     transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
                 filter 0.4s ease;
-    filter: brightness(0.88) contrast(1.05);
+    filter: brightness(0.92) contrast(1.05);
   }
 
-  /* Positions fines par expert */
   .expert-image.pos1 { object-position: center 8%;  }
   .expert-image.pos2 { object-position: center 10%; }
   .expert-image.pos3 { object-position: center 12%; }
@@ -115,22 +322,21 @@ const globalStyles = `
     filter: brightness(1) contrast(1.05);
   }
 
-  /* Dégradé bas — fondu photo → corps carte */
+  /* Fondu bas de la photo (teinte navy, cohérente avec la marque) */
   .expert-image-wrapper::after {
     content: '';
     position: absolute;
     bottom: 0; left: 0; right: 0;
     height: 90px;
-    background: linear-gradient(to top, #111827 0%, transparent 100%);
+    background: linear-gradient(to top, rgba(5,56,118,0.75) 0%, transparent 100%);
     pointer-events: none;
     z-index: 2;
   }
 
-  /* Overlay coloré au survol */
   .image-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(59,130,246,0.35), rgba(139,92,246,0.35));
+    background: linear-gradient(135deg, rgba(11,116,193,0.35), rgba(42,172,178,0.35));
     opacity: 0;
     transition: opacity 0.5s ease;
     z-index: 3;
@@ -138,7 +344,6 @@ const globalStyles = `
   }
   .expert-card:hover .image-overlay { opacity: 1; }
 
-  /* Shine au survol */
   .image-shine {
     position: absolute;
     top: 0; left: -100%;
@@ -151,23 +356,23 @@ const globalStyles = `
   }
   .expert-card:hover .image-shine { left: 150%; }
 
-  /* Anneau lumineux */
+  /* Anneau lumineux (survol) — reprend la palette énergie de Home */
   .glow-ring {
     position: absolute;
     inset: -3px;
     border-radius: inherit;
-    background: conic-gradient(from 0deg, transparent, #3b82f6, transparent, #8b5cf6, transparent);
+    background: conic-gradient(from 0deg, transparent, #0B74C1, transparent, #2AACB2, transparent);
     opacity: 0;
     transition: opacity 0.35s ease;
     z-index: 0;
     pointer-events: none;
   }
   .expert-card:hover .glow-ring {
-    opacity: 0.45;
+    opacity: 0.4;
     animation: rotateGlow 2.5s linear infinite;
   }
 
-  /* Icônes réseaux sociaux */
+  /* Icônes réseaux sociaux (sur la photo) */
   .social-icon {
     transform: translateY(14px);
     opacity: 0;
@@ -180,54 +385,60 @@ const globalStyles = `
   .social-icon:nth-child(4) { transition-delay: 0.19s; }
   .social-icon:nth-child(5) { transition-delay: 0.24s; }
 
-  /* Badge rôle */
+  /* Badge rôle (sur la photo) */
   .role-badge {
     transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     z-index: 10;
   }
   .expert-card:hover .role-badge {
     transform: scale(1.06);
-    box-shadow: 0 0 16px rgba(59,130,246,0.5);
+    box-shadow: 0 0 16px rgba(11,116,193,0.5);
   }
 
-  /* Tags compétences */
-  .skill-tag { transition: all 0.25s ease; }
+  /* Tags compétences — version claire */
+  .skill-tag {
+    transition: all 0.25s ease;
+    color: #053876;
+    background: rgba(11,116,193,0.07);
+    border: 1px solid rgba(5,56,118,0.12);
+  }
   .skill-tag:hover {
     transform: translateY(-2px) scale(1.05);
-    background: rgba(59,130,246,0.28) !important;
-    border-color: rgba(59,130,246,0.75) !important;
+    background: rgba(11,116,193,0.16) !important;
+    border-color: rgba(11,116,193,0.5) !important;
+    color: #0B74C1;
   }
 
-  /* Carte — hauteur uniforme via flexbox colonne */
+  /* Carte expert — reprend .card-hover (fond blanc, ombre navy) */
   .expert-card {
-    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
     position: relative;
-    background: linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018));
-    backdrop-filter: blur(3px);
+    background: #fff;
+    border: 1px solid rgba(5,56,118,.09);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(5,56,118,.06);
     display: flex;
     flex-direction: column;
   }
   .expert-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 28px 48px -18px rgba(59,130,246,0.38);
-    border-color: rgba(59,130,246,0.65) !important;
+    transform: translateY(-9px);
+    box-shadow: 0 24px 50px rgba(11,116,193,.16);
+    border-color: rgba(42,172,178,.4);
   }
 
-  /* Corps de la carte — grandit pour pousser les certifs en bas */
   .expert-card-body {
     flex: 1;
     display: flex;
     flex-direction: column;
   }
 
-  /* Bio */
-  .expert-bio { transition: color 0.3s ease; }
-  .expert-card:hover .expert-bio { color: #cbd5e1; }
+  .expert-bio { color: #25364A; transition: color 0.3s ease; }
+  .expert-card:hover .expert-bio { color: #0B1213; }
 
-  /* Nom */
-  .expert-name { transition: all 0.3s ease; }
+  .expert-name { color: #053876; transition: all 0.3s ease; }
   .expert-card:hover .expert-name {
-    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+    background: linear-gradient(135deg, #0B74C1, #2AACB2);
     background-size: 200% 200%;
     -webkit-background-clip: text;
     background-clip: text;
@@ -235,12 +446,11 @@ const globalStyles = `
     animation: gradientShift 2s ease infinite;
   }
 
-  /* Grille de cartes : toutes les cartes du même rang ont la même hauteur */
   .experts-grid {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     gap: 2rem;
-    align-items: start; /* chaque carte grandit individuellement */
+    align-items: start;
   }
   @media (min-width: 768px) {
     .experts-grid { grid-template-columns: repeat(2, 1fr); }
@@ -251,12 +461,30 @@ const globalStyles = `
 `;
 
 const fadeUp = {
-  hidden:  { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7 } }
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] } },
 };
 const staggerContainer = {
-  hidden:  { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.08 } }
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
+};
+
+const Counter = ({ end, suffix, duration = 2.2 }) => {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-60px' });
+  useEffect(() => {
+    if (!isInView) return;
+    let start = 0;
+    const inc = end / (duration * 60);
+    const timer = setInterval(() => {
+      start += inc;
+      if (start >= end) { setCount(end); clearInterval(timer); }
+      else setCount(Math.floor(start));
+    }, 16);
+    return () => clearInterval(timer);
+  }, [isInView, end, duration]);
+  return <span ref={ref}>{count}{suffix}</span>;
 };
 
 const Experts = () => {
@@ -269,7 +497,7 @@ const Experts = () => {
       position: 'Expert en Informatique Appliquée & Développeur Full-Stack',
       bio: "Plus de 4 ans d'expérience en infrastructure IT et cybersécurité en Afrique centrale. Visionnaire et passionné par l'innovation technologique.",
       image: expert1,
-      gradient: 'from-blue-500 to-blue-700',
+      gradient: 'from-[#0B74C1] to-[#053876]',
       posClass: 'pos1',
       socials: { linkedin: 'https://linkedin.com/in/meya-dorodoro', github: 'https://github.com/meyadorodoro', twitter: 'https://twitter.com/meyadorodoro', email: 'oseedoro@gmail.com' },
       skills: ['Cybersécurité', 'Infrastructure IT', 'Cloud Computing', 'Leadership'],
@@ -282,7 +510,7 @@ const Experts = () => {
       position: 'Ingénieur Télécoms',
       bio: "Ingénieur en télécommunications, spécialiste des réseaux haut débit et des solutions cloud. Elle pilote l'innovation technique et la R&D.",
       image: expert2,
-      gradient: 'from-cyan-500 to-cyan-700',
+      gradient: 'from-[#72A5CE] to-[#1D5B9B]',
       posClass: 'pos2',
       socials: { linkedin: 'https://linkedin.com/in/osee-mbongo', github: 'https://github.com/oseembongo', twitter: 'https://twitter.com/oseembongo', email: 'osee.mbongo@omedev.com' },
       skills: ['Réseaux', 'Télécommunications', 'Cloud', '5G', 'IoT'],
@@ -295,7 +523,7 @@ const Experts = () => {
       position: 'Ingénieur Énergies Renouvelables',
       bio: "Ingénieur en énergies renouvelables, il pilote nos projets solaires et d'efficacité énergétique. Expert en solutions photovoltaïques.",
       image: expert3,
-      gradient: 'from-amber-500 to-orange-600',
+      gradient: 'from-[#55DDB5] to-[#2AACB2]',
       posClass: 'pos3',
       socials: { linkedin: 'https://linkedin.com/in/paul-kasongo', twitter: 'https://twitter.com/paulkasongo', email: 'paul.kasongo@omedev.com' },
       skills: ['Solaire photovoltaïque', 'Efficacité énergétique', 'Stockage batterie', 'Micro-grids'],
@@ -308,7 +536,7 @@ const Experts = () => {
       position: 'Développeuse Full-Stack',
       bio: 'Développeuse full-stack, elle conçoit des applications web et mobiles sur mesure. Spécialisée en React, Node.js et architecture cloud-native.',
       image: expert4,
-      gradient: 'from-violet-500 to-purple-700',
+      gradient: 'from-[#1D5B9B] to-[#053876]',
       posClass: 'pos4',
       socials: { linkedin: 'https://linkedin.com/in/claire-mbenza', github: 'https://github.com/clairembenza', twitter: 'https://twitter.com/clairembenza', instagram: 'https://instagram.com/claire.dev', email: 'claire.mbenza@omedev.com' },
       skills: ['React', 'Node.js', 'Flutter', 'MongoDB', 'AWS'],
@@ -316,78 +544,65 @@ const Experts = () => {
     },
     {
       id: 5,
-      name: 'Rodric Kasway',
-      role: 'Expert Cybersécurité',
-      position: 'Pentester & Consultant Sécurité',
-      bio: "Spécialiste en sécurité offensive et défensive. Il réalise des audits de sécurité, tests d'intrusion et accompagne les entreprises dans leur conformité.",
-      image: expert5,
-      gradient: 'from-red-500 to-rose-700',
-      posClass: 'pos5',
-      socials: { linkedin: 'https://linkedin.com/in/yannick-tshibangu', github: 'https://github.com/yannicksec', twitter: 'https://twitter.com/yannick_sec', email: 'yannick.tshibangu@omedev.com' },
-      skills: ['Pentest', 'Audit sécurité', 'SOC', 'ISO 27001', 'Forensics'],
-      certifications: ['CEH', 'OSCP', 'CISA']
-    },
-    {
-      id: 6,
       name: 'Fido Makayabu',
       role: 'Admin. Réseau',
       position: 'Expert Télécommunications & Administration Réseau',
       bio: "Certifié dans le domaine des télécommunications et de l'administration réseau, il conçoit et maintient des infrastructures réseau robustes et sécurisées.",
       image: expert6,
-      gradient: 'from-teal-500 to-emerald-700',
+      gradient: 'from-[#2AACB2] to-[#1D5B9B]',
       posClass: 'pos6',
       socials: { linkedin: 'https://linkedin.com/in/fido-makayabu', instagram: 'https://instagram.com/fido.tech', behance: 'https://behance.net/fidomakayabu', email: 'fido.makayabu@omedev.com' },
       skills: ['Networking', 'Cisco', 'Juniper', 'Linux', 'Windows Server'],
       certifications: ['CCNA', 'CCNP', 'MCSE']
     },
     {
-      id: 7,
+      id: 6,
       name: 'Amosi Aristote',
       role: 'Resp Climatisation',
       position: 'Expert en Installation & Maintenance,  Responsable du support technique',
       bio: "Certifié dans le domaine de la climatisation, il intervient sur l'installation, la maintenance et la réparation des systèmes de climatisation.",
       image: expert7,
-      gradient: 'from-sky-500 to-blue-700',
+      gradient: 'from-[#72A5CE] to-[#053876]',
       posClass: 'pos7',
       socials: { linkedin: 'https://linkedin.com/in/amosi-aristote', instagram: 'https://instagram.com/amosi.clim', email: 'amosi.aristote@omedev.com' },
       skills: ['Climatisation', 'HVAC', 'Installation', 'Maintenance', 'Réparation'],
       certifications: ['Certificat Climatisation', 'Maintenance HVAC', 'Technicien Réfrigération']
     },
     {
-      id: 8,
+      id: 7,
       name: 'Rodric Kasway',
       role: 'chargé technique des l’infrastructures réseau',
       position: 'Administration et supervision des équipements réseau (routeurs, switchs, firewalls), ',
       bio: "Spécialiste en Réseaux et configuration de serveurs, il conçoit et maintient des systèmes de surveillance robustes et sécurisés pour nos clients.",
       image: expert8,
-      gradient: 'from-indigo-500 to-indigo-700',
+      gradient: 'from-[#4681B7] to-[#1D5B9B]',
       posClass: 'pos8',
       socials: { linkedin: 'https://linkedin.com/in/rodric-kasway', instagram: 'https://instagram.com/rodric.tech', email: 'rodric.kasway@omedev.com' },
       skills: ['Création réseau', 'IP Cameras', 'Configuration réseau', 'Câblage'],
       certifications: ['Certificat Cisco', 'Technicien Sécurité Électronique']
     },
     {
-      id: 9,
+      id: 8,
       name: 'Glody Ntudi',
       role: 'Infographie & IT',
       position: 'Expert en Infographie & Informatique',
       bio: "Certifié en informatique et graphisme, il conçoit des solutions visuelles et numériques innovantes : identité visuelle, supports de communication et outils informatiques.",
       image: expert9,
-      gradient: 'from-fuchsia-500 to-pink-700',
+      gradient: 'from-[#2AACB2] to-[#053876]',
       posClass: 'pos9',
       socials: { linkedin: 'https://linkedin.com/in/glody-ntudi', instagram: 'https://instagram.com/glody.design', behance: 'https://behance.net/glodyntudi', email: 'glody.ntudi@omedev.com' },
       skills: ['Photoshop', 'Illustrator', 'InDesign', 'Identité visuelle', 'Web Design'],
       certifications: ['Adobe Certified', 'Technicien Infographiste', 'Web Designer']
     },
-    
+
      {
-      id: 10,
+      id: 9,
       name: 'Emanuel Kitoko',
       role: 'Analyste Programmeur ',
       position: 'un programmeur analyste spécialisé en développement de logiciels et applications.',
       bio: "Certifié en informatique de gestion, il conçoit des solutions logicielles personnalisées pour répondre aux besoins spécifiques de nos clients, en assurant performance et fiabilité.",
       image: expert10,
-      gradient: 'from-fuchsia-500 to-pink-700',
+      gradient: 'from-[#55DDB5] to-[#0B74C1]',
       posClass: 'pos10',
       socials: { linkedin: 'https://linkedin.com/in/glody-ntudi', instagram: 'https://instagram.com/glody.design', behance: 'https://behance.net/glodyntudi', email: 'glody.ntudi@omedev.com' },
       skills: ['Photoshop', 'Illustrator', 'InDesign', 'Identité visuelle', 'Web Design'],
@@ -396,10 +611,10 @@ const Experts = () => {
   ];
 
   const stats = [
-    { value: '4+',   label: "Années d'expertise", icon: Calendar   },
-    { value: '150+', label: 'Projets réalisés',    icon: Briefcase  },
-    { value: '98%',  label: 'Clients satisfaits',  icon: Star       },
-    { value: '24/7', label: 'Support technique',   icon: Headphones },
+    { value: 4,   suffix: '+', label: "Années d'expertise", icon: Calendar   },
+    { value: 15,  suffix: '+', label: 'Projets réalisés',    icon: Briefcase  },
+    { value: 98,  suffix: '%', label: 'Clients satisfaits',  icon: Star       },
+    { value: 24,  suffix: '/7', label: 'Support technique',  icon: Headphones },
   ];
 
   const getSocialUrl = (platform, url) =>
@@ -424,127 +639,77 @@ const Experts = () => {
         className="social-icon w-9 h-9 rounded-full bg-white/15 flex items-center justify-center
                    transition-all duration-300 hover:scale-110 hover:bg-white/35 group"
       >
-        <Icon size={15} className="text-gray-300 group-hover:text-white transition-colors" />
+        <Icon size={15} className="text-white/80 group-hover:text-white transition-colors" />
       </a>
     );
   };
 
   return (
-    <>
+    <div className="omedev-home">
       <style>{globalStyles}</style>
 
-      {/* ══════════════════════════ HERO ══════════════════════════ */}
-      <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden pt-32 pb-20 min-h-[550px]">
-        <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px'
-        }} />
-        <div className="absolute w-96 h-96 bg-blue-600/20 top-20 -left-20 rounded-full filter blur-[80px] animate-float" />
-        <div className="absolute w-72 h-72 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
+      {/* ==================== HERO ==================== */}
+      <PublicHero
+        badge="Notre équipe d'élite"
+        title="Des experts passionnés"
+        highlight="experts passionnés"
+        subtitle="Une équipe multidisciplinaire dédiée à votre réussite technologique et énergétique, de l'audit au déploiement."
+        primaryAction={{ label: 'Nous contacter', to: '/contact' }}
+        secondaryAction={{ label: 'Voir nos réalisations', to: '/realisations' }}
+      />
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-blue-600/15 border border-blue-500/30"
-            >
-              <Users className="w-4 h-4 text-blue-400" />
-              <span className="text-blue-300 font-semibold text-xs tracking-wide font-syne">Notre équipe d'élite</span>
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
-            >
-              Des{' '}
-              <span className="relative inline-block">
-                <span className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 blur-2xl opacity-50" />
-                <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
-                  experts passionnés
-                </span>
-              </span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-              className="text-gray-300 text-base sm:text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
-            >
-              Une équipe multidisciplinaire dédiée à votre réussite technologique et énergétique.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 }}
-              className="flex flex-wrap gap-4 justify-center"
-            >
-              <Link to="/contact" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
-                Nous contacter <ArrowRight size={18} className="group-hover:translate-x-1 transition" />
-              </Link>
-              <Link to="/realisations" className="group border-2 border-white/30 hover:border-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
-                Voir nos réalisations
-              </Link>
-            </motion.div>
+      {/* ==================== STATS ==================== */}
+      <section className="omedev-dark-section py-20">
+        <div className="container">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            {stats.map((stat, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                whileHover={{ y: -3 }}
+                className="relative group p-6 rounded-2xl backdrop-blur-md overflow-hidden"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  boxShadow: '0 8px 20px rgba(0,0,0,0.2)',
+                }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-[#2AACB2]/0 via-[#2AACB2]/5 to-[#2AACB2]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 shimmer" />
+                <div className="relative z-10">
+                  <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3"
+                    style={{ background: 'linear-gradient(135deg, #4681B7, #053876)' }}
+                  >
+                    <stat.icon size={24} className="text-white" />
+                  </div>
+                  <div className="text-4xl font-bold text-white mb-1">
+                    <Counter end={stat.value} suffix={stat.suffix} />
+                  </div>
+                  <div className="text-white/70 text-sm">{stat.label}</div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ══════════════════════════ STATS ══════════════════════════ */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
-        <div className="container mx-auto px-4 py-16">
+      {/* ==================== GRILLE EXPERTS ==================== */}
+      <section className="omedev-light-section light-content py-24">
+        <div className="container">
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={staggerContainer}
-            className="grid grid-cols-2 md:grid-cols-4 gap-6"
+            style={{ textAlign: 'center', marginBottom: '3.5rem' }}
           >
-            {stats.map((stat, i) => {
-              const Icon = stat.icon;
-              return (
-                <motion.div
-                  key={i}
-                  variants={fadeUp}
-                  className="relative group bg-gradient-to-br from-white/5 to-white/0 border border-white/10 rounded-2xl p-6 text-center transition-all duration-500 hover:-translate-y-2 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/10 overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/5 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 shimmer" />
-                  <div className="relative z-10">
-                    <div className="w-14 h-14 mx-auto mb-3 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                      <Icon size={24} className="text-white" />
-                    </div>
-                    <div className="text-3xl md:text-4xl font-bold text-white font-syne">{stat.value}</div>
-                    <div className="text-sm text-gray-400 mt-1 font-medium">{stat.label}</div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </div>
-      </div>
-
-      {/* ══════════════════════════ GRILLE EXPERTS ══════════════════════════ */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/10">
-        <div className="container mx-auto px-4 py-20">
-
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <div className="inline-flex items-center gap-2 bg-blue-500/20 border border-blue-500/30 rounded-full px-5 py-2 mb-5">
-              <Users size={16} className="text-blue-400" />
-              <span className="text-blue-300 text-sm font-semibold tracking-wide">Notre équipe</span>
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white font-syne mb-4">Rencontrez nos experts</h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">Des professionnels qualifiés à votre service</p>
+            <motion.div variants={fadeUp}><span className="section-badge">Notre équipe</span></motion.div>
+            <motion.h2 variants={fadeUp} className="section-title">Rencontrez nos experts</motion.h2>
+            <motion.div variants={fadeUp} className="divider" />
+            <motion.p variants={fadeUp} className="section-subtitle">Des professionnels qualifiés, certifiés et passionnés à votre service</motion.p>
           </motion.div>
 
           {/* ── Grille de cartes ── */}
@@ -555,18 +720,13 @@ const Experts = () => {
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                className="expert-card group border border-white/10 rounded-2xl overflow-hidden"
+                transition={{ delay: (i % 3) * 0.08 }}
+                className="expert-card group"
               >
                 {/* Anneau lumineux */}
                 <div className="glow-ring" />
 
-                {/* ════════════════════
-                    ZONE PHOTO — ratio 1:1
-                    • aspect-ratio: 1/1 garantit un carré parfait
-                    • img en position:absolute remplit exactement le conteneur
-                    • badge + icônes en position:absolute z-10
-                ════════════════════ */}
+                {/* Zone photo — ratio 1:1 */}
                 <div className="expert-image-wrapper">
 
                   <img
@@ -579,14 +739,14 @@ const Experts = () => {
                   <div className="image-overlay" />
                   <div className="image-shine" />
 
-                  {/* Badge rôle — coin supérieur droit */}
+                  {/* Badge rôle */}
                   <div className="absolute top-4 right-4 z-10">
                     <span className={`role-badge inline-block px-3 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r ${expert.gradient} text-white shadow-lg backdrop-blur-sm`}>
                       {expert.role}
                     </span>
                   </div>
 
-                  {/* Réseaux sociaux — bas de photo */}
+                  {/* Réseaux sociaux */}
                   <div className="absolute bottom-4 left-0 right-0 flex gap-2 justify-center z-10 px-4">
                     {Object.entries(expert.socials).map(([platform, url]) => (
                       <SocialIcon key={platform} platform={platform} url={url} />
@@ -594,10 +754,9 @@ const Experts = () => {
                   </div>
                 </div>
 
-                {/* ── Corps de la carte ── */}
+                {/* Corps de la carte */}
                 <div className="expert-card-body p-6">
-                  <h3 className="expert-name text-xl font-bold font-syne mb-1
-                                 bg-gradient-to-r from-white to-white bg-clip-text text-transparent">
+                  <h3 className="expert-name text-xl font-bold font-syne mb-1">
                     {expert.name}
                   </h3>
 
@@ -605,37 +764,33 @@ const Experts = () => {
                     {expert.position}
                   </p>
 
-                  <p className="expert-bio text-gray-400 text-sm leading-relaxed mb-4 line-clamp-3">
+                  <p className="expert-bio text-sm leading-relaxed mb-4 line-clamp-3">
                     {expert.bio}
                   </p>
 
-                  <div className="w-full h-px bg-white/5 mb-4" />
+                  <div className="w-full h-px bg-[rgba(5,56,118,0.08)] mb-4" />
 
                   <div className="flex flex-wrap gap-2 mb-4">
                     {expert.skills.slice(0, 3).map((skill, idx) => (
-                      <span
-                        key={idx}
-                        className="skill-tag text-xs px-2.5 py-1 rounded-full text-gray-300 border border-white/10 cursor-default"
-                        style={{ background: 'rgba(255,255,255,0.06)' }}
-                      >
+                      <span key={idx} className="skill-tag text-xs px-2.5 py-1 rounded-full cursor-default">
                         {skill}
                       </span>
                     ))}
                     {expert.skills.length > 3 && (
-                      <span className="text-xs px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/20">
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-[rgba(11,116,193,0.10)] text-[#0B74C1] border border-[rgba(11,116,193,0.25)]">
                         +{expert.skills.length - 3}
                       </span>
                     )}
                   </div>
 
                   <details className="mt-auto">
-                    <summary className="text-xs text-blue-400 cursor-pointer hover:text-blue-300 transition-colors flex items-center gap-1.5 select-none">
+                    <summary className="text-xs text-[#0B74C1] cursor-pointer hover:text-[#2AACB2] transition-colors flex items-center gap-1.5 select-none font-semibold">
                       <Award size={12} />
                       Certifications ({expert.certifications.length})
                     </summary>
                     <div className="mt-2 flex flex-wrap gap-2">
                       {expert.certifications.map((cert, idx) => (
-                        <span key={idx} className="text-xs px-2 py-1 rounded-full bg-blue-500/15 text-blue-400 border border-blue-500/25">
+                        <span key={idx} className="text-xs px-2 py-1 rounded-full bg-[rgba(11,116,193,0.08)] text-[#0B74C1] border border-[rgba(11,116,193,0.2)]">
                           {cert}
                         </span>
                       ))}
@@ -646,59 +801,19 @@ const Experts = () => {
             ))}
           </div>
         </div>
-      </div>
-
-      {/* ══════════════════════════ CTA ══════════════════════════ */}
-      <section className="py-24 relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/5">
-        <div className="absolute inset-0 opacity-30" style={{
-          backgroundImage: `radial-gradient(circle at 30% 40%, rgba(59,130,246,0.3) 0%, transparent 60%),
-                            radial-gradient(circle at 80% 70%, rgba(6,182,212,0.2) 0%, transparent 60%)`
-        }} />
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0 }}
-              className="group relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/30 hover:border-blue-500/50 text-center"
-            >
-              <div className="w-20 h-20 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-xl transition-all duration-300 group-hover:scale-110 group-hover:shadow-blue-500/50">
-                <Target size={32} className="text-white" />
-              </div>
-              <h3 className="text-2xl md:text-3xl font-bold text-white font-syne mb-3">Audit gratuit</h3>
-              <p className="text-gray-300 mb-6 leading-relaxed">
-                Bénéficiez d'un diagnostic complet de vos infrastructures sans engagement.
-              </p>
-              <Link to="/audit-gratuit" className="inline-flex items-center gap-2 bg-white/10 border border-white/20 hover:bg-white/20 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg">
-                Demander un audit <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="group relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-amber-500/30 hover:border-amber-500/50 text-center"
-            >
-              <div className="w-20 h-20 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-xl transition-all duration-300 group-hover:scale-110 group-hover:shadow-amber-500/50">
-                <Handshake size={32} className="text-white" />
-              </div>
-              <h3 className="text-2xl md:text-3xl font-bold text-white font-syne mb-3">Devis personnalisé</h3>
-              <p className="text-gray-300 mb-6 leading-relaxed">
-                Recevez une proposition sur mesure adaptée à vos besoins et votre budget.
-              </p>
-              <Link to="/demander-devis" className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg shadow-amber-500/30">
-                Demander un devis <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </motion.div>
-
-          </div>
-        </div>
       </section>
-    </>
+
+      {/* ==================== CTA FINALE ==================== */}
+      <CTASection
+        badge="Envie de travailler avec nous ?"
+        title="Rencontrez l'équipe qui portera votre projet"
+        highlight="votre projet"
+        subtitle="Bénéficiez d'un diagnostic gratuit de vos infrastructures ou recevez une proposition sur mesure adaptée à vos besoins."
+        backgroundImage="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1920&q=80"
+        primaryAction={{ label: 'Demander un devis', to: '/demander-devis' }}
+        secondaryAction={{ label: 'Audit gratuit', to: '/audit-gratuit' }}
+      />
+    </div>
   );
 };
 

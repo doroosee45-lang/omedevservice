@@ -1,70 +1,448 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-import { Send, CheckCircle, ChevronLeft } from 'lucide-react'
+import PublicHero from '../../components/Public/PublicHero'
+import {
+  Send,
+  CheckCircle,
+  ChevronLeft,
+  User,
+  Mail,
+  Phone,
+  Building2,
+  Activity,
+  DollarSign,
+  Calendar,
+  FileText,
+  MessageSquare,
+  ArrowRight,
+  ShieldCheck,
+  Clock,
+  Sparkles,
+} from 'lucide-react'
+
 import { quoteRequests } from '../../services/api'
 
+/* ============================================================
+   DESIGN SYSTEM — IDENTIQUE À LA PAGE ABOUT
+   ============================================================ */
+
 const globalStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,0..40,300&display=swap');
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  .omedev-devis {
+    --omedev-navy: #053876;
+    --omedev-blue-dark: #1D5B9B;
+    --omedev-blue: #0B74C1;
+    --omedev-blue-light: #4681B7;
+    --omedev-cyan: #72A5CE;
+    --omedev-cyan-light: #A6C3D7;
+    --omedev-turquoise: #2AACB2;
+    --omedev-energy: #55DDB5;
+    --omedev-white: #F6F6F7;
+    --omedev-gray: #D5DCE1;
+    --omedev-dark: #0B1213;
+    --omedev-text-secondary: #25364A;
 
-  body {
+    min-height: 100vh;
+    background: #F6F6F7;
+    color: #0B1213;
     font-family: 'DM Sans', sans-serif;
-    background: #0d1b2a;
-    color: #e2e8f0;
     overflow-x: hidden;
   }
 
-  .fc-badge-dot {
-    width: 6px; height: 6px;
-    background: #22d3ee;
-    border-radius: 50%;
-    animation: pulse 2s infinite;
+  .omedev-devis *,
+  .omedev-devis *::before,
+  .omedev-devis *::after {
+    box-sizing: border-box;
   }
 
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
+  .omedev-devis .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
   }
 
-  .fc-input, .fc-select, .fc-textarea {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 10px;
-    padding: 11px 14px;
-    color: #e2e8f0;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    transition: border-color 0.2s, background 0.2s;
+  /* ==========================================================
+     HERO
+     ========================================================== */
+
+  .omedev-devis .omedev-hero {
+    background:
+      linear-gradient(
+        135deg,
+        #053876 0%,
+        #1D5B9B 35%,
+        #4681B7 60%,
+        #72A5CE 80%,
+        #A6C3D7 100%
+      );
+    position: relative;
+    overflow: hidden;
+  }
+
+  .omedev-devis .hero-grid {
+    background-image:
+      linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+
+  .omedev-devis .hero-glow {
+    position: absolute;
+    border-radius: 999px;
+    filter: blur(100px);
+    pointer-events: none;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-16px);
+    }
+  }
+
+  .omedev-devis .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  /* ==========================================================
+     TYPOGRAPHIE
+     ========================================================== */
+
+  .omedev-devis .font-syne {
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-devis .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: .5rem 1.1rem;
+    border-radius: 999px;
+    background: rgba(11,116,193,.08);
+    color: #0B74C1;
+    border: 1px solid rgba(11,116,193,.18);
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-devis .section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -.03em;
+    margin-bottom: 1rem;
+    font-family: 'Syne', sans-serif;
+    color: #053876;
+  }
+
+  .omedev-devis .divider {
+    width: 64px;
+    height: 4px;
+    background: linear-gradient(
+      90deg,
+      #0B74C1,
+      #2AACB2,
+      #55DDB5
+    );
+    border-radius: 99px;
+    margin: 1rem auto 1.5rem;
+  }
+
+  /* ==========================================================
+     FORM CARD
+     ========================================================== */
+
+  .omedev-devis .form-card {
+    background: #fff;
+    border: 1px solid rgba(5,56,118,.09);
+    border-radius: 22px;
+    box-shadow: 0 18px 55px rgba(5,56,118,.09);
+  }
+
+  .omedev-devis .form-section {
+    padding: 0;
+  }
+
+  .omedev-devis .section-heading {
+    display: flex;
+    align-items: center;
+    gap: .9rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .omedev-devis .section-icon {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(11,116,193,.10);
+    color: #0B74C1;
+  }
+
+  .omedev-devis .section-heading h2 {
+    margin: 0;
+    font-family: 'Syne', sans-serif;
+    color: #053876;
+    font-size: 1.35rem;
+    font-weight: 700;
+  }
+
+  .omedev-devis .section-heading p {
+    margin: 3px 0 0;
+    color: #64748b;
+    font-size: .82rem;
+  }
+
+  .omedev-devis .form-divider {
+    height: 1px;
+    background: rgba(5,56,118,.08);
+    margin: 2rem 0;
+  }
+
+  /* ==========================================================
+     CHAMPS
+     ========================================================== */
+
+  .omedev-devis .field {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+  }
+
+  .omedev-devis .field label {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    color: #25364A;
+    font-size: .78rem;
+    font-weight: 600;
+  }
+
+  .omedev-devis .field label svg {
+    color: #0B74C1;
+  }
+
+  .omedev-devis .required {
+    color: #2AACB2;
+    font-weight: 800;
+  }
+
+  .omedev-devis .fc-input,
+  .omedev-devis .fc-select,
+  .omedev-devis .fc-textarea {
     width: 100%;
+    border: 1px solid rgba(5,56,118,.14);
+    background: #F6F6F7;
+    border-radius: 12px;
+    padding: .85rem 1rem;
+    color: #053876;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .9rem;
     outline: none;
+    transition:
+      border-color .25s ease,
+      box-shadow .25s ease,
+      background .25s ease,
+      transform .25s ease;
   }
-  .fc-input:focus, .fc-select:focus, .fc-textarea:focus {
-    border-color: rgba(34,211,238,0.5);
-    background: rgba(34,211,238,0.04);
-  }
-  .fc-input::placeholder, .fc-textarea::placeholder { color: #475569; }
 
-  .fc-select {
+  .omedev-devis .fc-input:hover,
+  .omedev-devis .fc-select:hover,
+  .omedev-devis .fc-textarea:hover {
+    border-color: rgba(11,116,193,.30);
+  }
+
+  .omedev-devis .fc-input:focus,
+  .omedev-devis .fc-select:focus,
+  .omedev-devis .fc-textarea:focus {
+    border-color: #2AACB2;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(42,172,178,.09);
+  }
+
+  .omedev-devis .fc-input::placeholder,
+  .omedev-devis .fc-textarea::placeholder {
+    color: #94a3b8;
+  }
+
+  .omedev-devis .fc-select {
     appearance: none;
     cursor: pointer;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2367e8f9' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    padding-right: 2.8rem;
+    background-image:
+      linear-gradient(45deg, transparent 50%, #0B74C1 50%),
+      linear-gradient(135deg, #0B74C1 50%, transparent 50%);
+    background-position:
+      calc(100% - 18px) 52%,
+      calc(100% - 13px) 52%;
+    background-size: 5px 5px, 5px 5px;
     background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 36px;
-    background-color: rgba(255,255,255,0.03);
   }
-  .fc-select option { background: #0d1b2a; color: #e2e8f0; }
 
-  .fc-textarea { resize: vertical; min-height: 110px; line-height: 1.6; }
+  .omedev-devis .fc-select option {
+    color: #053876;
+    background: #fff;
+  }
 
-  .fc-input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(0.6) sepia(1) hue-rotate(160deg);
+  .omedev-devis .fc-textarea {
+    resize: vertical;
+    min-height: 135px;
+    line-height: 1.65;
+  }
+
+  .omedev-devis .fc-input[type="date"] {
+    color: #053876;
+  }
+
+  /* ==========================================================
+     BOUTON
+     ========================================================== */
+
+  .omedev-devis .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    background:
+      linear-gradient(
+        135deg,
+        #0B74C1 0%,
+        #2AACB2 55%,
+        #55DDB5 100%
+      );
+    color: #fff;
+    font-size: .9rem;
+    font-weight: 700;
+    padding: .9rem 1.7rem;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all .3s ease;
     cursor: pointer;
+    border: none;
+    font-family: 'Syne', sans-serif;
+    box-shadow: 0 10px 28px rgba(11,116,193,.20);
+  }
+
+  .omedev-devis .btn-primary:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgba(42,172,178,.28);
+  }
+
+  .omedev-devis .btn-primary:disabled {
+    opacity: .65;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .omedev-devis .btn-full {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border-radius: 13px;
+    font-size: .95rem;
+  }
+
+  /* ==========================================================
+     INFO CARDS
+     ========================================================== */
+
+  .omedev-devis .info-card {
+    background: #fff;
+    border: 1px solid rgba(5,56,118,.09);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(5,56,118,.06);
+    transition:
+      transform .35s ease,
+      box-shadow .35s ease,
+      border-color .35s ease;
+  }
+
+  .omedev-devis .info-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 22px 48px rgba(11,116,193,.13);
+    border-color: rgba(42,172,178,.35);
+  }
+
+  .omedev-devis .info-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* ==========================================================
+     CONFIRMATION
+     ========================================================== */
+
+  .omedev-devis .success-box {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .omedev-devis .success-icon {
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background:
+      linear-gradient(
+        135deg,
+        #0B74C1,
+        #2AACB2,
+        #55DDB5
+      );
+    box-shadow: 0 18px 45px rgba(42,172,178,.25);
+  }
+
+  /* ==========================================================
+     RESPONSIVE
+     ========================================================== */
+
+  @media (max-width: 768px) {
+    .omedev-devis .container {
+      padding: 0 1rem;
+    }
+
+    .omedev-devis .form-card {
+      border-radius: 17px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .omedev-devis .hero-content {
+      padding-top: 7rem !important;
+      padding-bottom: 5rem !important;
+    }
+
+    .omedev-devis .form-padding {
+      padding: 1.25rem !important;
+    }
+
+    .omedev-devis .success-box {
+      padding: 3rem 1.25rem;
+    }
   }
 `
+
+/* ============================================================
+   DONNÉES DU FORMULAIRE
+   ============================================================ */
 
 const SERVICES = [
   'Hébergement cloud scalable (AWS/Azure/GCP)',
@@ -95,81 +473,79 @@ const TYPES_PROJET = [
 ]
 
 const EMPTY_FORM = {
-  nom: '', email: '', telephone: '', entreprise: '',
-  service: '', budget: '', dateSouhaitee: '', typeProjet: '', message: '',
+  nom: '',
+  email: '',
+  telephone: '',
+  entreprise: '',
+  service: '',
+  budget: '',
+  dateSouhaitee: '',
+  typeProjet: '',
+  message: '',
 }
 
-/* ─── Sous-composants ─────────────────────────────────────── */
+/* ============================================================
+   COMPOSANTS
+   ============================================================ */
 
-const SectionTitle = ({ children }) => (
-  <div style={{
-    fontFamily: "'Syne', sans-serif",
-    fontSize: 11,
-    fontWeight: 600,
-    color: '#22d3ee',
-    letterSpacing: '0.12em',
-    textTransform: 'uppercase',
-    marginBottom: '1.25rem',
-    paddingBottom: '0.75rem',
-    borderBottom: '1px solid rgba(6,182,212,0.15)',
-    display: 'flex',
-    alignItems: 'center',
-    gap: 8,
-  }}>
-    <span style={{
-      display: 'block', width: 3, height: 14,
-      background: 'linear-gradient(to bottom, #22d3ee, #60a5fa)',
-      borderRadius: 2, flexShrink: 0,
-    }} />
-    {children}
-  </div>
-)
-
-const Divider = () => (
-  <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '1.75rem 0' }} />
-)
-
-const Field = ({ label, required, icon, children }) => (
-  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-    <label style={{
-      fontSize: 12, fontWeight: 500, color: '#94a3b8',
-      display: 'flex', alignItems: 'center', gap: 5, letterSpacing: '0.03em',
-    }}>
-      {icon}
-      {label}
-      {required && <span style={{ color: '#22d3ee', fontSize: 10 }}>*</span>}
+const Field = ({
+  label,
+  required = false,
+  icon: Icon,
+  children,
+}) => (
+  <div className="field">
+    <label>
+      {Icon && <Icon size={14} strokeWidth={2} />}
+      <span>{label}</span>
+      {required && <span className="required">*</span>}
     </label>
     {children}
   </div>
 )
 
-/* ─── Icons inline (pas d'import lourd) ──────────────────── */
-const Icon = ({ d, d2, cx, cy, r, type }) => {
-  const props = { width: 12, height: 12, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, opacity: 0.7 }
-  if (type === 'user') return <svg {...props}><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-  if (type === 'mail') return <svg {...props}><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-  if (type === 'phone') return <svg {...props}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.06 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 17z"/></svg>
-  if (type === 'building') return <svg {...props}><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-  if (type === 'pulse') return <svg {...props}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-  if (type === 'dollar') return <svg {...props}><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-  if (type === 'calendar') return <svg {...props}><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-  if (type === 'file') return <svg {...props}><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
-  if (type === 'msg') return <svg {...props}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-  return null
-}
+const FormSectionHeader = ({
+  icon: Icon,
+  title,
+  description,
+}) => (
+  <div className="section-heading">
+    <div className="section-icon">
+      <Icon size={22} />
+    </div>
 
-/* ─── Composant principal ─────────────────────────────────── */
+    <div>
+      <h2>{title}</h2>
+      {description && <p>{description}</p>}
+    </div>
+  </div>
+)
+
+/* ============================================================
+   COMPOSANT PRINCIPAL
+   ============================================================ */
+
 const DevisCloud = () => {
   const [formData, setFormData] = useState(EMPTY_FORM)
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const handleChange = (e) =>
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
+  const handleChange = (e) => {
+    const { name, value } = e.target
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    if (loading) return
+
     setLoading(true)
+
     try {
       await quoteRequests.create({
         name: formData.nom,
@@ -178,9 +554,14 @@ const DevisCloud = () => {
         company: formData.entreprise,
         service: formData.service || 'Cloud & Hébergement',
         budget: formData.budget,
-        message: `Type de projet: ${formData.typeProjet} | Date souhaitée: ${formData.dateSouhaitee}\n\n${formData.message}`,
+        message:
+          `Type de projet: ${formData.typeProjet || 'Non précisé'} | ` +
+          `Date souhaitée: ${formData.dateSouhaitee || 'Non précisée'}\n\n` +
+          formData.message,
       })
+
       setSubmitted(true)
+
       setTimeout(() => {
         setSubmitted(false)
         setFormData(EMPTY_FORM)
@@ -192,235 +573,702 @@ const DevisCloud = () => {
     }
   }
 
-  /* ── styles communs ── */
   const row2 = {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))',
     gap: '1.25rem',
+    marginBottom: '1.25rem',
   }
 
   return (
-    <>
+    <div className="omedev-devis">
       <style>{globalStyles}</style>
 
-      {/* ── Hero ── */}
-      <section style={{
-        position: 'relative',
-        background: 'linear-gradient(135deg, #0d1b2a 0%, #0a2a3d 50%, #0d1f35 100%)',
-        padding: '5rem 1.5rem 3rem',
-        textAlign: 'center',
-        overflow: 'hidden',
-      }}>
-        {/* grille décorative */}
-        <div style={{
-          position: 'absolute', inset: 0, opacity: 0.15,
-          backgroundImage: `linear-gradient(rgba(6,182,212,0.2) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(6,182,212,0.2) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px',
-          pointerEvents: 'none',
-        }} />
-        {/* halo */}
-        <div style={{
-          position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
-          width: 500, height: 300,
-          background: 'radial-gradient(ellipse, rgba(6,182,212,0.12) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }} />
+      {/* ======================================================
+          HERO
+          ====================================================== */}
 
-        <div style={{ position: 'relative', maxWidth: 640, margin: '0 auto' }}>
+      <PublicHero
+        badge="Demande de devis"
+        title="Votre projet Cloud & Hébergement"
+        highlight="Cloud & Hébergement"
+        subtitle="Décrivez-nous votre projet et recevez une proposition personnalisée adaptée à vos besoins, vos objectifs et votre budget."
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.45 }}
+          className="flex flex-wrap justify-center gap-3 mt-8"
+        >
+          {[
+            { icon: Clock, text: 'Réponse sous 24h' },
+            { icon: ShieldCheck, text: 'Données protégées' },
+            { icon: Sparkles, text: 'Offre personnalisée' },
+          ].map(({ icon: Icon, text }) => (
+            <div
+              key={text}
+              className="inline-flex items-center gap-1.5 text-white/85 text-xs px-3.5 py-2 rounded-full"
+              style={{ background: 'rgba(255,255,255,.08)', border: '1px solid rgba(255,255,255,.14)' }}
+            >
+              <Icon size={14} />
+              {text}
+            </div>
+          ))}
+        </motion.div>
+      </PublicHero>
+
+      {/* ======================================================
+          FORMULAIRE
+          ====================================================== */}
+
+      <section
+        style={{
+          background: '#F6F6F7',
+          padding: '5rem 0',
+        }}
+      >
+        <div className="container">
+
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-              background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.25)',
-              borderRadius: 20, padding: '6px 16px', marginBottom: '1.25rem',
+            initial={{
+              opacity: 0,
+              y: 50,
             }}
-          >
-            <div className="fc-badge-dot" />
-            <span style={{ fontFamily: "'Syne', sans-serif", fontSize: 11, color: '#67e8f9', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-              Demande de devis
-            </span>
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            style={{ fontFamily: "'Syne', sans-serif", fontSize: 'clamp(28px,5vw,48px)', fontWeight: 800, color: '#f1f5f9', lineHeight: 1.15, marginBottom: '0.75rem' }}
-          >
-            Devis{' '}
-            <span style={{ background: 'linear-gradient(90deg,#22d3ee,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-              Cloud & Hébergement
-            </span>
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            style={{ color: '#94a3b8', fontSize: 15, fontWeight: 300 }}
-          >
-            Un expert cloud vous recontactera sous 24h avec une offre personnalisée.
-          </motion.p>
-        </div>
-      </section>
-
-      {/* ── Formulaire ── */}
-      <section style={{ background: 'linear-gradient(180deg,#0a2a3d 0%,#0d1b2a 100%)', padding: '3rem 1.5rem 4rem' }}>
-        <div style={{ maxWidth: 720, margin: '0 auto' }}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 }}
-            style={{
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: 20,
-              padding: 'clamp(1.5rem,4vw,2.5rem)',
-              backdropFilter: 'blur(8px)',
+            whileInView={{
+              opacity: 1,
+              y: 0,
             }}
+            viewport={{
+              once: true,
+              margin: '-80px',
+            }}
+            transition={{
+              duration: .7,
+            }}
+            className="form-card"
           >
             {submitted ? (
-              /* ── Confirmation ── */
+              /* =================================================
+                 CONFIRMATION
+                 ================================================= */
+
               <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                style={{ textAlign: 'center', padding: '3rem 1rem' }}
+                initial={{
+                  opacity: 0,
+                  scale: .95,
+                }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                }}
+                className="success-box"
               >
-                <CheckCircle size={64} color="#22d3ee" style={{ marginBottom: '1rem' }} />
-                <h3 style={{ fontFamily: "'Syne',sans-serif", fontSize: 24, fontWeight: 700, color: '#f1f5f9', marginBottom: 8 }}>
+                <div className="success-icon">
+                  <CheckCircle size={42} />
+                </div>
+
+                <h2
+                  className="font-syne"
+                  style={{
+                    color: '#053876',
+                    fontSize: 'clamp(1.8rem,4vw,2.5rem)',
+                    fontWeight: 800,
+                    marginBottom: '.75rem',
+                  }}
+                >
                   Demande envoyée !
-                </h3>
-                <p style={{ color: '#94a3b8', fontSize: 15, marginBottom: '1.5rem' }}>
-                  Merci, nous vous contacterons sous 24h avec un devis personnalisé.
+                </h2>
+
+                <div className="divider" />
+
+                <p
+                  style={{
+                    maxWidth: 520,
+                    margin: '0 auto 1.75rem',
+                    color: '#25364A',
+                    lineHeight: 1.7,
+                    fontSize: '.95rem',
+                  }}
+                >
+                  Merci pour votre confiance. Notre équipe va étudier
+                  votre projet et vous contacter sous 24h ouvrées avec
+                  une proposition personnalisée.
                 </p>
+
                 <Link
                   to="/cloud-hebergement"
-                  style={{ color: '#22d3ee', fontSize: 14, display: 'inline-flex', alignItems: 'center', gap: 4, textDecoration: 'none' }}
+                  className="btn-primary"
                 >
-                  <ChevronLeft size={16} /> Retour à la page Cloud
+                  <ChevronLeft size={17} />
+                  Retour à Cloud & Hébergement
                 </Link>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit}>
+              <form
+                onSubmit={handleSubmit}
+                className="form-padding"
+                style={{
+                  padding: '2.75rem',
+                }}
+              >
+                {/* =============================================
+                    COORDONNÉES
+                    ============================================= */}
 
-                {/* Section 1 — Coordonnées */}
-                <SectionTitle>Coordonnées</SectionTitle>
+                <FormSectionHeader
+                  icon={User}
+                  title="Vos coordonnées"
+                  description="Comment pouvons-nous vous contacter ?"
+                />
 
-                <div style={{ ...row2, marginBottom: '1.25rem' }}>
-                  <Field label="Nom complet" required icon={<Icon type="user" />}>
-                    <input className="fc-input" type="text" name="nom" value={formData.nom} onChange={handleChange} required placeholder="Jean Dupont" />
+                <div style={row2}>
+                  <Field
+                    label="Nom complet"
+                    required
+                    icon={User}
+                  >
+                    <input
+                      className="fc-input"
+                      type="text"
+                      name="nom"
+                      value={formData.nom}
+                      onChange={handleChange}
+                      required
+                      autoComplete="name"
+                      placeholder="Jean Dupont"
+                    />
                   </Field>
-                  <Field label="Email professionnel" required icon={<Icon type="mail" />}>
-                    <input className="fc-input" type="email" name="email" value={formData.email} onChange={handleChange} required placeholder="jean@entreprise.com" />
+
+                  <Field
+                    label="Email professionnel"
+                    required
+                    icon={Mail}
+                  >
+                    <input
+                      className="fc-input"
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      autoComplete="email"
+                      placeholder="jean@entreprise.com"
+                    />
                   </Field>
                 </div>
 
-                <div style={{ ...row2, marginBottom: '1.25rem' }}>
-                  <Field label="Téléphone" required icon={<Icon type="phone" />}>
-                    <input className="fc-input" type="tel" name="telephone" value={formData.telephone} onChange={handleChange} required placeholder="+33 6 12 34 56 78" />
+                <div style={row2}>
+                  <Field
+                    label="Téléphone"
+                    required
+                    icon={Phone}
+                  >
+                    <input
+                      className="fc-input"
+                      type="tel"
+                      name="telephone"
+                      value={formData.telephone}
+                      onChange={handleChange}
+                      required
+                      autoComplete="tel"
+                      placeholder="+243 81 659 07 88"
+                    />
                   </Field>
-                  <Field label="Entreprise / Organisation" icon={<Icon type="building" />}>
-                    <input className="fc-input" type="text" name="entreprise" value={formData.entreprise} onChange={handleChange} placeholder="Nom de votre entreprise" />
+
+                  <Field
+                    label="Entreprise / Organisation"
+                    icon={Building2}
+                  >
+                    <input
+                      className="fc-input"
+                      type="text"
+                      name="entreprise"
+                      value={formData.entreprise}
+                      onChange={handleChange}
+                      autoComplete="organization"
+                      placeholder="Nom de votre entreprise"
+                    />
                   </Field>
                 </div>
 
-                <Divider />
+                <div className="form-divider" />
 
-                {/* Section 2 — Détails du projet */}
-                <SectionTitle>Détails du projet</SectionTitle>
+                {/* =============================================
+                    DÉTAILS PROJET
+                    ============================================= */}
 
-                <div style={{ ...row2, marginBottom: '1.25rem' }}>
-                  <Field label="Service souhaité" required icon={<Icon type="pulse" />}>
-                    <select className="fc-select" name="service" value={formData.service} onChange={handleChange} required>
-                      <option value="">Sélectionnez un service</option>
-                      {SERVICES.map(s => <option key={s} value={s}>{s}</option>)}
+                <FormSectionHeader
+                  icon={Activity}
+                  title="Votre projet"
+                  description="Aidez-nous à comprendre précisément vos besoins."
+                />
+
+                <div style={row2}>
+                  <Field
+                    label="Service souhaité"
+                    required
+                    icon={Activity}
+                  >
+                    <select
+                      className="fc-select"
+                      name="service"
+                      value={formData.service}
+                      onChange={handleChange}
+                      required
+                    >
+                      <option value="">
+                        Sélectionnez un service
+                      </option>
+
+                      {SERVICES.map((service) => (
+                        <option
+                          key={service}
+                          value={service}
+                        >
+                          {service}
+                        </option>
+                      ))}
                     </select>
                   </Field>
-                  <Field label="Budget estimé" required icon={<Icon type="dollar" />}>
-                    <select className="fc-select" name="budget" value={formData.budget} onChange={handleChange} required>
-                      <option value="">Sélectionnez un budget</option>
-                      {BUDGETS.map(b => <option key={b} value={b}>{b}</option>)}
+
+                  <Field
+                    label="Budget estimé"
+                    required
+                    icon={DollarSign}
+                  >
+                    <select
+                      className="fc-select"
+                      name="budget"
+                      value={formData.budget}
+                      onChange={handleChange}
+                      required
+                    >
+                      <option value="">
+                        Sélectionnez un budget
+                      </option>
+
+                      {BUDGETS.map((budget) => (
+                        <option
+                          key={budget}
+                          value={budget}
+                        >
+                          {budget}
+                        </option>
+                      ))}
                     </select>
                   </Field>
                 </div>
 
-                <div style={{ ...row2, marginBottom: '1.25rem' }}>
-                  <Field label="Date de mise en production" icon={<Icon type="calendar" />}>
-                    <input className="fc-input" type="date" name="dateSouhaitee" value={formData.dateSouhaitee} onChange={handleChange} />
+                <div style={row2}>
+                  <Field
+                    label="Date de mise en production"
+                    icon={Calendar}
+                  >
+                    <input
+                      className="fc-input"
+                      type="date"
+                      name="dateSouhaitee"
+                      value={formData.dateSouhaitee}
+                      onChange={handleChange}
+                    />
                   </Field>
-                  <Field label="Type de projet" icon={<Icon type="file" />}>
-                    <select className="fc-select" name="typeProjet" value={formData.typeProjet} onChange={handleChange}>
-                      <option value="">Sélectionnez</option>
-                      {TYPES_PROJET.map(t => <option key={t} value={t}>{t}</option>)}
+
+                  <Field
+                    label="Type de projet"
+                    icon={FileText}
+                  >
+                    <select
+                      className="fc-select"
+                      name="typeProjet"
+                      value={formData.typeProjet}
+                      onChange={handleChange}
+                    >
+                      <option value="">
+                        Sélectionnez
+                      </option>
+
+                      {TYPES_PROJET.map((type) => (
+                        <option
+                          key={type}
+                          value={type}
+                        >
+                          {type}
+                        </option>
+                      ))}
                     </select>
                   </Field>
                 </div>
 
-                <Field label="Description & besoins spécifiques" icon={<Icon type="msg" />}>
+                <Field
+                  label="Description & besoins spécifiques"
+                  icon={MessageSquare}
+                >
                   <textarea
                     className="fc-textarea"
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
-                    placeholder="Décrivez votre infrastructure actuelle, vos contraintes techniques, vos objectifs, le nombre d'utilisateurs..."
+                    placeholder="Décrivez votre infrastructure actuelle, vos contraintes techniques, vos objectifs, le nombre d'utilisateurs, vos besoins en sécurité, sauvegarde, migration..."
                   />
                 </Field>
 
-                <Divider />
+                <div className="form-divider" />
 
-                {/* Bouton */}
+                {/* =============================================
+                    ENVOI
+                    ============================================= */}
+
                 <button
                   type="submit"
                   disabled={loading}
-                  style={{
-                    width: '100%',
-                    background: loading ? 'rgba(14,116,144,0.5)' : 'linear-gradient(135deg,#0e7490,#1d4ed8)',
-                    border: 'none',
-                    borderRadius: 12,
-                    padding: '14px 20px',
-                    color: '#fff',
-                    fontFamily: "'Syne',sans-serif",
-                    fontSize: 15,
-                    fontWeight: 700,
-                    letterSpacing: '0.04em',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 10,
-                    transition: 'opacity 0.2s',
-                    opacity: loading ? 0.7 : 1,
-                  }}
+                  className="btn-primary btn-full"
                 >
-                  {loading ? 'Envoi en cours…' : (
-                    <>Envoyer ma demande de devis <Send size={16} /></>
+                  {loading ? (
+                    <>
+                      <span
+                        style={{
+                          width: 16,
+                          height: 16,
+                          borderRadius: '50%',
+                          border:
+                            '2px solid rgba(255,255,255,.35)',
+                          borderTopColor: '#fff',
+                          animation:
+                            'spin .8s linear infinite',
+                        }}
+                      />
+                      Envoi en cours…
+                    </>
+                  ) : (
+                    <>
+                      Envoyer ma demande de devis
+                      <Send size={17} />
+                    </>
                   )}
                 </button>
 
-                <p style={{ fontSize: 11, color: '#475569', textAlign: 'center', marginTop: '1rem', lineHeight: 1.6 }}>
-                  En soumettant ce formulaire, vous acceptez que vos données soient traitées pour vous recontacter.
-                  Un devis personnalisé vous sera envoyé sous 24h ouvrées.
+                <p
+                  style={{
+                    textAlign: 'center',
+                    color: '#64748b',
+                    fontSize: '.72rem',
+                    lineHeight: 1.6,
+                    maxWidth: 680,
+                    margin: '1rem auto 0',
+                  }}
+                >
+                  En soumettant ce formulaire, vous acceptez que vos
+                  données soient traitées uniquement afin de vous
+                  recontacter concernant votre demande. Un devis
+                  personnalisé vous sera envoyé sous 24h ouvrées.
                 </p>
               </form>
             )}
           </motion.div>
-
-          {/* Lien retour */}
-          <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
-            <Link
-              to="/cloud-hebergement"
-              style={{ color: '#64748b', fontSize: 13, display: 'inline-flex', alignItems: 'center', gap: 4, textDecoration: 'none', transition: 'color 0.2s' }}
-              onMouseEnter={e => e.currentTarget.style.color = '#22d3ee'}
-              onMouseLeave={e => e.currentTarget.style.color = '#64748b'}
-            >
-              <ChevronLeft size={16} /> Retour à la page Cloud & Hébergement
-            </Link>
-          </div>
         </div>
       </section>
-    </>
+
+      {/* ======================================================
+          INFORMATIONS / GARANTIES
+          ====================================================== */}
+
+      {!submitted && (
+        <section
+          style={{
+            background: '#fff',
+            padding: '1rem 0 5rem',
+          }}
+        >
+          <div className="container">
+
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: 30,
+              }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+              }}
+              viewport={{
+                once: true,
+              }}
+              transition={{
+                duration: .6,
+              }}
+              style={{
+                textAlign: 'center',
+                marginBottom: '2.5rem',
+              }}
+            >
+              <span className="section-badge">
+                Pourquoi nous choisir ?
+              </span>
+
+              <h2
+                className="section-title"
+                style={{
+                  marginTop: '1rem',
+                }}
+              >
+                Un accompagnement de proximité
+              </h2>
+
+              <div className="divider" />
+
+              <p
+                style={{
+                  maxWidth: 650,
+                  margin: '0 auto',
+                  color: '#25364A',
+                  lineHeight: 1.7,
+                  fontSize: '.95rem',
+                }}
+              >
+                Notre équipe vous accompagne de l'analyse de vos besoins
+                jusqu'au déploiement et au suivi de votre infrastructure.
+              </p>
+            </motion.div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns:
+                  'repeat(auto-fit, minmax(220px, 1fr))',
+                gap: '1.5rem',
+              }}
+            >
+              {[
+                {
+                  icon: Clock,
+                  title: 'Réponse rapide',
+                  text: 'Votre demande est étudiée rapidement par notre équipe.',
+                  color: '#0B74C1',
+                },
+                {
+                  icon: ShieldCheck,
+                  title: 'Sécurité',
+                  text: 'Vos informations restent confidentielles et protégées.',
+                  color: '#053876',
+                },
+                {
+                  icon: Sparkles,
+                  title: 'Sur mesure',
+                  text: 'Chaque proposition est adaptée à votre contexte.',
+                  color: '#2AACB2',
+                },
+                {
+                  icon: CheckCircle,
+                  title: 'Transparence',
+                  text: 'Une proposition claire, détaillée et sans engagement.',
+                  color: '#4681B7',
+                },
+              ].map((item, index) => {
+                const Icon = item.icon
+
+                return (
+                  <motion.div
+                    key={item.title}
+                    initial={{
+                      opacity: 0,
+                      y: 35,
+                    }}
+                    whileInView={{
+                      opacity: 1,
+                      y: 0,
+                    }}
+                    viewport={{
+                      once: true,
+                    }}
+                    transition={{
+                      delay: index * .08,
+                    }}
+                    className="info-card"
+                    style={{
+                      padding: '1.5rem',
+                    }}
+                  >
+                    <div
+                      className="info-icon"
+                      style={{
+                        background: `${item.color}15`,
+                        color: item.color,
+                        marginBottom: '1rem',
+                      }}
+                    >
+                      <Icon size={22} />
+                    </div>
+
+                    <h3
+                      className="font-syne"
+                      style={{
+                        color: '#053876',
+                        fontSize: '1.05rem',
+                        fontWeight: 700,
+                        marginBottom: '.5rem',
+                      }}
+                    >
+                      {item.title}
+                    </h3>
+
+                    <p
+                      style={{
+                        color: '#25364A',
+                        fontSize: '.83rem',
+                        lineHeight: 1.65,
+                        margin: 0,
+                      }}
+                    >
+                      {item.text}
+                    </p>
+                  </motion.div>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ======================================================
+          CTA FINAL
+          ====================================================== */}
+
+      {!submitted && (
+        <section
+          style={{
+            background:
+              'linear-gradient(135deg,#053876 0%,#0B74C1 55%,#2AACB2 100%)',
+            position: 'relative',
+            overflow: 'hidden',
+            padding: '5rem 0',
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              opacity: .2,
+              backgroundImage:
+                'radial-gradient(circle at 20% 40%, rgba(85,221,181,.5) 0%, transparent 45%), radial-gradient(circle at 80% 60%, rgba(255,255,255,.25) 0%, transparent 45%)',
+            }}
+          />
+
+          <div
+            className="container"
+            style={{
+              position: 'relative',
+              zIndex: 2,
+              textAlign: 'center',
+            }}
+          >
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: 35,
+              }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+              }}
+              viewport={{
+                once: true,
+              }}
+            >
+              <h2
+                className="font-syne"
+                style={{
+                  color: '#fff',
+                  fontSize: 'clamp(2rem,4vw,3rem)',
+                  fontWeight: 800,
+                  marginBottom: '1rem',
+                }}
+              >
+                Une question avant votre devis ?
+              </h2>
+
+              <p
+                style={{
+                  maxWidth: 600,
+                  margin: '0 auto 1.75rem',
+                  color: 'rgba(255,255,255,.78)',
+                  lineHeight: 1.7,
+                }}
+              >
+                Notre équipe est disponible pour vous conseiller et
+                vous orienter vers la solution cloud la plus adaptée.
+              </p>
+
+              <Link
+                to="/contact"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '.6rem',
+                  background: '#fff',
+                  color: '#053876',
+                  padding: '.9rem 1.6rem',
+                  borderRadius: 12,
+                  textDecoration: 'none',
+                  fontFamily: "'Syne', sans-serif",
+                  fontWeight: 700,
+                  fontSize: '.9rem',
+                  transition: 'all .3s ease',
+                }}
+              >
+                Nous contacter
+                <ArrowRight size={17} />
+              </Link>
+            </motion.div>
+          </div>
+        </section>
+      )}
+
+      {/* ======================================================
+          RETOUR CLOUD
+          ====================================================== */}
+
+      {!submitted && (
+        <div
+          style={{
+            background: '#F6F6F7',
+            textAlign: 'center',
+            padding: '1.5rem 1rem 2rem',
+          }}
+        >
+          <Link
+            to="/cloud-hebergement"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '.4rem',
+              color: '#64748b',
+              fontSize: '.82rem',
+              textDecoration: 'none',
+              transition: 'color .2s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = '#0B74C1'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = '#64748b'
+            }}
+          >
+            <ChevronLeft size={16} />
+            Retour à la page Cloud & Hébergement
+          </Link>
+        </div>
+      )}
+
+      <style>
+        {`
+          @keyframes spin {
+            to {
+              transform: rotate(360deg);
+            }
+          }
+        `}
+      </style>
+    </div>
   )
 }
 

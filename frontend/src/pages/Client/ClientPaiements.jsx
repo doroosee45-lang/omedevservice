@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { devis as devisApi } from '../../services/api'
-import { 
+import {
   CreditCard, Download, Eye, Search, Calendar, Euro,
   CheckCircle, Clock, AlertCircle, Plus, Wallet, X,
   FileText, Building, ArrowLeft, Lock, Shield, ChevronRight
@@ -11,11 +11,30 @@ import ClientHeader from '../../components/ClientHeader'
 
 /* ─── Styles globaux ──────────────────────────────────────────────────────── */
 const globalStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'DM Sans', sans-serif; background: #0f172a; color: #e2e8f0; overflow-x: hidden; }
-  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
-  .animate-float { animation: float 6s ease-in-out infinite; }
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+
+  .omedev-vm {
+    --omedev-navy: #053876;
+    --omedev-blue-dark: #1D5B9B;
+    --omedev-blue: #0B74C1;
+    --omedev-blue-light: #4681B7;
+    --omedev-cyan: #72A5CE;
+    --omedev-cyan-light: #A6C3D7;
+    --omedev-turquoise: #2AACB2;
+    --omedev-energy: #55DDB5;
+    --omedev-white: #F6F6F7;
+    --omedev-gray: #D5DCE1;
+    --omedev-dark: #0B1213;
+    --omedev-text-secondary: #25364A;
+    background: #F6F6F7;
+    color: #0B1213;
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+  .omedev-vm * { box-sizing: border-box; }
+
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
+  .omedev-vm .animate-float { animation: float 6s ease-in-out infinite; }
 `
 
 const fadeUp = {
@@ -56,7 +75,7 @@ const getClientNom = (projet) => {
   return 'Cyber Protect Group'
 }
 
-/* ─── Génération PDF via jsPDF ────────────────────────────────────────────── */
+/* ─── Génération PDF via jsPDF (palette omdev) ────────────────────────────── */
 const generateInvoicePDF = async (paiement) => {
   if (!window.jspdf) {
     await new Promise((resolve, reject) => {
@@ -71,10 +90,10 @@ const generateInvoicePDF = async (paiement) => {
   const doc = new jsPDF({ unit: 'mm', format: 'a4' })
   const W = 210
 
-  const navy    = [15, 23, 42]
-  const blue    = [59, 130, 246]
-  const cyan    = [6, 182, 212]
-  const emerald = [16, 185, 129]
+  const navy    = [5, 56, 118]     // #053876
+  const blue    = [11, 116, 193]   // #0B74C1
+  const cyan    = [42, 172, 178]   // #2AACB2
+  const emerald = [85, 221, 181]   // #55DDB5
   const gray50  = [248, 250, 252]
   const gray100 = [241, 245, 249]
   const gray300 = [203, 213, 225]
@@ -327,33 +346,33 @@ const generateInvoicePDF = async (paiement) => {
 /* ─── Modal: Voir Facture ─────────────────────────────────────────────────── */
 const ModalVoirFacture = ({ paiement, onClose, onPay, onDownload }) => {
   const status = {
-    paid:    { label: 'Payé',       color: 'text-emerald-400 bg-emerald-500/20 border-emerald-500/30', icon: CheckCircle },
-    pending: { label: 'En attente', color: 'text-amber-400 bg-amber-500/20 border-amber-500/30',     icon: Clock },
-    overdue: { label: 'En retard',  color: 'text-red-400 bg-red-500/20 border-red-500/30',           icon: AlertCircle },
+    paid:    { label: 'Payé',       color: 'bg-[#55DDB5]/15 text-[#1D5B9B] border-[#55DDB5]/50', icon: CheckCircle },
+    pending: { label: 'En attente', color: 'bg-amber-100 text-amber-700 border-amber-300/50',     icon: Clock },
+    overdue: { label: 'En retard',  color: 'bg-red-100 text-red-700 border-red-300/50',           icon: AlertCircle },
   }[paiement.statut]
   const StatusIcon = status.icon
   const montantHT = Math.round(paiement.montantValue / 1.20)
   const tvaAmt    = paiement.montantValue - montantHT
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1213]/50 backdrop-blur-sm" onClick={onClose}>
       <motion.div variants={modalVariants} initial="hidden" animate="visible" exit="exit"
-        className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl max-h-[92vh] overflow-y-auto"
+        className="bg-white border border-[rgba(5,56,118,0.12)] rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl max-h-[92vh] overflow-y-auto"
         onClick={e => e.stopPropagation()}>
 
-        <div className="bg-gradient-to-r from-blue-600/30 to-cyan-600/30 p-6 border-b border-white/10">
+        <div className="bg-gradient-to-r from-[#0B74C1]/12 to-[#55DDB5]/12 p-6 border-b border-[rgba(5,56,118,0.1)]">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-[#0B74C1] to-[#2AACB2] flex items-center justify-center">
                 <FileText className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-white">Facture {paiement.id}</h2>
-                <p className="text-gray-400 text-sm">{ENTREPRISE.nom}</p>
+                <h2 className="text-lg font-bold text-[#053876]">Facture {paiement.id}</h2>
+                <p className="text-[#25364A]/70 text-sm">{ENTREPRISE.nom}</p>
               </div>
             </div>
-            <button onClick={onClose} className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all">
-              <X className="w-4 h-4 text-gray-300" />
+            <button onClick={onClose} className="w-8 h-8 rounded-full bg-[#F6F6F7] hover:bg-[#E8EDF1] flex items-center justify-center transition-all">
+              <X className="w-4 h-4 text-[#25364A]" />
             </button>
           </div>
           <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${status.color}`}>
@@ -363,20 +382,20 @@ const ModalVoirFacture = ({ paiement, onClose, onPay, onDownload }) => {
 
         <div className="p-6 space-y-5">
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white/5 rounded-xl p-4">
-              <p className="text-blue-400 text-xs font-bold uppercase tracking-wide mb-3">Émetteur</p>
-              <p className="text-white font-bold text-sm">{ENTREPRISE.nom}</p>
-              <p className="text-gray-400 text-xs mt-1">{ENTREPRISE.adresse}</p>
-              <p className="text-gray-400 text-xs">{ENTREPRISE.ville}</p>
-              <p className="text-gray-400 text-xs mt-2">SIRET : {ENTREPRISE.siret}</p>
-              <p className="text-gray-400 text-xs">TVA : {ENTREPRISE.tva}</p>
+            <div className="bg-[#F6F6F7] rounded-xl p-4">
+              <p className="text-[#2AACB2] text-xs font-bold uppercase tracking-wide mb-3">Émetteur</p>
+              <p className="text-[#053876] font-bold text-sm">{ENTREPRISE.nom}</p>
+              <p className="text-[#25364A]/70 text-xs mt-1">{ENTREPRISE.adresse}</p>
+              <p className="text-[#25364A]/70 text-xs">{ENTREPRISE.ville}</p>
+              <p className="text-[#25364A]/70 text-xs mt-2">SIRET : {ENTREPRISE.siret}</p>
+              <p className="text-[#25364A]/70 text-xs">TVA : {ENTREPRISE.tva}</p>
             </div>
-            <div className="bg-white/5 rounded-xl p-4">
-              <p className="text-cyan-400 text-xs font-bold uppercase tracking-wide mb-3">Client</p>
-              <p className="text-white font-bold text-sm">{getClientNom(paiement.projet)}</p>
-              <p className="text-gray-400 text-xs mt-1">M. Jean Dupont</p>
-              <p className="text-gray-400 text-xs">12 Av. de l'Innovation</p>
-              <p className="text-gray-400 text-xs">69002 Lyon, France</p>
+            <div className="bg-[#F6F6F7] rounded-xl p-4">
+              <p className="text-[#0B74C1] text-xs font-bold uppercase tracking-wide mb-3">Client</p>
+              <p className="text-[#053876] font-bold text-sm">{getClientNom(paiement.projet)}</p>
+              <p className="text-[#25364A]/70 text-xs mt-1">M. Jean Dupont</p>
+              <p className="text-[#25364A]/70 text-xs">12 Av. de l'Innovation</p>
+              <p className="text-[#25364A]/70 text-xs">69002 Lyon, France</p>
             </div>
           </div>
 
@@ -386,51 +405,51 @@ const ModalVoirFacture = ({ paiement, onClose, onPay, onDownload }) => {
               { label: "Échéance", val: paiement.date },
               { label: "Méthode", val: paiement.methode !== '-' ? paiement.methode : 'Non définie' },
             ].map(({ label, val }) => (
-              <div key={label} className="bg-white/5 rounded-xl p-3 text-center">
-                <p className="text-gray-500 text-xs mb-1">{label}</p>
-                <p className="text-white font-semibold text-sm">{val}</p>
+              <div key={label} className="bg-[#F6F6F7] rounded-xl p-3 text-center">
+                <p className="text-[#25364A]/60 text-xs mb-1">{label}</p>
+                <p className="text-[#053876] font-semibold text-sm">{val}</p>
               </div>
             ))}
           </div>
 
-          <div className="bg-white/5 rounded-xl overflow-hidden">
-            <div className="bg-slate-800 px-4 py-2 flex justify-between text-xs font-bold text-gray-400 uppercase tracking-wide">
+          <div className="bg-[#F6F6F7] rounded-xl overflow-hidden">
+            <div className="bg-[#053876] px-4 py-2 flex justify-between text-xs font-bold text-white uppercase tracking-wide">
               <span>Désignation</span><span>Montant HT</span>
             </div>
-            <div className="px-4 py-3 border-b border-white/5 flex justify-between">
+            <div className="px-4 py-3 border-b border-[rgba(5,56,118,0.08)] flex justify-between">
               <div>
-                <p className="text-white text-sm font-medium">{paiement.projet}</p>
-                <p className="text-gray-500 text-xs">Conception, développement & mise en prod.</p>
+                <p className="text-[#053876] text-sm font-medium">{paiement.projet}</p>
+                <p className="text-[#25364A]/60 text-xs">Conception, développement & mise en prod.</p>
               </div>
-              <p className="text-white font-semibold text-sm whitespace-nowrap">{montantHT.toLocaleString('fr-FR')} €</p>
+              <p className="text-[#053876] font-semibold text-sm whitespace-nowrap">{montantHT.toLocaleString('fr-FR')} €</p>
             </div>
-            <div className="px-4 py-2 flex justify-between text-xs text-gray-400 border-b border-white/5">
+            <div className="px-4 py-2 flex justify-between text-xs text-[#25364A]/70 border-b border-[rgba(5,56,118,0.08)]">
               <span>Sous-total HT</span><span>{montantHT.toLocaleString('fr-FR')} €</span>
             </div>
-            <div className="px-4 py-2 flex justify-between text-xs text-gray-400 border-b border-white/5">
+            <div className="px-4 py-2 flex justify-between text-xs text-[#25364A]/70 border-b border-[rgba(5,56,118,0.08)]">
               <span>TVA 20%</span><span>+ {tvaAmt.toLocaleString('fr-FR')} €</span>
             </div>
-            <div className="px-4 py-3 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 flex justify-between items-center">
-              <span className="text-white font-bold">TOTAL TTC</span>
-              <span className="text-xl font-bold text-cyan-400">{paiement.montant}</span>
+            <div className="px-4 py-3 bg-gradient-to-r from-[#0B74C1]/12 to-[#55DDB5]/12 flex justify-between items-center">
+              <span className="text-[#053876] font-bold">TOTAL TTC</span>
+              <span className="text-xl font-bold text-[#2AACB2]">{paiement.montant}</span>
             </div>
           </div>
 
-          <div className="bg-white/5 rounded-xl p-4">
-            <p className="text-gray-500 text-xs mb-2 font-bold uppercase tracking-wide">Coordonnées bancaires</p>
-            <p className="text-gray-300 text-xs">IBAN : <span className="font-mono text-white">{ENTREPRISE.iban}</span></p>
-            <p className="text-gray-300 text-xs mt-1">BIC : <span className="font-mono text-white">{ENTREPRISE.bic}</span> — {ENTREPRISE.banque}</p>
+          <div className="bg-[#F6F6F7] rounded-xl p-4">
+            <p className="text-[#25364A]/60 text-xs mb-2 font-bold uppercase tracking-wide">Coordonnées bancaires</p>
+            <p className="text-[#25364A] text-xs">IBAN : <span className="font-mono text-[#053876]">{ENTREPRISE.iban}</span></p>
+            <p className="text-[#25364A] text-xs mt-1">BIC : <span className="font-mono text-[#053876]">{ENTREPRISE.bic}</span> — {ENTREPRISE.banque}</p>
           </div>
         </div>
 
         <div className="p-6 pt-0 flex gap-3">
-          <button onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-white/20 text-gray-300 text-sm hover:bg-white/10 transition-all">Fermer</button>
-          <button onClick={() => { onClose(); onDownload(paiement) }} className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-blue-500/50 text-blue-400 text-sm hover:bg-blue-500/10 transition-all">
+          <button onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-[rgba(5,56,118,0.2)] text-[#25364A] text-sm hover:bg-[#F6F6F7] transition-all">Fermer</button>
+          <button onClick={() => { onClose(); onDownload(paiement) }} className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-[#2AACB2]/40 text-[#2AACB2] text-sm hover:bg-[#2AACB2]/10 transition-all">
             <Download className="w-4 h-4" /> PDF
           </button>
           {paiement.statut !== 'paid' && (
             <button onClick={() => { onClose(); onPay(paiement) }}
-              className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm font-semibold hover:scale-105 transition-all shadow-lg">
+              className="flex-1 py-2.5 rounded-full bg-gradient-to-r from-[#0B74C1] via-[#2AACB2] to-[#55DDB5] hover:brightness-110 text-white text-sm font-semibold transition-all duration-300 shadow-[0_10px_28px_rgba(11,116,193,0.2)] hover:shadow-[0_16px_36px_rgba(42,172,178,0.28)]">
               Payer maintenant
             </button>
           )}
@@ -456,50 +475,50 @@ const ModalTelecharger = ({ paiement, onClose }) => {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1213]/50 backdrop-blur-sm" onClick={onClose}>
       <motion.div variants={modalVariants} initial="hidden" animate="visible" exit="exit"
-        className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl"
+        className="bg-white border border-[rgba(5,56,118,0.12)] rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl"
         onClick={e => e.stopPropagation()}>
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-bold text-white">Télécharger la facture</h2>
-            <button onClick={onClose} className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all">
-              <X className="w-4 h-4 text-gray-300" />
+            <h2 className="text-lg font-bold text-[#053876]">Télécharger la facture</h2>
+            <button onClick={onClose} className="w-8 h-8 rounded-full bg-[#F6F6F7] hover:bg-[#E8EDF1] flex items-center justify-center transition-all">
+              <X className="w-4 h-4 text-[#25364A]" />
             </button>
           </div>
 
-          <div className="bg-white/5 rounded-xl p-4 mb-5 flex items-center gap-4">
-            <div className="w-14 h-14 rounded-xl bg-gradient-to-r from-red-500 to-orange-500 flex flex-col items-center justify-center shadow-lg">
+          <div className="bg-[#F6F6F7] rounded-xl p-4 mb-5 flex items-center gap-4">
+            <div className="w-14 h-14 rounded-xl bg-gradient-to-r from-[#0B74C1] to-[#2AACB2] flex flex-col items-center justify-center shadow-lg">
               <FileText className="w-6 h-6 text-white" />
               <span className="text-white text-[9px] font-bold mt-0.5">PDF</span>
             </div>
             <div>
-              <p className="text-white font-semibold">Facture-{paiement.id}.pdf</p>
-              <p className="text-gray-400 text-sm">{paiement.projet}</p>
-              <p className="text-emerald-400 text-xs font-semibold mt-0.5">{paiement.montant} TTC</p>
+              <p className="text-[#053876] font-semibold">Facture-{paiement.id}.pdf</p>
+              <p className="text-[#25364A]/70 text-sm">{paiement.projet}</p>
+              <p className="text-[#2AACB2] text-xs font-semibold mt-0.5">{paiement.montant} TTC</p>
             </div>
           </div>
 
-          <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-3 mb-5 text-xs text-blue-300">
+          <div className="bg-[#0B74C1]/10 border border-[#0B74C1]/20 rounded-xl p-3 mb-5 text-xs text-[#0B74C1]">
             📄 Facture professionnelle avec logo, détail HT/TVA, coordonnées bancaires et mentions légales.
           </div>
 
           {status === 'done' ? (
             <div className="flex flex-col items-center gap-2 py-3">
-              <CheckCircle className="w-10 h-10 text-emerald-400" />
-              <p className="text-emerald-400 font-semibold">Téléchargement réussi !</p>
+              <CheckCircle className="w-10 h-10 text-[#2AACB2]" />
+              <p className="text-[#2AACB2] font-semibold">Téléchargement réussi !</p>
             </div>
           ) : status === 'error' ? (
             <div className="flex flex-col items-center gap-2 py-3">
-              <AlertCircle className="w-8 h-8 text-red-400" />
-              <p className="text-red-400 text-sm">Erreur lors de la génération</p>
-              <button onClick={handleDownload} className="text-blue-400 text-xs underline">Réessayer</button>
+              <AlertCircle className="w-8 h-8 text-red-500" />
+              <p className="text-red-500 text-sm">Erreur lors de la génération</p>
+              <button onClick={handleDownload} className="text-[#2AACB2] hover:text-[#0B74C1] text-xs underline transition-colors">Réessayer</button>
             </div>
           ) : (
             <div className="flex gap-3">
-              <button onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-white/20 text-gray-300 text-sm hover:bg-white/10 transition-all">Annuler</button>
+              <button onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-[rgba(5,56,118,0.2)] text-[#25364A] text-sm hover:bg-[#F6F6F7] transition-all">Annuler</button>
               <button onClick={handleDownload} disabled={status === 'loading'}
-                className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-sm font-medium hover:scale-105 transition-all disabled:opacity-70 disabled:scale-100 flex items-center justify-center gap-2">
+                className="flex-1 py-2.5 rounded-full bg-gradient-to-r from-[#0B74C1] via-[#2AACB2] to-[#55DDB5] hover:brightness-110 text-white text-sm font-medium transition-all duration-300 disabled:opacity-70 shadow-[0_10px_28px_rgba(11,116,193,0.2)] hover:shadow-[0_16px_36px_rgba(42,172,178,0.28)] flex items-center justify-center gap-2">
                 {status === 'loading'
                   ? <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Génération PDF...</>
                   : <><Download className="w-4 h-4" /> Télécharger PDF</>
@@ -555,28 +574,28 @@ const ModalPayer = ({ paiement, onClose, onSuccess }) => {
   const fmtExpiry = v => v.replace(/\D/g,'').slice(0,4).replace(/^(\d{2})(\d)/,'$1/$2')
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1213]/50 backdrop-blur-sm" onClick={onClose}>
       <motion.div variants={modalVariants} initial="hidden" animate="visible" exit="exit"
-        className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl"
+        className="bg-white border border-[rgba(5,56,118,0.12)] rounded-2xl w-full max-w-md overflow-hidden shadow-2xl"
         onClick={e => e.stopPropagation()}>
 
-        <div className="bg-gradient-to-r from-emerald-600/20 to-teal-600/20 p-5 border-b border-white/10 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-[#0B74C1]/12 to-[#55DDB5]/12 p-5 border-b border-[rgba(5,56,118,0.1)] flex items-center justify-between">
           <div className="flex items-center gap-3">
             {step > 1 && step < 3 && (
-              <button onClick={() => setStep(s => s - 1)} className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all">
-                <ArrowLeft className="w-3.5 h-3.5 text-gray-300" />
+              <button onClick={() => setStep(s => s - 1)} className="w-7 h-7 rounded-full bg-[#F6F6F7] hover:bg-[#E8EDF1] flex items-center justify-center transition-all">
+                <ArrowLeft className="w-3.5 h-3.5 text-[#25364A]" />
               </button>
             )}
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-r from-[#0B74C1] to-[#2AACB2] flex items-center justify-center">
               <CreditCard style={{ width: 18, height: 18 }} className="text-white" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white">Paiement sécurisé</h2>
-              <p className="text-gray-400 text-xs">{paiement.projet} · {paiement.montant}</p>
+              <h2 className="text-base font-bold text-[#053876]">Paiement sécurisé</h2>
+              <p className="text-[#25364A]/70 text-xs">{paiement.projet} · {paiement.montant}</p>
             </div>
           </div>
-          <button onClick={onClose} className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all">
-            <X className="w-4 h-4 text-gray-300" />
+          <button onClick={onClose} className="w-8 h-8 rounded-full bg-[#F6F6F7] hover:bg-[#E8EDF1] flex items-center justify-center transition-all">
+            <X className="w-4 h-4 text-[#25364A]" />
           </button>
         </div>
 
@@ -584,11 +603,11 @@ const ModalPayer = ({ paiement, onClose, onSuccess }) => {
           <div className="px-5 pt-4 flex items-center">
             {['Méthode','Informations','Confirmation'].map((s, i) => (
               <div key={i} className="flex items-center flex-1">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step > i+1 ? 'bg-emerald-500 text-white' : step === i+1 ? 'bg-blue-500 text-white' : 'bg-white/10 text-gray-500'}`}>
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step > i+1 ? 'bg-[#2AACB2] text-white' : step === i+1 ? 'bg-[#2AACB2] text-white' : 'bg-[#E8EDF1] text-[#25364A]/50'}`}>
                   {step > i+1 ? '✓' : i+1}
                 </div>
-                <span className={`text-xs ml-1 ${step === i+1 ? 'text-white' : 'text-gray-500'}`}>{s}</span>
-                {i < 2 && <div className={`h-px flex-1 mx-2 ${step > i+1 ? 'bg-emerald-500/50' : 'bg-white/10'}`} />}
+                <span className={`text-xs ml-1 ${step === i+1 ? 'text-[#053876]' : 'text-[#25364A]/50'}`}>{s}</span>
+                {i < 2 && <div className={`h-px flex-1 mx-2 ${step > i+1 ? 'bg-[#2AACB2]/40' : 'bg-[rgba(5,56,118,0.12)]'}`} />}
               </div>
             ))}
           </div>
@@ -597,22 +616,22 @@ const ModalPayer = ({ paiement, onClose, onSuccess }) => {
         <div className="p-5">
           {step === 1 && (
             <div className="space-y-3 mt-2">
-              <p className="text-gray-400 text-sm mb-3">Choisissez votre méthode de paiement</p>
+              <p className="text-[#25364A]/70 text-sm mb-3">Choisissez votre méthode de paiement</p>
               {methodes.map(m => (
                 <button key={m.id} onClick={() => setMethode(m.id)}
-                  className={`w-full flex items-center gap-4 p-4 rounded-xl border transition-all text-left ${methode === m.id ? 'border-blue-500 bg-blue-500/10' : 'border-white/10 bg-white/5 hover:border-white/20'}`}>
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${methode === m.id ? 'bg-blue-500' : 'bg-white/10'}`}>
+                  className={`w-full flex items-center gap-4 p-4 rounded-xl border transition-all text-left ${methode === m.id ? 'border-[#2AACB2] bg-[#2AACB2]/10' : 'border-[rgba(5,56,118,0.12)] bg-[#F6F6F7] hover:border-[rgba(42,172,178,0.4)]'}`}>
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${methode === m.id ? 'bg-[#2AACB2]' : 'bg-[#E8EDF1]'}`}>
                     <m.icon className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-white font-medium text-sm">{m.label}</p>
-                    <p className="text-gray-500 text-xs">{m.desc}</p>
+                    <p className="text-[#053876] font-medium text-sm">{m.label}</p>
+                    <p className="text-[#25364A]/70 text-xs">{m.desc}</p>
                   </div>
-                  {methode === m.id && <CheckCircle className="w-5 h-5 text-blue-400" />}
+                  {methode === m.id && <CheckCircle className="w-5 h-5 text-[#2AACB2]" />}
                 </button>
               ))}
               <button disabled={!methode} onClick={() => setStep(2)}
-                className="w-full mt-3 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold text-sm disabled:opacity-40 hover:scale-105 transition-all flex items-center justify-center gap-2">
+                className="w-full mt-3 py-3 rounded-full bg-gradient-to-r from-[#0B74C1] via-[#2AACB2] to-[#55DDB5] hover:brightness-110 text-white font-semibold text-sm disabled:opacity-40 transition-all duration-300 shadow-[0_10px_28px_rgba(11,116,193,0.2)] hover:shadow-[0_16px_36px_rgba(42,172,178,0.28)] flex items-center justify-center gap-2">
                 Continuer <ChevronRight className="w-4 h-4" />
               </button>
             </div>
@@ -623,61 +642,61 @@ const ModalPayer = ({ paiement, onClose, onSuccess }) => {
               {methode === 'carte' ? (
                 <>
                   <div>
-                    <label className="text-gray-400 text-xs mb-1 block">Nom du titulaire</label>
+                    <label className="text-[#25364A]/70 text-xs mb-1 block">Nom du titulaire</label>
                     <input type="text" placeholder="Jean Dupont" value={form.nom}
                       onChange={e => setForm({ ...form, nom: e.target.value })}
-                      className={`w-full px-4 py-2.5 rounded-xl bg-white/10 border ${errors.nom ? 'border-red-500' : 'border-white/20'} text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all text-sm`} />
-                    {errors.nom && <p className="text-red-400 text-xs mt-1">{errors.nom}</p>}
+                      className={`w-full px-4 py-2.5 rounded-xl bg-white border ${errors.nom ? 'border-red-500' : 'border-[rgba(5,56,118,0.18)]'} text-[#0B1213] placeholder-[#25364A]/45 focus:outline-none focus:border-[#2AACB2] transition-all text-sm`} />
+                    {errors.nom && <p className="text-red-500 text-xs mt-1">{errors.nom}</p>}
                   </div>
                   <div>
-                    <label className="text-gray-400 text-xs mb-1 block">Numéro de carte</label>
+                    <label className="text-[#25364A]/70 text-xs mb-1 block">Numéro de carte</label>
                     <input type="text" placeholder="1234 5678 9012 3456" value={form.numero}
                       onChange={e => setForm({ ...form, numero: fmtCard(e.target.value) })}
-                      className={`w-full px-4 py-2.5 rounded-xl bg-white/10 border ${errors.numero ? 'border-red-500' : 'border-white/20'} text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all text-sm font-mono`} />
-                    {errors.numero && <p className="text-red-400 text-xs mt-1">{errors.numero}</p>}
+                      className={`w-full px-4 py-2.5 rounded-xl bg-white border ${errors.numero ? 'border-red-500' : 'border-[rgba(5,56,118,0.18)]'} text-[#0B1213] placeholder-[#25364A]/45 focus:outline-none focus:border-[#2AACB2] transition-all text-sm font-mono`} />
+                    {errors.numero && <p className="text-red-500 text-xs mt-1">{errors.numero}</p>}
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-gray-400 text-xs mb-1 block">Expiration</label>
+                      <label className="text-[#25364A]/70 text-xs mb-1 block">Expiration</label>
                       <input type="text" placeholder="MM/AA" value={form.expiry}
                         onChange={e => setForm({ ...form, expiry: fmtExpiry(e.target.value) })}
-                        className={`w-full px-4 py-2.5 rounded-xl bg-white/10 border ${errors.expiry ? 'border-red-500' : 'border-white/20'} text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all text-sm`} />
-                      {errors.expiry && <p className="text-red-400 text-xs mt-1">{errors.expiry}</p>}
+                        className={`w-full px-4 py-2.5 rounded-xl bg-white border ${errors.expiry ? 'border-red-500' : 'border-[rgba(5,56,118,0.18)]'} text-[#0B1213] placeholder-[#25364A]/45 focus:outline-none focus:border-[#2AACB2] transition-all text-sm`} />
+                      {errors.expiry && <p className="text-red-500 text-xs mt-1">{errors.expiry}</p>}
                     </div>
                     <div>
-                      <label className="text-gray-400 text-xs mb-1 block">CVV</label>
+                      <label className="text-[#25364A]/70 text-xs mb-1 block">CVV</label>
                       <input type="password" placeholder="•••" maxLength={4} value={form.cvv}
                         onChange={e => setForm({ ...form, cvv: e.target.value.replace(/\D/g,'') })}
-                        className={`w-full px-4 py-2.5 rounded-xl bg-white/10 border ${errors.cvv ? 'border-red-500' : 'border-white/20'} text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all text-sm`} />
-                      {errors.cvv && <p className="text-red-400 text-xs mt-1">{errors.cvv}</p>}
+                        className={`w-full px-4 py-2.5 rounded-xl bg-white border ${errors.cvv ? 'border-red-500' : 'border-[rgba(5,56,118,0.18)]'} text-[#0B1213] placeholder-[#25364A]/45 focus:outline-none focus:border-[#2AACB2] transition-all text-sm`} />
+                      {errors.cvv && <p className="text-red-500 text-xs mt-1">{errors.cvv}</p>}
                     </div>
                   </div>
                 </>
               ) : (
                 <div>
-                  <label className="text-gray-400 text-xs mb-1 block">IBAN bénéficiaire</label>
+                  <label className="text-[#25364A]/70 text-xs mb-1 block">IBAN bénéficiaire</label>
                   <input type="text" placeholder="FR76 3000 6000 0112 3456 7890 189" value={form.iban}
                     onChange={e => setForm({ ...form, iban: e.target.value.toUpperCase() })}
-                    className={`w-full px-4 py-2.5 rounded-xl bg-white/10 border ${errors.iban ? 'border-red-500' : 'border-white/20'} text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all text-sm font-mono`} />
-                  {errors.iban && <p className="text-red-400 text-xs mt-1">{errors.iban}</p>}
-                  <div className="mt-3 bg-blue-500/10 border border-blue-500/20 rounded-xl p-3 text-blue-300 text-xs space-y-1">
+                    className={`w-full px-4 py-2.5 rounded-xl bg-white border ${errors.iban ? 'border-red-500' : 'border-[rgba(5,56,118,0.18)]'} text-[#0B1213] placeholder-[#25364A]/45 focus:outline-none focus:border-[#2AACB2] transition-all text-sm font-mono`} />
+                  {errors.iban && <p className="text-red-500 text-xs mt-1">{errors.iban}</p>}
+                  <div className="mt-3 bg-[#0B74C1]/10 border border-[#0B74C1]/20 rounded-xl p-3 text-[#0B74C1] text-xs space-y-1">
                     <p>Référence à indiquer : <strong>{paiement.id}</strong></p>
                     <p>Délai de traitement : 1 à 3 jours ouvrés</p>
                     <p>Bénéficiaire : {ENTREPRISE.nom}</p>
                   </div>
                 </div>
               )}
-              <div className="flex items-center gap-2 text-gray-500 text-xs">
-                <Shield className="w-3.5 h-3.5 text-emerald-400" />
+              <div className="flex items-center gap-2 text-[#25364A]/60 text-xs">
+                <Shield className="w-3.5 h-3.5 text-[#2AACB2]" />
                 <span>Paiement sécurisé SSL 256-bit</span>
-                <Lock className="w-3.5 h-3.5 text-emerald-400 ml-1" />
+                <Lock className="w-3.5 h-3.5 text-[#2AACB2] ml-1" />
               </div>
-              <div className="bg-white/5 rounded-xl p-3 flex items-center justify-between">
-                <span className="text-gray-400 text-sm">Montant à payer</span>
-                <span className="text-white font-bold text-lg">{paiement.montant}</span>
+              <div className="bg-[#F6F6F7] rounded-xl p-3 flex items-center justify-between">
+                <span className="text-[#25364A]/70 text-sm">Montant à payer</span>
+                <span className="text-[#053876] font-bold text-lg">{paiement.montant}</span>
               </div>
               <button onClick={handlePay} disabled={loading}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold text-sm hover:scale-105 transition-all disabled:scale-100 disabled:opacity-70 flex items-center justify-center gap-2">
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-[#0B74C1] via-[#2AACB2] to-[#55DDB5] hover:brightness-110 text-white font-semibold text-sm disabled:opacity-70 flex items-center justify-center gap-2 shadow-[0_10px_28px_rgba(11,116,193,0.2)]">
                 {loading
                   ? <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Traitement...</>
                   : <><Lock className="w-4 h-4" /> Confirmer le paiement</>
@@ -689,21 +708,21 @@ const ModalPayer = ({ paiement, onClose, onSuccess }) => {
           {step === 3 && (
             <div className="flex flex-col items-center py-6 gap-4">
               <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200 }}
-                className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                <CheckCircle className="w-10 h-10 text-emerald-400" />
+                className="w-16 h-16 rounded-full bg-[#2AACB2]/15 flex items-center justify-center">
+                <CheckCircle className="w-10 h-10 text-[#2AACB2]" />
               </motion.div>
-              <h3 className="text-xl font-bold text-white">Paiement confirmé !</h3>
-              <p className="text-gray-400 text-sm text-center">
-                Votre paiement de <span className="text-white font-semibold">{paiement.montant}</span> pour{' '}
-                <span className="text-white font-semibold">{paiement.projet}</span> a été traité avec succès.
+              <h3 className="text-xl font-bold text-[#053876]">Paiement confirmé !</h3>
+              <p className="text-[#25364A]/70 text-sm text-center">
+                Votre paiement de <span className="text-[#053876] font-semibold">{paiement.montant}</span> pour{' '}
+                <span className="text-[#053876] font-semibold">{paiement.projet}</span> a été traité avec succès.
               </p>
-              <div className="bg-white/5 rounded-xl p-3 w-full text-center">
-                <p className="text-gray-500 text-xs">Référence de transaction</p>
-                <p className="text-white font-mono font-semibold text-sm mt-1">{txnRef}</p>
+              <div className="bg-[#F6F6F7] rounded-xl p-3 w-full text-center">
+                <p className="text-[#25364A]/60 text-xs">Référence de transaction</p>
+                <p className="text-[#053876] font-mono font-semibold text-sm mt-1">{txnRef}</p>
               </div>
-              <p className="text-gray-500 text-xs text-center">Un reçu a été envoyé à votre adresse email</p>
+              <p className="text-[#25364A]/60 text-xs text-center">Un reçu a été envoyé à votre adresse email</p>
               <button onClick={onClose}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold text-sm hover:scale-105 transition-all">
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-[#0B74C1] via-[#2AACB2] to-[#55DDB5] hover:brightness-110 text-white font-semibold text-sm transition-all shadow-[0_10px_28px_rgba(11,116,193,0.2)]">
                 Fermer
               </button>
             </div>
@@ -747,9 +766,9 @@ const Paiements = () => {
     setPaiements(prev => prev.map(p => p.id === id ? { ...p, statut: 'paid', methode: methodeUsed } : p))
 
   const getStatusConfig = (statut) => ({
-    paid:    { label: 'Payé',       icon: CheckCircle, color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
-    pending: { label: 'En attente', icon: Clock,       color: 'bg-amber-500/20 text-amber-400 border-amber-500/30' },
-    overdue: { label: 'En retard',  icon: AlertCircle, color: 'bg-red-500/20 text-red-400 border-red-500/30' },
+    paid:    { label: 'Payé',       icon: CheckCircle, color: 'bg-[#55DDB5]/15 text-[#1D5B9B] border-[#55DDB5]/50' },
+    pending: { label: 'En attente', icon: Clock,       color: 'bg-amber-100 text-amber-700 border-amber-300/50' },
+    overdue: { label: 'En retard',  icon: AlertCircle, color: 'bg-red-100 text-red-700 border-red-300/50' },
   }[statut])
 
   const totalPaye  = paiements.filter(p => p.statut === 'paid').reduce((s,p) => s + p.montantValue, 0)
@@ -761,13 +780,13 @@ const Paiements = () => {
   const firstUnpaid = paiements.find(p => p.statut !== 'paid')
 
   const stats = [
-    { title: 'Total payé',          value: `${totalPaye.toLocaleString('fr-FR')} €`, icon: CreditCard,  color: 'from-emerald-500 to-teal-500',  bgLight: 'bg-emerald-500/10', textLight: 'text-emerald-400', badge: 'Réglé' },
-    { title: 'Restant dû',          value: `${totalDu.toLocaleString('fr-FR')} €`,   icon: AlertCircle, color: 'from-amber-500 to-orange-500',   bgLight: 'bg-amber-500/10',   textLight: 'text-amber-400',   badge: 'À régler' },
-    { title: 'Paiements effectués', value: paiements.filter(p => p.statut === 'paid').length.toString(), icon: Wallet, color: 'from-blue-500 to-cyan-500', bgLight: 'bg-blue-500/10', textLight: 'text-blue-400', badge: 'Total' },
+    { title: 'Total payé',          value: `${totalPaye.toLocaleString('fr-FR')} €`, icon: CreditCard,  color: 'from-[#2AACB2] to-[#55DDB5]', bgLight: 'bg-[#2AACB2]/12', textLight: 'text-[#2AACB2]', badge: 'Réglé' },
+    { title: 'Restant dû',          value: `${totalDu.toLocaleString('fr-FR')} €`,   icon: AlertCircle, color: 'from-[#4681B7] to-[#72A5CE]', bgLight: 'bg-[#4681B7]/12', textLight: 'text-[#4681B7]', badge: 'À régler' },
+    { title: 'Paiements effectués', value: paiements.filter(p => p.statut === 'paid').length.toString(), icon: Wallet, color: 'from-[#0B74C1] to-[#2AACB2]', bgLight: 'bg-[#0B74C1]/12', textLight: 'text-[#0B74C1]', badge: 'Total' },
   ]
 
   return (
-    <>
+    <div className="omedev-vm">
       <style>{globalStyles}</style>
 
       <AnimatePresence>
@@ -787,22 +806,22 @@ const Paiements = () => {
         )}
       </AnimatePresence>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
+      <div className="min-h-screen" style={{ background: '#F6F6F7' }}>
         <ClientHeader onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
 
         <div className="flex">
           <div className={`fixed inset-y-0 left-0 z-40 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300`}>
             <ClientSidebar />
           </div>
-          {sidebarOpen && <div className="fixed inset-0 bg-black/50 z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />}
+          {sidebarOpen && <div className="fixed inset-0 bg-[#0B1213]/40 z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />}
 
           <div className="flex-1 lg:ml-64">
             <main className="p-6 md:p-10">
 
               {/* Titre page */}
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
-                <h1 className="text-2xl md:text-3xl font-bold text-white">Paiements</h1>
-                <p className="text-gray-400 mt-1">Gérez vos factures et effectuez vos paiements</p>
+                <h1 className="text-2xl md:text-3xl font-bold text-[#053876]">Paiements</h1>
+                <p className="text-[#25364A]/70 mt-1">Gérez vos factures et effectuez vos paiements</p>
               </motion.div>
 
               {/* Stats */}
@@ -810,34 +829,34 @@ const Paiements = () => {
                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
                 {stats.map((stat, i) => (
                   <motion.div key={i} variants={fadeUp}
-                    className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-6 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:border-blue-500/50 hover:bg-white/15">
+                    className="bg-white border border-[rgba(5,56,118,0.09)] rounded-2xl p-6 shadow-[0_10px_30px_rgba(5,56,118,0.06)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_22px_48px_rgba(11,116,193,0.14)] hover:border-[rgba(42,172,178,0.4)]">
                     <div className="flex items-center justify-between mb-4">
                       <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-lg`}>
                         <stat.icon className="w-6 h-6 text-white" />
                       </div>
                       <span className={`text-xs font-semibold px-2 py-1 rounded-full ${stat.bgLight} ${stat.textLight}`}>{stat.badge}</span>
                     </div>
-                    <div className="text-2xl font-bold text-white">{stat.value}</div>
-                    <div className="text-gray-400 text-sm mt-1">{stat.title}</div>
+                    <div className="text-2xl font-bold text-[#053876]">{stat.value}</div>
+                    <div className="text-[#25364A]/70 text-sm mt-1">{stat.title}</div>
                   </motion.div>
                 ))}
               </motion.div>
 
               {/* Quick action */}
               <motion.div variants={fadeUp} initial="hidden" animate="visible"
-                className="bg-gradient-to-r from-blue-600/20 to-cyan-600/20 rounded-2xl p-6 border border-white/10 mb-8">
+                className="bg-gradient-to-r from-[#0B74C1]/10 to-[#55DDB5]/10 rounded-2xl p-6 border border-[rgba(5,56,118,0.12)] mb-8">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-[#0B74C1] to-[#2AACB2] flex items-center justify-center shadow-lg">
                       <Plus className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-white mb-1">Effectuer un paiement</h3>
-                      <p className="text-gray-400">Réglez vos factures en ligne en toute sécurité</p>
+                      <h3 className="text-xl font-bold text-[#053876] mb-1">Effectuer un paiement</h3>
+                      <p className="text-[#25364A]/70">Réglez vos factures en ligne en toute sécurité</p>
                     </div>
                   </div>
                   <button onClick={() => firstUnpaid && setModalPayer(firstUnpaid)} disabled={!firstUnpaid}
-                    className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
+                    className="bg-gradient-to-r from-[#0B74C1] via-[#2AACB2] to-[#55DDB5] hover:brightness-110 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all shadow-[0_10px_28px_rgba(11,116,193,0.2)] disabled:opacity-50 disabled:cursor-not-allowed">
                     {firstUnpaid ? 'Payer maintenant' : 'Tout est réglé ✓'}
                     <CreditCard className="w-4 h-4" />
                   </button>
@@ -846,12 +865,12 @@ const Paiements = () => {
 
               {/* Recherche */}
               <motion.div variants={fadeUp} initial="hidden" animate="visible"
-                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 mb-8">
+                className="bg-white border border-[rgba(5,56,118,0.09)] rounded-2xl p-4 mb-8 shadow-[0_10px_30px_rgba(5,56,118,0.06)]">
                 <div className="relative">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#25364A]/50" />
                   <input type="text" placeholder="Rechercher une facture..." value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all" />
+                    className="w-full pl-12 pr-4 py-3 rounded-xl bg-white border border-[rgba(5,56,118,0.18)] text-[#0B1213] placeholder-[#25364A]/45 focus:outline-none focus:border-[#2AACB2] transition-all" />
                 </div>
               </motion.div>
 
@@ -863,64 +882,64 @@ const Paiements = () => {
                   const StatusIcon = status.icon
                   return (
                     <motion.div key={paiement.id} variants={fadeUp}
-                      className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-blue-500/50 transition-all hover:-translate-y-2 hover:shadow-2xl flex flex-col">
-                      <div className="h-1 bg-gradient-to-r from-blue-500 to-cyan-500" />
+                      className="bg-white border border-[rgba(5,56,118,0.09)] rounded-2xl overflow-hidden shadow-[0_10px_30px_rgba(5,56,118,0.06)] hover:border-[rgba(42,172,178,0.4)] transition-all hover:-translate-y-2 hover:shadow-[0_22px_48px_rgba(11,116,193,0.14)] flex flex-col">
+                      <div className="h-1 bg-gradient-to-r from-[#0B74C1] to-[#2AACB2]" />
 
                       <div className="p-6 flex-1 flex flex-col gap-4">
                         {/* Header */}
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <div className="w-9 h-9 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg">
+                            <div className="w-9 h-9 rounded-lg bg-gradient-to-r from-[#0B74C1] to-[#2AACB2] flex items-center justify-center shadow-lg">
                               <CreditCard className="w-4 h-4 text-white" />
                             </div>
-                            <span className="text-xs text-gray-500 font-mono">{paiement.id}</span>
+                            <span className="text-xs text-[#25364A]/60 font-mono">{paiement.id}</span>
                           </div>
                           <div className="flex items-center gap-1.5">
-                            <Calendar className="w-3.5 h-3.5 text-blue-400" />
-                            <span className="text-xs text-gray-400">{paiement.date}</span>
+                            <Calendar className="w-3.5 h-3.5 text-[#0B74C1]" />
+                            <span className="text-xs text-[#25364A]/70">{paiement.date}</span>
                           </div>
                         </div>
 
                         {/* Projet + statut */}
                         <div>
-                          <h3 className="text-lg font-bold text-white mb-2 line-clamp-1">{paiement.projet}</h3>
+                          <h3 className="text-lg font-bold text-[#053876] mb-2 line-clamp-1">{paiement.projet}</h3>
                           <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border ${status.color}`}>
                             <StatusIcon className="w-3 h-3" /> {status.label}
                           </span>
                         </div>
 
                         {/* Montant encadré */}
-                        <div className="bg-white/5 rounded-xl p-4 flex items-center justify-between">
+                        <div className="bg-[#F6F6F7] rounded-xl p-4 flex items-center justify-between">
                           <div>
-                            <p className="text-gray-500 text-xs mb-0.5">Montant TTC</p>
-                            <p className="text-2xl font-bold text-white">{paiement.montant}</p>
+                            <p className="text-[#25364A]/60 text-xs mb-0.5">Montant TTC</p>
+                            <p className="text-2xl font-bold text-[#053876]">{paiement.montant}</p>
                           </div>
-                          <Euro className="w-8 h-8 text-emerald-400 opacity-40" />
+                          <Euro className="w-8 h-8 text-[#0B74C1] opacity-40" />
                         </div>
 
                         {/* Méthode si payé */}
                         {paiement.statut === 'paid' && paiement.methode !== '-' && (
                           <div className="flex items-center gap-2">
-                            <CreditCard className="w-4 h-4 text-gray-500" />
-                            <span className="text-sm text-gray-400">Via : <span className="text-gray-300">{paiement.methode}</span></span>
+                            <CreditCard className="w-4 h-4 text-[#25364A]/50" />
+                            <span className="text-sm text-[#25364A]/70">Via : <span className="text-[#053876]">{paiement.methode}</span></span>
                           </div>
                         )}
 
                         <div className="flex-1" />
 
                         {/* Actions */}
-                        <div className="flex gap-2 pt-3 border-t border-white/10">
+                        <div className="flex gap-2 pt-3 border-t border-[rgba(5,56,118,0.1)]">
                           <button onClick={() => setModalVoir(paiement)}
-                            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-white/20 text-gray-300 text-xs font-medium hover:bg-blue-500/20 hover:text-blue-400 hover:border-blue-500/50 transition-all">
+                            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-[rgba(5,56,118,0.18)] text-[#25364A] text-xs font-medium hover:bg-[#F6F6F7] hover:text-[#053876] transition-all">
                             <Eye className="w-3.5 h-3.5" /> Voir
                           </button>
                           <button onClick={() => setModalDownload(paiement)}
-                            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-white/20 text-gray-300 text-xs font-medium hover:bg-blue-500/20 hover:text-blue-400 hover:border-blue-500/50 transition-all">
+                            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-[rgba(5,56,118,0.18)] text-[#25364A] text-xs font-medium hover:bg-[#F6F6F7] hover:text-[#053876] transition-all">
                             <Download className="w-3.5 h-3.5" /> PDF
                           </button>
                           {paiement.statut !== 'paid' && (
                             <button onClick={() => setModalPayer(paiement)}
-                              className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-semibold hover:scale-105 transition-all shadow-md">
+                              className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-gradient-to-r from-[#0B74C1] via-[#2AACB2] to-[#55DDB5] hover:brightness-110 text-white text-xs font-semibold transition-all shadow-[0_10px_28px_rgba(11,116,193,0.2)]">
                               Payer
                             </button>
                           )}
@@ -934,10 +953,10 @@ const Paiements = () => {
               {/* Empty state */}
               {filtered.length === 0 && (
                 <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-16 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl">
-                  <CreditCard className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-white">Aucune facture trouvée</h3>
-                  <p className="text-gray-500 mt-1">Essayez de modifier vos critères de recherche</p>
+                  className="text-center py-16 bg-white border border-[rgba(5,56,118,0.09)] rounded-2xl shadow-[0_10px_30px_rgba(5,56,118,0.06)]">
+                  <CreditCard className="w-16 h-16 text-[#25364A]/30 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-[#053876]">Aucune facture trouvée</h3>
+                  <p className="text-[#25364A]/60 mt-1">Essayez de modifier vos critères de recherche</p>
                 </motion.div>
               )}
 
@@ -945,7 +964,7 @@ const Paiements = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

@@ -9,7 +9,7 @@ require('dotenv').config();
 const initialUsers = [
   {
     name: 'Super Admin',
-    email: 'admin@omdeve.com',
+    email: 'admin@omedevservices.com',
     phone: '+243 000 000 000',
     password: 'admin123',
     role: 'super_admin',
@@ -17,7 +17,7 @@ const initialUsers = [
   },
   {
     name: 'Jean Client',
-    email: 'client@omdeve.com',
+    email: 'client@omedevservices.com',
     phone: '+243 000 000 001',
     password: 'client123',
     role: 'client',
@@ -87,7 +87,7 @@ const seedDatabase = async () => {
     const articles = await Article.insertMany(initialArticles);
     console.log(`${articles.length} articles créés`);
 
-    console.log('✅ Base de données initialisée avec succès');
+    console.log('Base de données initialisée avec succès');
     process.exit(0);
   } catch (error) {
     console.error('Erreur lors du seeding:', error);
@@ -101,16 +101,16 @@ if (require.main === module) {
 
 // dans seeders/initialData.js, ajouter :
 const defaultSettings = [
-  { key: 'siteName', value: 'OMDEVE Services', description: 'Nom du site' },
-  { key: 'siteEmail', value: 'contact@omdeve.com', description: 'Email de contact' },
+  { key: 'siteName', value: 'OMEDEV Services', description: 'Nom du site' },
+  { key: 'siteEmail', value: 'omedevservices@gmail.com', description: 'Email de contact' },
   { key: 'sitePhone', value: '+243 555 503 59', description: 'Téléphone' },
   { key: 'siteAddress', value: 'Avenue Kabmabre n°75, Lingwala, Kinshasa', description: 'Adresse' },
-  { key: 'facebook', value: 'https://facebook.com/omdeve', description: 'Facebook' },
-  { key: 'linkedin', value: 'https://linkedin.com/company/omdeve', description: 'LinkedIn' },
-  { key: 'twitter', value: 'https://twitter.com/omdeve', description: 'Twitter' },
+  { key: 'facebook', value: 'https://facebook.com/omedevservices', description: 'Facebook' },
+  { key: 'linkedin', value: 'https://linkedin.com/company/omedevservices', description: 'LinkedIn' },
+  { key: 'twitter', value: 'https://twitter.com/omedevservices', description: 'Twitter' },
   { key: 'vatRate', value: 16, description: 'TVA (%)' },
   { key: 'currency', value: 'EUR', description: 'Devise' },
-  { key: 'seoTitle', value: 'OMDEVE - Solutions IT, Énergie & Digital en RDC', description: 'Titre SEO' },
+  { key: 'seoTitle', value: 'OMEDEV Services - Solutions IT, Énergie & Digital en RDC', description: 'Titre SEO' },
   { key: 'seoDesc', value: 'Leader en solutions informatiques, énergétiques et digitales en République Démocratique du Congo', description: 'Description SEO' },
 ];
 await Setting.insertMany(defaultSettings);

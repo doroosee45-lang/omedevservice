@@ -1,4 +1,4 @@
-﻿// components/Footer.jsx
+﻿// components/Public/Footer.jsx
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Clock, Loader2 } from 'lucide-react';
@@ -68,37 +68,37 @@ const Footer = () => {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
 
         .footer {
-          font-family: 'Outfit', sans-serif;
-          background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+          font-family: 'DM Sans', sans-serif;
+          background: #ffffff;
           position: relative;
           overflow: hidden;
         }
 
-        /* ── Animated background mesh ── */
+        /* ── Animated background mesh (orbes brand, très légers sur fond blanc) ── */
         .footer-mesh {
           position: absolute; inset: 0; pointer-events: none; overflow: hidden;
         }
         .mesh-blob {
-          position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.12;
+          position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.10;
         }
         .mesh-blob-1 {
           width: 500px; height: 500px;
-          background: radial-gradient(circle, #2563eb, transparent);
+          background: radial-gradient(circle, #0B74C1, transparent);
           top: -100px; left: -100px;
           animation: blobFloat1 12s ease-in-out infinite alternate;
         }
         .mesh-blob-2 {
           width: 400px; height: 400px;
-          background: radial-gradient(circle, #06b6d4, transparent);
+          background: radial-gradient(circle, #55DDB5, transparent);
           bottom: -80px; right: -80px;
           animation: blobFloat2 10s ease-in-out infinite alternate;
         }
         .mesh-blob-3 {
           width: 300px; height: 300px;
-          background: radial-gradient(circle, #3b82f6, transparent);
+          background: radial-gradient(circle, #2AACB2, transparent);
           top: 50%; left: 50%; transform: translate(-50%,-50%);
           animation: blobFloat3 14s ease-in-out infinite alternate;
         }
@@ -106,7 +106,7 @@ const Footer = () => {
         @keyframes blobFloat2 { from { transform: translate(0,0) scale(1.1); } to { transform: translate(-40px,-30px) scale(1); } }
         @keyframes blobFloat3 { from { transform: translate(-50%,-50%) scale(1); } to { transform: translate(-45%,-55%) scale(1.15); } }
 
-        /* Diagonal top divider */
+        /* Diagonal top divider (blanc pour raccorder au fond du footer) */
         .footer-divider-top {
           width: 100%; height: 36px; overflow: hidden; line-height: 0;
         }
@@ -115,8 +115,9 @@ const Footer = () => {
         /* ── Newsletter strip ── */
         .footer-newsletter {
           position: relative; z-index: 2;
-          border-bottom: 1px solid rgba(255,255,255,0.06);
+          border-bottom: 1px solid rgba(5,56,118,0.10);
           padding: 22px 0;
+          background: #F6F6F7;
         }
         .footer-newsletter-inner {
           max-width: 1200px; margin: 0 auto; padding: 0 32px;
@@ -125,44 +126,48 @@ const Footer = () => {
         }
         .newsletter-text-block { flex: 1; min-width: 260px; }
         .newsletter-eyebrow {
-          font-size: 0.7rem; font-weight: 700; color: #2563eb;
+          font-size: 0.7rem; font-weight: 700; color: #2AACB2;
           text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px;
           display: flex; align-items: center; gap: 6px;
+          font-family: 'Syne', sans-serif;
         }
         .newsletter-eyebrow::before {
           content: ''; width: 20px; height: 2px;
-          background: linear-gradient(90deg, #2563eb, #06b6d4); border-radius: 99px;
+          background: linear-gradient(90deg, #0B74C1, #55DDB5); border-radius: 99px;
         }
-        .newsletter-title { font-size: 1.1rem; font-weight: 800; color: white; margin: 0; letter-spacing: -0.3px; }
-        .newsletter-sub   { font-size: 0.8rem; color: rgba(255,255,255,0.45); margin-top: 2px; }
+        .newsletter-title {
+          font-family: 'Syne', sans-serif;
+          font-size: 1.1rem; font-weight: 800; color: #053876; margin: 0; letter-spacing: -0.3px;
+        }
+        .newsletter-sub   { font-size: 0.8rem; color: #25364A; margin-top: 2px; }
 
         .newsletter-form { display: flex; gap: 8px; flex: 1; max-width: 420px; }
         .newsletter-input {
           flex: 1; padding: 11px 16px;
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.12);
-          border-radius: 10px; color: white;
-          font-size: 1rem; font-family: 'Outfit', sans-serif;
+          background: #ffffff;
+          border: 1px solid rgba(5,56,118,0.16);
+          border-radius: 10px; color: #0B1213;
+          font-size: 1rem; font-family: 'DM Sans', sans-serif;
           outline: none; transition: all 0.25s;
         }
-        .newsletter-input::placeholder { color: rgba(255,255,255,0.3); }
+        .newsletter-input::placeholder { color: rgba(11,18,19,0.4); }
         .newsletter-input:focus {
-          border-color: #2563eb;
-          background: rgba(37,99,235,0.08);
-          box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+          border-color: #2AACB2;
+          background: rgba(42,172,178,0.06);
+          box-shadow: 0 0 0 3px rgba(42,172,178,0.15);
         }
         .newsletter-btn {
           padding: 11px 22px;
-          background: linear-gradient(135deg, #2563eb, #06b6d4);
+          background: linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%);
           color: white; border: none; border-radius: 10px;
-          font-size: 1rem; font-weight: 700; font-family: 'Outfit', sans-serif;
+          font-size: 1rem; font-weight: 700; font-family: 'Syne', sans-serif;
           cursor: pointer; white-space: nowrap; transition: all 0.25s;
-          box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+          box-shadow: 0 4px 14px rgba(11,116,193,0.25);
         }
-        .newsletter-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(37,99,235,0.45); }
+        .newsletter-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(42,172,178,0.35); }
         .newsletter-success {
           display: flex; align-items: center; gap: 8px;
-          color: #34d399; font-size: 0.875rem; font-weight: 600;
+          color: #0B8A6F; font-size: 0.875rem; font-weight: 600;
           animation: fadeUpIn 0.3s ease;
         }
         @keyframes fadeUpIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
@@ -184,66 +189,71 @@ const Footer = () => {
         }
         .brand-icon {
           width: 44px; height: 44px; border-radius: 12px;
-          background: linear-gradient(135deg, #2563eb, #06b6d4);
+          background: linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%);
           display: flex; align-items: center; justify-content: center;
           font-size: 1.3rem; font-weight: 900; color: white;
           flex-shrink: 0;
-          box-shadow: 0 4px 14px rgba(37,99,235,0.4);
+          box-shadow: 0 4px 14px rgba(11,116,193,0.30);
+          font-family: 'Syne', sans-serif;
         }
-        .brand-name { font-weight: 900; font-size: 1.15rem; color: white; letter-spacing: -0.3px; line-height: 1.1; }
-        .brand-name span { color: #06b6d4; }
-        .brand-sub  { font-size: 0.58rem; color: rgba(255,255,255,0.35); font-weight: 600; letter-spacing: 1.8px; text-transform: uppercase; }
+        .brand-name {
+          font-family: 'Syne', sans-serif; font-weight: 800;
+          font-size: 1.15rem; color: #053876; letter-spacing: -0.3px; line-height: 1.1;
+        }
+        .brand-name span { color: #2AACB2; }
+        .brand-sub  { font-size: 0.58rem; color: #25364A; font-weight: 600; letter-spacing: 1.8px; text-transform: uppercase; }
 
-        .brand-desc { font-size: 0.82rem; color: rgba(255,255,255,0.45); line-height: 1.65; margin-bottom: 16px; max-width: 280px; }
+        .brand-desc { font-size: 0.82rem; color: #25364A; line-height: 1.65; margin-bottom: 16px; max-width: 280px; }
 
         /* Social icons */
         .socials { display: flex; gap: 8px; }
         .social-btn {
           width: 36px; height: 36px; border-radius: 9px;
-          background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-          color: rgba(255,255,255,0.55);
+          background: #F6F6F7; border: 1px solid rgba(5,56,118,0.12);
+          color: #053876;
           display: flex; align-items: center; justify-content: center;
           cursor: pointer; text-decoration: none;
           transition: all 0.2s;
           font-size: 1rem;
         }
         .social-btn:hover {
-          background: linear-gradient(135deg, #2563eb, #06b6d4);
+          background: linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%);
           border-color: transparent; color: white;
-          transform: translateY(-2px); box-shadow: 0 6px 16px rgba(37,99,235,0.35);
+          transform: translateY(-2px); box-shadow: 0 6px 16px rgba(11,116,193,0.30);
         }
 
         /* Link columns */
         .footer-col { }
         .col-title {
-          font-size: 0.72rem; font-weight: 800; color: white;
+          font-family: 'Syne', sans-serif;
+          font-size: 0.72rem; font-weight: 800; color: #053876;
           text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 18px;
           display: flex; align-items: center; gap: 8px;
         }
         .col-title::after {
           content: ''; flex: 1; height: 1px;
-          background: linear-gradient(90deg, rgba(37,99,235,0.5), transparent);
+          background: linear-gradient(90deg, rgba(42,172,178,0.5), transparent);
         }
         .col-links { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
         .col-link {
-          color: rgba(255,255,255,0.45); text-decoration: none;
+          color: #25364A; text-decoration: none;
           font-size: 0.875rem; font-weight: 500;
           display: flex; align-items: center; gap: 6px;
           transition: all 0.2s;
         }
         .col-link::before {
           content: ''; width: 0; height: 1px;
-          background: linear-gradient(90deg, #2563eb, #06b6d4);
+          background: linear-gradient(90deg, #0B74C1, #2AACB2);
           transition: width 0.25s; border-radius: 99px;
           flex-shrink: 0;
         }
-        .col-link:hover { color: white; padding-left: 4px; }
+        .col-link:hover { color: #0B74C1; padding-left: 4px; }
         .col-link:hover::before { width: 12px; }
 
         /* ── Contact strip ── */
         .footer-contact {
           position: relative; z-index: 2;
-          border-top: 1px solid rgba(255,255,255,0.06);
+          border-top: 1px solid rgba(5,56,118,0.10);
           max-width: 1200px; margin: 0 auto; padding: 14px 32px;
           display: flex; gap: 24px; flex-wrap: wrap;
         }
@@ -252,29 +262,27 @@ const Footer = () => {
         }
         .contact-icon {
           width: 34px; height: 34px; border-radius: 9px;
-          background: rgba(37,99,235,0.15); border: 1px solid rgba(37,99,235,0.25);
+          background: rgba(42,172,178,0.10); border: 1px solid rgba(42,172,178,0.25);
           display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
-          flex-shrink: 0;
+          flex-shrink: 0; color: #2AACB2;
         }
-        .contact-label { font-size: 0.65rem; color: rgba(255,255,255,0.3); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: block; }
-        .contact-value { font-size: 0.82rem; color: rgba(255,255,255,0.75); font-weight: 600; }
+        .contact-label { font-size: 0.65rem; color: #25364A; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: block; }
+        .contact-value { font-size: 0.82rem; color: #0B1213; font-weight: 600; }
 
         /* ── Bottom bar ── */
         .footer-bottom {
           position: relative; z-index: 2;
-          border-top: 1px solid rgba(255,255,255,0.05);
+          border-top: 1px solid rgba(5,56,118,0.08);
           padding: 12px 32px;
-          display: flex; align-items: center; justify-content: space-between;
-          flex-wrap: wrap; gap: 12px;
-          max-width: 100%;
+          background: #F6F6F7;
         }
         .footer-bottom-inner {
           max-width: 1200px; margin: 0 auto; width: 100%;
           display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
         }
-        .copyright { font-size: 0.78rem; color: rgba(255,255,255,0.25); font-weight: 500; }
-        .copyright strong { color: rgba(255,255,255,0.5); }
-        .made-with { font-size: 0.75rem; color: rgba(255,255,255,0.2); display: flex; align-items: center; gap: 4px; }
+        .copyright { font-size: 0.78rem; color: #25364A; font-weight: 500; }
+        .copyright strong { color: #053876; }
+        .made-with { font-size: 0.75rem; color: #25364A; display: flex; align-items: center; gap: 4px; }
         .made-with span { color: #ef4444; animation: heartbeat 1.5s ease-in-out infinite; display: inline-block; }
         @keyframes heartbeat { 0%,100% { transform:scale(1); } 50% { transform:scale(1.3); } }
 
@@ -282,13 +290,13 @@ const Footer = () => {
         .scroll-top {
           position: fixed; bottom: 28px; right: 28px; z-index: 999;
           width: 44px; height: 44px; border-radius: 12px;
-          background: linear-gradient(135deg, #2563eb, #06b6d4);
+          background: linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%);
           border: none; color: white; font-size: 1.1rem;
           display: flex; align-items: center; justify-content: center;
-          cursor: pointer; box-shadow: 0 6px 20px rgba(37,99,235,0.4);
+          cursor: pointer; box-shadow: 0 6px 20px rgba(11,116,193,0.35);
           transition: all 0.25s;
         }
-        .scroll-top:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(37,99,235,0.55); }
+        .scroll-top:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(42,172,178,0.45); }
 
         @media (max-width: 900px) {
           .footer-main { grid-template-columns: 1fr 1fr; gap: 32px; }
@@ -298,7 +306,6 @@ const Footer = () => {
         @media (max-width: 560px) {
           .footer-main { grid-template-columns: 1fr; gap: 28px; }
           .footer-contact { flex-direction: column; gap: 16px; }
-          .brand-stats { grid-template-columns: repeat(4,1fr); }
         }
         @media (max-width: 480px) {
           .footer-newsletter-inner { padding: 0 16px; flex-direction: column; gap: 16px; }
@@ -315,15 +322,15 @@ const Footer = () => {
         }
       `}</style>
 
-      {/* Wave divider */}
+      {/* Wave divider (blanc pour raccorder au fond blanc du footer) */}
       <div className="footer-divider-top">
         <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style={{ width:'100%', height:'36px' }}>
-          <path d="M0,40 C240,0 480,60 720,30 C960,0 1200,50 1440,20 L1440,60 L0,60 Z" fill="#0f172a"/>
+          <path d="M0,40 C240,0 480,60 720,30 C960,0 1200,50 1440,20 L1440,60 L0,60 Z" fill="#ffffff"/>
         </svg>
       </div>
 
       <footer className="footer">
-        {/* Mesh background */}
+        {/* Mesh background (orbes) */}
         <div className="footer-mesh">
           <div className="mesh-blob mesh-blob-1" />
           <div className="mesh-blob mesh-blob-2" />
@@ -358,7 +365,7 @@ const Footer = () => {
                   </button>
                 </form>
                 {error && (
-                  <p style={{ color: '#f87171', fontSize: '12px', marginTop: '8px' }}>{error}</p>
+                  <p style={{ color: '#dc2626', fontSize: '12px', marginTop: '8px' }}>{error}</p>
                 )}
               </div>
             ) : (
@@ -446,21 +453,21 @@ const Footer = () => {
               © {new Date().getFullYear()} <strong>OMDEVE Services</strong> — Tous droits réservés
             </div>
             <div style={{ display:'flex', gap:'20px', flexWrap:'wrap' }}>
-              <Link to="/legal" style={{ color:'rgba(255,255,255,0.2)', fontSize:'0.75rem', textDecoration:'none', transition:'color 0.2s' }}
-                onMouseEnter={e => e.target.style.color='rgba(255,255,255,0.6)'}
-                onMouseLeave={e => e.target.style.color='rgba(255,255,255,0.2)'}
+              <Link to="/legal" style={{ color:'#25364A', fontSize:'0.75rem', textDecoration:'none', transition:'color 0.2s' }}
+                onMouseEnter={e => e.target.style.color='#0B74C1'}
+                onMouseLeave={e => e.target.style.color='#25364A'}
               >Mentions légales</Link>
-              <Link to="/privacy" style={{ color:'rgba(255,255,255,0.2)', fontSize:'0.75rem', textDecoration:'none', transition:'color 0.2s' }}
-                onMouseEnter={e => e.target.style.color='rgba(255,255,255,0.6)'}
-                onMouseLeave={e => e.target.style.color='rgba(255,255,255,0.2)'}
+              <Link to="/privacy" style={{ color:'#25364A', fontSize:'0.75rem', textDecoration:'none', transition:'color 0.2s' }}
+                onMouseEnter={e => e.target.style.color='#0B74C1'}
+                onMouseLeave={e => e.target.style.color='#25364A'}
               >Confidentialité</Link>
-              <Link to="/cgv" style={{ color:'rgba(255,255,255,0.2)', fontSize:'0.75rem', textDecoration:'none', transition:'color 0.2s' }}
-                onMouseEnter={e => e.target.style.color='rgba(255,255,255,0.6)'}
-                onMouseLeave={e => e.target.style.color='rgba(255,255,255,0.2)'}
+              <Link to="/cgv" style={{ color:'#25364A', fontSize:'0.75rem', textDecoration:'none', transition:'color 0.2s' }}
+                onMouseEnter={e => e.target.style.color='#0B74C1'}
+                onMouseLeave={e => e.target.style.color='#25364A'}
               >CGV</Link>
-              <Link to="/cookies" style={{ color:'rgba(255,255,255,0.2)', fontSize:'0.75rem', textDecoration:'none', transition:'color 0.2s' }}
-                onMouseEnter={e => e.target.style.color='rgba(255,255,255,0.6)'}
-                onMouseLeave={e => e.target.style.color='rgba(255,255,255,0.2)'}
+              <Link to="/cookies" style={{ color:'#25364A', fontSize:'0.75rem', textDecoration:'none', transition:'color 0.2s' }}
+                onMouseEnter={e => e.target.style.color='#0B74C1'}
+                onMouseLeave={e => e.target.style.color='#25364A'}
               >Cookies</Link>
             </div>
             <div className="made-with">

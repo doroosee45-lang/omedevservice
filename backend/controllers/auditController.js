@@ -1,408 +1,3 @@
-// // src/controllers/auditController.js
-// const AuditRequest = require('../models/AuditRequest');
-// const PDFDocument = require('pdfkit');
-// const fs = require('fs');
-// const path = require('path');
-// const nodemailer = require('nodemailer');
-
-// // Configuration email
-// const transporter = nodemailer.createTransport({
-//   host: process.env.EMAIL_HOST,
-//   port: process.env.EMAIL_PORT,
-//   secure: false,
-//   auth: {
-//     user: process.env.EMAIL_USER,
-//     pass: process.env.EMAIL_PASS,
-//   },
-// });
-
-// // Calcul du score et recommandations
-// const calculateAuditResults = (data) => {
-//   let score = 0;
-//   if (data.hasNetwork === 'yes') score += 10;
-//   if (data.hasServer === 'yes') score += 10;
-//   if (data.hasFirewall === 'yes') score += 10;
-//   if (data.hasAntivirus === 'yes') score += 10;
-//   if (data.hasBackup === 'yes') score += 15;
-//   if (data.hasCyberPolicy === 'yes') score += 10;
-//   if (data.lastAudit === 'moins-6-mois') score += 5;
-//   else if (data.lastAudit === '6-12-mois') score += 3;
-//   else if (data.lastAudit === '1-2-ans') score += 1;
-//   score -= (data.mainIssues || []).length * 2;
-//   score = Math.max(0, Math.min(100, score));
-
-//   let level, recommendations;
-//   if (score >= 80) {
-//     level = 'Excellent';
-//     recommendations = [
-//       'Mettre en place une veille technologique régulière',
-//       'Former les équipes aux bonnes pratiques',
-//       'Envisager une migration vers le cloud pour plus d\'agilité',
-//       'Automatiser les processus de sauvegarde'
-//     ];
-//   } else if (score >= 60) {
-//     level = 'Bon';
-//     recommendations = [
-//       'Renforcer la sécurité réseau avec un firewall nouvelle génération',
-//       'Mettre en place des sauvegardes automatisées',
-//       'Auditer les accès et les permissions utilisateurs',
-//       'Optimiser la bande passante internet'
-//     ];
-//   } else if (score >= 40) {
-//     level = 'Moyen';
-//     recommendations = [
-//       'Installer un antivirus centralisé',
-//       'Mettre en place une politique de mots de passe stricts',
-//       'Réaliser un audit de sécurité complet',
-//       'Former les employés à la cybersécurité',
-//       'Mettre en place des sauvegardes régulières'
-//     ];
-//   } else {
-//     level = 'Critique';
-//     recommendations = [
-//       'Audit complet de l\'infrastructure IT',
-//       'Mise en place d\'une solution de sécurité globale',
-//       'Migration vers une infrastructure moderne',
-//       'Formation cybersécurité pour toute l\'équipe',
-//       'Mise en place d\'un plan de reprise d\'activité'
-//     ];
-//   }
-//   return { score, level, recommendations };
-// };
-
-// // Génération du PDF (améliorée)
-// const generateAuditPDF = async (audit) => {
-//   return new Promise((resolve, reject) => {
-//     try {
-//       const doc = new PDFDocument({ margin: 50, size: 'A4' });
-//       const filename = `audit_${audit.requestNumber}_${Date.now()}.pdf`;
-//       const uploadDir = path.join(__dirname, '../../uploads/audits');
-//       if (!fs.existsSync(uploadDir)) {
-//         fs.mkdirSync(uploadDir, { recursive: true });
-//         console.log('📁 Dossier uploads/audits créé');
-//       }
-//       const filepath = path.join(uploadDir, filename);
-//       const stream = fs.createWriteStream(filepath);
-//       doc.pipe(stream);
-
-//       // En-tête
-//       doc.fontSize(20).font('Helvetica-Bold').text('RAPPORT D\'AUDIT', { align: 'center' });
-//       doc.moveDown();
-//       doc.fontSize(10).font('Helvetica')
-//         .text(`Date : ${new Date().toLocaleDateString('fr-FR')}`, { align: 'right' })
-//         .text(`Référence : ${audit.requestNumber}`, { align: 'right' });
-//       doc.moveDown(2);
-
-//       // Infos client
-//       doc.fontSize(14).font('Helvetica-Bold').text('Informations du client', { underline: true });
-//       doc.moveDown(0.5);
-//       doc.fontSize(10).font('Helvetica')
-//         .text(`Entreprise : ${audit.companyName || 'Non renseigné'}`)
-//         .text(`Secteur : ${audit.sector || 'Non renseigné'}`)
-//         .text(`Contact : ${audit.name}`)
-//         .text(`Email : ${audit.email}`)
-//         .text(`Téléphone : ${audit.phone || 'Non renseigné'}`);
-//       doc.moveDown();
-
-//       // Résultats
-//       doc.fontSize(14).font('Helvetica-Bold').text('Résultats de l\'audit', { underline: true });
-//       doc.moveDown(0.5);
-//       doc.fontSize(12).font('Helvetica-Bold').text(`Score global : ${audit.auditScore}/100`);
-//       let scoreColor = 'black';
-//       if (audit.auditLevel === 'Excellent') scoreColor = 'green';
-//       else if (audit.auditLevel === 'Bon') scoreColor = 'blue';
-//       else if (audit.auditLevel === 'Moyen') scoreColor = 'orange';
-//       else scoreColor = 'red';
-//       doc.fillColor(scoreColor).text(`Niveau : ${audit.auditLevel}`).fillColor('black');
-//       doc.moveDown();
-
-//       // Barre progression
-//       const barWidth = 400;
-//       const barHeight = 20;
-//       const filledWidth = (audit.auditScore / 100) * barWidth;
-//       doc.rect(50, doc.y, barWidth, barHeight).fillColor('#e0e0e0').fill();
-//       doc.rect(50, doc.y, filledWidth, barHeight).fillColor(scoreColor).fill();
-//       doc.moveDown(2);
-
-//       // Recommandations
-//       doc.fontSize(14).font('Helvetica-Bold').text('Recommandations', { underline: true });
-//       doc.moveDown(0.5);
-//       doc.fontSize(10).font('Helvetica');
-//       (audit.recommendations || []).forEach((rec, idx) => {
-//         doc.text(`${idx + 1}. ${rec}`);
-//         doc.moveDown(0.3);
-//       });
-//       doc.moveDown();
-
-//       // Détail évaluation
-//       doc.fontSize(14).font('Helvetica-Bold').text('Détail de l\'évaluation', { underline: true });
-//       doc.moveDown(0.5);
-//       const sections = [
-//         { title: 'Infrastructure réseau', items: [
-//           { label: 'Réseau informatique', value: audit.hasNetwork === 'yes' ? 'Oui' : audit.hasNetwork === 'no' ? 'Non' : 'Partiellement' },
-//           { label: 'Serveurs', value: audit.hasServer === 'yes' ? 'Oui' : audit.hasServer === 'no' ? 'Non' : 'Cloud uniquement' },
-//           { label: 'Pare-feu', value: audit.hasFirewall === 'yes' ? 'Oui' : audit.hasFirewall === 'no' ? 'Non' : 'Basique' },
-//           { label: 'Débit internet', value: audit.internetSpeed || 'Non renseigné' },
-//         ]},
-//         { title: 'Sécurité', items: [
-//           { label: 'Antivirus', value: audit.hasAntivirus === 'yes' ? 'Oui, centralisé' : audit.hasAntivirus === 'no' ? 'Non' : 'Basique' },
-//           { label: 'Sauvegarde', value: audit.hasBackup === 'yes' ? 'Oui' : audit.hasBackup === 'no' ? 'Non' : 'Partiel' },
-//           { label: 'Politique cybersécurité', value: audit.hasCyberPolicy === 'yes' ? 'Oui' : audit.hasCyberPolicy === 'no' ? 'Non' : 'En cours' },
-//           { label: 'Dernier audit', value: audit.lastAudit || 'Jamais' },
-//         ]},
-//       ];
-//       sections.forEach(section => {
-//         doc.fontSize(12).font('Helvetica-Bold').text(section.title);
-//         doc.moveDown(0.3);
-//         section.items.forEach(item => {
-//           doc.fontSize(10).font('Helvetica').text(`• ${item.label}: ${item.value}`);
-//         });
-//         doc.moveDown();
-//       });
-
-//       // Problèmes identifiés
-//       if (audit.mainIssues && audit.mainIssues.length) {
-//         doc.fontSize(12).font('Helvetica-Bold').text('Problèmes identifiés');
-//         doc.moveDown(0.3);
-//         audit.mainIssues.forEach(issue => {
-//           doc.fontSize(10).font('Helvetica').text(`• ${issue}`);
-//         });
-//         doc.moveDown();
-//       }
-
-//       // Footer
-//       const pageCount = doc.bufferedPageRange().count;
-//       for (let i = 0; i < pageCount; i++) {
-//         doc.switchToPage(i);
-//         doc.fontSize(8).fillColor('gray')
-//           .text(
-//             `OMDEVE Services - Rapport d'audit ${audit.requestNumber} - Page ${i + 1}/${pageCount}`,
-//             50,
-//             doc.page.height - 50,
-//             { align: 'center' }
-//           );
-//       }
-//       doc.end();
-
-//       stream.on('finish', () => {
-//         console.log(`✅ PDF généré : ${filepath}`);
-//         resolve(`/uploads/audits/${filename}`);
-//       });
-//       stream.on('error', (err) => {
-//         console.error('❌ Erreur stream écriture:', err);
-//         reject(err);
-//       });
-//     } catch (err) {
-//       console.error('❌ Erreur création PDF:', err);
-//       reject(err);
-//     }
-//   });
-// };
-
-// // Création d'une demande d'audit
-// const createAuditRequest = async (req, res) => {
-//   const auditData = req.body;
-//   if (!auditData.preferredContact || auditData.preferredContact === '') {
-//     auditData.preferredContact = 'email';
-//   }
-//   const { score, level, recommendations } = calculateAuditResults(auditData);
-
-//   try {
-//     const auditRequest = await AuditRequest.create({
-//       ...auditData,
-//       auditScore: score,
-//       auditLevel: level,
-//       recommendations,
-//     });
-
-//     // Email de confirmation avec vrai contenu HTML
-//     const emailHtml = `
-//       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-//         <h2 style="color: #2563eb;">Merci pour votre demande d'audit</h2>
-//         <p>Bonjour ${auditData.name},</p>
-//         <p>Nous avons bien reçu votre demande d'audit gratuit.</p>
-//         <p><strong>Votre numéro de dossier :</strong> ${auditRequest.requestNumber}</p>
-//         <p>Notre équipe va analyser vos réponses et vous fournira un rapport personnalisé sous 48h.</p>
-//         <p>Cordialement,<br>L'équipe OMDEVE</p>
-//       </div>
-//     `;
-
-//     await transporter.sendMail({
-//       from: `"OMDEVE Services" <${process.env.EMAIL_USER}>`,
-//       to: auditData.email,
-//       subject: `Confirmation de votre demande d'audit - ${auditRequest.requestNumber}`,
-//       html: emailHtml,
-//     });
-//     console.log(`📧 Email de confirmation envoyé à ${auditData.email}`);
-
-//     res.status(201).json({
-//       success: true,
-//       _id: auditRequest._id,
-//       requestNumber: auditRequest.requestNumber,
-//       audit: { score, level, recommendations },
-//     });
-//   } catch (error) {
-//     console.error('Erreur création audit:', error);
-//     res.status(500).json({ success: false, message: 'Erreur lors de la création de l\'audit' });
-//   }
-// };
-
-// // Téléchargement du PDF
-// const downloadAuditPDF = async (req, res) => {
-//   console.log('📥 Téléchargement PDF demandé pour ID:', req.params.id);
-//   const audit = await AuditRequest.findById(req.params.id);
-//   if (!audit) {
-//     return res.status(404).json({ success: false, message: 'Audit non trouvé' });
-//   }
-
-//   try {
-//     const pdfUrl = await generateAuditPDF(audit);
-//     audit.pdfReportUrl = pdfUrl;
-//     audit.status = 'completed';
-//     await audit.save();
-
-//     // Envoi du PDF par email (optionnel)
-//     const emailHtml = `
-//       <div style="font-family: Arial, sans-serif;">
-//         <h2>Bonjour ${audit.name},</h2>
-//         <p>Votre rapport d'audit est disponible en pièce jointe.</p>
-//         <p>Merci de faire confiance à OMDEVE Services.</p>
-//         <p>Cordialement,<br>L'équipe OMDEVE</p>
-//       </div>
-//     `;
-//     await transporter.sendMail({
-//       from: `"OMDEVE Services" <${process.env.EMAIL_USER}>`,
-//       to: audit.email,
-//       subject: `Rapport d'audit OMDEVE - ${audit.requestNumber}`,
-//       html: emailHtml,
-//       attachments: [{ filename: `audit_${audit.requestNumber}.pdf`, path: path.join(__dirname, '../..', pdfUrl) }],
-//     }).catch(err => console.error('Erreur envoi email avec PDF:', err));
-
-//     const filepath = path.join(__dirname, '../..', pdfUrl);
-//     res.download(filepath, `audit_${audit.requestNumber}.pdf`);
-//   } catch (error) {
-//     console.error('❌ Erreur génération PDF:', error);
-//     res.status(500).json({ success: false, message: 'Erreur lors de la génération du PDF' });
-//   }
-// };
-
-// // ==================== AUTRES FONCTIONS ====================
-// const getMyAudits = async (req, res) => {
-//   const audits = await AuditRequest.find({ user: req.user._id }).sort('-createdAt');
-//   res.json(audits);
-// };
-
-// const getAuditByRequestNumber = async (req, res) => {
-//   const audit = await AuditRequest.findOne({ requestNumber: req.params.requestNumber });
-//   if (audit) {
-//     res.json({
-//       requestNumber: audit.requestNumber,
-//       status: audit.status,
-//       createdAt: audit.createdAt,
-//       auditScore: audit.auditScore,
-//       auditLevel: audit.auditLevel,
-//     });
-//   } else {
-//     res.status(404);
-//     throw new Error('Audit non trouvé');
-//   }
-// };
-
-// const getAllAudits = async (req, res) => {
-//   const { status, startDate, endDate } = req.query;
-//   let query = {};
-//   if (status) query.status = status;
-//   if (startDate || endDate) {
-//     query.createdAt = {};
-//     if (startDate) query.createdAt.$gte = new Date(startDate);
-//     if (endDate) query.createdAt.$lte = new Date(endDate);
-//   }
-//   const audits = await AuditRequest.find(query).populate('user', 'name email').sort('-createdAt');
-//   res.json(audits);
-// };
-
-// const getAuditStats = async (req, res) => {
-//   const total = await AuditRequest.countDocuments();
-//   const completed = await AuditRequest.countDocuments({ status: 'completed' });
-//   const pending = await AuditRequest.countDocuments({ status: 'pending' });
-//   const contacted = await AuditRequest.countDocuments({ status: 'contacted' });
-//   const averageScore = await AuditRequest.aggregate([{ $group: { _id: null, avg: { $avg: '$auditScore' } } }]);
-//   const byLevel = await AuditRequest.aggregate([{ $group: { _id: '$auditLevel', count: { $sum: 1 } } }]);
-//   res.json({
-//     total,
-//     completed,
-//     pending,
-//     contacted,
-//     averageScore: averageScore[0]?.avg || 0,
-//     byLevel: byLevel.reduce((acc, curr) => { acc[curr._id] = curr.count; return acc; }, {}),
-//   });
-// };
-
-// const getAuditById = async (req, res) => {
-//   const audit = await AuditRequest.findById(req.params.id).populate('user', 'name email phone');
-//   if (audit) {
-//     res.json(audit);
-//   } else {
-//     res.status(404);
-//     throw new Error('Audit non trouvé');
-//   }
-// };
-
-// const updateAuditStatus = async (req, res) => {
-//   const { status } = req.body;
-//   const audit = await AuditRequest.findById(req.params.id);
-//   if (audit) {
-//     audit.status = status;
-//     await audit.save();
-//     res.json(audit);
-//   } else {
-//     res.status(404);
-//     throw new Error('Audit non trouvé');
-//   }
-// };
-
-// const updateAuditPdfUrl = async (req, res) => {
-//   const { pdfReportUrl } = req.body;
-//   const audit = await AuditRequest.findById(req.params.id);
-//   if (audit) {
-//     audit.pdfReportUrl = pdfReportUrl;
-//     audit.status = 'completed';
-//     await audit.save();
-//     res.json(audit);
-//   } else {
-//     res.status(404);
-//     throw new Error('Audit non trouvé');
-//   }
-// };
-
-// const deleteAudit = async (req, res) => {
-//   const audit = await AuditRequest.findById(req.params.id);
-//   if (audit) {
-//     if (audit.pdfReportUrl) {
-//       const filepath = path.join(__dirname, '../..', audit.pdfReportUrl);
-//       if (fs.existsSync(filepath)) fs.unlinkSync(filepath);
-//     }
-//     await audit.deleteOne();
-//     res.json({ message: 'Audit supprimé' });
-//   } else {
-//     res.status(404);
-//     throw new Error('Audit non trouvé');
-//   }
-// };
-
-// module.exports = {
-//   createAuditRequest,
-//   getMyAudits,
-//   getAuditByRequestNumber,
-//   getAllAudits,
-//   getAuditStats,
-//   getAuditById,
-//   updateAuditStatus,
-//   downloadAuditPDF,
-//   updateAuditPdfUrl,
-//   deleteAudit,
-// };
-
 // src/controllers/auditController.js
 const AuditRequest = require('../models/AuditRequest');
 const PDFDocument  = require('pdfkit');
@@ -535,10 +130,10 @@ const generateAuditPDF = (audit) =>
       doc.save().circle(PAGE_W - 55, 28, 155).fill('#1a3560').restore();
       doc.save().circle(PAGE_W - 10, 130, 90).fill('#142d50').restore();
       roundRect(doc, 28, 18, 42, 42, 21, C.blueBright);
-      doc.font('Helvetica-Bold').fontSize(12).fillColor(C.white)
-         .text('TV', 28, 33, { width: 42, align: 'center' });
+      doc.font('Helvetica-Bold').fontSize(11).fillColor(C.white)
+         .text('OM', 28, 34, { width: 42, align: 'center' });
       doc.font('Helvetica-Bold').fontSize(17).fillColor(C.white)
-         .text('Omedev services', 80, 22);
+         .text('OMEDEV Services', 80, 22);
       doc.font('Helvetica').fontSize(8.5).fillColor(C.gray400)
          .text('Solutions Digitales & Infrastructures IT', 80, 42);
       fillRect(doc, 80, 54, 190, 1.5, C.cyan);
@@ -703,7 +298,7 @@ const generateAuditPDF = (audit) =>
       fillRect(doc, 0, PAGE_H - 36, PAGE_W, 36, C.navy);
       fillRect(doc, 0, PAGE_H - 38, PAGE_W, 2, C.cyan);
       doc.font('Helvetica').fontSize(7.5).fillColor('#4a6080')
-         .text(`Omedev services  ·  Avenue Kabambare n° 75, Kinshasa, RDC  ·  omedeveservices@gmail.com  ·  Rapport ${audit.requestNumber}`,
+         .text(`OMEDEV Services  ·  Avenue Kabmabre n°75, Lingwala, Kinshasa, RDC  ·  omedevservices@gmail.com  ·  Rapport ${audit.requestNumber}`,
            0, PAGE_H - 22, { width: PAGE_W - 60, align: 'center' });
       doc.font('Helvetica').fontSize(7.5).fillColor('#2a3d55')
          .text('Page 1/1', PAGE_W - 52, PAGE_H - 22);
@@ -720,29 +315,33 @@ const generateAuditPDF = (audit) =>
 const sendAuditReportEmail = async (audit, pdfUrl) => {
   const emailHtml = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
-      <div style="background: #0d1b2a; padding: 24px 32px;">
-        <div style="color: white; font-size: 17px; font-weight: bold;">Omedev services</div>
-        <div style="color: #8899aa; font-size: 11px;">Solutions Digitales & Infrastructures IT</div>
+      <div style="background: #0d1b2a; padding: 24px 32px; display: flex; align-items: center;">
+        <div style="width: 42px; height: 42px; border-radius: 10px; background: #2979ff; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; letter-spacing: -0.5px; flex-shrink: 0;">OM</div>
+        <div style="margin-left: 14px;">
+          <div style="color: white; font-size: 17px; font-weight: bold;">OMEDEV Services</div>
+          <div style="color: #8899aa; font-size: 11px;">Solutions Digitales &amp; Infrastructures IT</div>
+        </div>
       </div>
       <div style="padding: 28px 32px;">
         <h2 style="color: #1565c0; margin-top: 0;">Votre rapport d'audit est prêt</h2>
         <p>Bonjour <strong>${audit.name}</strong>,</p>
-        <p>Veuillez trouver en pièce jointe votre rapport d'audit personnalisé.</p>
-        <p>Merci de faire confiance à Omedev Services.</p>
+        <p>Veuillez trouver ci-joint votre rapport d'audit personnalisé, référence <strong>${audit.requestNumber}</strong>.</p>
+        <p>Notre équipe reste à votre disposition pour échanger sur les recommandations qu'il contient.</p>
+        <p style="margin-bottom: 0;">Cordialement,<br/>L'équipe OMEDEV Services</p>
       </div>
       <div style="background: #0d1b2a; padding: 14px 32px; text-align: center; font-size: 11px; color: #4a6080;">
-        Omedev services · omedeveservices@gmail.com · www.omedeveservices.com
+        OMEDEV Services · Avenue Kabmabre n°75, Lingwala, Kinshasa, RDC · omedevservices@gmail.com
       </div>
     </div>
   `;
   await transporter.sendMail({
-    from:        `"Omedev Services" <${process.env.EMAIL_USER}>`,
+    from:        `"OMEDEV Services" <${process.env.EMAIL_USER}>`,
     to:          audit.email,
-    subject:     `Rapport d'audit Omedev - ${audit.requestNumber}`,
+    subject:     `Votre rapport d'audit OMEDEV — ${audit.requestNumber}`,
     html:        emailHtml,
     attachments: [{ filename: `audit_${audit.requestNumber}.pdf`, path: pdfUrl }],
   });
-  console.log(`📧 Rapport PDF envoyé à ${audit.email}`);
+  console.log(`Rapport PDF envoyé à ${audit.email}`);
 };
 
 // Planification de l'envoi automatique du rapport après 4 minutes
@@ -792,10 +391,10 @@ const createAuditRequest = async (req, res) => {
     const confirmationHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
         <div style="background: #0d1b2a; padding: 24px 32px; display: flex; align-items: center;">
-          <div style="width: 42px; height: 42px; border-radius: 50%; background: #2979ff; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; flex-shrink: 0;">TV</div>
-          <div style="margin-left: 12px;">
-            <div style="color: white; font-size: 17px; font-weight: bold;">Omedev services</div>
-            <div style="color: #8899aa; font-size: 11px;">Solutions Digitales & Infrastructures IT</div>
+          <div style="width: 42px; height: 42px; border-radius: 10px; background: #2979ff; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; letter-spacing: -0.5px; flex-shrink: 0;">OM</div>
+          <div style="margin-left: 14px;">
+            <div style="color: white; font-size: 17px; font-weight: bold;">OMEDEV Services</div>
+            <div style="color: #8899aa; font-size: 11px;">Solutions Digitales &amp; Infrastructures IT</div>
           </div>
         </div>
         <div style="padding: 28px 32px;">
@@ -806,20 +405,21 @@ const createAuditRequest = async (req, res) => {
             <span style="background: #f0f4f8; padding: 2px 10px; border-radius: 4px; font-family: monospace;">${auditRequest.requestNumber}</span>
           </p>
           <p>Notre équipe va analyser vos réponses et vous fournira un rapport personnalisé sous 48h.</p>
+          <p style="margin-bottom: 0;">Cordialement,<br/>L'équipe OMEDEV Services</p>
         </div>
         <div style="background: #0d1b2a; padding: 14px 32px; text-align: center; font-size: 11px; color: #4a6080;">
-          Omedev services · omedeveservices@gmail.com · www.omedeveservices.com
+          OMEDEV Services · Avenue Kabmabre n°75, Lingwala, Kinshasa, RDC · omedevservices@gmail.com
         </div>
       </div>
     `;
 
     await transporter.sendMail({
-      from:    `"Omedev Services" <${process.env.EMAIL_USER}>`,
+      from:    `"OMEDEV Services" <${process.env.EMAIL_USER}>`,
       to:      auditData.email,
-      subject: `Confirmation de votre demande d'audit - ${auditRequest.requestNumber}`,
+      subject: `Confirmation de votre demande d'audit — ${auditRequest.requestNumber}`,
       html:    confirmationHtml,
     });
-    console.log(`📧 Email de confirmation envoyé à ${auditData.email}`);
+    console.log(`Email de confirmation envoyé à ${auditData.email}`);
 
     // Planification de l'envoi du rapport après 4 minutes
     scheduleAuditReport(auditRequest._id);

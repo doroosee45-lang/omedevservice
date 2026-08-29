@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const {
+  createUser,
   getUsers,
   getUserById,
   updateUser,
@@ -13,8 +14,10 @@ const { protect, authorize } = require('../middleware/authMiddleware');
 // Toutes les routes nécessitent d'être admin
 router.use(protect, authorize('admin', 'super_admin'));
 
+// La création de compte est réservée au SuperAdministrateur
 router.route('/')
-  .get(getUsers);
+  .get(getUsers)
+  .post(authorize('super_admin'), createUser);
 
 router.route('/:id')
   .get(getUserById)

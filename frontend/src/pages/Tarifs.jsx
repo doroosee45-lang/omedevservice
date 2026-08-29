@@ -1,55 +1,307 @@
 ﻿import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
-  ArrowRight, CheckCircle, XCircle, Rocket, Star, Calendar, MapPin, Briefcase, Clock,
-  Eye, X, Search, Quote, ThumbsUp, Award, Users,
-  Network, Shield, Code, Cloud, Sun, Monitor, BookOpen,
-  Wifi, GraduationCap, Filter, ChevronRight, Heart, Headphones,
-  CreditCard, Zap, Crown, HelpCircle, ChevronDown, ChevronUp,
-  TrendingUp, ShoppingBag, Euro
+  ArrowRight, CheckCircle, Star, Calendar, Headphones,
+  Code, Cloud, Sun, GraduationCap, Wifi, Shield,
+  TrendingUp, Handshake, Target
 } from 'lucide-react';
+import PublicHero from '../components/Public/PublicHero';
+import CTASection from '../components/Public/CTASection';
 
+/* ─────────────────────────────────────────────
+   DESIGN SYSTEM — identique à la page About
+   (navy/electric/turquoise/energy)
+   ───────────────────────────────────────────── */
 const globalStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: #0f172a;
-    color: #e2e8f0;
-    overflow-x: hidden;
+  .omedev-tarifs {
+    --omedev-navy: #053876;
+    --omedev-blue-dark: #1D5B9B;
+    --omedev-blue: #0B74C1;
+    --omedev-blue-light: #4681B7;
+    --omedev-cyan: #72A5CE;
+    --omedev-cyan-light: #A6C3D7;
+    --omedev-turquoise: #2AACB2;
+    --omedev-energy: #55DDB5;
+    --omedev-white: #F6F6F7;
+    --omedev-gray: #D5DCE1;
+    --omedev-dark: #0B1213;
+    --omedev-text-secondary: #25364A;
+    background: #F6F6F7;
+    color: #0B1213;
+  }
+
+  .omedev-tarifs .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .omedev-tarifs .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: .5rem 1.1rem;
+    border-radius: 999px;
+    background: rgba(11,116,193,.08);
+    color: #0B74C1;
+    border: 1px solid rgba(11,116,193,.18);
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-tarifs .section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -.03em;
+    margin-bottom: 1rem;
+    font-family: 'Syne', sans-serif;
+    color: #053876;
+  }
+
+  .omedev-tarifs .section-subtitle {
+    font-size: 1rem;
+    color: #25364A;
+    max-width: 52ch;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .omedev-tarifs .divider {
+    width: 64px;
+    height: 4px;
+    background: linear-gradient(90deg, #0B74C1, #2AACB2, #55DDB5);
+    border-radius: 99px;
+    margin: 1rem auto 1.5rem;
+  }
+
+  .omedev-tarifs .btn-primary,
+  .omedev-tarifs .btn-accent {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    background: linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%);
+    color: #fff;
+    font-size: .9rem;
+    font-weight: 700;
+    padding: .9rem 1.7rem;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all .3s ease;
+    cursor: pointer;
+    border: none;
+    font-family: 'Syne', sans-serif;
+    box-shadow: 0 10px 28px rgba(11,116,193,.20);
+  }
+
+  .omedev-tarifs .btn-primary:hover,
+  .omedev-tarifs .btn-accent:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgba(42,172,178,.28);
+  }
+
+  .omedev-tarifs .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    background: #fff;
+    color: #053876;
+    font-size: .9rem;
+    font-weight: 700;
+    padding: .85rem 1.7rem;
+    border-radius: 12px;
+    border: 1px solid rgba(5,56,118,.18);
+    text-decoration: none;
+    transition: all .3s ease;
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-tarifs .btn-outline:hover {
+    border-color: #2AACB2;
+    color: #0B74C1;
+    background: rgba(85,221,181,.08);
+    transform: translateY(-3px);
+  }
+
+  .omedev-tarifs .card-hover {
+    transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+    background: #fff;
+    border: 1px solid rgba(5,56,118,.09);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(5,56,118,.06);
+  }
+
+  .omedev-tarifs .card-hover:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 22px 48px rgba(11,116,193,.14);
+    border-color: rgba(42,172,178,.35);
+  }
+
+  .omedev-tarifs .omedev-hero {
+    background: linear-gradient(135deg, #053876 0%, #1D5B9B 35%, #4681B7 60%, #72A5CE 80%, #A6C3D7 100%);
+    position: relative;
+  }
+
+  .omedev-tarifs .omedev-light-section { background: #F6F6F7; }
+  .omedev-tarifs .omedev-white-section { background: #fff; }
+  .omedev-tarifs .omedev-energy-section {
+    background: linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%);
+  }
+  .omedev-tarifs .omedev-dark-section {
+    background: linear-gradient(135deg, #053876 0%, #1D5B9B 55%, #0B74C1 100%);
+  }
+
+  .omedev-tarifs .hero-grid {
+    background-image: linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+    background-size: 56px 56px;
   }
 
   @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-16px); }
   }
-  
-  @keyframes pulse-ring {
-    0% { transform: scale(0.8); opacity: 1; }
-    70% { transform: scale(1.3); opacity: 0; }
-    100% { transform: scale(0.8); opacity: 0; }
+  .omedev-tarifs .animate-float { animation: float 6s ease-in-out infinite; }
+
+  /* ── Billing toggle ── */
+  .omedev-tarifs .billing-toggle-wrap {
+    background: rgba(5,56,118,.05);
+    border: 1px solid rgba(5,56,118,.10);
+    border-radius: 999px;
+    padding: 4px;
+    display: inline-flex;
   }
-  
-  .animate-float { animation: float 6s ease-in-out infinite; }
-  .animate-pulse-ring { animation: pulse-ring 2s ease-out infinite; }
+  .omedev-tarifs .billing-btn {
+    padding: .6rem 1.4rem;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: .85rem;
+    font-family: 'Syne', sans-serif;
+    border: none;
+    background: transparent;
+    color: #25364A;
+    cursor: pointer;
+    transition: all .3s ease;
+  }
+  .omedev-tarifs .billing-btn.active {
+    background: linear-gradient(135deg, #0B74C1 0%, #2AACB2 100%);
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(11,116,193,.25);
+  }
+  .omedev-tarifs .billing-btn:not(.active):hover {
+    color: #0B74C1;
+  }
+  .omedev-tarifs .discount-pill {
+    margin-left: 6px;
+    font-size: 10px;
+    background: #55DDB5;
+    color: #053876;
+    padding: 1px 6px;
+    border-radius: 999px;
+    font-weight: 800;
+  }
+
+  /* ── Service / pack cards ── */
+  .omedev-tarifs .service-card-header {
+    padding: 1.75rem;
+    color: #fff;
+  }
+  .omedev-tarifs .service-icon-wrap {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  .omedev-tarifs .popular-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 5;
+    background: #55DDB5;
+    color: #053876;
+    font-size: 10.5px;
+    font-weight: 800;
+    padding: 5px 12px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 6px 16px rgba(5,56,118,.2);
+  }
+  .omedev-tarifs .price-line {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    color: #053876;
+  }
+
+  @media (max-width: 768px) {
+    .omedev-tarifs .container { padding: 0 1rem; }
+  }
 `;
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7 } }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] } },
 };
 const staggerContainer = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.08 } }
+  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
+};
+
+const SectionHeader = ({ badge, title, subtitle, light }) => (
+  <motion.div
+    initial="hidden"
+    whileInView="visible"
+    viewport={{ once: true }}
+    variants={staggerContainer}
+    style={{ textAlign: 'center', marginBottom: '3rem' }}
+  >
+    {badge && (
+      <motion.div variants={fadeUp}>
+        <span
+          className="section-badge"
+          style={light ? { background: 'rgba(255,255,255,.14)', color: '#fff', borderColor: 'rgba(255,255,255,.28)' } : {}}
+        >
+          {badge}
+        </span>
+      </motion.div>
+    )}
+    <motion.h2 variants={fadeUp} className="section-title" style={light ? { color: '#fff' } : {}}>
+      {title}
+    </motion.h2>
+    <motion.div variants={fadeUp} className="divider" />
+    {subtitle && (
+      <motion.p variants={fadeUp} className="section-subtitle" style={light ? { color: 'rgba(255,255,255,.78)' } : {}}>
+        {subtitle}
+      </motion.p>
+    )}
+  </motion.div>
+);
+
+const colors = {
+  navy: '#053876',
+  blue: '#0B74C1',
+  blueLight: '#4681B7',
+  turquoise: '#2AACB2',
+  energy: '#55DDB5',
 };
 
 const Tarifs = () => {
   const [billingPeriod, setBillingPeriod] = useState('monthly');
 
-  // Services avec tarifs
   const services = [
     {
       id: 1,
@@ -66,7 +318,7 @@ const Tarifs = () => {
         'Rapports mensuels'
       ],
       popular: false,
-      gradient: 'from-blue-500 to-cyan-500'
+      gradient: 'linear-gradient(135deg, #0B74C1, #4681B7)',
     },
     {
       id: 2,
@@ -83,7 +335,7 @@ const Tarifs = () => {
         'Backup sécurisé'
       ],
       popular: true,
-      gradient: 'from-red-500 to-orange-500'
+      gradient: 'linear-gradient(135deg, #053876, #1D5B9B)',
     },
     {
       id: 3,
@@ -100,7 +352,7 @@ const Tarifs = () => {
         'Support prioritaire'
       ],
       popular: false,
-      gradient: 'from-purple-500 to-pink-500'
+      gradient: 'linear-gradient(135deg, #2AACB2, #55DDB5)',
     },
     {
       id: 4,
@@ -117,7 +369,7 @@ const Tarifs = () => {
         'SLA 99.9%'
       ],
       popular: false,
-      gradient: 'from-cyan-500 to-blue-500'
+      gradient: 'linear-gradient(135deg, #1D5B9B, #72A5CE)',
     },
     {
       id: 5,
@@ -134,7 +386,7 @@ const Tarifs = () => {
         'Garantie 5 ans'
       ],
       popular: false,
-      gradient: 'from-yellow-500 to-orange-500'
+      gradient: 'linear-gradient(135deg, #55DDB5, #2AACB2)',
     },
     {
       id: 6,
@@ -151,11 +403,10 @@ const Tarifs = () => {
         'Mise à jour continue'
       ],
       popular: false,
-      gradient: 'from-green-500 to-emerald-500'
+      gradient: 'linear-gradient(135deg, #0B74C1, #2AACB2)',
     }
   ];
 
-  // Packs pré-configurés
   const packs = [
     {
       name: 'Pack Start',
@@ -203,9 +454,7 @@ const Tarifs = () => {
     }
   ];
 
-  const getCurrentPrice = (service) => {
-    return service.price[billingPeriod];
-  };
+  const getCurrentPrice = (service) => service.price[billingPeriod];
 
   const getDiscountLabel = () => {
     if (billingPeriod === 'quarterly') return 'Économisez 10%';
@@ -214,258 +463,99 @@ const Tarifs = () => {
   };
 
   return (
-    <>
+    <div className="omedev-tarifs">
       <style>{globalStyles}</style>
 
-      {/* ==================== HERO SECTION - TARIFS ==================== */}
-      <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden h-[550px] flex flex-col justify-center pt-16">
-        <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px'
-        }} />
-        <div className="absolute w-96 h-96 bg-blue-600/20 top-20 -left-20 rounded-full filter blur-[80px] animate-float" />
-        <div className="absolute w-72 h-72 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
+      {/* ==================== HERO ==================== */}
+      <PublicHero
+        badge="Nos tarifs"
+        title="Des offres adaptées à vos besoins"
+        highlight="vos besoins"
+        subtitle="Choisissez la formule qui correspond à votre activité. Sans engagement, évolutif."
+        primaryAction={{ label: 'Demander un conseil', to: '/contact' }}
+        secondaryAction={{ label: 'Faire un audit', to: '/audit' }}
+      />
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-blue-600/15 border border-blue-500/30"
+      {/* ==================== BILLING TOGGLE ==================== */}
+      <div className="omedev-white-section sticky top-0 z-40 py-5 border-b border-black/5">
+        <div className="container flex justify-center">
+          <div className="billing-toggle-wrap">
+            <button
+              onClick={() => setBillingPeriod('monthly')}
+              className={`billing-btn ${billingPeriod === 'monthly' ? 'active' : ''}`}
             >
-              <CreditCard className="w-4 h-4 text-blue-400" />
-              <span className="text-blue-300 font-semibold text-xs tracking-wide font-syne">Nos Tarifs</span>
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
+              Mensuel
+            </button>
+            <button
+              onClick={() => setBillingPeriod('quarterly')}
+              className={`billing-btn ${billingPeriod === 'quarterly' ? 'active' : ''}`}
             >
-              Des offres adaptées à{' '}
-              <span className="relative inline-block">
-                <span className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 blur-2xl opacity-50" />
-                <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
-                  vos besoins
-                </span>
-              </span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-              className="text-gray-300 text-base sm:text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
+              Trimestriel
+            </button>
+            <button
+              onClick={() => setBillingPeriod('yearly')}
+              className={`billing-btn ${billingPeriod === 'yearly' ? 'active' : ''}`}
             >
-              Choisissez la formule qui correspond à votre activité. Sans engagement, évolutif.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 }}
-              className="flex flex-wrap gap-4 justify-center"
-            >
-              <Link to="/contact" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
-                Demander un conseil <ArrowRight size={18} className="group-hover:translate-x-1 transition" />
-              </Link>
-              <Link to="/audit" className="group border-2 border-white/30 hover:border-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
-                Faire un audit
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      {/* Billing Toggle (style modernisé) */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 sticky top-0 z-40 py-4 border-b border-white/10 backdrop-blur-xl bg-opacity-80">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-center">
-            <div className="bg-white/10 border border-white/20 rounded-full p-1 inline-flex backdrop-blur-sm">
-              <button
-                onClick={() => setBillingPeriod('monthly')}
-                className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${billingPeriod === 'monthly'
-                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg'
-                    : 'text-gray-300 hover:text-white hover:bg-white/10'
-                  }`}
-              >
-                Mensuel
-              </button>
-              <button
-                onClick={() => setBillingPeriod('quarterly')}
-                className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${billingPeriod === 'quarterly'
-                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg'
-                    : 'text-gray-300 hover:text-white hover:bg-white/10'
-                  }`}
-              >
-                Trimestriel
-              </button>
-              <button
-                onClick={() => setBillingPeriod('yearly')}
-                className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${billingPeriod === 'yearly'
-                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg'
-                    : 'text-gray-300 hover:text-white hover:bg-white/10'
-                  }`}
-              >
-                Annuel
-                <span className="ml-1 text-xs bg-green-500 text-white px-1 rounded-full">-20%</span>
-              </button>
-            </div>
+              Annuel <span className="discount-pill">-20%</span>
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Services Grid */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
-        <div className="container mx-auto px-4 py-16">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-white font-syne mb-3">Tarifs par service</h2>
-            <p className="text-gray-300 max-w-2xl mx-auto">
-              Des prix transparents sans surprise. Abonnement sans engagement.
-            </p>
-          </motion.div>
+      {/* ==================== SERVICES ==================== */}
+      <section className="omedev-light-section py-24">
+        <div className="container">
+          <SectionHeader badge="Nos offres" title="Tarifs par service" subtitle="Des prix transparents sans surprise. Abonnement sans engagement." />
 
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={staggerContainer}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
           >
-            {services.map((service, index) => {
+            {services.map((service) => {
               const Icon = service.icon;
               return (
                 <motion.div
                   key={service.id}
                   variants={fadeUp}
-                  className={`relative rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-2 ${service.popular
-                      ? 'bg-gradient-to-br from-amber-900/30 via-orange-900/20 to-slate-900 border-2 border-amber-500/50 shadow-2xl shadow-amber-500/10'
-                      : 'bg-white/5 border border-white/10 hover:border-blue-500/30'
-                    }`}
+                  className="team-card card-hover relative overflow-hidden flex flex-col"
                 >
                   {service.popular && (
-                    <div className="absolute top-4 right-4 bg-amber-500 text-black text-xs font-bold px-3 py-1 rounded-full z-10 flex items-center gap-1">
-                      <Star size={12} className="fill-current" /> Populaire
+                    <div className="popular-badge">
+                      <Star size={11} className="fill-current" /> Populaire
                     </div>
                   )}
-                  <div className={`p-6 bg-gradient-to-r ${service.gradient} bg-opacity-20`}>
-                    <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mb-4">
-                      <Icon size={28} className="text-white" />
+
+                  <div className="service-card-header" style={{ background: service.gradient }}>
+                    <div className="service-icon-wrap">
+                      <Icon size={26} className="text-white" />
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-2">{service.name}</h3>
-                    <p className="text-white/80 text-sm">{service.description}</p>
+                    <h3 className="font-syne text-xl font-bold mb-1">{service.name}</h3>
+                    <p className="text-white/85 text-sm">{service.description}</p>
                   </div>
-                  <div className="p-6">
+
+                  <div className="p-6 flex flex-col flex-1">
                     <div className="mb-6">
-                      <span className="text-3xl font-extrabold text-white">{getCurrentPrice(service)}</span>
-                      <span className="text-gray-400 text-sm ml-1">
+                      <span className="price-line text-3xl">{getCurrentPrice(service)}</span>
+                      <span className="text-[#25364A]/60 text-sm ml-1">
                         / {billingPeriod === 'monthly' ? 'mois' : billingPeriod === 'quarterly' ? 'trimestre' : 'an'}
                       </span>
                       {billingPeriod !== 'monthly' && (
-                        <p className="text-sm text-emerald-400 mt-1">{getDiscountLabel()}</p>
+                        <p className="text-sm mt-1" style={{ color: colors.turquoise }}>{getDiscountLabel()}</p>
                       )}
                     </div>
-                    <div className="space-y-3 mb-8">
+                    <div className="space-y-3 mb-8 flex-1">
                       {service.features.map((feature, idx) => (
                         <div key={idx} className="flex items-start gap-2 text-sm">
-                          <CheckCircle size={16} className="text-emerald-400 flex-shrink-0 mt-0.5" />
-                          <span className="text-gray-300">{feature}</span>
+                          <CheckCircle size={16} style={{ color: colors.turquoise }} className="flex-shrink-0 mt-0.5" />
+                          <span className="text-[#25364A]">{feature}</span>
                         </div>
                       ))}
                     </div>
-                    <Link
-                      to="/contact"
-                      className="block text-center py-3 px-4 rounded-xl font-semibold transition-all hover:scale-105 bg-gradient-to-r from-blue-500 to-blue-600 text-white"
-                    >
-                      Demander ce service <ArrowRight size={16} className="inline ml-1" />
+                    <Link to="/contact" className="btn-primary w-full">
+                      Demander ce service <ArrowRight size={16} />
                     </Link>
                   </div>
                 </motion.div>
@@ -473,65 +563,54 @@ const Tarifs = () => {
             })}
           </motion.div>
         </div>
-      </div>
+      </section>
 
-      {/* Packs Section */}
-      <section className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/5 py-20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-white font-syne mb-3">Packs pré-configurés</h2>
-            <p className="text-gray-300 max-w-2xl mx-auto">Des offres complètes à prix réduits. Tout compris.</p>
-          </motion.div>
+      {/* ==================== PACKS ==================== */}
+      <section className="omedev-white-section py-24">
+        <div className="container">
+          <SectionHeader badge="Offres groupées" title="Packs pré-configurés" subtitle="Des offres complètes à prix réduits. Tout compris." />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {packs.map((pack, index) => (
               <motion.div
                 key={pack.name}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className={`relative rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-2 ${pack.recommended
-                    ? 'bg-gradient-to-br from-amber-900/30 via-orange-900/20 to-slate-900 border-2 border-amber-500/50 shadow-2xl shadow-amber-500/10'
-                    : 'bg-white/5 border border-white/10 hover:border-blue-500/30'
-                  }`}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="card-hover relative overflow-hidden"
+                style={pack.recommended ? { borderColor: 'rgba(42,172,178,.45)', boxShadow: '0 22px 48px rgba(11,116,193,.16)' } : {}}
               >
                 {pack.recommended && (
-                  <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-amber-500 to-orange-600 text-black text-center text-sm font-bold py-1 z-10">
+                  <div
+                    className="text-center text-xs font-bold py-2 text-white font-syne uppercase tracking-wide"
+                    style={{ background: 'linear-gradient(135deg, #0B74C1, #2AACB2, #55DDB5)' }}
+                  >
                     Recommandé
                   </div>
                 )}
-                <div className={`p-6 text-center ${pack.recommended ? 'pt-8' : ''}`}>
-                  <h3 className="text-2xl font-bold text-white mb-2">{pack.name}</h3>
-                  <p className="text-gray-400 text-sm mb-4">{pack.description}</p>
-                  <div className="mb-4">
-                    <span className="text-4xl font-extrabold text-white">{pack.price}</span>
+                <div className="p-8 text-center">
+                  <h3 className="font-syne text-2xl font-bold mb-2" style={{ color: colors.navy }}>{pack.name}</h3>
+                  <p className="text-[#25364A] text-sm mb-4">{pack.description}</p>
+                  <div className="mb-6">
+                    <span className="price-line text-4xl">{pack.price}</span>
                     {pack.originalPrice && (
-                      <span className="text-gray-500 line-through ml-2">{pack.originalPrice}</span>
+                      <span className="text-[#25364A]/40 line-through ml-2 text-lg">{pack.originalPrice}</span>
                     )}
                   </div>
-                  <ul className="text-left space-y-2 mb-6">
+                  <ul className="text-left space-y-3 mb-8">
                     {pack.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-2 text-sm">
-                        <CheckCircle size={16} className="text-emerald-400 flex-shrink-0 mt-0.5" />
-                        <span className="text-gray-300">{feature}</span>
+                        <CheckCircle size={16} style={{ color: colors.turquoise }} className="flex-shrink-0 mt-0.5" />
+                        <span className="text-[#25364A]">{feature}</span>
                       </li>
                     ))}
                   </ul>
                   <Link
                     to="/contact"
-                    className={`block text-center py-3 px-4 rounded-xl font-semibold transition-all hover:scale-105 ${pack.recommended
-                        ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg'
-                        : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
-                      }`}
+                    className={pack.recommended ? 'btn-primary w-full' : 'btn-outline w-full'}
                   >
-                    Choisir ce pack <ArrowRight size={16} className="inline ml-1" />
+                    Choisir ce pack <ArrowRight size={16} />
                   </Link>
                 </div>
               </motion.div>
@@ -540,88 +619,74 @@ const Tarifs = () => {
         </div>
       </section>
 
-      {/* Why choose us + Devis personnalisé (2 colonnes) */}
-      <section className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/5 py-20">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12">
+      {/* ==================== POURQUOI NOUS + DEVIS ==================== */}
+      <section className="omedev-light-section py-20">
+        <div className="container">
+          <div className="grid lg:grid-cols-2 gap-10">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
               viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
             >
-              <h2 className="text-2xl md:text-3xl font-bold text-white font-syne mb-6">Pourquoi choisir OMDEVE ?</h2>
+              <span className="section-badge">
+                Pourquoi nous
+              </span>
+              <h2 className="font-syne text-2xl md:text-3xl font-bold mt-4 mb-6" style={{ color: colors.navy }}>Pourquoi choisir omedev Services ?</h2>
               <div className="space-y-4">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
-                    <CheckCircle size={20} className="text-emerald-400" />
+                {[
+                  { icon: CheckCircle, title: 'Prix transparents', text: 'Pas de frais cachés. Ce que vous voyez est ce que vous payez.' },
+                  { icon: Headphones, title: 'Support 24/7', text: 'Une équipe dédiée à votre écoute, jour et nuit.' },
+                  { icon: Calendar, title: 'Sans engagement', text: "Résiliez à tout moment. Pas de période d'engagement obligatoire." },
+                  { icon: TrendingUp, title: 'Évolutif', text: 'Changez de formule à tout moment selon vos besoins.' },
+                ].map(({ icon: Icon, title, text }) => (
+                  <div key={title} className="flex items-start gap-4 p-4 rounded-xl bg-white" style={{ border: '1px solid rgba(5,56,118,.09)', boxShadow: '0 10px 30px rgba(5,56,118,.06)' }}>
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(42,172,178,.12)' }}>
+                      <Icon size={18} style={{ color: colors.turquoise }} />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-1" style={{ color: colors.navy }}>{title}</h3>
+                      <p className="text-[#25364A] text-sm">{text}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-white mb-1">Prix transparents</h3>
-                    <p className="text-gray-400 text-sm">Pas de frais cachés. Ce que vous voyez est ce que vous payez.</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
-                    <Headphones size={20} className="text-blue-400" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-white mb-1">Support 24/7</h3>
-                    <p className="text-gray-400 text-sm">Une équipe dédiée à votre écoute, jour et nuit.</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
-                    <Calendar size={20} className="text-purple-400" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-white mb-1">Sans engagement</h3>
-                    <p className="text-gray-400 text-sm">Résiliez à tout moment. Pas de période d'engagement obligatoire.</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center flex-shrink-0">
-                    <TrendingUp size={20} className="text-orange-400" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-white mb-1">Évolutif</h3>
-                    <p className="text-gray-400 text-sm">Changez de formule à tout moment selon vos besoins.</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm"
+              transition={{ duration: 0.6 }}
+              className="rounded-2xl p-8 flex flex-col justify-center bg-white"
+              style={{ border: '1px solid rgba(5,56,118,.09)', boxShadow: '0 10px 30px rgba(5,56,118,.06)' }}
             >
-              <h2 className="text-2xl font-bold text-white mb-4">Besoin d'un devis personnalisé ?</h2>
-              <p className="text-gray-300 mb-6">
+              <h2 className="font-syne text-2xl font-bold mb-4" style={{ color: colors.navy }}>Besoin d'un devis personnalisé ?</h2>
+              <p className="text-[#25364A] mb-6">
                 Chaque projet est unique. Contactez-nous pour une offre adaptée à vos besoins spécifiques.
               </p>
               <div className="space-y-3">
                 <Link
                   to="/contact"
-                  className="flex items-center justify-between p-4 bg-white/10 rounded-xl hover:bg-white/20 transition group"
+                  className="flex items-center justify-between p-4 rounded-xl transition group"
+                  style={{ background: 'rgba(11,116,193,.06)' }}
                 >
                   <div>
-                    <p className="font-semibold text-white">Demander un devis gratuit</p>
-                    <p className="text-sm text-gray-400">Réponse sous 24h</p>
+                    <p className="font-semibold" style={{ color: colors.navy }}>Demander un devis gratuit</p>
+                    <p className="text-sm text-[#25364A]/70">Réponse sous 24h</p>
                   </div>
-                  <ArrowRight size={20} className="text-blue-400 group-hover:translate-x-1 transition" />
+                  <ArrowRight size={20} style={{ color: colors.blue }} className="group-hover:translate-x-1 transition" />
                 </Link>
                 <Link
-                  to="/audit"
-                  className="flex items-center justify-between p-4 bg-white/10 rounded-xl hover:bg-white/20 transition group"
+                  to="/audit-gratuit"
+                  className="flex items-center justify-between p-4 rounded-xl transition group"
+                  style={{ background: 'rgba(11,116,193,.06)' }}
                 >
                   <div>
-                    <p className="font-semibold text-white">Audit gratuit</p>
-                    <p className="text-sm text-gray-400">Diagnostic complet de votre infrastructure</p>
+                    <p className="font-semibold" style={{ color: colors.navy }}>Audit gratuit</p>
+                    <p className="text-sm text-[#25364A]/70">Diagnostic complet de votre infrastructure</p>
                   </div>
-                  <ArrowRight size={20} className="text-blue-400 group-hover:translate-x-1 transition" />
+                  <ArrowRight size={20} style={{ color: colors.blue }} className="group-hover:translate-x-1 transition" />
                 </Link>
               </div>
             </motion.div>
@@ -629,39 +694,17 @@ const Tarifs = () => {
         </div>
       </section>
 
-      {/* CTA finale */}
-      <section className="py-20 relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900/50 to-indigo-900/50 border-t border-white/5">
-        <div className="absolute inset-0 opacity-30" style={{
-          backgroundImage: `radial-gradient(circle at 70% 30%, rgba(59,130,246,0.4) 0%, transparent 60%)`
-        }} />
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 font-syne">Prêt à démarrer ?</h2>
-            <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">
-              Rejoignez plus de 150 clients satisfaits qui nous font confiance pour leur transformation digitale.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <Link
-                to="/contact"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all hover:scale-105 hover:shadow-xl"
-              >
-                Demander un devis <ArrowRight size={18} />
-              </Link>
-              <Link
-                to="/contact"
-                className="inline-flex items-center gap-2 border-2 border-white/30 hover:border-white text-white px-8 py-4 rounded-xl font-semibold transition-all hover:scale-105 hover:bg-white/10"
-              >
-                Nous contacter <Headphones size={18} />
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-    </>
+      {/* ==================== CTA FINALE ==================== */}
+      <CTASection
+        badge="Prêt à démarrer ?"
+        title="Trouvez la formule qui vous correspond"
+        highlight="qui vous correspond"
+        subtitle="Un conseiller vous aide à choisir le pack adapté à votre budget et à vos objectifs, ou vous prépare un devis sur mesure."
+        backgroundImage="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1920&q=80"
+        primaryAction={{ label: 'Demander un devis', to: '/demander-devis' }}
+        secondaryAction={{ label: 'Nous contacter', to: '/contact' }}
+      />
+    </div>
   );
 };
 

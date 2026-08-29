@@ -1,116 +1,7 @@
-
-// // src/utils/emailService.js
-// const nodemailer = require('nodemailer');
-
-// const transporter = nodemailer.createTransport({
-//   host: process.env.EMAIL_HOST,
-//   port: process.env.EMAIL_PORT,
-//   secure: false,
-//   auth: {
-//     user: process.env.EMAIL_USER,
-//     pass: process.env.EMAIL_PASS,
-//   },
-// });
-
-// /**
-//  * Envoie un email générique
-//  * @param {Object} options - { to, subject, html, text }
-//  */
-// const sendEmail = async (options) => {
-//   try {
-//     const mailOptions = {
-//       from: `"OMDEVE Services" <${process.env.EMAIL_USER}>`,
-//       to: options.to,
-//       subject: options.subject,
-//       html: options.html,
-//       text: options.text,
-//     };
-//     await transporter.sendMail(mailOptions);
-//     console.log(`Email envoyé à ${options.to}`);
-//   } catch (error) {
-//     console.error(`Erreur d'envoi d'email à ${options.to}:`, error);
-//     throw error;
-//   }
-// };
-
-// /**
-//  * Email de confirmation de contact
-//  */
-// const sendContactConfirmation = async (to, name, message) => {
-//   const subject = 'Confirmation de votre message - OMDEVE Services';
-//   const html = `
-//     <div style="font-family: Arial, sans-serif;">
-//       <h2>Bonjour ${name},</h2>
-//       <p>Nous avons bien reçu votre message et nous vous répondrons dans les plus brefs délais.</p>
-//       <p>Votre message : <em>${message.substring(0, 200)}...</em></p>
-//       <p>Cordialement,<br>L'équipe Omedev</p>
-//     </div>
-//   `;
-//   await sendEmail({ to, subject, html });
-// };
-
-// /**
-//  * Email de notification interne pour un nouveau message de contact
-//  */
-// const sendContactNotificationToAdmin = async (contactData) => {
-//   const { nom, email, phone, objet, message } = contactData;
-//   const subject = `Nouveau message de contact - ${objet}`;
-//   const html = `
-//     <div>
-//       <h2>Nouveau message depuis le site</h2>
-//       <p><strong>Nom :</strong> ${nom}</p>
-//       <p><strong>Email :</strong> ${email}</p>
-//       <p><strong>Téléphone :</strong> ${phone || 'Non renseigné'}</p>
-//       <p><strong>Objet :</strong> ${objet}</p>
-//       <p><strong>Message :</strong><br/>${message}</p>
-//     </div>
-//   `;
-//   await sendEmail({ to: process.env.CONTACT_EMAIL || process.env.EMAIL_USER, subject, html });
-// };
-
-// /**
-//  * Email de confirmation de demande de devis
-//  */
-// const sendQuoteRequestConfirmation = async (to, name, requestNumber) => {
-//   const subject = `Confirmation de votre demande de devis - ${requestNumber}`;
-//   const html = `
-//     <div>
-//       <h2>Merci ${name} !</h2>
-//       <p>Votre demande de devis a bien été enregistrée sous le numéro <strong>${requestNumber}</strong>.</p>
-//       <p>Notre équipe vous contactera sous 48h.</p>
-//     </div>
-//   `;
-//   await sendEmail({ to, subject, html });
-// };
-
-// /**
-//  * Email de notification d'audit avec le rapport PDF
-//  */
-// const sendAuditReport = async (to, name, requestNumber, pdfUrl) => {
-//   const subject = `Rapport d'audit OMDEVE - ${requestNumber}`;
-//   const html = `
-//     <div>
-//       <h2>Bonjour ${name},</h2>
-//       <p>Votre audit est disponible. Vous pouvez télécharger votre rapport ci-dessous :</p>
-//       <a href="${process.env.BACKEND_URL}${pdfUrl}" style="background:#2563eb; color:white; padding:10px 20px; text-decoration:none;">Télécharger le PDF</a>
-//       <p>L'équipe OMDEVE reste à votre disposition.</p>
-//     </div>
-//   `;
-//   await sendEmail({ to, subject, html });
-// };
-
-// module.exports = {
-//   sendEmail,
-//   sendContactConfirmation,
-//   sendContactNotificationToAdmin,
-//   sendQuoteRequestConfirmation,
-//   sendAuditReport,
-// };
-
 // ============================================================
 // src/utils/emailService.js
-// Service d'envoi d'emails — OMDEVE Services
-// Harmonisé avec la charte graphique OMDEVE (bleu, cyan, dégradés)
+// Service d'envoi d'emails — OMEDEV Services
+// Harmonisé avec la charte graphique OMEDEV (bleu, cyan, dégradés)
 // ============================================================
 
 const nodemailer = require('nodemailer');
@@ -129,7 +20,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // ============================================================
-// COMPOSANTS RÉUTILISABLES – DESIGN OMDEVE
+// COMPOSANTS RÉUTILISABLES – DESIGN OMEDEV
 // ============================================================
 
 // Enveloppe principale : header + body + footer
@@ -139,7 +30,7 @@ const emailWrapper = (content) => `
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>OMDEVE Services</title>
+  <title>OMEDEV Services</title>
 </head>
 <body style="margin:0; padding:0; background-color:#0f172a; font-family:'Segoe UI', Arial, sans-serif;">
 
@@ -148,7 +39,7 @@ const emailWrapper = (content) => `
       <td align="center">
         <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px; width:100%;">
 
-          <!-- HEADER (dégradé OMDEVE) -->
+          <!-- HEADER (dégradé OMEDEV) -->
           <tr>
             <td style="
               background: linear-gradient(135deg, #0c1a40 0%, #1e1b4b 100%);
@@ -163,10 +54,10 @@ const emailWrapper = (content) => `
                     border-radius: 10px;
                     width: 42px; height: 42px;
                     text-align: center; vertical-align: middle;
-                    font-weight: 800; font-size: 20px; color: #fff;
-                  ">O</td>
+                    font-weight: 800; font-size: 15px; letter-spacing: -0.5px; color: #fff;
+                  ">OM</td>
                   <td style="padding-left: 14px;">
-                    <span style="font-size: 20px; font-weight: 700; color: #f1f5f9; letter-spacing: -0.3px;">OMDEVE</span>
+                    <span style="font-size: 20px; font-weight: 700; color: #f1f5f9; letter-spacing: -0.3px;">OMEDEV</span>
                     <span style="font-size: 11px; color: #64748b; display: block; margin-top: 2px;">Services IT &amp; Infrastructure</span>
                   </td>
                 </tr>
@@ -198,7 +89,7 @@ const emailWrapper = (content) => `
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="font-size: 12px; color: #475569; line-height: 1.8;">
-                    <strong style="color: #64748b;">OMDEVE Services</strong><br/>
+                    <strong style="color: #64748b;">OMEDEV Services</strong><br/>
                     Avenue Kabmabre n°75, Lingwala, Kinshasa<br/>
                     <a href="tel:+24355550359" style="color: #3b82f6; text-decoration: none;">+243 555 503 59</a>
                     &nbsp;·&nbsp;
@@ -240,7 +131,7 @@ const emailWrapper = (content) => `
 `;
 
 // Badge coloré (style pill – comme dans le front-end)
-const badge = (emoji, text, color = '#93c5fd', bg = 'rgba(59,130,246,0.12)', border = 'rgba(59,130,246,0.3)') => `
+const badge = (text, color = '#93c5fd', bg = 'rgba(59,130,246,0.12)', border = 'rgba(59,130,246,0.3)') => `
   <div style="
     display: inline-block;
     background: ${bg};
@@ -250,7 +141,7 @@ const badge = (emoji, text, color = '#93c5fd', bg = 'rgba(59,130,246,0.12)', bor
     margin-bottom: 20px;
   ">
     <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: ${color};">
-      ${emoji}&nbsp; ${text}
+      ${text}
     </span>
   </div>
 `;
@@ -319,12 +210,12 @@ const infoBlock = (text, color = '#7dd3fc', bg = 'rgba(59,130,246,0.07)', border
   </div>
 `;
 
-// Signature OMDEVE
+// Signature OMEDEV
 const signature = () => `
   <div style="border-top: 1px solid rgba(255,255,255,0.06); margin-top: 28px; padding-top: 24px;">
     <p style="margin: 0; font-size: 14px; color: #64748b; line-height: 1.9;">
       Cordialement,<br/>
-      <strong style="color: #94a3b8;">L'équipe OMDEVE Services</strong>
+      <strong style="color: #94a3b8;">L'équipe OMEDEV Services</strong>
     </p>
   </div>
 `;
@@ -337,26 +228,26 @@ const signature = () => `
 const sendEmail = async (options) => {
   try {
     const mailOptions = {
-      from: `"OMDEVE Services" <${process.env.EMAIL_USER}>`,
+      from: `"OMEDEV Services" <${process.env.EMAIL_USER}>`,
       to: options.to,
       subject: options.subject,
       html: options.html,
       text: options.text,
     };
     await transporter.sendMail(mailOptions);
-    console.log(`✅ Email envoyé à : ${options.to}`);
+    console.log(`Email envoyé à : ${options.to}`);
   } catch (error) {
-    console.error(`❌ Erreur d'envoi d'email à ${options.to} :`, error);
+    console.error(`Erreur d'envoi d'email à ${options.to} :`, error);
     throw error;
   }
 };
 
 // Confirmation de contact au visiteur
 const sendContactConfirmation = async (to, name, message) => {
-  const subject = 'Confirmation de votre message — OMDEVE Services';
+  const subject = 'Confirmation de votre message — OMEDEV Services';
 
   const html = emailWrapper(`
-    ${badge('✉️', 'Message reçu')}
+    ${badge('Message reçu')}
     ${heading(`Bonjour ${name},`)}
     ${subtitle('Nous avons bien reçu votre message et vous répondrons sous 24h.')}
 
@@ -366,7 +257,7 @@ const sendContactConfirmation = async (to, name, message) => {
     `)}
 
     ${infoBlock(
-      '⚡&nbsp;&nbsp;Notre équipe s\'engage à vous répondre sous <strong>24h ouvrées</strong>.',
+      'Notre équipe s\'engage à vous répondre sous <strong>24h ouvrées</strong>.',
       '#34d399',
       'rgba(16,185,129,0.08)',
       'rgba(16,185,129,0.2)'
@@ -378,13 +269,13 @@ const sendContactConfirmation = async (to, name, message) => {
   await sendEmail({ to, subject, html });
 };
 
-// Notification interne à l'équipe OMDEVE
+// Notification interne à l'équipe OMEDEV
 const sendContactNotificationToAdmin = async (contactData) => {
   const { nom, email, phone, objet, message } = contactData;
-  const subject = `📩 Nouveau contact — ${objet}`;
+  const subject = `Nouveau contact — ${objet}`;
 
   const html = emailWrapper(`
-    ${badge('📩', 'Nouveau message', '#fcd34d', 'rgba(245,158,11,0.1)', 'rgba(245,158,11,0.3)')}
+    ${badge('Nouveau message', '#fcd34d', 'rgba(245,158,11,0.1)', 'rgba(245,158,11,0.3)')}
     ${heading('Nouveau message depuis le site')}
     ${subtitle('Un visiteur vient de soumettre le formulaire de contact.')}
 
@@ -402,7 +293,7 @@ const sendContactNotificationToAdmin = async (contactData) => {
       <p style="margin: 0; font-size: 14px; color: #cbd5e1;">${message}</p>
     `)}
 
-    ${ctaButton('Répondre par email', `mailto:${email}`, '↩️')}
+    ${ctaButton('Répondre par email', `mailto:${email}`)}
   `);
 
   await sendEmail({
@@ -417,20 +308,20 @@ const sendQuoteRequestConfirmation = async (to, name, requestNumber) => {
   const subject = `Confirmation de votre demande de devis — ${requestNumber}`;
 
   const html = emailWrapper(`
-    ${badge('📋', 'Demande de devis', '#c4b5fd', 'rgba(139,92,246,0.1)', 'rgba(139,92,246,0.3)')}
-    ${heading(`Merci ${name} !`)}
+    ${badge('Demande de devis', '#67e8f9', 'rgba(6,182,212,0.1)', 'rgba(6,182,212,0.3)')}
+    ${heading(`Merci ${name},`)}
     ${subtitle('Votre demande de devis a bien été enregistrée.')}
 
     ${card(`
       <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
-        ${dataRow('Référence', `<strong style="color:#a78bfa;">${requestNumber}</strong>`)}
+        ${dataRow('Référence', `<strong style="color:#67e8f9;">${requestNumber}</strong>`)}
         ${dataRow('Statut', '<span style="color:#34d399;">✔ Enregistrée</span>')}
         ${dataRow('Délai de réponse', 'Sous <strong>48h ouvrées</strong>')}
       </table>
-    `, '#8b5cf6')}
+    `, '#06b6d4')}
 
     ${infoBlock(
-      '💬&nbsp;&nbsp;Pour toute question urgente, appelez-nous au <a href="tel:+24355550359" style="color:#3b82f6;">+243 555 503 59</a> ou via <a href="https://wa.me/24355550359" style="color:#22c55e;">WhatsApp</a>.'
+      'Pour toute question urgente, appelez-nous au <a href="tel:+24355550359" style="color:#3b82f6;">+243 555 503 59</a> ou via <a href="https://wa.me/24355550359" style="color:#22c55e;">WhatsApp</a>.'
     )}
 
     ${signature()}
@@ -441,10 +332,10 @@ const sendQuoteRequestConfirmation = async (to, name, requestNumber) => {
 
 // Envoi du rapport d'audit avec lien PDF
 const sendAuditReport = async (to, name, requestNumber, pdfUrl) => {
-  const subject = `Rapport d'audit OMDEVE — ${requestNumber}`;
+  const subject = `Rapport d'audit OMEDEV — ${requestNumber}`;
 
   const html = emailWrapper(`
-    ${badge('📊', 'Rapport d\'audit disponible', '#67e8f9', 'rgba(6,182,212,0.1)', 'rgba(6,182,212,0.3)')}
+    ${badge('Rapport d\'audit disponible', '#67e8f9', 'rgba(6,182,212,0.1)', 'rgba(6,182,212,0.3)')}
     ${heading(`Bonjour ${name},`)}
     ${subtitle('Votre rapport d\'audit est prêt. Téléchargez-le ci-dessous.')}
 
@@ -456,10 +347,54 @@ const sendAuditReport = async (to, name, requestNumber, pdfUrl) => {
       </table>
     `, '#06b6d4')}
 
-    ${ctaButton('Télécharger le rapport PDF', `${process.env.BACKEND_URL}${pdfUrl}`, '📄')}
+    ${ctaButton('Télécharger le rapport PDF', `${process.env.BACKEND_URL}${pdfUrl}`)}
 
     ${infoBlock(
-      '🔒&nbsp;&nbsp;Ce lien est sécurisé et personnel. Merci de ne pas le partager.'
+      'Ce lien est sécurisé et personnel. Merci de ne pas le partager.'
+    )}
+
+    ${signature()}
+  `);
+
+  await sendEmail({ to, subject, html });
+};
+
+// Libellés lisibles des rôles pour les emails
+const ROLE_LABELS = {
+  client:      'Client',
+  manager:     'Manager',
+  admin:       'Administrateur',
+  super_admin: 'Super Administrateur',
+  visitor:     'Visiteur',
+};
+
+// Email d'activation de compte — envoyé lorsqu'un compte est créé par le
+// SuperAdministrateur. Le lien permet au nouvel utilisateur de définir son
+// mot de passe et d'activer son compte.
+const sendAccountActivation = async (to, name, role, activationLink) => {
+  const subject = 'Votre compte OMEDEV Services a été créé';
+  const roleLabel = ROLE_LABELS[role] || role;
+
+  const html = emailWrapper(`
+    ${badge('Compte créé', '#34d399', 'rgba(16,185,129,0.1)', 'rgba(16,185,129,0.3)')}
+    ${heading(`Bienvenue, ${name}`)}
+    ${subtitle(`Un compte vous a été créé sur la plateforme OMEDEV Services avec le rôle « ${roleLabel} ».`)}
+
+    ${card(`
+      <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
+        ${dataRow('Email', to)}
+        ${dataRow('Rôle', `<strong style="color:#34d399;">${roleLabel}</strong>`)}
+      </table>
+    `, '#10b981')}
+
+    <p style="margin: 0 0 20px; font-size: 14px; color: #94a3b8; line-height: 1.75;">
+      Pour activer votre compte, cliquez sur le bouton ci-dessous afin de définir votre mot de passe.
+    </p>
+
+    ${ctaButton('Activer mon compte', activationLink)}
+
+    ${infoBlock(
+      'Ce lien est valable 7 jours et à usage personnel. Si vous n\'êtes pas à l\'origine de cette demande, ignorez simplement cet email.'
     )}
 
     ${signature()}
@@ -477,4 +412,5 @@ module.exports = {
   sendContactNotificationToAdmin,
   sendQuoteRequestConfirmation,
   sendAuditReport,
+  sendAccountActivation,
 };

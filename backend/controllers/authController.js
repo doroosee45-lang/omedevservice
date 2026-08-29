@@ -263,39 +263,6 @@ const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
 const jwt = require('jsonwebtoken');
 
-// @desc    Inscription d'un nouvel utilisateur
-// @route   POST /api/auth/register
-// @access  Public
-const registerUser = async (req, res) => {
-  const { name, email, phone, password, role } = req.body;
-
-  const userExists = await User.findOne({ email });
-  if (userExists) {
-    res.status(400);
-    throw new Error('Cet utilisateur existe déjà');
-  }
-
-  // Le premier utilisateur inscrit devient automatiquement super_admin
-  const userCount = await User.countDocuments();
-  const assignedRole = userCount === 0 ? 'super_admin' : role || 'client';
-
-  const user = await User.create({ name, email, phone, password, role: assignedRole });
-
-  if (user) {
-    res.status(201).json({
-      _id:   user._id,
-      name:  user.name,
-      email: user.email,
-      phone: user.phone,
-      role:  user.role,
-      token: generateToken(user._id),
-    });
-  } else {
-    res.status(400);
-    throw new Error('Données utilisateur invalides');
-  }
-};
-
 // @desc    Connexion d'un utilisateur
 // @route   POST /api/auth/login
 // @access  Public
@@ -450,8 +417,7 @@ const resetPassword = async (req, res) => {
     const user = await User.findById(decoded.id);
 
     if (!user) {
-      res.status(400);
-      throw new Error('Token invalide');
+      return res.status(400).json({ message: 'Token invalide' });
     }
 
     user.password = newPassword;
@@ -459,8 +425,34 @@ const resetPassword = async (req, res) => {
 
     res.json({ message: 'Mot de passe réinitialisé avec succès' });
   } catch (error) {
-    res.status(400);
-    throw new Error('Token invalide ou expiré');
+    res.status(400).json({ message: 'Token invalide ou expiré' });
+  }
+};
+
+// @desc    Activer un compte créé par le SuperAdministrateur (définit le mot
+//          de passe ET active le compte). Distinct de resetPassword afin
+//          qu'une simple réinitialisation de mot de passe ne puisse jamais
+//          réactiver un compte explicitement désactivé par un administrateur.
+// @route   POST /api/auth/activate-account
+// @access  Public
+const activateAccount = async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+
+    if (!user) {
+      return res.status(400).json({ message: 'Token invalide' });
+    }
+
+    user.password = newPassword;
+    user.isActive = true;
+    await user.save();
+
+    res.json({ message: 'Compte activé avec succès' });
+  } catch (error) {
+    res.status(400).json({ message: 'Lien d\'activation invalide ou expiré' });
   }
 };
 
@@ -495,7 +487,6 @@ const refreshToken = async (req, res) => {
 };
 
 module.exports = {
-  registerUser,
   loginUser,
   logoutUser,
   getUserProfile,
@@ -503,5 +494,6 @@ module.exports = {
   changePassword,
   forgotPassword,
   resetPassword,
+  activateAccount,
   refreshToken,
 };

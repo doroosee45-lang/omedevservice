@@ -27,13 +27,7 @@ const quoteRequestSchema = mongoose.Schema(
     serviceType: {
       type: String,
       required: true,
-      enum: ['site-web', 'ecommerce', 'application', 'reseau', 'securite', 'cloud', 'energie', 'formation', 'audit', 'conseil', 'ferronnerie', 'autre'],
-    },
-    ferronnerieType: {
-      type: String,
-    },
-    dimensions: {
-      type: String,
+      enum: ['site-web', 'ecommerce', 'application', 'reseau', 'securite', 'cloud', 'energie', 'formation', 'audit', 'conseil', 'autre'],
     },
     description: {
       type: String,

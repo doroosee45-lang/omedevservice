@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { history as historyApi } from '../../services/api'
-import { 
+import {
   History as HistoryIcon,
   CheckCircle,
   Download,
@@ -28,30 +28,30 @@ import ClientSidebar from '../../components/ClientSidebar'
 import ClientHeader from '../../components/ClientHeader'
 
 const globalStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  
-  body {
+  .omedev-vm {
+    --omedev-navy: #053876;
+    --omedev-blue-dark: #1D5B9B;
+    --omedev-blue: #0B74C1;
+    --omedev-blue-light: #4681B7;
+    --omedev-cyan: #72A5CE;
+    --omedev-cyan-light: #A6C3D7;
+    --omedev-turquoise: #2AACB2;
+    --omedev-energy: #55DDB5;
+    --omedev-white: #F6F6F7;
+    --omedev-gray: #D5DCE1;
+    --omedev-dark: #0B1213;
+    --omedev-text-secondary: #25364A;
+    background: #F6F6F7;
+    color: #0B1213;
     font-family: 'DM Sans', sans-serif;
-    background: #0f172a;
-    color: #e2e8f0;
     overflow-x: hidden;
   }
+  .omedev-vm * { box-sizing: border-box; }
 
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-  }
-  
-  @keyframes pulse-ring {
-    0% { transform: scale(0.8); opacity: 1; }
-    70% { transform: scale(1.3); opacity: 0; }
-    100% { transform: scale(0.8); opacity: 0; }
-  }
-  
-  .animate-float { animation: float 6s ease-in-out infinite; }
-  .animate-pulse-ring { animation: pulse-ring 2s ease-out infinite; }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
+  .omedev-vm .animate-float { animation: float 6s ease-in-out infinite; }
 `
 
 const fadeUp = {
@@ -144,7 +144,7 @@ const DETAILS = {
   }
 }
 
-/* ─── Génération PDF via jsPDF ────────────────────────────────────────────── */
+/* ─── Génération PDF via jsPDF (palette omdev) ────────────────────────────── */
 const generateHistoriquePDF = async (item) => {
   if (!window.jspdf) {
     await new Promise((resolve, reject) => {
@@ -163,19 +163,19 @@ const generateHistoriquePDF = async (item) => {
   const montantHT  = Math.round(montantNum / 1.20)
   const tvaAmt     = montantNum - montantHT
 
-  const navy    = [15, 23, 42]
-  const blue    = [59, 130, 246]
-  const cyan    = [6, 182, 212]
-  const emerald = [16, 185, 129]
+  const navy    = [5, 56, 118]     // #053876
+  const blue    = [11, 116, 193]   // #0B74C1
+  const cyan    = [42, 172, 178]   // #2AACB2
+  const emerald = [85, 221, 181]   // #55DDB5
+  const bluelight = [70, 129, 183] // #4681B7
   const gray50  = [248, 250, 252]
   const gray100 = [241, 245, 249]
   const gray300 = [203, 213, 225]
   const gray500 = [100, 116, 139]
   const gray700 = [51, 65, 85]
   const white   = [255, 255, 255]
-  const purple  = [139, 92, 246]
 
-  const typeColor = item.type === 'Formation' ? purple : item.type === 'Devis' ? emerald : blue
+  const typeColor = item.type === 'Formation' ? bluelight : item.type === 'Devis' ? emerald : blue
 
   // Fond blanc
   doc.setFillColor(...white)
@@ -404,22 +404,22 @@ const generateHistoriquePDF = async (item) => {
 
 /* ─── Modal: Détails ──────────────────────────────────────────────────────── */
 const ModalDetails = ({ item, onClose, onDownload }) => {
-  const details  = DETAILS[item.id] || {}
-  const typeColor = item.type === 'Formation' ? 'from-purple-500 to-pink-500'
-    : item.type === 'Devis' ? 'from-emerald-500 to-teal-500'
-    : 'from-blue-500 to-cyan-500'
-  const typeText  = item.type === 'Formation' ? 'text-purple-400'
-    : item.type === 'Devis' ? 'text-emerald-400'
-    : 'text-blue-400'
+  const details = DETAILS[item.id] || {}
+  const typeColor = item.type === 'Formation' ? 'from-[#4681B7] to-[#72A5CE]'
+    : item.type === 'Devis' ? 'from-[#2AACB2] to-[#55DDB5]'
+    : 'from-[#0B74C1] to-[#2AACB2]'
+  const typeHex = item.type === 'Formation' ? '#4681B7'
+    : item.type === 'Devis' ? '#2AACB2'
+    : '#0B74C1'
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1213]/50 backdrop-blur-sm" onClick={onClose}>
       <motion.div variants={modalVariants} initial="hidden" animate="visible" exit="exit"
-        className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl max-h-[92vh] overflow-y-auto"
+        className="bg-white border border-[rgba(5,56,118,0.12)] rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl max-h-[92vh] overflow-y-auto"
         onClick={e => e.stopPropagation()}>
 
         {/* Header */}
-        <div className="bg-gradient-to-r from-slate-800 to-slate-900 p-6 border-b border-white/10">
+        <div className="bg-gradient-to-r from-[#0B74C1]/10 to-[#55DDB5]/10 p-6 border-b border-[rgba(5,56,118,0.1)]">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
               <div className={`w-10 h-10 rounded-xl bg-gradient-to-r ${typeColor} flex items-center justify-center shadow-lg`}>
@@ -428,19 +428,20 @@ const ModalDetails = ({ item, onClose, onDownload }) => {
                   : <GraduationCap className="w-5 h-5 text-white" />}
               </div>
               <div>
-                <h2 className="text-lg font-bold text-white">{item.name}</h2>
-                <p className="text-gray-400 text-sm font-mono">{item.id}</p>
+                <h2 className="text-lg font-bold text-[#053876]">{item.name}</h2>
+                <p className="text-[#25364A]/60 text-sm font-mono">{item.id}</p>
               </div>
             </div>
-            <button onClick={onClose} className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all">
-              <X className="w-4 h-4 text-gray-300" />
+            <button onClick={onClose} className="w-8 h-8 rounded-full bg-[#F6F6F7] hover:bg-[#E8EDF1] flex items-center justify-center transition-all">
+              <X className="w-4 h-4 text-[#25364A]" />
             </button>
           </div>
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#2AACB2]/15 text-[#2AACB2] border border-[#2AACB2]/30">
               <CheckCircle className="w-3.5 h-3.5" /> Terminé
             </span>
-            <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${typeColor} bg-opacity-20 text-white`}>
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border"
+              style={{ color: typeHex, backgroundColor: typeHex + '1A', borderColor: typeHex + '40' }}>
               {item.type}
             </span>
           </div>
@@ -448,9 +449,9 @@ const ModalDetails = ({ item, onClose, onDownload }) => {
 
         <div className="p-6 space-y-5">
           {/* Description */}
-          <div className="bg-white/5 rounded-xl p-4">
-            <p className={`text-xs font-bold uppercase tracking-wide mb-2 ${typeText}`}>Description</p>
-            <p className="text-gray-300 text-sm leading-relaxed">{details.description || `Prestation — ${item.name}.`}</p>
+          <div className="bg-[#F6F6F7] rounded-xl p-4">
+            <p className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: typeHex }}>Description</p>
+            <p className="text-[#25364A] text-sm leading-relaxed">{details.description || `Prestation — ${item.name}.`}</p>
           </div>
 
           {/* Infos clés */}
@@ -461,27 +462,27 @@ const ModalDetails = ({ item, onClose, onDownload }) => {
               { icon: User,      label: 'Intervenant',  val: details.intervenant || 'N/A' },
               { icon: MapPin,    label: 'Lieu',         val: details.lieu || 'N/A' },
             ].map(({ icon: Icon, label, val }) => (
-              <div key={label} className="bg-white/5 rounded-xl p-3">
+              <div key={label} className="bg-[#F6F6F7] rounded-xl p-3">
                 <div className="flex items-center gap-2 mb-1">
-                  <Icon className="w-3.5 h-3.5 text-gray-500" />
-                  <p className="text-gray-500 text-xs">{label}</p>
+                  <Icon className="w-3.5 h-3.5 text-[#25364A]/50" />
+                  <p className="text-[#25364A]/60 text-xs">{label}</p>
                 </div>
-                <p className="text-white font-semibold text-sm">{val}</p>
+                <p className="text-[#053876] font-semibold text-sm">{val}</p>
               </div>
             ))}
           </div>
 
           {/* Phases */}
           {details.phases && (
-            <div className="bg-white/5 rounded-xl p-4">
-              <p className={`text-xs font-bold uppercase tracking-wide mb-3 ${typeText}`}>Phases réalisées</p>
+            <div className="bg-[#F6F6F7] rounded-xl p-4">
+              <p className="text-xs font-bold uppercase tracking-wide mb-3" style={{ color: typeHex }}>Phases réalisées</p>
               <div className="space-y-2">
                 {details.phases.map((phase, i) => (
                   <div key={i} className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
-                      <CheckCircle className="w-3 h-3 text-emerald-400" />
+                    <div className="w-5 h-5 rounded-full bg-[#2AACB2]/15 flex items-center justify-center flex-shrink-0">
+                      <CheckCircle className="w-3 h-3 text-[#2AACB2]" />
                     </div>
-                    <span className="text-gray-300 text-sm">{phase}</span>
+                    <span className="text-[#25364A] text-sm">{phase}</span>
                   </div>
                 ))}
               </div>
@@ -490,11 +491,12 @@ const ModalDetails = ({ item, onClose, onDownload }) => {
 
           {/* Technologies */}
           {details.technologies && (
-            <div className="bg-white/5 rounded-xl p-4">
-              <p className={`text-xs font-bold uppercase tracking-wide mb-3 ${typeText}`}>Technologies & outils</p>
+            <div className="bg-[#F6F6F7] rounded-xl p-4">
+              <p className="text-xs font-bold uppercase tracking-wide mb-3" style={{ color: typeHex }}>Technologies & outils</p>
               <div className="flex flex-wrap gap-2">
                 {details.technologies.map(tech => (
-                  <span key={tech} className={`px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${typeColor} text-white shadow-sm`}>
+                  <span key={tech} className="px-3 py-1 rounded-full text-xs font-medium shadow-sm"
+                    style={{ color: typeHex, backgroundColor: typeHex + '1A' }}>
                     {tech}
                   </span>
                 ))}
@@ -504,18 +506,18 @@ const ModalDetails = ({ item, onClose, onDownload }) => {
 
           {/* Note satisfaction */}
           {details.note && (
-            <div className="bg-white/5 rounded-xl p-4 flex items-center justify-between">
+            <div className="bg-[#F6F6F7] rounded-xl p-4 flex items-center justify-between">
               <div>
-                <p className="text-gray-500 text-xs mb-1">Satisfaction client</p>
+                <p className="text-[#25364A]/60 text-xs mb-1">Satisfaction client</p>
                 <div className="flex items-center gap-1">
                   {[1,2,3,4,5].map(n => (
-                    <Star key={n} className={`w-4 h-4 ${n <= details.note ? 'text-amber-400 fill-amber-400' : 'text-gray-600'}`} />
+                    <Star key={n} className={`w-4 h-4 ${n <= details.note ? 'text-amber-400 fill-amber-400' : 'text-[#25364A]/30'}`} />
                   ))}
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-gray-500 text-xs mb-1">Montant total</p>
-                <p className="text-xl font-bold text-white">{item.amount}</p>
+                <p className="text-[#25364A]/60 text-xs mb-1">Montant total</p>
+                <p className="text-xl font-bold text-[#053876]">{item.amount}</p>
               </div>
             </div>
           )}
@@ -523,11 +525,11 @@ const ModalDetails = ({ item, onClose, onDownload }) => {
 
         {/* Footer */}
         <div className="p-6 pt-0 flex gap-3">
-          <button onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-white/20 text-gray-300 text-sm hover:bg-white/10 transition-all">
+          <button onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-[rgba(5,56,118,0.2)] text-[#25364A] text-sm hover:bg-[#F6F6F7] transition-all">
             Fermer
           </button>
           <button onClick={() => { onClose(); onDownload(item) }}
-            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-sm font-semibold hover:scale-105 transition-all shadow-lg">
+            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-full bg-gradient-to-r from-[#0B74C1] via-[#2AACB2] to-[#55DDB5] hover:brightness-110 text-white text-sm font-semibold transition-all duration-300 shadow-[0_10px_28px_rgba(11,116,193,0.2)] hover:shadow-[0_16px_36px_rgba(42,172,178,0.28)]">
             <Download className="w-4 h-4" /> Télécharger Facture
           </button>
         </div>
@@ -551,57 +553,57 @@ const ModalTelecharger = ({ item, onClose }) => {
     }
   }
 
-  const typeColor = item.type === 'Formation' ? 'from-purple-500 to-pink-500'
-    : item.type === 'Devis' ? 'from-emerald-500 to-teal-500'
-    : 'from-blue-500 to-cyan-500'
+  const typeColor = item.type === 'Formation' ? 'from-[#4681B7] to-[#72A5CE]'
+    : item.type === 'Devis' ? 'from-[#2AACB2] to-[#55DDB5]'
+    : 'from-[#0B74C1] to-[#2AACB2]'
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1213]/50 backdrop-blur-sm" onClick={onClose}>
       <motion.div variants={modalVariants} initial="hidden" animate="visible" exit="exit"
-        className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl"
+        className="bg-white border border-[rgba(5,56,118,0.12)] rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl"
         onClick={e => e.stopPropagation()}>
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-bold text-white">Télécharger la facture</h2>
-            <button onClick={onClose} className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all">
-              <X className="w-4 h-4 text-gray-300" />
+            <h2 className="text-lg font-bold text-[#053876]">Télécharger la facture</h2>
+            <button onClick={onClose} className="w-8 h-8 rounded-full bg-[#F6F6F7] hover:bg-[#E8EDF1] flex items-center justify-center transition-all">
+              <X className="w-4 h-4 text-[#25364A]" />
             </button>
           </div>
 
-          <div className="bg-white/5 rounded-xl p-4 mb-5 flex items-center gap-4">
-            <div className={`w-14 h-14 rounded-xl bg-gradient-to-r from-red-500 to-orange-500 flex flex-col items-center justify-center shadow-lg`}>
+          <div className="bg-[#F6F6F7] rounded-xl p-4 mb-5 flex items-center gap-4">
+            <div className={`w-14 h-14 rounded-xl bg-gradient-to-r from-[#0B74C1] to-[#2AACB2] flex flex-col items-center justify-center shadow-lg`}>
               <FileText className="w-6 h-6 text-white" />
               <span className="text-white text-[9px] font-bold mt-0.5">PDF</span>
             </div>
             <div>
-              <p className="text-white font-semibold">Facture-{item.id}.pdf</p>
-              <p className="text-gray-400 text-sm">{item.name}</p>
-              <p className="text-emerald-400 text-xs font-semibold mt-0.5">{item.amount} TTC</p>
+              <p className="text-[#053876] font-semibold">Facture-{item.id}.pdf</p>
+              <p className="text-[#25364A]/70 text-sm">{item.name}</p>
+              <p className="text-[#2AACB2] text-xs font-semibold mt-0.5">{item.amount} TTC</p>
             </div>
           </div>
 
-          <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-3 mb-5 text-xs text-blue-300">
+          <div className="bg-[#0B74C1]/10 border border-[#0B74C1]/20 rounded-xl p-3 mb-5 text-xs text-[#0B74C1]">
             📄 Facture professionnelle avec détails de la prestation, HT/TVA, coordonnées et mentions légales.
           </div>
 
           {status === 'done' ? (
             <div className="flex flex-col items-center gap-2 py-3">
-              <CheckCircle className="w-10 h-10 text-emerald-400" />
-              <p className="text-emerald-400 font-semibold">Téléchargement réussi !</p>
+              <CheckCircle className="w-10 h-10 text-[#2AACB2]" />
+              <p className="text-[#2AACB2] font-semibold">Téléchargement réussi !</p>
             </div>
           ) : status === 'error' ? (
             <div className="flex flex-col items-center gap-2 py-3">
-              <X className="w-8 h-8 text-red-400" />
-              <p className="text-red-400 text-sm">Erreur lors de la génération</p>
-              <button onClick={handleDownload} className="text-blue-400 text-xs underline">Réessayer</button>
+              <X className="w-8 h-8 text-red-500" />
+              <p className="text-red-500 text-sm">Erreur lors de la génération</p>
+              <button onClick={handleDownload} className="text-[#2AACB2] hover:text-[#0B74C1] text-xs underline transition-colors">Réessayer</button>
             </div>
           ) : (
             <div className="flex gap-3">
-              <button onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-white/20 text-gray-300 text-sm hover:bg-white/10 transition-all">
+              <button onClick={onClose} className="flex-1 py-2.5 rounded-xl border border-[rgba(5,56,118,0.2)] text-[#25364A] text-sm hover:bg-[#F6F6F7] transition-all">
                 Annuler
               </button>
               <button onClick={handleDownload} disabled={status === 'loading'}
-                className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-sm font-medium hover:scale-105 transition-all disabled:opacity-70 disabled:scale-100 flex items-center justify-center gap-2">
+                className="flex-1 py-2.5 rounded-full bg-gradient-to-r from-[#0B74C1] via-[#2AACB2] to-[#55DDB5] hover:brightness-110 text-white text-sm font-medium transition-all duration-300 disabled:opacity-70 shadow-[0_10px_28px_rgba(11,116,193,0.2)] hover:shadow-[0_16px_36px_rgba(42,172,178,0.28)] flex items-center justify-center gap-2">
                 {status === 'loading'
                   ? <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Génération...</>
                   : <><Download className="w-4 h-4" /> Télécharger PDF</>
@@ -649,10 +651,19 @@ const Historique = () => {
 
   const getTypeColor = (type) => {
     switch(type) {
-      case 'Projet':    return 'from-blue-500 to-cyan-500'
-      case 'Devis':     return 'from-emerald-500 to-teal-500'
-      case 'Formation': return 'from-purple-500 to-pink-500'
-      default:          return 'from-blue-500 to-cyan-500'
+      case 'Projet':    return 'from-[#0B74C1] to-[#2AACB2]'
+      case 'Devis':     return 'from-[#2AACB2] to-[#55DDB5]'
+      case 'Formation': return 'from-[#4681B7] to-[#72A5CE]'
+      default:          return 'from-[#0B74C1] to-[#2AACB2]'
+    }
+  }
+
+  const getTypeHex = (type) => {
+    switch(type) {
+      case 'Projet':    return '#0B74C1'
+      case 'Devis':     return '#2AACB2'
+      case 'Formation': return '#4681B7'
+      default:          return '#0B74C1'
     }
   }
 
@@ -666,7 +677,7 @@ const Historique = () => {
   }
 
   return (
-    <>
+    <div className="omedev-vm">
       <style>{globalStyles}</style>
 
       {/* Modals */}
@@ -681,8 +692,8 @@ const Historique = () => {
         )}
       </AnimatePresence>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
-        
+      <div className="min-h-screen" style={{ background: '#F6F6F7' }}>
+
         {/* Header */}
         <ClientHeader onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
 
@@ -694,21 +705,21 @@ const Historique = () => {
 
           {/* Overlay for mobile */}
           {sidebarOpen && (
-            <div className="fixed inset-0 bg-black/50 z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />
+            <div className="fixed inset-0 bg-[#0B1213]/40 z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />
           )}
 
           {/* Main content */}
           <div className="flex-1 lg:ml-64">
             <main className="p-6 md:p-8">
-              
+
               {/* Header Section */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="mb-8"
               >
-                <h1 className="text-2xl md:text-3xl font-bold text-white font-syne">Historique</h1>
-                <p className="text-gray-400 mt-1">Consultez l'historique de vos projets et interventions</p>
+                <h1 className="text-2xl md:text-3xl font-bold text-[#053876] font-syne">Historique</h1>
+                <p className="text-[#25364A]/70 mt-1">Consultez l'historique de vos projets et interventions</p>
               </motion.div>
 
               {/* Filters */}
@@ -716,26 +727,26 @@ const Historique = () => {
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
-                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 mb-6"
+                className="bg-white border border-[rgba(5,56,118,0.09)] rounded-2xl p-4 mb-6 shadow-[0_10px_30px_rgba(5,56,118,0.06)]"
               >
                 <div className="flex flex-col sm:flex-row gap-4">
                   <div className="flex-1 relative">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#25364A]/50" />
                     <input
                       type="text"
                       placeholder="Rechercher par nom ou numéro..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full pl-12 pr-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition-all"
+                      className="w-full pl-12 pr-4 py-3 rounded-xl bg-white border border-[rgba(5,56,118,0.18)] text-[#0B1213] placeholder-[#25364A]/45 focus:outline-none focus:border-[#2AACB2] transition-all"
                     />
                   </div>
                   <select
                     value={yearFilter}
                     onChange={(e) => setYearFilter(e.target.value)}
-                    className="px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white focus:outline-none focus:border-blue-500 transition-all cursor-pointer"
+                    className="px-4 py-3 rounded-xl bg-white border border-[rgba(5,56,118,0.18)] text-[#0B1213] focus:outline-none focus:border-[#2AACB2] transition-all cursor-pointer"
                   >
                     {years.map(year => (
-                      <option key={year} value={year} className="bg-slate-800">
+                      <option key={year} value={year} className="bg-white">
                         {year === 'all' ? 'Toutes les années' : year}
                       </option>
                     ))}
@@ -752,31 +763,33 @@ const Historique = () => {
               >
                 {filteredHistorique.map((item) => {
                   const typeColor = getTypeColor(item.type)
+                  const typeHex = getTypeHex(item.type)
                   return (
                     <motion.div
                       key={item.id}
                       variants={fadeUp}
-                      className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-blue-500/50 transition-all hover:-translate-y-2 hover:shadow-2xl flex flex-col h-full"
+                      className="bg-white border border-[rgba(5,56,118,0.09)] rounded-2xl overflow-hidden shadow-[0_10px_30px_rgba(5,56,118,0.06)] hover:border-[rgba(42,172,178,0.4)] transition-all hover:-translate-y-2 hover:shadow-[0_22px_48px_rgba(11,116,193,0.14)] flex flex-col h-full"
                     >
                       {/* Header with gradient bar */}
                       <div className="relative">
-                        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-cyan-500" />
+                        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#0B74C1] to-[#2AACB2]" />
                         <div className="p-5 pb-3">
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-2">
                               <div className={`w-8 h-8 rounded-lg bg-gradient-to-r ${typeColor} flex items-center justify-center shadow-lg`}>
                                 {getTypeIcon(item.type)}
                               </div>
-                              <span className="text-xs text-gray-500 font-mono">{item.id}</span>
+                              <span className="text-xs text-[#25364A]/60 font-mono">{item.id}</span>
                             </div>
                             <div className="flex items-center gap-1.5">
-                              <Calendar className="w-3.5 h-3.5 text-blue-400" />
-                              <span className="text-xs text-gray-400">{item.date}</span>
+                              <Calendar className="w-3.5 h-3.5 text-[#0B74C1]" />
+                              <span className="text-xs text-[#25364A]/70">{item.date}</span>
                             </div>
                           </div>
-                          <h3 className="text-lg font-bold text-white mb-1 line-clamp-1">{item.name}</h3>
+                          <h3 className="text-lg font-bold text-[#053876] mb-1 line-clamp-1">{item.name}</h3>
                           <div className="flex items-center gap-2 mt-2">
-                            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r ${typeColor} bg-opacity-20 text-white`}>
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border"
+                              style={{ color: typeHex, backgroundColor: typeHex + '1A', borderColor: typeHex + '40' }}>
                               {getTypeIcon(item.type)}
                               {item.type}
                             </span>
@@ -788,31 +801,31 @@ const Historique = () => {
                         {/* Amount */}
                         <div className="mb-4">
                           <div className="flex items-center gap-2 mb-2">
-                            <Euro className="w-4 h-4 text-emerald-400" />
-                            <span className="text-2xl font-bold text-white">{item.amount}</span>
+                            <Euro className="w-4 h-4 text-[#0B74C1]" />
+                            <span className="text-2xl font-bold text-[#053876]">{item.amount}</span>
                           </div>
                         </div>
 
                         {/* Status */}
                         <div className="mb-4">
                           <div className="flex items-center gap-2">
-                            <CheckCircle className="w-4 h-4 text-emerald-400" />
-                            <span className="text-sm text-gray-400">Terminé</span>
+                            <CheckCircle className="w-4 h-4 text-[#2AACB2]" />
+                            <span className="text-sm text-[#25364A]/70">Terminé</span>
                           </div>
                         </div>
 
                         {/* Actions */}
-                        <div className="flex gap-2 mt-auto pt-3 border-t border-white/10">
+                        <div className="flex gap-2 mt-auto pt-3 border-t border-[rgba(5,56,118,0.1)]">
                           <button
                             onClick={() => setModalDetails(item)}
-                            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-white/20 text-gray-300 text-xs font-medium hover:bg-blue-500/20 hover:text-blue-400 hover:border-blue-500/50 transition-all"
+                            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-[rgba(5,56,118,0.18)] text-[#25364A] text-xs font-medium hover:bg-[#F6F6F7] hover:text-[#053876] transition-all"
                           >
                             <Eye className="w-3.5 h-3.5" />
                             Détails
                           </button>
                           <button
                             onClick={() => setModalDownload(item)}
-                            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs font-medium hover:scale-105 transition-all"
+                            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-full bg-gradient-to-r from-[#0B74C1] via-[#2AACB2] to-[#55DDB5] hover:brightness-110 text-white text-xs font-medium transition-all duration-300 shadow-[0_10px_28px_rgba(11,116,193,0.2)] hover:shadow-[0_16px_36px_rgba(42,172,178,0.28)]"
                           >
                             <Download className="w-3.5 h-3.5" />
                             Facture
@@ -829,18 +842,18 @@ const Historique = () => {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-16 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl"
+                  className="text-center py-16 bg-white border border-[rgba(5,56,118,0.09)] rounded-2xl shadow-[0_10px_30px_rgba(5,56,118,0.06)]"
                 >
-                  <HistoryIcon className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-white">Aucun historique trouvé</h3>
-                  <p className="text-gray-500 mt-1">Essayez de modifier vos critères de recherche</p>
+                  <HistoryIcon className="w-16 h-16 text-[#25364A]/30 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-[#053876]">Aucun historique trouvé</h3>
+                  <p className="text-[#25364A]/60 mt-1">Essayez de modifier vos critères de recherche</p>
                 </motion.div>
               )}
             </main>
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

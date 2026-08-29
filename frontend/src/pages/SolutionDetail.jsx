@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import PublicHero from '../components/Public/PublicHero';
 import {
   ArrowRight,
+  ChevronRight,
   CheckCircle,
   Building2,
   ShoppingBag,
@@ -77,7 +80,7 @@ const SolutionDetailPage = () => {
       id: 'pack-entreprise',
       name: 'Pack Entreprise',
       tagline: 'La solution complète pour les entreprises établies',
-      color: 'blue',
+      color: '#0B74C1',
       bgGradient: 'from-blue-600 to-indigo-700',
       icon: Building2,
       heroImage: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&h=600&fit=crop',
@@ -174,7 +177,7 @@ const SolutionDetailPage = () => {
       id: 'pack-ecommerce',
       name: 'Pack E-commerce',
       tagline: 'Vendez en ligne avec une boutique performante',
-      color: 'green',
+      color: '#2AACB2',
       bgGradient: 'from-green-600 to-emerald-700',
       icon: ShoppingBag,
       heroImage: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&h=600&fit=crop',
@@ -258,7 +261,7 @@ const SolutionDetailPage = () => {
       id: 'pack-digital',
       name: 'Pack Digital Complet',
       tagline: 'La transformation digitale 360°',
-      color: 'purple',
+      color: '#1D5B9B',
       bgGradient: 'from-purple-600 to-pink-700',
       icon: Globe,
       heroImage: 'https://images.unsplash.com/photo-1551434678-e076c2236a9a?w=1200&h=600&fit=crop',
@@ -347,7 +350,7 @@ const SolutionDetailPage = () => {
       id: 'pack-energie',
       name: 'Pack Énergie Solaire',
       tagline: 'Économisez sur votre facture énergétique',
-      color: 'orange',
+      color: '#55DDB5',
       bgGradient: 'from-orange-600 to-yellow-700',
       icon: Sun,
       heroImage: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=1200&h=600&fit=crop',
@@ -430,7 +433,7 @@ const SolutionDetailPage = () => {
       id: 'pack-formation',
       name: 'Pack Formation',
       tagline: 'Formez vos équipes aux nouvelles technologies',
-      color: 'indigo',
+      color: '#72A5CE',
       bgGradient: 'from-indigo-600 to-blue-700',
       icon: GraduationCap,
       heroImage: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&h=600&fit=crop',
@@ -521,7 +524,7 @@ const SolutionDetailPage = () => {
 
   const handleQuoteRequest = () => {
     setFormData({ ...formData, solution: solution?.name });
-    setShowModal(true);
+    setShowQuoteModal(true);
   };
 
   const handleInputChange = (e) => {
@@ -531,16 +534,16 @@ const SolutionDetailPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     alert(`✅ Demande envoyée pour :\n${formData.solution}\n\n📧 Un email de confirmation a été envoyé à ${formData.email}\n📞 Notre équipe commerciale vous contactera sous 24h.`);
-    setShowModal(false);
+    setShowQuoteModal(false);
     setFormData({ name: '', email: '', phone: '', company: '', solution: '', message: '' });
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#F6F6F7] flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Chargement de la solution...</p>
+          <div className="w-16 h-16 border-4 border-[#0B74C1] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-[#25364A]">Chargement de la solution...</p>
         </div>
       </div>
     );
@@ -548,14 +551,14 @@ const SolutionDetailPage = () => {
 
   if (!solution) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#F6F6F7] flex items-center justify-center">
         <div className="text-center max-w-md mx-auto px-4">
           <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <X size={48} className="text-red-500" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Solution non trouvée</h2>
-          <p className="text-gray-600 mb-6">La solution que vous recherchez n'existe pas.</p>
-          <Link to="/solutions" className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+          <h2 className="text-2xl font-bold text-[#053876] mb-2 font-syne">Solution non trouvée</h2>
+          <p className="text-[#25364A] mb-6">La solution que vous recherchez n'existe pas.</p>
+          <Link to="/solutions" className="inline-flex items-center gap-2 text-white px-6 py-3 rounded-full font-semibold transition-all hover:-translate-y-0.5" style={{ background: 'linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%)' }}>
             Voir toutes les solutions <ArrowRight size={18} />
           </Link>
         </div>
@@ -566,51 +569,55 @@ const SolutionDetailPage = () => {
   const IconComponent = solution.icon;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#F6F6F7]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <style>{`
+        .card-hover {
+          background: #fff; border: 1px solid rgba(5,56,118,.09); border-radius: 18px;
+          box-shadow: 0 10px 30px rgba(5,56,118,.06);
+          transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+        }
+        .card-hover:hover {
+          box-shadow: 0 20px 44px rgba(11,116,193,.14); border-color: rgba(42,172,178,.35);
+        }
+        .hero-grid {
+          background-image: linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+          background-size: 56px 56px;
+        }
+      `}</style>
+
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0">
-          <img src={solution.heroImage} alt={solution.name} className="w-full h-full object-cover" />
-          <div className={`absolute inset-0 bg-gradient-to-r ${solution.bgGradient} opacity-85`}></div>
-        </div>
-        <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
-          <div className="max-w-3xl">
-            <div className="flex items-center gap-2 text-white/80 text-sm mb-4">
-              <Link to="/solutions" className="hover:text-white transition">Solutions</Link>
-              <span>/</span>
-              <span className="text-white">{solution.name}</span>
-            </div>
-            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
-              <IconComponent size={18} className="text-white" />
-              <span className="text-white text-sm">{solution.tagline}</span>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">{solution.name}</h1>
-            <p className="text-xl text-white/90 mb-8">{solution.overview}</p>
-            <div className="flex flex-wrap gap-4">
-              <button onClick={handleQuoteRequest} className="bg-white text-gray-900 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all flex items-center gap-2">
-                Demander ce pack <ArrowRight size={18} />
-              </button>
-              <button className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-gray-900 transition-all flex items-center gap-2">
-                Audit gratuit <CheckCircle size={18} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PublicHero
+        backgroundImage={solution.heroImage}
+        breadcrumb={
+          <>
+            <Link to="/solutions">Solutions</Link>
+            <ChevronRight size={12} />
+            <span style={{ color: '#fff' }}>{solution.name}</span>
+          </>
+        }
+        badge={solution.tagline}
+        title={solution.name}
+        subtitle={solution.overview}
+        primaryAction={{ label: 'Demander ce pack', onClick: handleQuoteRequest }}
+        secondaryAction={{ label: 'Audit gratuit', to: '/audit-gratuit', icon: <CheckCircle size={18} /> }}
+        align="left"
+        compact
+      />
 
       {/* Navigation Tabs */}
-      <div className="sticky top-0 bg-white shadow-md z-40">
+      <div className="sticky top-0 bg-white border-b border-[#053876]/10 shadow-sm z-40">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex overflow-x-auto gap-1 py-3">
             {['overview', 'features', 'process', 'specs', 'benefits'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-6 py-2 rounded-lg font-medium transition-all whitespace-nowrap ${
+                className={`px-6 py-2 rounded-full font-medium transition-all duration-300 whitespace-nowrap ${
                   activeTab === tab
-                    ? `bg-${solution.color}-600 text-white`
-                    : 'text-gray-600 hover:bg-gray-100'
+                    ? 'text-white shadow-md'
+                    : 'text-[#25364A] hover:bg-[#0B74C1]/5'
                 }`}
+                style={activeTab === tab ? { background: 'linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%)' } : undefined}
               >
                 {tab === 'overview' && 'Aperçu'}
                 {tab === 'features' && 'Services inclus'}
@@ -627,41 +634,41 @@ const SolutionDetailPage = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Overview Tab */}
         {activeTab === 'overview' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-2xl p-8 shadow-sm">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Description détaillée</h2>
-                <div className="prose prose-lg max-w-none text-gray-700 whitespace-pre-line">
+              <div className="card-hover p-8">
+                <h2 className="text-2xl font-bold text-[#053876] mb-6 font-syne">Description détaillée</h2>
+                <div className="prose prose-lg max-w-none text-[#25364A] whitespace-pre-line">
                   {solution.detailedDescription}
                 </div>
               </div>
             </div>
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-2xl p-6 shadow-sm sticky top-24">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Informations clés</h3>
+              <div className="card-hover p-6 sticky top-24">
+                <h3 className="text-xl font-bold text-[#053876] mb-4 font-syne">Informations clés</h3>
                 <div className="space-y-4 mb-6">
-                  <div className="flex justify-between pb-2 border-b border-gray-100">
-                    <span className="text-gray-500">Fourchette tarifaire</span>
-                    <span className="font-semibold text-gray-900">{solution.priceRange}</span>
+                  <div className="flex justify-between pb-2 border-b border-[#053876]/10">
+                    <span className="text-[#25364A]/70">Fourchette tarifaire</span>
+                    <span className="font-semibold text-[#053876]">{solution.priceRange}</span>
                   </div>
-                  <div className="flex justify-between pb-2 border-b border-gray-100">
-                    <span className="text-gray-500">Durée estimée</span>
-                    <span className="font-semibold text-gray-900">{solution.duration}</span>
+                  <div className="flex justify-between pb-2 border-b border-[#053876]/10">
+                    <span className="text-[#25364A]/70">Durée estimée</span>
+                    <span className="font-semibold text-[#053876]">{solution.duration}</span>
                   </div>
-                  <div className="flex justify-between pb-2 border-b border-gray-100">
-                    <span className="text-gray-500">Public cible</span>
-                    <span className="font-semibold text-gray-900 text-sm">{solution.recommendedFor}</span>
+                  <div className="flex justify-between pb-2 border-b border-[#053876]/10">
+                    <span className="text-[#25364A]/70">Public cible</span>
+                    <span className="font-semibold text-[#053876] text-sm">{solution.recommendedFor}</span>
                   </div>
                 </div>
-                <button onClick={handleQuoteRequest} className={`w-full bg-${solution.color}-600 text-white py-3 rounded-xl font-semibold hover:bg-${solution.color}-700 transition-all flex items-center justify-center gap-2 mb-3`}>
+                <button onClick={handleQuoteRequest} className="w-full text-white py-3 rounded-full font-semibold hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 mb-3 shadow-lg" style={{ background: 'linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%)' }}>
                   Demander un devis <ArrowRight size={18} />
                 </button>
-                <div className="mt-4 p-4 bg-gray-50 rounded-xl">
-                  <h4 className="font-semibold text-gray-900 mb-2">Inclus dans le pack</h4>
+                <div className="mt-4 p-4 bg-[#F6F6F7] rounded-xl">
+                  <h4 className="font-semibold text-[#053876] mb-2">Inclus dans le pack</h4>
                   <ul className="space-y-1">
                     {solution.includedServices.slice(0, 4).map((service, idx) => (
-                      <li key={idx} className="flex items-center gap-2 text-sm text-gray-600">
-                        <CheckCircle size={14} className="text-green-500" />
+                      <li key={idx} className="flex items-center gap-2 text-sm text-[#25364A]">
+                        <CheckCircle size={14} className="text-[#55DDB5]" />
                         {service}
                       </li>
                     ))}
@@ -669,169 +676,169 @@ const SolutionDetailPage = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Features Tab */}
         {activeTab === 'features' && (
-          <div className="bg-white rounded-2xl p-8 shadow-sm">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Services inclus dans le pack</h2>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="card-hover p-8">
+            <h2 className="text-2xl font-bold text-[#053876] mb-6 font-syne">Services inclus dans le pack</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {solution.features.map((feature, idx) => {
                 const FeatureIcon = feature.icon;
                 return (
-                  <div key={idx} className={`bg-${solution.color}-50 rounded-xl p-5`}>
-                    <div className={`w-12 h-12 rounded-xl bg-${solution.color}-100 flex items-center justify-center mb-4`}>
-                      <FeatureIcon size={24} className={`text-${solution.color}-600`} />
+                  <div key={idx} className="rounded-xl p-5" style={{ background: `${solution.color}0D` }}>
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ background: `${solution.color}22` }}>
+                      <FeatureIcon size={24} style={{ color: solution.color }} />
                     </div>
-                    <h3 className="font-bold text-gray-900 mb-2">{feature.title}</h3>
-                    <p className="text-gray-600 text-sm">{feature.description}</p>
+                    <h3 className="font-bold text-[#053876] mb-2">{feature.title}</h3>
+                    <p className="text-[#25364A] text-sm">{feature.description}</p>
                   </div>
                 );
               })}
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Process Tab */}
         {activeTab === 'process' && (
-          <div className="bg-white rounded-2xl p-8 shadow-sm">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Notre processus de déploiement</h2>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="card-hover p-8">
+            <h2 className="text-2xl font-bold text-[#053876] mb-6 font-syne">Notre processus de déploiement</h2>
             <div className="relative">
-              <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gray-200 hidden md:block"></div>
+              <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-[#053876]/10 hidden md:block"></div>
               <div className="space-y-8">
                 {solution.process.map((step) => (
                   <div key={step.step} className="relative flex flex-col md:flex-row gap-6">
-                    <div className={`w-16 h-16 rounded-full bg-${solution.color}-100 text-${solution.color}-700 flex items-center justify-center text-xl font-bold flex-shrink-0 z-10`}>
+                    <div className="w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold flex-shrink-0 z-10 text-white" style={{ background: `linear-gradient(135deg, ${solution.color}, #2AACB2)` }}>
                       {step.step}
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
-                      <p className="text-gray-600">{step.description}</p>
+                      <h3 className="text-xl font-bold text-[#053876] mb-2 font-syne">{step.title}</h3>
+                      <p className="text-[#25364A]">{step.description}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Specs Tab */}
         {activeTab === 'specs' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="bg-white rounded-2xl p-8 shadow-sm">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Caractéristiques techniques</h2>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="card-hover p-8">
+              <h2 className="text-2xl font-bold text-[#053876] mb-6 font-syne">Caractéristiques techniques</h2>
               <ul className="space-y-3">
                 {solution.technicalSpecs.map((spec, idx) => (
                   <li key={idx} className="flex items-center gap-3">
-                    <CheckCircle size={20} className={`text-${solution.color}-500`} />
-                    <span className="text-gray-700">{spec}</span>
+                    <CheckCircle size={20} style={{ color: solution.color }} />
+                    <span className="text-[#25364A]">{spec}</span>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="bg-white rounded-2xl p-8 shadow-sm">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Services inclus</h2>
+            <div className="card-hover p-8">
+              <h2 className="text-2xl font-bold text-[#053876] mb-6 font-syne">Services inclus</h2>
               <ul className="space-y-3">
                 {solution.includedServices.map((service, idx) => (
                   <li key={idx} className="flex items-center gap-3">
-                    <CheckCircle size={20} className="text-green-500" />
-                    <span className="text-gray-700">{service}</span>
+                    <CheckCircle size={20} className="text-[#55DDB5]" />
+                    <span className="text-[#25364A]">{service}</span>
                   </li>
                 ))}
               </ul>
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Benefits Tab */}
         {activeTab === 'benefits' && (
-          <div className="bg-white rounded-2xl p-8 shadow-sm">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Avantages exclusifs</h2>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="card-hover p-8">
+            <h2 className="text-2xl font-bold text-[#053876] mb-6 font-syne">Avantages exclusifs</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {solution.benefits.map((benefit, idx) => {
                 const BenefitIcon = benefit.icon;
                 return (
                   <div key={idx} className="text-center">
-                    <div className={`w-20 h-20 rounded-full bg-${solution.color}-100 flex items-center justify-center mx-auto mb-4`}>
-                      <BenefitIcon size={32} className={`text-${solution.color}-600`} />
+                    <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: `${solution.color}18` }}>
+                      <BenefitIcon size={32} style={{ color: solution.color }} />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">{benefit.title}</h3>
-                    <p className="text-gray-600">{benefit.description}</p>
+                    <h3 className="text-xl font-bold text-[#053876] mb-2 font-syne">{benefit.title}</h3>
+                    <p className="text-[#25364A]">{benefit.description}</p>
                   </div>
                 );
               })}
             </div>
-          </div>
+          </motion.div>
         )}
       </div>
 
       {/* CTA Bottom */}
-      <section className="py-16 bg-gradient-to-r from-gray-900 to-gray-800 text-white">
+      <section className="py-16 sm:py-20 text-white" style={{ background: 'linear-gradient(135deg, #053876 0%, #0B74C1 55%, #2AACB2 100%)' }}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Prêt à démarrer avec {solution.name} ?</h2>
-          <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4 font-syne">Prêt à démarrer avec {solution.name} ?</h2>
+          <p className="text-[#A6C3D7] mb-8 max-w-2xl mx-auto">
             Contactez-nous dès maintenant pour un devis personnalisé et un accompagnement dédié
           </p>
-          <button onClick={handleQuoteRequest} className="bg-white text-gray-900 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all inline-flex items-center gap-2">
+          <button onClick={handleQuoteRequest} className="bg-white text-[#053876] px-8 py-3 rounded-full font-semibold hover:-translate-y-0.5 transition-all duration-300 shadow-lg hover:shadow-2xl inline-flex items-center gap-2">
             Demander un devis <ArrowRight size={18} />
           </button>
         </div>
       </section>
 
       {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto animate-fade-in-up">
-            <div className="sticky top-0 bg-white border-b border-gray-200 p-5 flex justify-between items-center">
-              <div>
-                <h3 className="text-xl font-bold text-gray-900">Demander {solution.name}</h3>
-                <p className="text-sm text-gray-500">Remplissez ce formulaire</p>
+      <AnimatePresence>
+        {showQuoteModal && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.94, y: 20 }}
+              transition={{ duration: 0.25 }}
+              className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+            >
+              <div className="sticky top-0 bg-white border-b border-[#053876]/10 p-5 flex justify-between items-center rounded-t-2xl">
+                <div>
+                  <h3 className="text-xl font-bold text-[#053876] font-syne">Demander {solution.name}</h3>
+                  <p className="text-sm text-[#25364A]/70">Remplissez ce formulaire</p>
+                </div>
+                <button onClick={() => setShowQuoteModal(false)} className="text-[#25364A]/50 hover:text-[#053876] p-1 rounded-full hover:bg-[#F6F6F7] transition">
+                  <X size={24} />
+                </button>
               </div>
-              <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600">
-                <X size={24} />
-              </button>
-            </div>
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
-              <div>
-                <label className="block text-gray-700 font-medium mb-1 text-sm">Solution sélectionnée</label>
-                <input type="text" value={formData.solution} readOnly className="w-full px-4 py-2 rounded-lg bg-gray-100 border border-gray-200 text-gray-700 text-sm font-medium" />
-              </div>
-              <div>
-                <label className="block text-gray-700 font-medium mb-1 text-sm">Nom complet *</label>
-                <input type="text" name="name" required value={formData.name} onChange={handleInputChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none" />
-              </div>
-              <div>
-                <label className="block text-gray-700 font-medium mb-1 text-sm">Email *</label>
-                <input type="email" name="email" required value={formData.email} onChange={handleInputChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none" />
-              </div>
-              <div>
-                <label className="block text-gray-700 font-medium mb-1 text-sm">Téléphone *</label>
-                <input type="tel" name="phone" required value={formData.phone} onChange={handleInputChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none" />
-              </div>
-              <div>
-                <label className="block text-gray-700 font-medium mb-1 text-sm">Entreprise</label>
-                <input type="text" name="company" value={formData.company} onChange={handleInputChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none" />
-              </div>
-              <div>
-                <label className="block text-gray-700 font-medium mb-1 text-sm">Message</label>
-                <textarea name="message" rows="3" value={formData.message} onChange={handleInputChange} className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none resize-none"></textarea>
-              </div>
-              <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
-                Envoyer la demande <ArrowRight size={18} />
-              </button>
-            </form>
+              <form onSubmit={handleSubmit} className="p-6 space-y-4">
+                <div>
+                  <label className="block text-[#053876] font-medium mb-1 text-sm">Solution sélectionnée</label>
+                  <input type="text" value={formData.solution} readOnly className="w-full px-4 py-2 rounded-lg bg-[#F6F6F7] border border-[#053876]/15 text-[#25364A] text-sm font-medium" />
+                </div>
+                <div>
+                  <label className="block text-[#053876] font-medium mb-1 text-sm">Nom complet *</label>
+                  <input type="text" name="name" required value={formData.name} onChange={handleInputChange} className="w-full px-4 py-2 rounded-lg border border-[#053876]/15 focus:border-[#2AACB2] focus:outline-none" />
+                </div>
+                <div>
+                  <label className="block text-[#053876] font-medium mb-1 text-sm">Email *</label>
+                  <input type="email" name="email" required value={formData.email} onChange={handleInputChange} className="w-full px-4 py-2 rounded-lg border border-[#053876]/15 focus:border-[#2AACB2] focus:outline-none" />
+                </div>
+                <div>
+                  <label className="block text-[#053876] font-medium mb-1 text-sm">Téléphone *</label>
+                  <input type="tel" name="phone" required value={formData.phone} onChange={handleInputChange} className="w-full px-4 py-2 rounded-lg border border-[#053876]/15 focus:border-[#2AACB2] focus:outline-none" />
+                </div>
+                <div>
+                  <label className="block text-[#053876] font-medium mb-1 text-sm">Entreprise</label>
+                  <input type="text" name="company" value={formData.company} onChange={handleInputChange} className="w-full px-4 py-2 rounded-lg border border-[#053876]/15 focus:border-[#2AACB2] focus:outline-none" />
+                </div>
+                <div>
+                  <label className="block text-[#053876] font-medium mb-1 text-sm">Message</label>
+                  <textarea name="message" rows="3" value={formData.message} onChange={handleInputChange} className="w-full px-4 py-2 rounded-lg border border-[#053876]/15 focus:border-[#2AACB2] focus:outline-none resize-none"></textarea>
+                </div>
+                <button type="submit" className="w-full text-white py-3 rounded-full font-semibold transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2" style={{ background: 'linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%)' }}>
+                  Envoyer la demande <ArrowRight size={18} />
+                </button>
+              </form>
+            </motion.div>
           </div>
-        </div>
-      )}
-
-      <style jsx>{`
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in-up { animation: fadeInUp 0.3s ease-out; }
-      `}</style>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

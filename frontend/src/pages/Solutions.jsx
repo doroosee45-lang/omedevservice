@@ -1,69 +1,484 @@
-﻿import { motion, useInView } from 'framer-motion';
+﻿import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { useRef, useEffect, useState } from 'react';
 import {
-  ArrowRight, Server, Shield, Code, Cloud, Zap, GraduationCap,
-  CheckCircle, Users, Clock, Award, Star, Quote, Briefcase, Globe,
-  Cpu, Camera, Wifi, Wrench, Phone, ThermometerSun, Monitor,
-  ChevronRight, Sparkles, TrendingUp, Rocket, TrendingDown, FileText,
-  Lock, AlertTriangle, BarChart3, Mail, ShoppingBag, Database,
-  Network, Eye, Fingerprint, Sun, Battery, Headphones, BookOpen,
-  Building2, ShoppingCart, Smartphone, DollarSign, Leaf, GraduationCap as Graduation,
-  Briefcase as BriefcaseIcon, Settings, ShieldCheck, Layers, X,
-  Video, Webcam, Fan, Wind, Snowflake
+  ArrowRight, CheckCircle, Clock, DollarSign, Headphones, Sparkles,
+  Rocket, ChevronRight, Phone, Layers, X, Building2, ShoppingCart,
+  Smartphone, Sun, GraduationCap as Graduation, Camera, Snowflake, Wrench,
 } from 'lucide-react';
+import PublicHero from '../components/Public/PublicHero';
+import CTASection from '../components/Public/CTASection';
 
+/* ─────────────────────────────────────────────
+   DESIGN SYSTEM — identique à la page About
+   (navy/electric/turquoise/energy)
+   ───────────────────────────────────────────── */
 const globalStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: #0f172a;
-    color: #e2e8f0;
-    overflow-x: hidden;
+  .omedev-solutions {
+    --omedev-navy: #053876;
+    --omedev-blue-dark: #1D5B9B;
+    --omedev-blue: #0B74C1;
+    --omedev-blue-light: #4681B7;
+    --omedev-cyan: #72A5CE;
+    --omedev-cyan-light: #A6C3D7;
+    --omedev-turquoise: #2AACB2;
+    --omedev-energy: #55DDB5;
+    --omedev-white: #F6F6F7;
+    --omedev-gray: #D5DCE1;
+    --omedev-dark: #0B1213;
+    --omedev-text-secondary: #25364A;
+    background: #F6F6F7;
+    color: #0B1213;
+  }
+
+  .omedev-solutions .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .omedev-solutions .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: .5rem 1.1rem;
+    border-radius: 999px;
+    background: rgba(11,116,193,.08);
+    color: #0B74C1;
+    border: 1px solid rgba(11,116,193,.18);
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-solutions .section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -.03em;
+    margin-bottom: 1rem;
+    font-family: 'Syne', sans-serif;
+    color: #053876;
+  }
+
+  .omedev-solutions .section-subtitle {
+    font-size: 1rem;
+    color: #25364A;
+    max-width: 56ch;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .omedev-solutions .divider {
+    width: 64px;
+    height: 4px;
+    background: linear-gradient(90deg, #0B74C1, #2AACB2, #55DDB5);
+    border-radius: 99px;
+    margin: 1rem auto 1.5rem;
+  }
+
+  .omedev-solutions .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    background: linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%);
+    color: #fff;
+    font-size: .9rem;
+    font-weight: 700;
+    padding: .9rem 1.7rem;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all .3s ease;
+    cursor: pointer;
+    border: none;
+    font-family: 'Syne', sans-serif;
+    box-shadow: 0 10px 28px rgba(11,116,193,.20);
+  }
+
+  .omedev-solutions .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgba(42,172,178,.28);
+  }
+
+  .omedev-solutions .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    background: #fff;
+    color: #053876;
+    font-size: .9rem;
+    font-weight: 700;
+    padding: .85rem 1.7rem;
+    border-radius: 12px;
+    border: 1px solid rgba(5,56,118,.18);
+    text-decoration: none;
+    transition: all .3s ease;
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-solutions .btn-outline:hover {
+    border-color: #2AACB2;
+    color: #0B74C1;
+    background: rgba(85,221,181,.08);
+    transform: translateY(-3px);
+  }
+
+  .omedev-solutions .card-hover {
+    transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+    background: #fff;
+    border: 1px solid rgba(5,56,118,.09);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(5,56,118,.06);
+  }
+
+  .omedev-solutions .card-hover:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 22px 48px rgba(11,116,193,.14);
+    border-color: rgba(42,172,178,.35);
+  }
+
+  .omedev-solutions .omedev-hero {
+    background: linear-gradient(135deg, #053876 0%, #1D5B9B 35%, #4681B7 60%, #72A5CE 80%, #A6C3D7 100%);
+    position: relative;
+  }
+
+  .omedev-solutions .omedev-light-section { background: #F6F6F7; }
+  .omedev-solutions .omedev-white-section { background: #fff; }
+  .omedev-solutions .omedev-dark-section {
+    background: linear-gradient(135deg, #053876 0%, #1D5B9B 55%, #0B74C1 100%);
+  }
+
+  .omedev-solutions .hero-grid {
+    background-image: linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+    background-size: 56px 56px;
   }
 
   @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-16px); }
   }
-  
-  @keyframes pulse-ring {
-    0% { transform: scale(0.8); opacity: 1; }
-    70% { transform: scale(1.3); opacity: 0; }
-    100% { transform: scale(0.8); opacity: 0; }
+  .omedev-solutions .animate-float { animation: float 6s ease-in-out infinite; }
+
+  /* ── Pack card ── */
+  .omedev-solutions .pack-card {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid rgba(5,56,118,.09);
+    box-shadow: 0 10px 30px rgba(5,56,118,.06);
+    transition: all .4s cubic-bezier(.4,0,.2,1);
+    display: flex;
+    flex-direction: column;
   }
-  
-  .animate-float { animation: float 6s ease-in-out infinite; }
-  .animate-pulse-ring { animation: pulse-ring 2s ease-out infinite; }
+  .omedev-solutions .pack-card:hover {
+    transform: translateY(-9px);
+    border-color: rgba(42,172,178,.35);
+    box-shadow: 0 22px 48px rgba(11,116,193,.16);
+  }
+  .omedev-solutions .pack-photo-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #D5DCE1;
+  }
+  .omedev-solutions .pack-photo-wrap img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .8s cubic-bezier(.4,0,.2,1);
+  }
+  .omedev-solutions .pack-card:hover .pack-photo-wrap img { transform: scale(1.07); }
+  .omedev-solutions .pack-photo-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(5,56,118,0) 40%, rgba(5,56,118,.55) 100%);
+  }
+  .omedev-solutions .pack-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 3;
+    padding: 5px 12px;
+    border-radius: 50px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: #053876;
+    background: linear-gradient(135deg, #55DDB5, #A6C3D7);
+    box-shadow: 0 4px 16px rgba(5,56,118,.25);
+  }
+  .omedev-solutions .pack-icon-badge {
+    position: absolute;
+    bottom: -26px;
+    left: 24px;
+    z-index: 3;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    box-shadow: 0 10px 24px rgba(5,56,118,.28);
+  }
+  .omedev-solutions .pack-price-wrap {
+    position: absolute;
+    bottom: 14px;
+    right: 18px;
+    z-index: 3;
+    text-align: right;
+  }
+  .omedev-solutions .pack-price {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: #fff;
+    line-height: 1.15;
+  }
+  .omedev-solutions .pack-price-range {
+    font-size: 11px;
+    color: rgba(255,255,255,.75);
+  }
+  .omedev-solutions .pack-bottom-bar {
+    height: 3px;
+    width: 100%;
+  }
+  .omedev-solutions .pack-info {
+    padding: 40px 24px 26px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .omedev-solutions .pack-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #053876;
+    margin-bottom: 4px;
+  }
+  .omedev-solutions .pack-tagline {
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: .02em;
+  }
+  .omedev-solutions .pack-desc {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: #25364A;
+    margin-bottom: 18px;
+  }
+  .omedev-solutions .pack-feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .omedev-solutions .pack-feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12.5px;
+    color: #25364A;
+    line-height: 1.5;
+  }
+  .omedev-solutions .pack-more {
+    font-size: 11.5px;
+    color: #4681B7;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+  .omedev-solutions .pack-bonus {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+  }
+  .omedev-solutions .pack-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+  }
+  .omedev-solutions .pack-cta {
+    flex: 1;
+    text-align: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 13.5px;
+    padding: .8rem 1rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-family: 'Syne', sans-serif;
+    transition: all .3s ease;
+    box-shadow: 0 8px 20px rgba(5,56,118,.16);
+  }
+  .omedev-solutions .pack-cta:hover { transform: translateY(-3px); }
+  .omedev-solutions .pack-call {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    border-radius: 12px;
+    border: 1px solid rgba(5,56,118,.15);
+    color: #053876;
+    transition: all .3s ease;
+  }
+  .omedev-solutions .pack-call:hover {
+    border-color: #2AACB2;
+    background: rgba(42,172,178,.08);
+    transform: translateY(-3px);
+  }
+
+  /* ── Comparison card ── */
+  .omedev-solutions .compare-card {
+    background: #fff;
+    border: 1px solid rgba(5,56,118,.09);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all .35s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  .omedev-solutions .compare-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px rgba(11,116,193,.14);
+    border-color: rgba(42,172,178,.3);
+  }
+  .omedev-solutions .compare-head {
+    padding: 16px;
+    border-bottom: 1px solid rgba(5,56,118,.08);
+  }
+  .omedev-solutions .compare-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .omedev-solutions .compare-body {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+  .omedev-solutions .compare-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .omedev-solutions .compare-foot {
+    padding: 14px 16px;
+    border-top: 1px solid rgba(5,56,118,.08);
+  }
+  .omedev-solutions .compare-cta {
+    display: block;
+    text-align: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 11.5px;
+    padding: .6rem 1rem;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: opacity .3s ease;
+  }
+  .omedev-solutions .compare-cta:hover { opacity: .88; }
+
+  .omedev-solutions .pack-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 2rem;
+  }
+  @media (min-width: 1024px) {
+    .omedev-solutions .pack-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    .omedev-solutions .container { padding: 0 1rem; }
+  }
 `;
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7 } }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] } },
 };
 const staggerContainer = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.08 } }
+  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
 };
 
-// Monnaie: FC (Francs Congolais) ou $
+const SectionHeader = ({ badge, title, subtitle, light }) => (
+  <motion.div
+    initial="hidden"
+    whileInView="visible"
+    viewport={{ once: true }}
+    variants={staggerContainer}
+    style={{ textAlign: 'center', marginBottom: '3rem' }}
+  >
+    {badge && (
+      <motion.div variants={fadeUp}>
+        <span
+          className="section-badge"
+          style={light ? { background: 'rgba(255,255,255,.14)', color: '#fff', borderColor: 'rgba(255,255,255,.28)' } : {}}
+        >
+          {badge}
+        </span>
+      </motion.div>
+    )}
+    <motion.h2 variants={fadeUp} className="section-title" style={light ? { color: '#fff' } : {}}>
+      {title}
+    </motion.h2>
+    <motion.div variants={fadeUp} className="divider" />
+    {subtitle && (
+      <motion.p variants={fadeUp} className="section-subtitle" style={light ? { color: 'rgba(255,255,255,.78)' } : {}}>
+        {subtitle}
+      </motion.p>
+    )}
+  </motion.div>
+);
+
+const colors = {
+  navy: '#053876',
+  blueDark: '#1D5B9B',
+  blue: '#0B74C1',
+  blueLight: '#4681B7',
+  cyan: '#72A5CE',
+  turquoise: '#2AACB2',
+  energy: '#55DDB5',
+};
+
 const CURRENCY = 'FC'; // Changez à '$' pour dollars
 
-// Données des packs solutions
+/* ── Packs (contenu inchangé, styles alignés sur la palette About) ── */
 const packs = [
   {
     id: 'entreprise',
     name: 'Pack Entreprise',
     tagline: 'La solution complète pour les grandes entreprises',
     icon: Building2,
-    color: 'blue',
-    gradient: 'from-blue-500 to-blue-600',
-    bgLight: 'bg-blue-500/10',
-    textLight: 'text-blue-400',
-    borderLight: 'border-blue-500/30',
+    accent: colors.blue,
+    gradientBg: `linear-gradient(135deg, ${colors.blue}, ${colors.turquoise})`,
     price: CURRENCY === 'FC' ? 'À partir de 5 000 000 FC' : 'À partir de 2 500 $',
     priceRange: CURRENCY === 'FC' ? '5M - 20M FC' : '2 500 - 10 000 $',
     popular: true,
@@ -76,52 +491,46 @@ const packs = [
       'Support technique 24/7 avec SLA',
       'Formation des équipes (20 personnes)',
       'Maintenance préventive et corrective',
-      'Téléphonie d\'entreprise VoIP'
+      "Téléphonie d'entreprise VoIP",
     ],
     image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=500&fit=crop',
-    bonus: '✅ Audit de sécurité offert'
+    bonus: '✅ Audit de sécurité offert',
   },
   {
     id: 'ecommerce',
     name: 'Pack E-commerce',
     tagline: 'Vendez en ligne avec une boutique professionnelle',
     icon: ShoppingCart,
-    color: 'cyan',
-    gradient: 'from-cyan-500 to-cyan-600',
-    bgLight: 'bg-cyan-500/10',
-    textLight: 'text-cyan-400',
-    borderLight: 'border-cyan-500/30',
+    accent: colors.blueLight,
+    gradientBg: `linear-gradient(135deg, ${colors.blueLight}, ${colors.navy})`,
     price: CURRENCY === 'FC' ? 'À partir de 1 500 000 FC' : 'À partir de 750 $',
     priceRange: CURRENCY === 'FC' ? '1.5M - 5M FC' : '750 - 2 500 $',
     popular: false,
     description: 'Une boutique en ligne performante pour développer vos ventes sur internet.',
     features: [
-      'Site e-commerce complet (jusqu\'à 1000 produits)',
+      "Site e-commerce complet (jusqu'à 1000 produits)",
       'Design responsive et moderne',
       'Paiement sécurisé (Mobile Money, Carte, Orange Money)',
       'Gestion des stocks et commandes',
       'Dashboard administrateur',
       'SEO optimisé pour le référencement',
       'Intégration des réseaux sociaux',
-      'Formation à l\'administration du site'
+      "Formation à l'administration du site",
     ],
     image: 'https://images.unsplash.com/photo-1556742044-3c52d6e88c62?w=800&h=500&fit=crop',
-    bonus: '✅ 3 mois de maintenance offerts'
+    bonus: '✅ 3 mois de maintenance offerts',
   },
   {
     id: 'digital',
     name: 'Pack Digital Complet',
     tagline: 'La transformation digitale totale de votre entreprise',
     icon: Smartphone,
-    color: 'amber',
-    gradient: 'from-amber-500 to-amber-600',
-    bgLight: 'bg-amber-500/10',
-    textLight: 'text-amber-400',
-    borderLight: 'border-amber-500/30',
+    accent: colors.turquoise,
+    gradientBg: `linear-gradient(135deg, ${colors.turquoise}, ${colors.energy})`,
     price: CURRENCY === 'FC' ? 'À partir de 8 000 000 FC' : 'À partir de 4 000 $',
     priceRange: CURRENCY === 'FC' ? '8M - 30M FC' : '4 000 - 15 000 $',
     popular: true,
-    description: 'Une solution tout-en-un pour digitaliser l\'ensemble de vos processus.',
+    description: "Une solution tout-en-un pour digitaliser l'ensemble de vos processus.",
     features: [
       'Site web vitrine + Application mobile',
       'CRM et ERP intégrés',
@@ -130,21 +539,18 @@ const packs = [
       'Stratégie digitale et SEO',
       'Formation complète des équipes',
       'Support prioritaire 24/7',
-      'Dashboard de pilotage en temps réel'
+      'Dashboard de pilotage en temps réel',
     ],
     image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=500&fit=crop',
-    bonus: '✅ Audit digital offert + 6 mois de maintenance'
+    bonus: '✅ Audit digital offert + 6 mois de maintenance',
   },
   {
     id: 'energie',
     name: 'Pack Énergie Solaire',
     tagline: 'Économisez avec une énergie propre et durable',
     icon: Sun,
-    color: 'orange',
-    gradient: 'from-orange-500 to-orange-600',
-    bgLight: 'bg-orange-500/10',
-    textLight: 'text-orange-400',
-    borderLight: 'border-orange-500/30',
+    accent: colors.turquoise,
+    gradientBg: `linear-gradient(135deg, ${colors.energy}, ${colors.cyan})`,
     price: CURRENCY === 'FC' ? 'À partir de 3 000 000 FC' : 'À partir de 1 500 $',
     priceRange: CURRENCY === 'FC' ? '3M - 15M FC' : '1 500 - 7 500 $',
     popular: false,
@@ -157,21 +563,18 @@ const packs = [
       'Maintenance préventive',
       'Étude de faisabilité gratuite',
       'Garantie 5 ans sur les équipements',
-      'Financement possible'
+      'Financement possible',
     ],
     image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&h=500&fit=crop',
-    bonus: '✅ Énergie gratuite pendant 25 ans'
+    bonus: '✅ Énergie gratuite pendant 25 ans',
   },
   {
     id: 'formation',
     name: 'Pack Formation',
     tagline: 'Montez en compétences avec nos formations certifiantes',
     icon: Graduation,
-    color: 'green',
-    gradient: 'from-green-500 to-green-600',
-    bgLight: 'bg-green-500/10',
-    textLight: 'text-green-400',
-    borderLight: 'border-green-500/30',
+    accent: colors.navy,
+    gradientBg: `linear-gradient(135deg, ${colors.navy}, ${colors.blueDark})`,
     price: CURRENCY === 'FC' ? 'À partir de 500 000 FC' : 'À partir de 250 $',
     priceRange: CURRENCY === 'FC' ? '500K - 3M FC' : '250 - 1 500 $',
     popular: false,
@@ -183,22 +586,19 @@ const packs = [
       'Formation en cloud computing',
       'Certification reconnue',
       'Support post-formation',
-      'Accès à la plateforme e-learning',
-      'Suivi personnalisé'
+      "Accès à la plateforme e-learning",
+      'Suivi personnalisé',
     ],
     image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=500&fit=crop',
-    bonus: '✅ 5 places offertes pour 10 inscrits'
+    bonus: '✅ 5 places offertes pour 10 inscrits',
   },
   {
     id: 'camera',
     name: 'Pack Caméra de Surveillance',
     tagline: 'Protection 360° pour votre entreprise',
     icon: Camera,
-    color: 'purple',
-    gradient: 'from-purple-500 to-purple-600',
-    bgLight: 'bg-purple-500/10',
-    textLight: 'text-purple-400',
-    borderLight: 'border-purple-500/30',
+    accent: colors.blueDark,
+    gradientBg: `linear-gradient(135deg, ${colors.blueDark}, ${colors.blueLight})`,
     price: CURRENCY === 'FC' ? 'À partir de 2 000 000 FC' : 'À partir de 1 000 $',
     priceRange: CURRENCY === 'FC' ? '2M - 8M FC' : '1 000 - 4 000 $',
     popular: false,
@@ -206,26 +606,23 @@ const packs = [
     features: [
       'Caméras IP 4K (4 à 16 caméras selon configuration)',
       'Enregistreur vidéo (NVR) haute capacité',
-      'Vision nocturne jusqu\'à 30 mètres',
+      "Vision nocturne jusqu'à 30 mètres",
       'Détection de mouvement et alertes en temps réel',
       'Accès à distance via application mobile',
       'Stockage cloud sécurisé (30 jours)',
       'Installation et câblage professionnel',
-      'Support technique inclus'
+      'Support technique inclus',
     ],
     image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=800&h=500&fit=crop',
-    bonus: '✅ 1 an de stockage cloud offert'
+    bonus: '✅ 1 an de stockage cloud offert',
   },
   {
     id: 'climatisation',
     name: 'Pack Climatisation',
-    tagline: 'Confort thermique et économies d\'énergie',
+    tagline: "Confort thermique et économies d'énergie",
     icon: Snowflake,
-    color: 'teal',
-    gradient: 'from-teal-500 to-teal-600',
-    bgLight: 'bg-teal-500/10',
-    textLight: 'text-teal-400',
-    borderLight: 'border-teal-500/30',
+    accent: colors.blue,
+    gradientBg: `linear-gradient(135deg, ${colors.blue}, ${colors.blueLight})`,
     price: CURRENCY === 'FC' ? 'À partir de 3 500 000 FC' : 'À partir de 1 800 $',
     priceRange: CURRENCY === 'FC' ? '3.5M - 12M FC' : '1 800 - 6 000 $',
     popular: false,
@@ -236,155 +633,98 @@ const packs = [
       'Maintenance préventive annuelle incluse',
       'Garantie 3 ans sur les équipements',
       'Télécommande et programmation',
-      'Filtres antibactériens et purification d\'air',
+      "Filtres antibactériens et purification d'air",
       'Consommation énergétique optimisée',
-      'Support après-vente réactif'
+      'Support après-vente réactif',
     ],
-    image: 'https://images.unsplash.com/photo-1634723424278-2b59a58e8195?w=800&h=500&fit=crop',
-    bonus: '✅ 2 ans de maintenance gratuite'
-  }, 
-
-   {
-    id: 'Installation de salle informatique',
+    image: 'https://images.unsplash.com/photo-1757219525975-03b5984bc6e8?w=800&h=500&fit=crop',
+    bonus: '✅ 2 ans de maintenance gratuite',
+  },
+  {
+    id: 'salle-informatique',
     name: 'Pack Installation de salle informatique',
     tagline: 'Performance, fiabilité et sécurité pour votre infrastructure IT',
-    icon: Wrench, 
-    color: 'teal',
-    gradient: 'from-teal-500 to-teal-600',
-    bgLight: 'bg-teal-500/10',
-    textLight: 'text-teal-400',
-    borderLight: 'border-teal-500/30',
+    icon: Wrench,
+    accent: colors.blueLight,
+    gradientBg: `linear-gradient(135deg, ${colors.cyan}, ${colors.turquoise})`,
     price: CURRENCY === 'FC' ? 'À partir de 4 500 000 FC' : 'À partir de 2 300 $',
     priceRange: CURRENCY === 'FC' ? '4.5M - 15M FC' : '2 300 - 7 500 $',
     popular: false,
-    description: 'Solutions complètes pour l’aménagement et l’équipement de salles informatiques professionnelles.',
+    description: "Solutions complètes pour l'aménagement et l'équipement de salles informatiques professionnelles.",
     features: [
-      'Câblage structuré cuivre / fibre optique (jusqu’à 24 points)',
+      "Câblage structuré cuivre / fibre optique (jusqu'à 24 points)",
       'Baies de brassage et armoires serveur 19 pouces',
       'Postes de travail complets (PC, écrans, claviers, souris)',
       'Switch réseau PoE + routeur professionnel',
       'Onduleurs avec régulation de tension',
       'Système de refroidissement adapté (climatisation / ventilation)',
       'Mise en conformité électrique (prises, disjoncteurs, parafoudre)',
-      'Support technique pendant 1 an'
+      'Support technique pendant 1 an',
     ],
     image: 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=800&h=500&fit=crop',
-    bonus: '✅ Audit gratuit de la salle avant installation'
-}
+    bonus: "✅ Audit gratuit de la salle avant installation",
+  },
 ];
 
-// Fonctionnalités communes pour la comparaison
 const comparisonFeatures = [
   'Infrastructure réseau', 'Sécurité avancée', 'Application mobile',
   'ERP intégré', 'Support 24/7', 'Formation incluse', 'Maintenance', 'Cloud',
-  'Vidéosurveillance', 'Climatisation', 'Énergie solaire'
+  'Vidéosurveillance', 'Climatisation', 'Énergie solaire',
 ];
 
 const PackCard = ({ pack, index }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  
-  const getPriceColor = (color) => {
-    const colors = {
-      blue: 'text-blue-400',
-      cyan: 'text-cyan-400',
-      amber: 'text-amber-400',
-      orange: 'text-orange-400',
-      green: 'text-green-400',
-      purple: 'text-purple-400',
-      teal: 'text-teal-400'
-    };
-    return colors[color] || 'text-blue-400';
-  };
-
+  const Icon = pack.icon;
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay: index * 0.1 }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className={`group relative rounded-2xl overflow-hidden transition-all duration-500 ${
-        pack.popular ? 'ring-2 ring-blue-500 shadow-xl shadow-blue-500/20' : ''
-      }`}
+      transition={{ duration: 0.5, delay: index * 0.08 }}
+      className="pack-card"
     >
-      {/* Image d'arrière-plan */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-          style={{ backgroundImage: `url('${pack.image}')` }} />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-slate-950/60" />
+      <div className="pack-photo-wrap">
+        <img src={pack.image} alt={pack.name} />
+        {pack.popular && <div className="pack-badge">⭐ Populaire</div>}
+        <div className="pack-icon-badge" style={{ background: pack.gradientBg }}>
+          <Icon size={26} />
+        </div>
       </div>
 
-      {/* Badge populaire */}
-      {pack.popular && (
-        <div className="absolute top-4 right-4 z-20">
-          <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
-            ⭐ Populaire
-          </div>
-        </div>
-      )}
+      <div className="pack-bottom-bar" style={{ background: pack.gradientBg }} />
 
-      {/* Contenu */}
-      <div className="relative z-10 p-8 backdrop-blur-sm bg-slate-950/40">
-        {/* En-tête */}
-        <div className="flex items-start justify-between mb-6">
-          <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${pack.gradient} flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:rotate-3`}>
-            <pack.icon size={32} className="text-white" />
-          </div>
-          <div className="text-right">
-            <div className={`text-2xl font-bold ${getPriceColor(pack.color)} font-syne`}>{pack.price}</div>
-            <div className="text-gray-400 text-xs">{pack.priceRange}</div>
-          </div>
+      <div className="pack-info">
+        <div className="pack-name">{pack.name}</div>
+        <div className="pack-tagline" style={{ color: pack.accent }}>{pack.tagline}</div>
+        <p className="pack-desc">{pack.description}</p>
+
+        <div className="pack-feature-list">
+          {pack.features.slice(0, 6).map((feature, i) => (
+            <div key={i} className="pack-feature-item">
+              <CheckCircle size={15} style={{ color: pack.accent, flexShrink: 0, marginTop: 1 }} />
+              <span>{feature}</span>
+            </div>
+          ))}
+          {pack.features.length > 6 && (
+            <div className="pack-more">+{pack.features.length - 6} autres services</div>
+          )}
         </div>
 
-        {/* Titre et description */}
-        <h3 className="text-2xl font-bold text-white mb-2 font-syne group-hover:text-blue-300 transition-colors">
-          {pack.name}
-        </h3>
-        <p className="text-cyan-400 text-sm font-medium mb-3">{pack.tagline}</p>
-        <p className="text-gray-300 text-sm leading-relaxed mb-6">{pack.description}</p>
-
-        {/* Caractéristiques */}
-        <div className="mb-6">
-          <h4 className="text-white font-semibold text-sm mb-3 flex items-center gap-2">
-            <CheckCircle size={16} className="text-emerald-400" />
-            Ce que comprend ce pack :
-          </h4>
-          <div className="grid grid-cols-1 gap-2">
-            {pack.features.slice(0, 6).map((feature, i) => (
-              <div key={i} className="flex items-center gap-2 text-gray-400 text-sm">
-                <div className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${pack.gradient}`} />
-                {feature}
-              </div>
-            ))}
-            {pack.features.length > 6 && (
-              <div className="text-gray-500 text-xs mt-1">+{pack.features.length - 6} autres services</div>
-            )}
+        <div className="pack-bonus" style={{ background: `${pack.accent}12`, border: `1px solid ${pack.accent}33` }}>
+          <Sparkles size={16} style={{ color: pack.accent, flexShrink: 0, marginTop: 1 }} />
+          <div>
+            <span style={{ fontSize: 11, fontWeight: 700, color: pack.accent, textTransform: 'uppercase', letterSpacing: '.04em' }}>
+              Offre spéciale
+            </span>
+            <p style={{ color: colors.navy, fontSize: 13, marginTop: 2 }}>{pack.bonus}</p>
           </div>
         </div>
 
-        {/* Bonus */}
-        <div className={`mb-6 p-3 rounded-xl ${pack.bgLight} border ${pack.borderLight}`}>
-          <div className="flex items-center gap-2">
-            <Sparkles size={16} className={pack.textLight} />
-            <span className={`text-xs font-semibold ${pack.textLight}`}>🎁 Offre spéciale</span>
-          </div>
-          <p className="text-white text-sm mt-1">{pack.bonus}</p>
-        </div>
-
-        {/* Boutons d'action */}
-        <div className="flex gap-3">
-          <Link
-            to="/demander-devis"
-            className={`flex-1 text-center py-3 rounded-xl font-semibold transition-all duration-300 bg-gradient-to-r ${pack.gradient} text-white hover:shadow-lg hover:scale-105`}
-          >
+        <div className="pack-actions">
+          <Link to="/demander-devis" className="pack-cta" style={{ background: pack.gradientBg }}>
             Demander un devis
           </Link>
-          <Link
-            to="/contact"
-            className="px-4 py-3 rounded-xl border border-white/30 text-white hover:bg-white/10 transition-all duration-300 hover:scale-105"
-          >
-            <Phone size={18} />
+          <Link to="/contact" className="pack-call">
+            <Phone size={17} />
           </Link>
         </div>
       </div>
@@ -392,21 +732,23 @@ const PackCard = ({ pack, index }) => {
   );
 };
 
-// Carte de comparaison
 const ComparisonCard = ({ pack, index }) => {
+  const Icon = pack.icon;
   const hasFeature = (feature) => {
-    return pack.features.some(f => f.toLowerCase().includes(feature.toLowerCase()) || 
-      (feature === 'Infrastructure réseau' && (f.includes('réseau') || f.includes('fibre'))) ||
-      (feature === 'Sécurité avancée' && (f.includes('Sécurité') || f.includes('Firewall'))) ||
-      (feature === 'Application mobile' && f.includes('mobile')) ||
-      (feature === 'ERP intégré' && f.includes('ERP')) ||
-      (feature === 'Support 24/7' && f.includes('Support')) ||
-      (feature === 'Formation incluse' && f.includes('Formation')) ||
-      (feature === 'Maintenance' && f.includes('Maintenance')) ||
-      (feature === 'Cloud' && f.includes('cloud')) ||
-      (feature === 'Vidéosurveillance' && (f.includes('Caméra') || f.includes('surveillance'))) ||
-      (feature === 'Climatisation' && (f.includes('Climatisation') || f.includes('Climatiseur'))) ||
-      (feature === 'Énergie solaire' && (f.includes('solaire') || f.includes('panneaux')))
+    return pack.features.some(
+      (f) =>
+        f.toLowerCase().includes(feature.toLowerCase()) ||
+        (feature === 'Infrastructure réseau' && (f.includes('réseau') || f.includes('fibre'))) ||
+        (feature === 'Sécurité avancée' && (f.includes('Sécurité') || f.includes('Firewall'))) ||
+        (feature === 'Application mobile' && f.includes('mobile')) ||
+        (feature === 'ERP intégré' && f.includes('ERP')) ||
+        (feature === 'Support 24/7' && f.includes('Support')) ||
+        (feature === 'Formation incluse' && f.includes('Formation')) ||
+        (feature === 'Maintenance' && f.includes('Maintenance')) ||
+        (feature === 'Cloud' && f.includes('cloud')) ||
+        (feature === 'Vidéosurveillance' && (f.includes('Caméra') || f.includes('surveillance'))) ||
+        (feature === 'Climatisation' && (f.includes('Climatisation') || f.includes('Climatiseur'))) ||
+        (feature === 'Énergie solaire' && (f.includes('solaire') || f.includes('panneaux')))
     );
   };
 
@@ -416,38 +758,32 @@ const ComparisonCard = ({ pack, index }) => {
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.05 }}
-      className={`rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl ${
-        pack.popular ? 'ring-1 ring-blue-500/50' : ''
-      }`}
+      className="compare-card"
     >
-      <div className={`p-5 ${pack.bgLight} border-b ${pack.borderLight}`}>
+      <div className="compare-head">
         <div className="flex items-center gap-3">
-          <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${pack.gradient} flex items-center justify-center`}>
-            <pack.icon size={18} className="text-white" />
+          <div className="compare-icon" style={{ background: pack.gradientBg }}>
+            <Icon size={17} />
           </div>
           <div>
-            <h3 className="font-bold text-white text-sm font-syne">{pack.name}</h3>
-            <p className="text-gray-400 text-xs">{pack.priceRange.split(' - ')[0]}</p>
+            <h3 className="font-syne font-bold text-sm" style={{ color: colors.navy }}>{pack.name}</h3>
           </div>
         </div>
       </div>
-      <div className="p-4 bg-white/5 space-y-3">
+      <div className="compare-body">
         {comparisonFeatures.map((feature, idx) => (
-          <div key={idx} className="flex items-center justify-between">
-            <span className="text-gray-400 text-xs">{feature}</span>
+          <div key={idx} className="compare-row">
+            <span className="text-xs" style={{ color: '#25364A' }}>{feature}</span>
             {hasFeature(feature) ? (
-              <CheckCircle size={14} className={`${pack.textLight}`} />
+              <CheckCircle size={14} style={{ color: pack.accent }} />
             ) : (
-              <X size={14} className="text-gray-600" />
+              <X size={14} style={{ color: '#D5DCE1' }} />
             )}
           </div>
         ))}
       </div>
-      <div className="p-4 border-t border-white/10">
-        <Link
-          to="/demander-devis"
-          className={`block text-center py-2 rounded-xl text-xs font-semibold transition-all duration-300 bg-gradient-to-r ${pack.gradient} text-white hover:opacity-90`}
-        >
+      <div className="compare-foot">
+        <Link to="/demander-devis" className="compare-cta" style={{ background: pack.gradientBg }}>
           Demander un devis
         </Link>
       </div>
@@ -456,186 +792,102 @@ const ComparisonCard = ({ pack, index }) => {
 };
 
 const SolutionsPage = () => {
+  const pourquoi = [
+    { icon: CheckCircle, title: 'Clé en main', desc: 'Solutions prêtes à déployer', color: colors.blue },
+    { icon: Clock, title: 'Déploiement rapide', desc: 'Installation en quelques jours', color: colors.blueLight },
+    { icon: DollarSign, title: 'Tarifs transparents', desc: `Sans frais cachés (en ${CURRENCY})`, color: colors.turquoise },
+    { icon: Headphones, title: 'Support inclus', desc: 'Assistance 24/7', color: colors.navy },
+  ];
+
   return (
-    <>
+    <div className="omedev-solutions">
       <style>{globalStyles}</style>
 
-      {/* Hero Section */}
-      {/* ==================== HERO SECTION - SOLUTIONS ==================== */}
-      <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden pt-32 pb-20 min-h-[550px]">
-        <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px'
-        }} />
-        <div className="absolute w-96 h-96 bg-blue-600/20 top-20 -left-20 rounded-full filter blur-[80px] animate-float" />
-        <div className="absolute w-72 h-72 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
+      {/* ==================== HERO ==================== */}
+      <PublicHero
+        badge="Solutions clé en main"
+        title="Nos Solutions"
+        highlight="Solutions"
+        subtitle="Des packs complets et prêts à déployer pour accélérer la croissance de votre entreprise."
+        primaryAction={{ label: 'Tous nos packs', to: '/contact' }}
+        secondaryAction={{ label: 'Audit gratuit', to: '/audit' }}
+      />
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-blue-600/15 border border-blue-500/30"
-            >
-              <Sparkles className="w-4 h-4 text-blue-400" />
-              <span className="text-blue-300 font-semibold text-xs tracking-wide font-syne">Solutions clé en main</span>
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
-            >
-              Nos{' '}
-              <span className="relative inline-block">
-                <span className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 blur-2xl opacity-50" />
-                <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
-                  Solutions
-                </span>
-              </span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-              className="text-gray-300 text-base sm:text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
-            >
-              Des packs complets et prêts à déployer pour <strong className="text-white">accélérer votre croissance</strong>
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 }}
-              className="flex flex-wrap gap-4 justify-center"
-            >
-              <Link to="/contact" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
-                Tous nos packs <ArrowRight size={18} className="group-hover:translate-x-1 transition" />
-              </Link>
-              <Link to="/audit" className="group border-2 border-white/30 hover:border-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
-                Audit gratuit
-              </Link>
-            </motion.div>
+      {/* ==================== POURQUOI CHOISIR NOS PACKS ==================== */}
+      <section className="omedev-white-section py-24">
+        <div className="container">
+          <SectionHeader badge="Nos avantages" title="Pourquoi choisir nos packs ?" subtitle="Des solutions pensées pour un déploiement simple, rapide et sans surprise" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {pourquoi.map((item, i) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="card-hover p-6 text-center"
+                >
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-xl flex items-center justify-center" style={{ background: `${item.color}20`, color: item.color }}>
+                    <Icon size={24} />
+                  </div>
+                  <h3 className="font-syne font-bold text-lg mb-2" style={{ color: colors.navy }}>{item.title}</h3>
+                  <p className="text-[#25364A] text-sm leading-relaxed">{item.desc}</p>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Pourquoi choisir nos packs */}
-      <section className="py-16 bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/5">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white font-syne mb-4">Pourquoi choisir nos packs ?</h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full mx-auto" />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {[
-              { icon: CheckCircle, title: 'Clé en main', desc: 'Solutions prêtes à déployer', color: 'text-blue-400' },
-              { icon: Clock, title: 'Déploiement rapide', desc: 'Installation en quelques jours', color: 'text-cyan-400' },
-              { icon: DollarSign, title: 'Tarifs transparents', desc: `Sans frais cachés (en ${CURRENCY})`, color: 'text-amber-400' },
-              { icon: Headphones, title: 'Support inclus', desc: 'Assistance 24/7', color: 'text-emerald-400' }
-            ].map((item, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="text-center p-6 rounded-xl bg-white/5 border border-white/10 transition-all duration-300 hover:scale-105 hover:bg-white/10"
-              >
-                <item.icon size={40} className={`mx-auto mb-3 ${item.color}`} />
-                <h3 className="text-white font-bold text-lg mb-1">{item.title}</h3>
-                <p className="text-gray-400 text-sm">{item.desc}</p>
-              </motion.div>
+      {/* ==================== GRILLE DES PACKS ==================== */}
+      <section className="omedev-light-section py-24">
+        <div className="container">
+          <SectionHeader badge="Nos offres" title="8 packs prêts à déployer" subtitle="Choisissez le pack adapté à votre besoin, ou demandez une formule sur mesure" />
+          <div className="pack-grid">
+            {packs.map((pack, idx) => (
+              <PackCard key={pack.id} pack={pack} index={idx} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Grille des packs - Maintenant 7 packs */}
-      <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {packs.map((pack, idx) => (
-              <PackCard key={idx} pack={pack} index={idx} />
-            ))}
-          </div>
-        </div>
-      </div>
+      {/* ==================== COMPARAISON ==================== */}
+      <section className="omedev-white-section py-24">
+        <div className="container">
+          <SectionHeader badge="Comparaison" title="Comparez nos packs" subtitle="Trouvez la solution qui correspond le mieux à vos besoins avec notre tableau comparatif" />
 
-      {/* Comparaison des packs - Version Cartes */}
-      <section className="py-16 bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/5 border-b border-white/5">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-blue-600/15 border border-blue-500/30">
-              <Layers size={14} className="text-blue-400" />
-              <span className="text-blue-300 font-semibold text-xs tracking-wide font-syne">Comparaison</span>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-white font-syne mb-4">Comparez nos packs</h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full mx-auto" />
-            <p className="text-gray-400 mt-4 max-w-2xl mx-auto">
-              Trouvez la solution qui correspond le mieux à vos besoins avec notre tableau comparatif
-            </p>
-          </div>
-
-          {/* Grille de cartes de comparaison - 7 cartes */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {packs.map((pack, idx) => (
-              <ComparisonCard key={idx} pack={pack} index={idx} />
+              <ComparisonCard key={pack.id} pack={pack} index={idx} />
             ))}
           </div>
 
-          {/* Légende */}
-          <div className="flex justify-center gap-6 mt-8 text-xs">
+          <div className="flex justify-center gap-8 mt-10 text-xs">
             <div className="flex items-center gap-2">
-              <CheckCircle size={14} className="text-emerald-400" />
-              <span className="text-gray-400">Inclus</span>
+              <CheckCircle size={14} style={{ color: colors.turquoise }} />
+              <span style={{ color: '#25364A' }}>Inclus</span>
             </div>
             <div className="flex items-center gap-2">
-              <X size={14} className="text-gray-600" />
-              <span className="text-gray-400">Non inclus</span>
+              <X size={14} style={{ color: '#D5DCE1' }} />
+              <span style={{ color: '#25364A' }}>Non inclus</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Finale */}
-      <section className="py-20 relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
-        <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: `radial-gradient(circle at 20% 50%, rgba(59,130,246,0.3) 0%, transparent 50%)`
-        }} />
-        
-        <div className="absolute w-96 h-96 bg-blue-600/20 bottom-0 left-1/2 -translate-x-1/2 rounded-full filter blur-[100px]" />
-        
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 mb-6 text-amber-300 text-sm font-semibold">
-              <Rocket size={16} /> Besoin d'un pack personnalisé ?
-            </div>
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 font-syne">Vous avez un besoin spécifique ?</h2>
-            <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">
-              Notre équipe peut créer un pack sur mesure adapté exactement à vos besoins et à votre budget.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <Link to="/contact" className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-8 py-4 rounded-xl font-semibold transition-all hover:scale-105 hover:shadow-xl">
-                Contactez-nous <ArrowRight size={18} />
-              </Link>
-              <Link to="/services" className="inline-flex items-center gap-2 border-2 border-white/30 hover:border-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all hover:scale-105">
-                Voir tous les services <ChevronRight size={18} />
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-    </>
+      {/* ==================== CTA FINALE ==================== */}
+      <CTASection
+        badge="Besoin d'un pack personnalisé ?"
+        title="Vous avez un besoin spécifique ?"
+        highlight="besoin spécifique"
+        subtitle="Notre équipe peut créer un pack sur mesure adapté exactement à vos besoins et à votre budget."
+        backgroundImage="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1920&q=80"
+        primaryAction={{ label: 'Demander un devis', to: '/demander-devis' }}
+        secondaryAction={{ label: 'Voir tous les services', to: '/services' }}
+      />
+    </div>
   );
 };
 

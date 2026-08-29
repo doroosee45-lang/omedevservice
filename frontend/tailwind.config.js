@@ -34,8 +34,33 @@ export default {
           600: '#162a4a',
           500: '#1e3a5f',
         },
-        accent: '#00d4ff',
-        gold: '#f59e0b',
+        // 👇 Vert signature — accent principal inspiré des références (CTA, highlights)
+        accent: {
+          50: '#ecfdf5',
+          100: '#d1fae5',
+          200: '#a7f3d0',
+          300: '#6ee7b7',
+          400: '#34d399',
+          500: '#10b981',
+          600: '#059669',
+          700: '#047857',
+          800: '#065f46',
+          900: '#064e3b',
+        },
+        // 👇 Palette officielle OMEDEV (référence : Home.jsx) — à utiliser partout
+        brand: {
+          navy: '#053876',
+          blueDark: '#1D5B9B',
+          blue: '#0B74C1',
+          blueLight: '#4681B7',
+          cyan: '#72A5CE',
+          cyanLight: '#A6C3D7',
+          turquoise: '#2AACB2',
+          energy: '#55DDB5',
+          offwhite: '#F6F6F7',
+          dark: '#0B1213',
+          textSecondary: '#25364A',
+        },
       },
       fontFamily: {
         syne:    ['Syne', 'sans-serif'],
@@ -47,6 +72,7 @@ export default {
         'fade-up': 'fadeUp 0.6s ease forwards',
         'float': 'float 6s ease-in-out infinite',
         'glow': 'glow 2s ease-in-out infinite alternate',
+        'gradient-x': 'gradientX 8s ease infinite',
       },
       keyframes: {
         fadeUp: {
@@ -58,9 +84,13 @@ export default {
           '50%': { transform: 'translateY(-20px)' }
         },
         glow: {
-          '0%': { boxShadow: '0 0 20px rgba(0,212,255,0.3)' },
-          '100%': { boxShadow: '0 0 40px rgba(0,212,255,0.7)' }
-        }
+          '0%': { boxShadow: '0 0 20px rgba(16,185,129,0.3)' },
+          '100%': { boxShadow: '0 0 40px rgba(16,185,129,0.7)' }
+        },
+        gradientX: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
       },
     },
   },

@@ -1,8 +1,7 @@
-﻿
-
-import { motion, useInView } from 'framer-motion';
+﻿import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useRef, useEffect, useState } from 'react';
+import CTASection from '../components/Public/CTASection';
 import {
   ArrowRight,
   Server,
@@ -27,7 +26,6 @@ import {
   ThermometerSun,
   Monitor,
   ChevronRight,
-  Sparkles,
   TrendingUp,
   Headphones,
   Rocket,
@@ -52,245 +50,199 @@ import {
    ───────────────────────────────────────────── */
 const styles = {
   colors: {
-    navy: {
-      50: '#eff6ff',
-      100: '#dbeafe',
-      200: '#bfdbfe',
-      300: '#93c5fd',
-      400: '#60a5fa',
-      500: '#3b82f6',
-      600: '#2563eb',
-      700: '#1d4ed8',
-      800: '#1e40af',
-      900: '#1e3a8a',
-      950: '#172554',
-    },
-    background: {
-      light: 'rgba(248, 250, 255, 0.85)', // bleu très clair transparent
-      default: 'rgba(235, 245, 255, 0.95)', // légèrement plus opaque
-      dark: 'rgba(23, 37, 84, 0.92)', // pour sections foncées / overlay
-    },
-    electric: {
-      50: '#eff6ff',
-      100: '#dbeafe',
-      200: '#bfdbfe',
-      300: '#93c5fd',
-      400: '#60a5fa',
-      500: '#3b82f6',
-      600: '#2563eb',
-      700: '#1d4ed8',
-      800: '#1e40af',
-      900: '#1e3a8a',
-    },
-
-    // ✨ gold amélioré (léger ajustement visuel)
-    gold: '#e2a733',
-
-    white: '#FFFFFF',
-
-    gray: {
-      50: '#F9FAFB',
-      100: '#F3F4F6',
-      200: '#E5E7EB',
-      300: '#D1D5DB',
-      400: '#9CA3AF',
-      500: '#6B7280',
-      600: '#4B5563',
-      700: '#374151',
-      800: '#1F2937',
-      900: '#111827',
-    },
-
-    // ✅ corrigé (violet → pas cohérent avec ton thème bleu)
-    success: '#10B981',
+    navy: '#053876',
+    blueDark: '#1D5B9B',
+    blue: '#0B74C1',
+    blueLight: '#4681B7',
+    cyan: '#72A5CE',
+    cyanLight: '#A6C3D7',
+    turquoise: '#2AACB2',
+    energy: '#55DDB5',
+    white: '#F6F6F7',
+    gray: '#D5DCE1',
+    dark: '#0B1213',
+    textSecondary: '#25364A',
+    // Aliases conservés pour la logique existante
+    electric: { 400: '#4681B7', 500: '#0B74C1' },
+    gold: '#2AACB2',
   },
-
   gradients: {
-    primary: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-    accent: 'linear-gradient(135deg, #e2a733 0%, #f59e0b 100%)',
-    darkOverlay: 'linear-gradient(135deg, rgba(2,14,24,0.9) 0%, rgba(10,24,80,0.85) 100%)',
+    primary: 'linear-gradient(135deg, #053876 0%, #1D5B9B 35%, #4681B7 60%, #72A5CE 80%, #A6C3D7 100%)',
+    energy: 'linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%)',
+    digital: 'linear-gradient(135deg, #053876 0%, #0B74C1 55%, #2AACB2 100%)',
   },
-
   shadows: {
-    md: '0 4px 6px rgba(0, 0, 0, 0.08)',
-    xl: '0 20px 25px rgba(0, 0, 0, 0.12)',
-    glow: '0 0 20px rgba(59, 130, 246, 0.35)',
+    md: '0 8px 24px rgba(5, 56, 118, 0.10)',
+    xl: '0 20px 50px rgba(5, 56, 118, 0.14)',
+    glow: '0 0 30px rgba(85, 221, 181, 0.24)',
   },
-
-  animation: {
-    duration: 0.5,
-    stagger: 0.08,
-  },
+  animation: { duration: 0.5, stagger: 0.08 },
 };
-
-
-
-
-
-
 
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
 
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  .omedev-home {
+    --omedev-navy: #053876;
+    --omedev-blue-dark: #1D5B9B;
+    --omedev-blue: #0B74C1;
+    --omedev-blue-light: #4681B7;
+    --omedev-cyan: #72A5CE;
+    --omedev-cyan-light: #A6C3D7;
+    --omedev-turquoise: #2AACB2;
+    --omedev-energy: #55DDB5;
+    --omedev-white: #F6F6F7;
+    --omedev-gray: #D5DCE1;
+    --omedev-dark: #0B1213;
+    --omedev-text-secondary: #25364A;
+    background: #F6F6F7;
+    color: #0B1213;
+    overflow: hidden;
   }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: ${styles.colors.navy[950]};
-    color: #e2e8f0;
-    overflow-x: hidden;
-  }
-
-  .container {
+  .omedev-home .container {
     max-width: 1280px;
     margin: 0 auto;
     padding: 0 2rem;
   }
 
-  .section-badge {
+  .omedev-home .section-badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
+    gap: .5rem;
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
     text-transform: uppercase;
-    padding: 0.5rem 1.2rem;
-    border-radius: 99px;
-    background: rgba(37, 99, 235, 0.15);
-    color: ${styles.colors.electric[400]};
-    border: 1px solid rgba(37, 99, 235, 0.3);
+    padding: .5rem 1.1rem;
+    border-radius: 999px;
+    background: rgba(11,116,193,.08);
+    color: #0B74C1;
+    border: 1px solid rgba(11,116,193,.18);
     font-family: 'Syne', sans-serif;
   }
 
-  .section-title {
+  .omedev-home .section-title {
     font-size: clamp(2rem, 4vw, 3rem);
     font-weight: 800;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
+    line-height: 1.12;
+    letter-spacing: -.03em;
     margin-bottom: 1rem;
     font-family: 'Syne', sans-serif;
-    background: linear-gradient(135deg, #60a5fa, #2563eb, #818cf8);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: #053876;
   }
 
-  .section-subtitle {
-    font-size: 1.1rem;
-    color: ${styles.colors.gray[400]};
-    max-width: 48ch;
+  .omedev-home .section-subtitle {
+    font-size: 1rem;
+    color: #25364A;
+    max-width: 52ch;
     margin: 0 auto;
-    line-height: 1.6;
+    line-height: 1.7;
   }
 
-  .divider {
-    width: 60px;
+  .omedev-home .divider {
+    width: 64px;
     height: 4px;
-    background: linear-gradient(90deg, transparent, ${styles.colors.electric[500]}, transparent);
+    background: linear-gradient(90deg, #0B74C1, #2AACB2, #55DDB5);
     border-radius: 99px;
     margin: 1rem auto 1.5rem;
   }
 
-  .btn-primary {
+  .omedev-home .btn-primary,
+  .omedev-home .btn-accent {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
-    background: ${styles.gradients.primary};
-    color: white;
-    font-size: 0.9rem;
-    font-weight: 600;
-    padding: 0.9rem 2rem;
+    justify-content: center;
+    gap: .6rem;
+    background: linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%);
+    color: #fff;
+    font-size: .9rem;
+    font-weight: 700;
+    padding: .9rem 1.7rem;
     border-radius: 12px;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all .3s ease;
     cursor: pointer;
     border: none;
     font-family: 'Syne', sans-serif;
-    box-shadow: ${styles.shadows.md};
+    box-shadow: 0 10px 28px rgba(11,116,193,.20);
+  }
+
+  .omedev-home .btn-primary:hover,
+  .omedev-home .btn-accent:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 36px rgba(42,172,178,.28);
+  }
+
+  .omedev-home .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    background: #fff;
+    color: #053876;
+    font-size: .9rem;
+    font-weight: 700;
+    padding: .85rem 1.7rem;
+    border-radius: 12px;
+    border: 1px solid rgba(5,56,118,.18);
+    text-decoration: none;
+    transition: all .3s ease;
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-home .btn-outline:hover {
+    border-color: #2AACB2;
+    color: #0B74C1;
+    background: rgba(85,221,181,.08);
+    transform: translateY(-3px);
+  }
+
+  .omedev-home .card-hover {
     position: relative;
     overflow: hidden;
+    transition: transform .4s cubic-bezier(.22,.68,0,1), box-shadow .4s ease, border-color .4s ease;
+    background: #fff;
+    border: 1px solid rgba(5,56,118,.09);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(5,56,118,.06);
   }
-  .btn-primary::before {
+  .omedev-home .card-hover::before {
     content: '';
     position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #0B74C1, #2AACB2, #55DDB5);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .45s ease;
   }
-  .btn-primary:hover::before { opacity: 1; }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(37,99,235,0.4); }
+  .omedev-home .card-hover:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 26px 55px rgba(11,116,193,.16);
+    border-color: rgba(42,172,178,.45);
+  }
+  .omedev-home .card-hover:hover::before { transform: scaleX(1); }
+  .omedev-home .card-featured { border: 2px solid rgba(11,116,193,.45); }
+  .omedev-home .card-featured::before { transform: scaleX(1); }
 
-  .btn-outline {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    background: transparent;
-    color: ${styles.colors.gray[300]};
-    font-size: 0.9rem;
-    font-weight: 600;
-    padding: 0.85rem 2rem;
-    border-radius: 12px;
-    border: 1px solid rgba(37,99,235,0.5);
-    text-decoration: none;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    font-family: 'Syne', sans-serif;
+  .omedev-home .stat-card {
+    transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
   }
-  .btn-outline:hover {
-    border-color: ${styles.colors.electric[500]};
-    background: rgba(37,99,235,0.1);
-    transform: translateY(-2px);
-    color: white;
-  }
-
-  .btn-accent {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    background: linear-gradient(135deg, #e2a733, #f59e0b);
-    color: white;
-    font-size: 0.9rem;
-    font-weight: 700;
-    padding: 0.9rem 2rem;
-    border-radius: 12px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    border: none;
-    font-family: 'Syne', sans-serif;
-    box-shadow: ${styles.shadows.md};
-  }
-  .btn-accent:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(245,158,11,0.4);
-    filter: brightness(1.05);
-  }
-
-  .card-hover {
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 1.5rem;
-  }
-  .card-hover:hover {
+  .omedev-home .stat-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 20px 60px rgba(37,99,235,0.2);
-    border-color: rgba(37,99,235,0.5);
+    border-color: rgba(85,221,181,.45) !important;
+    box-shadow: 0 16px 36px rgba(0,0,0,.28);
   }
 
-  .grid-bg {
-    background-image: linear-gradient(rgba(37,99,235,0.07) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(37,99,235,0.07) 1px, transparent 1px);
+  .omedev-home .grid-bg {
+    background-image: linear-gradient(rgba(11,116,193,.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(11,116,193,.055) 1px, transparent 1px);
     background-size: 60px 60px;
   }
 
-  .orb {
+  .omedev-home .orb {
     position: absolute;
     border-radius: 50%;
     filter: blur(80px);
@@ -298,14 +250,116 @@ const globalStyles = `
     z-index: 0;
   }
 
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
+  .omedev-home .omedev-hero {
+    background: linear-gradient(135deg, #053876 0%, #1D5B9B 35%, #4681B7 60%, #72A5CE 80%, #A6C3D7 100%);
+    position: relative;
   }
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
+
+  .omedev-home .omedev-light-section {
+    background: #F6F6F7;
+  }
+
+  .omedev-home .omedev-white-section {
+    background: #fff;
+  }
+
+  .omedev-home .omedev-energy-section {
+    background: linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%);
+  }
+
+  .omedev-home .omedev-dark-section {
+    background: linear-gradient(135deg, #053876 0%, #1D5B9B 55%, #0B74C1 100%);
+  }
+
+  .omedev-home .hero-grid {
+    background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+
+  .omedev-home .hero-glass {
+    background: rgba(255,255,255,.14);
+    border: 1px solid rgba(255,255,255,.30);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 24px 60px rgba(5,56,118,.30);
+  }
+
+  .omedev-home .hero-glass-item {
+    background: rgba(255,255,255,.10);
+    border: 1px solid rgba(255,255,255,.20);
+    backdrop-filter: blur(10px);
+  }
+
+  .omedev-home .energy-icon {
+    background: rgba(85,221,181,.14);
+    color: #2AACB2;
+    border: 1px solid rgba(42,172,178,.20);
+  }
+
+  .omedev-home .light-card {
+    background: #fff;
+    border: 1px solid rgba(5,56,118,.08);
+    box-shadow: 0 14px 36px rgba(5,56,118,.07);
+  }
+
+  .omedev-home .dark-section .text-white,
+  .omedev-home .omedev-dark-section .text-white,
+  .omedev-home .omedev-energy-section .text-white,
+  .omedev-home .omedev-hero .text-white { color: #fff !important; }
+
+  .omedev-home .light-content .text-white,
+  .omedev-home .omedev-light-section .text-white,
+  .omedev-home .omedev-white-section .text-white { color: #0B1213 !important; }
+
+  .omedev-home .light-content .text-[#25364A],
+  .omedev-home .light-content .text-[#25364A],
+  .omedev-home .omedev-light-section .text-[#25364A],
+  .omedev-home .omedev-light-section .text-[#25364A],
+  .omedev-home .omedev-white-section .text-[#25364A],
+  .omedev-home .omedev-white-section .text-[#25364A] { color: #25364A !important; }
+
+  .omedev-home .light-content .text-blue-400,
+  .omedev-home .omedev-light-section .text-blue-400,
+  .omedev-home .omedev-white-section .text-blue-400 { color: #0B74C1 !important; }
+
+  .omedev-home .light-content .bg-white\/5,
+  .omedev-home .omedev-light-section .bg-white\/5,
+  .omedev-home .omedev-white-section .bg-white\/5 { background: #fff !important; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-16px); }
+  }
+  .omedev-home .animate-float { animation: float 6s ease-in-out infinite; }
+
+  /* Zoom/pan doux ("Ken Burns") sur la photo du hero */
+  @keyframes heroZoom {
+    0%   { transform: scale(1.06) translate(0, 0); }
+    50%  { transform: scale(1.14) translate(-1.5%, -1.5%); }
+    100% { transform: scale(1.06) translate(0, 0); }
+  }
+  .omedev-home .hero-photo {
+    animation: heroZoom 20s ease-in-out infinite;
+    will-change: transform;
+    /* Rendu plus net et moderne : léger boost de contraste/saturation */
+    filter: saturate(1.08) contrast(1.06) brightness(1.02);
+  }
+
+  @media (max-width: 768px) {
+    .omedev-home .container { padding: 0 1rem; }
   }
 `;
+
+// ─── IMAGES DE FOND (élégantes, palette OMDEVE, haute résolution) ─────────
+const bgImages = {
+  // Équipe digitale / open-space lumineux — même photo que sur les autres pages publiques (PublicHero)
+  hero: 'https://www.dmi40.fr/wp-content/uploads/2026/05/Actualite.webp',
+  // Open-space moderne / transformation digitale
+  cta: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1920&q=80',
+  // Réseau / globe connecté — pour la section CTA sombre
+  ctaDark: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80',
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -406,7 +460,7 @@ const steps = [
 const challenges = [
   { icon: <TrendingDown size={28} />, title: 'Perte financière', desc: 'Des processus inefficaces coûtent en moyenne 20% du CA chaque année.', color: '#ef4444' },
   { icon: <FileText size={28} />, title: 'Gestion manuelle', desc: 'Fichiers Excel, papier, erreurs humaines… votre temps vaut plus que ça.', color: '#f59e0b' },
-  { icon: <Lock size={28} />, title: 'Failles de sécurité', desc: 'Sans cybersécurité, vos données et celles de vos clients sont vulnérables.', color: '#3b82f6' },
+  { icon: <Lock size={28} />, title: 'Failles de sécurité', desc: 'Sans cybersécurité, vos données et celles de vos clients sont vulnérables.', color: '#0B74C1' },
   { icon: <AlertTriangle size={28} />, title: 'Croissance bloquée', desc: "L'absence d'outils digitaux freine votre expansion et votre compétitivité.", color: '#8b5cf6' },
 ];
 
@@ -457,96 +511,179 @@ const projects = [
 ];
 
 const Home = () => {
+  // Témoignages — carrousel automatique (3 s)
+  const [tIndex, setTIndex] = useState(0)
+  const [tDir, setTDir] = useState(1)
+  useEffect(() => {
+    const id = setInterval(() => {
+      setTDir(1)
+      setTIndex(i => (i + 1) % testimonials.length)
+    }, 3000)
+    return () => clearInterval(id)
+  }, [])
+
   return (
-    <>
+    <div className="omedev-home">
       <style>{globalStyles}</style>
 
       {/* ==================== HERO SECTION ==================== */}
-      <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden pt-32 pb-20 min-h-[550px]">
-        <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: `linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px'
+      <section className="omedev-hero relative text-white overflow-hidden flex items-center min-h-[300px] py-8 md:py-10" style={{
+        background: 'linear-gradient(135deg, #053876 0%, #1D5B9B 35%, #4681B7 60%, #72A5CE 80%, #A6C3D7 100%)',
+      }}>
+        {/* Photo de fond élégante (animation Ken Burns) */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src={bgImages.hero}
+            alt=""
+            className="hero-photo w-full h-full object-cover object-center"
+          />
+        </div>
+        {/* Overlay dégradé allégé — photo bien visible, texte lisible à gauche */}
+        <div className="absolute inset-0 z-0" style={{
+          background: 'linear-gradient(100deg, rgba(5,56,118,0.62) 0%, rgba(11,116,193,0.34) 48%, rgba(42,172,178,0.20) 100%)'
         }} />
-        <div className="absolute w-96 h-96 bg-blue-600/20 top-20 -left-20 rounded-full filter blur-[80px] animate-float" />
-        <div className="absolute w-72 h-72 bg-indigo-700/15 bottom-20 right-10 rounded-full filter blur-[80px] animate-float" style={{ animationDelay: '2s' }} />
+        {/* Vignette très douce */}
+        <div className="absolute inset-0 z-0" style={{
+          background: 'radial-gradient(120% 80% at 50% 40%, transparent 55%, rgba(5,56,118,0.15) 100%)'
+        }} />
+        {/* Grille subtile */}
+        <div className="hero-grid absolute inset-0 opacity-[0.14] z-[1]" style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)`,
+          backgroundSize: '56px 56px'
+        }} />
+        {/* Orbes lumineux — atténués pour ne pas noyer la photo */}
+        <div className="absolute w-[26rem] h-[26rem] bg-cyan-300/15 top-10 -left-24 rounded-full filter blur-[100px] animate-float" />
+        <div className="absolute w-[22rem] h-[22rem] bg-teal-300/15 bottom-0 right-0 rounded-full filter blur-[110px] animate-float" style={{ animationDelay: '2s' }} />
+        <div className="absolute w-64 h-64 bg-white/10 top-1/3 right-1/4 rounded-full filter blur-[90px] animate-float" style={{ animationDelay: '4s' }} />
 
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-blue-600/15 border border-blue-500/30"
-            >
-              <Sparkles className="w-4 h-4 text-blue-400" />
-              <span className="text-blue-300 font-semibold text-xs tracking-wide font-syne">Solutions Digitales Premium</span>
-            </motion.div>
+          <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-14 items-center">
 
-            <motion.h1
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 font-syne"
-            >
-              Transformez votre{' '}
-              <span className="relative inline-block">
-                <span className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-cyan-400 to-sky-400 blur-2xl opacity-50" />
-                <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-sky-400">
-                  Business Digital
+            {/* ── Colonne texte ── */}
+            <div className="text-center lg:text-left min-w-0">
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="inline-flex items-center gap-2 mb-7 px-4 py-2 rounded-full bg-white/10 border border-white/25 backdrop-blur-sm"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-[#55DDB5] animate-pulse" />
+                <span className="text-white font-bold text-[11px] tracking-[0.2em] uppercase font-syne">Croissance &amp; Innovation</span>
+              </motion.div>
+
+              <motion.h1
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.1 }}
+                className="text-[1.75rem] sm:text-5xl md:text-6xl lg:text-[4.2rem] font-extrabold leading-[1.15] mb-6 font-syne tracking-tight"
+                style={{ textShadow: '0 2px 20px rgba(5,56,118,0.35)' }}
+              >
+                Accélérez votre{' '}
+                <span className="relative inline-block max-w-full break-words">
+                  <span className="absolute -inset-2 bg-gradient-to-r from-[#55DDB5] to-[#72A5CE] blur-3xl opacity-30" />
+                  <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-[#55DDB5] via-teal-300 to-blue-400">
+                    Transformation Digitale
+                  </span>
                 </span>
-              </span>
-            </motion.h1>
+              </motion.h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-              className="text-gray-300 text-base sm:text-xl md:text-2xl mb-8 max-w-2xl mx-auto"
-            >
-              ERP · SaaS · Cybersécurité · Développement Web &amp; Mobile.<br />
-              Omedev vous accompagne dans votre <strong className="text-white">digitalisation complète</strong>.
-            </motion.p>
+              <motion.p
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.3 }}
+                className="text-white/90 text-base sm:text-lg md:text-xl mb-10 max-w-xl mx-auto lg:mx-0"
+                style={{ textShadow: '0 1px 12px rgba(5,56,118,0.35)' }}
+              >
+                ERP · Cybersécurité · Cloud · Développement Web &amp; Mobile.
+                Omedev vous accompagne dans votre <strong className="text-white font-semibold">digitalisation complète</strong>, de l'audit au déploiement.
+              </motion.p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 }}
-              className="flex flex-wrap gap-4 justify-center mb-12"
-            >
-              <Link to="/demander-devis" className="group bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-105">
-                Demander un devis <ArrowRight size={18} className="group-hover:translate-x-1 transition" />
-              </Link>
-              <Link to="/solutions" className="group border-2 border-white/30 hover:border-white px-5 py-3 sm:px-8 sm:py-4 rounded-xl font-semibold text-white hover:bg-white/10 transition-all">
-                Voir les solutions
-              </Link>
-              <Link to="/audit-gratuit" className="px-8 py-4 rounded-xl font-semibold text-amber-400 border border-amber-500/30 hover:bg-amber-500/10 transition-all">
-                Audit Gratuit
-              </Link>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.5 }}
-              className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto"
-            >
-              {[
-                { n: '15+', l: 'Projets livrés', icon: '🚀' },
-                { n: '98%', l: 'Satisfaction client', icon: '⭐' },
-                { n: '5+', l: 'Entreprises clientes', icon: '🏢' },
-                { n: '4 ans', l: "D'expertise", icon: '📅' }
-              ].map((s, i) => (
-                <div
-                  key={i}
-                  className="rounded-xl p-3 text-center"
-                  style={{ background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(37,99,235,0.2)' }}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.4 }}
+                className="flex flex-wrap gap-4 justify-center lg:justify-start mb-4"
+              >
+                <Link to="/demander-devis" className="group bg-gradient-to-r from-[#0B74C1] via-[#2AACB2] to-[#55DDB5] hover:brightness-110 text-white px-6 py-3.5 sm:px-8 sm:py-4 rounded-full font-semibold flex items-center gap-2 transition-all duration-300 hover:-translate-y-0.5 shadow-lg shadow-blue-900/30 hover:shadow-2xl hover:shadow-cyan-500/30">
+                  Demander un devis <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <Link
+                  to="/solutions"
+                  className="group border border-white/25 hover:border-white/60 px-6 py-3.5 sm:px-8 sm:py-4 rounded-full font-semibold text-white hover:bg-white/10 transition-all duration-300 hover:-translate-y-0.5"
+                  style={{ background: 'rgba(5,56,118,0.15)', backdropFilter: 'blur(4px)' }}
                 >
-                  <div className="text-xl mb-0.5 opacity-60">{s.icon}</div>
-                  <div className="font-extrabold text-xl text-white mb-0.5 font-syne">{s.n}</div>
-                  <div className="text-gray-400 text-[11px]">{s.l}</div>
+                  Voir les solutions
+                </Link>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.7, delay: 0.55 }}
+              >
+                <Link to="/audit-gratuit" className="inline-flex items-center gap-1.5 text-[#55DDB5] hover:text-white text-sm font-semibold link-underline transition-colors">
+                  Audit gratuit sans engagement <ChevronRight size={14} />
+                </Link>
+              </motion.div>
+            </div>
+
+            {/* ── Colonne carte flottante (stats + visuel) ── */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="relative mx-auto max-w-sm lg:max-w-none"
+            >
+              <div
+                className="hero-glass relative rounded-3xl p-7 backdrop-blur-xl overflow-hidden"
+                style={{
+                  background: 'rgba(255,255,255,0.14)',
+                  border: '1px solid rgba(255,255,255,0.30)',
+                  boxShadow: '0 30px 80px -20px rgba(5,56,118,0.35)',
+                }}
+              >
+                <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#55DDB5]/20 rounded-full blur-3xl" />
+                <div className="relative flex items-center gap-2 mb-6">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#55DDB5] to-[#0B74C1] flex items-center justify-center shadow-lg">
+                    <Rocket size={18} className="text-white" />
+                  </div>
+                  <div>
+                    <p className="text-white font-bold text-sm font-syne leading-none">Omedev Services</p>
+                    <p className="text-white/80 text-[11px] mt-1">Partenaire digital de confiance</p>
+                  </div>
                 </div>
-              ))}
+
+                <div className="relative grid grid-cols-2 gap-3">
+                  {[
+                    { n: '15+', l: 'Projets livrés', icon: '🚀' },
+                    { n: '98%', l: 'Satisfaction client', icon: '⭐' },
+                    { n: '5+', l: 'Entreprises clientes', icon: '🏢' },
+                    { n: '4 ans', l: "D'expertise", icon: '📅' }
+                  ].map((s, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.6 + i * 0.08 }}
+                      whileHover={{ y: -3 }}
+                      className="hero-glass-item rounded-2xl p-4 text-center transition-all duration-300 hover:bg-white/20"
+                      style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)' }}
+                    >
+                      <div className="text-lg mb-1 opacity-70">{s.icon}</div>
+                      <div className="font-extrabold text-xl text-white mb-0.5 font-syne">{s.n}</div>
+                      <div className="text-white/80 text-[11px] leading-tight">{s.l}</div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                <div className="relative mt-5 pt-5 border-t border-white/10 flex items-center justify-between">
+                  <span className="text-white/80 text-xs">Disponible 24/7</span>
+                  <span className="flex items-center gap-1.5 text-[#55DDB5] text-xs font-semibold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#55DDB5] animate-pulse" /> En ligne
+                  </span>
+                </div>
+              </div>
             </motion.div>
           </div>
         </div>
@@ -554,10 +691,10 @@ const Home = () => {
 
 
       {/* ==================== DÉFIS (Ces défis vous parlent ?) ==================== */}
-      <section className="py-24 relative overflow-hidden">
+      <section className="omedev-light-section light-content py-16 relative overflow-hidden">
         <div className="container">
-          <div className="text-center mb-14">
-            <span className="section-badge" style={{ background: '#3f59a1', color: '#edeae7', borderColor: '#3f7394' }}>⚠️ Problèmes courants</span>
+          <div className="text-center mb-10">
+            <span className="section-badge" style={{ background: '#D5DCE1', color: '#053876', borderColor: '#72A5CE' }}>⚠️ Problèmes courants</span>
             <h2 className="section-title">Ces défis vous parlent ?</h2>
             <div className="divider" />
             <p className="section-subtitle">La plupart des PME africaines perdent des opportunités faute d'outils digitaux adaptés.</p>
@@ -565,15 +702,15 @@ const Home = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {challenges.map((c, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
-                className="card-hover p-6 text-center" style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '1.5rem' }}>
-                <div style={{ color: c.color, marginBottom: '1rem' }}>{c.icon}</div>
+                className="card-hover group p-6 text-center">
+                <div className="group-hover:scale-110 transition-transform duration-300" style={{ color: c.color, marginBottom: '1rem' }}>{c.icon}</div>
                 <h3 className="font-display font-bold text-white text-lg mb-2">{c.title}</h3>
-                <p className="text-slate-400 text-sm leading-relaxed">{c.desc}</p>
+                <p className="text-[#25364A] text-sm leading-relaxed">{c.desc}</p>
               </motion.div>
             ))}
           </div>
-          <div className="text-center mt-12">
-            <p className="text-slate-400 mb-6 text-lg">Omedev a la solution pour chacun de ces défis.</p>
+          <div className="text-center mt-8">
+            <p className="text-[#25364A] mb-6 text-lg">Omedev a la solution pour chacun de ces défis.</p>
             <Link to="/services" className="btn-primary">Découvrir nos solutions <ArrowRight size={18} /></Link>
           </div>
         </div>
@@ -583,18 +720,18 @@ const Home = () => {
 
 
       {/* ==================== DOMAINES D'EXCELLENCE ==================== */}
-      <section className="py-24 bg-white/5">
+      <section className="omedev-white-section light-content py-16">
         <div className="container">
           <SectionHeader badge="Notre savoir-faire" title="Domaines d'excellence" subtitle="Nous maîtrisons l'ensemble des technologies essentielles à votre réussite" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {expertise.map((item, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.08 }}
-                className="card-hover p-8 text-center">
-                <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ background: `${item.color}20`, color: item.color }}>
+                className="card-hover group p-8 text-center">
+                <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style={{ background: `${item.color}20`, color: item.color }}>
                   <item.icon size={32} />
                 </div>
                 <h3 className="font-display font-bold text-white text-xl mb-2">{item.title}</h3>
-                <p className="text-slate-400 text-sm">{item.desc}</p>
+                <p className="text-[#25364A] text-sm">{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -606,7 +743,7 @@ const Home = () => {
 
 
       {/* ==================== PROJETS DIGITAUX ==================== */}
-      <section className="py-24">
+      <section className="omedev-light-section light-content py-16">
         <div className="container">
           <SectionHeader
             badge="Notre travail"
@@ -660,7 +797,7 @@ const Home = () => {
                         <span
                           key={t}
                           className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full"
-                          style={{ background: 'rgba(59,130,246,0.35)', color: '#93c5fd', border: '1px solid rgba(59,130,246,0.4)' }}
+                          style={{ background: 'rgba(59,130,246,0.35)', color: '#0B74C1', border: '1px solid rgba(59,130,246,0.4)' }}
                         >
                           {tag}
                         </span>
@@ -709,7 +846,7 @@ const Home = () => {
               <div className="absolute top-4 left-4 z-10">
                 <span
                   className="text-xs font-bold px-3 py-1 rounded-full"
-                  style={{ background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)', color: 'white' }}
+                  style={{ background: 'linear-gradient(135deg, #0B74C1, #053876)', color: 'white' }}
                 >
                   ★ Projet phare
                 </span>
@@ -729,7 +866,7 @@ const Home = () => {
                     <span
                       key={t}
                       className="text-xs font-semibold px-2.5 py-1 rounded-full"
-                      style={{ background: 'rgba(59,130,246,0.25)', color: '#93c5fd', border: '1px solid rgba(59,130,246,0.4)' }}
+                      style={{ background: 'rgba(11,116,193,0.12)', color: '#0B74C1', border: '1px solid rgba(59,130,246,0.4)' }}
                     >
                       {tag}
                     </span>
@@ -738,7 +875,7 @@ const Home = () => {
                 <h3 className="text-2xl font-bold text-white mb-2 font-syne group-hover:text-blue-300 transition-colors">
                   {projects[0].title}
                 </h3>
-                <p className="text-gray-300 text-sm leading-relaxed mb-4">
+                <p className="text-[#25364A] text-sm leading-relaxed mb-4">
                   {projects[0].description}
                 </p>
                 <span className="inline-flex items-center gap-2 text-blue-400 text-sm font-semibold group-hover:gap-3 transition-all">
@@ -753,7 +890,7 @@ const Home = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mt-10"
+            className="text-center mt-8"
           >
             <Link
               to="/realisations"
@@ -767,18 +904,18 @@ const Home = () => {
 
 
       {/* ==================== SERVICES ==================== */}
-      <section className="py-24 bg-white/5">
+      <section className="omedev-white-section light-content py-16">
         <div className="container">
           <SectionHeader badge="Nos services" title="Solutions Intégrées" subtitle="De l'infrastructure aux applications, nous couvrons tout le cycle technologique" />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.07 }}
-                className="card-hover p-5 sm:p-8">
-                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5" style={{ background: `${service.color}20`, color: service.color }}>
+                className="card-hover group p-5 sm:p-8">
+                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300" style={{ background: `${service.color}20`, color: service.color }}>
                   <service.icon size={28} />
                 </div>
                 <h3 className="font-display font-bold text-white text-xl mb-3">{service.title}</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-4">{service.description}</p>
+                <p className="text-[#25364A] text-sm leading-relaxed mb-4">{service.description}</p>
                 <Link to="/solutions" className="text-blue-400 text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">En savoir plus <ArrowRight size={14} /></Link>
               </motion.div>
             ))}
@@ -790,7 +927,7 @@ const Home = () => {
 
 
       {/* ==================== STATS ==================== */}
-      <section className="py-20" style={{ background: 'rgba(23,37,84,0.9)' }}> {/* navy foncé transparent */}
+      <section className="omedev-dark-section py-16"> {/* navy foncé transparent */}
         <div className="container">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {stats.map((stat, idx) => (
@@ -800,7 +937,7 @@ const Home = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
-                className="p-6 rounded-2xl backdrop-blur-md"
+                className="p-6 rounded-2xl backdrop-blur-md stat-card"
                 style={{
                   background: 'rgba(255, 255, 255, 0.05)', // léger overlay transparent
                   border: '1px solid rgba(255, 255, 255, 0.15)',
@@ -809,7 +946,7 @@ const Home = () => {
               >
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3"
-                  style={{ background: 'linear-gradient(135deg, #60a5fa, #1e40af)' }} // bleu moderne
+                  style={{ background: 'linear-gradient(135deg, #4681B7, #053876)' }} // bleu moderne
                 >
                   <stat.icon size={24} className="text-white" />
                 </div>
@@ -828,18 +965,18 @@ const Home = () => {
 
 
       {/* ==================== PRODUITS & ÉQUIPEMENTS ==================== */}
-      <section className="py-24">
+      <section className="omedev-light-section light-content py-16">
         <div className="container">
           <SectionHeader badge="Produits & Équipements" title="Achetez chez nous" subtitle="Climatiseurs · Matériel IT · Caméras — directement livrés et installés" />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {products.map((product, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
-                className="card-hover p-5 sm:p-8">
-                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5" style={{ background: `${product.color}20`, color: product.color }}>
+                className="card-hover group p-5 sm:p-8">
+                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300" style={{ background: `${product.color}20`, color: product.color }}>
                   <product.icon size={28} />
                 </div>
                 <h3 className="font-display font-bold text-white text-xl mb-3">{product.title}</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-4">{product.description}</p>
+                <p className="text-[#25364A] text-sm leading-relaxed mb-4">{product.description}</p>
                 <Link to="/boutique" className="text-blue-400 text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">Voir les produits <ArrowRight size={14} /></Link>
               </motion.div>
             ))}
@@ -851,22 +988,22 @@ const Home = () => {
 
 
       {/* ==================== SOLUTIONS PACKAGÉES ==================== */}
-      <section className="py-24 bg-white/5">
+      <section className="omedev-white-section light-content py-16">
         <div className="container">
           <SectionHeader badge="Offres packagées" title="Solutions Clé en Main" subtitle="Choisissez l'offre adaptée à votre entreprise" />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {packs.map((pack, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
-                className={`card-hover p-8 relative ${pack.featured ? 'border-2 border-blue-500' : ''}`}>
+                className={`card-hover group p-8 relative ${pack.featured ? 'card-featured' : ''}`}>
                 {pack.featured && <div className="absolute top-0 right-0 bg-gradient-to-r from-blue-600 to-blue-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-xl">Populaire</div>}
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style={{ background: `${styles.colors.electric[500]}20`, color: styles.colors.electric[500] }}>
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300" style={{ background: `${styles.colors.electric[500]}20`, color: styles.colors.electric[500] }}>
                   <pack.icon size={24} />
                 </div>
                 <h3 className="font-display font-bold text-white text-2xl mb-2">{pack.name}</h3>
                 <p className="text-3xl font-bold text-blue-400 mb-6">{pack.price}</p>
                 <ul className="space-y-3 mb-8">
                   {pack.features.map((f, i) => (
-                    <li key={i} className="flex items-center gap-2 text-slate-300 text-sm"><CheckCircle size={16} className="text-blue-400 flex-shrink-0" /> {f}</li>
+                    <li key={i} className="flex items-center gap-2 text-[#25364A] text-sm"><CheckCircle size={16} className="text-blue-400 flex-shrink-0" /> {f}</li>
                   ))}
                 </ul>
                 <Link to="/demander-devis" className={`block w-full text-center py-3 rounded-xl font-semibold transition-all ${pack.featured ? 'btn-primary' : 'btn-outline'}`}>
@@ -879,18 +1016,18 @@ const Home = () => {
       </section>
 
       {/* ==================== POURQUOI NOUS CHOISIR ==================== */}
-      <section className="py-24">
+      <section className="omedev-light-section light-content py-16">
         <div className="container">
           <SectionHeader badge="Pourquoi OMDEVE" title="Pourquoi nous choisir" subtitle="Une expertise locale avec des standards internationaux" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {whyUs.map((item, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.08 }}
-                className="text-center p-6 rounded-2xl bg-white/5 border border-white/10">
+                className="card-hover group text-center p-6">
                 <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ background: `${item.color}20`, color: item.color }}>
                   <item.icon size={32} />
                 </div>
                 <h3 className="font-display font-bold text-white text-lg mb-2">{item.title}</h3>
-                <p className="text-slate-400 text-sm">{item.description}</p>
+                <p className="text-[#25364A] text-sm">{item.description}</p>
               </motion.div>
             ))}
           </div>
@@ -898,7 +1035,7 @@ const Home = () => {
       </section>
 
       {/* ==================== PROCESSUS ==================== */}
-      <section className="py-24 bg-white/5">
+      <section className="omedev-white-section light-content py-16">
         <div className="container">
           <SectionHeader badge="Notre méthodologie" title="Comment ça marche" subtitle="Un processus simple et transparent" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -907,7 +1044,7 @@ const Home = () => {
                 className="text-center">
                 <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center mx-auto mb-4 text-2xl font-black text-white">{step.number}</div>
                 <h3 className="font-display font-bold text-white text-lg mb-2">{step.title}</h3>
-                <p className="text-slate-400 text-sm">{step.desc}</p>
+                <p className="text-[#25364A] text-sm">{step.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -917,146 +1054,64 @@ const Home = () => {
 
 
 
-      {/* ==================== TÉMOIGNAGES ==================== */}
-      <section className="py-24">
+      {/* ==================== TÉMOIGNAGES (CARROUSEL) ==================== */}
+      <section className="omedev-white-section light-content py-16">
         <div className="container">
           <SectionHeader badge="Témoignages" title="Ils nous font confiance" subtitle="Ce que nos clients pensent de nous" />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((t, idx) => (
-              <motion.div key={idx} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1 }}
-                className="card-hover p-6">
-                <Quote size={28} className="text-blue-400 opacity-50 mb-4" />
-                <p className="text-slate-300 text-sm italic mb-6">"{t.content}"</p>
-                <div className="flex items-center gap-3">
-                  <img src={t.avatar} alt={t.name} className="w-10 h-10 rounded-full object-cover" />
-                  <div><p className="font-semibold text-white text-sm">{t.name}</p><p className="text-slate-500 text-xs">{t.position}</p></div>
-                  <div className="ml-auto flex gap-0.5">{[...Array(t.rating)].map((_, i) => <Star key={i} size={14} className="fill-yellow-400 text-yellow-400" />)}</div>
+          <div className="relative max-w-2xl mx-auto">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={tIndex}
+                initial={{ opacity: 0, x: tDir * 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: tDir * -50 }}
+                transition={{ duration: 0.5, ease: [0.22, 0.68, 0, 1] }}
+                className="card-hover p-8 sm:p-10 text-center"
+              >
+                <Quote size={32} className="text-[#0B74C1] opacity-50 mb-5 mx-auto" />
+                <p className="text-[#25364A] text-base sm:text-lg italic mb-6 leading-relaxed">"{testimonials[tIndex].content}"</p>
+                <div className="flex items-center justify-center gap-3">
+                  <img src={testimonials[tIndex].avatar} alt={testimonials[tIndex].name} className="w-12 h-12 rounded-full object-cover" />
+                  <div className="text-left">
+                    <p className="font-semibold text-[#053876] text-sm">{testimonials[tIndex].name}</p>
+                    <p className="text-[#25364A]/70 text-xs">{testimonials[tIndex].position}</p>
+                  </div>
+                  <div className="ml-1 flex gap-0.5">
+                    {[...Array(testimonials[tIndex].rating)].map((_, i) => (
+                      <Star key={i} size={14} className="fill-[#55DDB5] text-[#55DDB5]" />
+                    ))}
+                  </div>
                 </div>
               </motion.div>
-            ))}
+            </AnimatePresence>
+
+            {/* Indicateurs */}
+            <div className="flex items-center justify-center gap-2 mt-6">
+              {testimonials.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => { setTDir(i > tIndex ? 1 : -1); setTIndex(i) }}
+                  aria-label={`Témoignage ${i + 1}`}
+                  className={`h-2.5 rounded-full transition-all duration-300 ${i === tIndex ? 'w-7 bg-[#0B74C1]' : 'w-2.5 bg-[#25364A]/20 hover:bg-[#25364A]/40'}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* ==================== CTA FINALE ==================== */}
-      <section
-        className="py-24 relative overflow-hidden"
-        style={{
-          background: 'linear-gradient(135deg, rgba(23,37,84,0.95) 0%, rgba(15, 27, 66, 0.9) 100%)', // bleu foncé moderne
-        }}
-      >
-        <div className="container text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 mb-6 text-amber-300 text-sm font-semibold">
-              <Rocket size={16} /> Prêt à démarrer
-            </div>
-
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Prêt à transformer votre entreprise ?
-            </h2>
-
-            <p className="text-white/80 text-lg mb-8 max-w-xl mx-auto">
-              Climatisation · Matériel IT · Caméras · Solutions digitales complètes
-            </p>
-
-            <div className="flex flex-wrap gap-4 justify-center">
-              <Link
-                to="/demander-devis"
-                className="btn-accent"
-                style={{
-                  background: 'linear-gradient(135deg, #1d1141 0%,#172554 100%)',
-                  color: 'white',
-                }}
-              >
-                Demander un devis <ArrowRight size={18} />
-              </Link>
-
-              <Link
-                to="/audit-gratuit"
-                className="btn-outline"
-                style={{
-                  color: 'white',
-                  border: '1px solid rgba(255,255,255,0.3)',
-                  background: 'rgba(255,255,255,0.05)',
-                }}
-              >
-                Audit gratuit <CheckCircle size={18} />
-              </Link>
-
-              <Link
-                to="/services/vente-materiel"
-                className="btn-outline"
-                style={{
-                  color: 'white',
-                  border: '1px solid rgba(255,255,255,0.3)',
-                  background: 'rgba(255,255,255,0.05)',
-                }}
-              >
-                Voir nos produits <ChevronRight size={18} />
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ==================== CTA FINALE (DOUBLE) ==================== */}
-      <section className="py-20 relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 border-t border-white/5">
-        <div className="absolute inset-0 opacity-30" style={{
-          backgroundImage: `radial-gradient(circle at 30% 40%, rgba(59,130,246,0.3) 0%, transparent 60%),
-                      radial-gradient(circle at 80% 70%, rgba(6,182,212,0.2) 0%, transparent 60%)`
-        }} />
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0 }}
-              className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20 hover:border-blue-500/50 text-center"
-            >
-              <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110">
-                <Target size={28} className="text-white" />
-              </div>
-              <h3 className="text-2xl md:text-3xl font-bold text-white font-syne mb-3">Audit gratuit</h3>
-              <p className="text-gray-300 mb-6">
-                Bénéficiez d'un diagnostic complet de vos infrastructures sans engagement.
-              </p>
-              <Link to="/blog" className="inline-flex items-center gap-2 bg-white/10 border border-white/20 hover:bg-white/20 text-white px-6 py-2.5 rounded-xl font-semibold transition-all hover:scale-105">
-                Consultez notre blog <ArrowRight size={16} />
-              </Link>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-amber-500/20 hover:border-amber-500/50 text-center"
-            >
-              <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110">
-                <Handshake size={28} className="text-white" />
-              </div>
-              <h3 className="text-2xl md:text-3xl font-bold text-white font-syne mb-3">Devis personnalisé</h3>
-              <p className="text-gray-300 mb-6">
-                Recevez une proposition sur mesure adaptée à vos besoins et votre budget.
-              </p>
-
-              <Link to="/inscription" className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-6 py-2.5 rounded-xl font-semibold transition-all hover:scale-105">
-                Inscrivez-vous dans notre Centre <ArrowRight size={16} />
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-    </>
+      <CTASection
+        badge="Prêt à démarrer"
+        title="Prêt à transformer votre entreprise ?"
+        highlight="votre entreprise"
+        subtitle="Climatisation · Matériel IT · Caméras · Solutions digitales complètes, accompagnées par une équipe d'experts à votre écoute."
+        backgroundImage={bgImages.cta}
+        primaryAction={{ label: 'Demander un devis', to: '/demander-devis' }}
+        secondaryAction={{ label: 'Audit gratuit', to: '/audit-gratuit' }}
+      />
+    </div>
   );
 };
 
 export default Home;
-
-

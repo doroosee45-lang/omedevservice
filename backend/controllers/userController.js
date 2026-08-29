@@ -1,6 +1,91 @@
 // controllers/userController.js - Gestion des utilisateurs (Admin)
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const logAction = require('../utils/auditLogger');
+const { sendAccountActivation } = require('../utils/emailService');
+
+const ROLES = ['client', 'manager', 'admin', 'super_admin', 'visitor'];
+
+// @desc    Créer un utilisateur (réservé au SuperAdministrateur)
+//          Un mot de passe temporaire aléatoire est généré côté serveur
+//          (jamais transmis) ; le compte reste inactif jusqu'à ce que le
+//          nouvel utilisateur active son compte via le lien reçu par email.
+// @route   POST /api/users
+// @access  Private/SuperAdmin
+const EMAIL_REGEX = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+
+const createUser = async (req, res) => {
+  try {
+    const { name, email, phone, role, companyName, address, city, country } = req.body;
+
+    if (!name || !email || !phone) {
+      return res.status(400).json({ success: false, message: 'Nom, email et téléphone sont obligatoires' });
+    }
+
+    if (!EMAIL_REGEX.test(email)) {
+      return res.status(400).json({ success: false, message: 'Adresse email invalide' });
+    }
+
+    if (role && !ROLES.includes(role)) {
+      return res.status(400).json({ success: false, message: 'Rôle invalide' });
+    }
+
+    const existing = await User.findOne({ email: email.toLowerCase() });
+    if (existing) {
+      return res.status(400).json({ success: false, message: 'Un utilisateur avec cet email existe déjà' });
+    }
+
+    // Mot de passe temporaire aléatoire — jamais communiqué : l'utilisateur
+    // définit son propre mot de passe via le lien d'activation.
+    const tempPassword = crypto.randomBytes(20).toString('hex');
+
+    const user = await User.create({
+      name,
+      email,
+      phone,
+      password: tempPassword,
+      role: role || 'client',
+      isActive: false,
+      companyName,
+      address,
+      city,
+      country,
+    });
+
+    const activationToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const activationLink = `${process.env.FRONTEND_URL}/#/activate-account?token=${activationToken}`;
+
+    let emailSent = true;
+    try {
+      await sendAccountActivation(user.email, user.name, user.role, activationLink);
+    } catch (error) {
+      emailSent = false;
+      console.error(`Erreur d'envoi de l'email d'activation à ${user.email}:`, error);
+    }
+
+    await logAction({
+      action: 'create',
+      entityType: 'user',
+      entityId: user._id,
+      entityName: user.name,
+      changes: { new: { role: user.role, email: user.email } },
+      req,
+    });
+
+    res.status(201).json({
+      _id:      user._id,
+      name:     user.name,
+      email:    user.email,
+      phone:    user.phone,
+      role:     user.role,
+      isActive: user.isActive,
+      emailSent,
+    });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message || 'Erreur lors de la création de l\'utilisateur' });
+  }
+};
 
 // @desc    Obtenir tous les utilisateurs
 // @route   GET /api/users
@@ -106,6 +191,7 @@ const toggleUserStatus = async (req, res) => {
 };
 
 module.exports = {
+  createUser,
   getUsers,
   getUserById,
   updateUser,
