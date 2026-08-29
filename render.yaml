@@ -1,0 +1,50 @@
+services:
+  # ── BACKEND (API Node/Express) ─────────────────────────────────────────────
+  - type: web
+    name: omedev-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        sync: false          # à saisir manuellement dans le dashboard Render
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRE
+        value: 30d
+      - key: EMAIL_HOST
+        value: smtp.gmail.com
+      - key: EMAIL_PORT
+        value: 587
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: CONTACT_EMAIL
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: FRONTEND_URL
+        sync: false          # ex: https://omedev-frontend.onrender.com
+
+  # ── FRONTEND (React/Vite, static site) ──────────────────────────────────────
+  - type: web
+    name: omedev-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    plan: free
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html   # gère le routing React SPA (HashRouter n'en a pas besoin, mais ne gêne pas)
+    envVars:
+      - key: VITE_API_URL
+        sync: false                # ex: https://omedev-backend.onrender.com/api
