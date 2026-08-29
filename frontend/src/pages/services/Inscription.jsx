@@ -620,7 +620,7 @@ const Inscription = () => {
                         onChange={handleChange}
                         required
                         className="field"
-                        placeholder="Jean Dupont"
+                        placeholder="Nom complet"
                       />
                     </div>
 
@@ -637,7 +637,7 @@ const Inscription = () => {
                         onChange={handleChange}
                         required
                         className="field"
-                        placeholder="jean@entreprise.com"
+                        placeholder="Adresse email"
                       />
                     </div>
 

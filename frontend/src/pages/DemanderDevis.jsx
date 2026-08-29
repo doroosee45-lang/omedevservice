@@ -2092,7 +2092,7 @@ const Devis = () => {
                                 )
                               }
                               className="form-input pl-12"
-                              placeholder="contact@exemple.com"
+                              placeholder="Adresse email"
                             />
 
                           </div>

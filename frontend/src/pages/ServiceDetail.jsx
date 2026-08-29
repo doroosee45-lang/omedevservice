@@ -1085,7 +1085,7 @@ const ServiceDetailPage = () => {
             <form onSubmit={handleSubmitQuote} className="p-6 space-y-4">
               <div>
                 <label className="block text-[#053876] font-medium mb-1 text-sm">Nom complet *</label>
-                <input type="text" name="name" required value={formData.name} onChange={handleInputChange} placeholder="Jean Dupont" className="w-full px-4 py-2 rounded-lg border border-[#053876]/15 focus:border-[#2AACB2] focus:outline-none focus:ring-1 focus:ring-[#2AACB2]" />
+                <input type="text" name="name" required value={formData.name} onChange={handleInputChange} placeholder="Nom complet" className="w-full px-4 py-2 rounded-lg border border-[#053876]/15 focus:border-[#2AACB2] focus:outline-none focus:ring-1 focus:ring-[#2AACB2]" />
               </div>
               <div>
                 <label className="block text-[#053876] font-medium mb-1 text-sm">Email *</label>

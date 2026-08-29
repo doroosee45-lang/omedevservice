@@ -9,8 +9,10 @@ const {
   createArticle,
   updateArticle,
   deleteArticle,
+  uploadArticleImage,
 } = require('../controllers/articleController');
 const { protect, authorize } = require('../middleware/authMiddleware');
+const { uploadArticleImage: uploadArticleImageMiddleware } = require('../middleware/uploadMiddleware');
 
 // Routes publiques
 router.get('/', getPublishedArticles);
@@ -20,6 +22,7 @@ router.get('/:slug', getArticleBySlug);
 router.use(protect, authorize('admin', 'super_admin'));
 router.get('/admin/all', getAllArticles);
 router.post('/', createArticle);
+router.post('/upload-image', uploadArticleImageMiddleware.single('image'), uploadArticleImage);
 router.route('/admin/:id')
   .get(getArticleById)
   .put(updateArticle)

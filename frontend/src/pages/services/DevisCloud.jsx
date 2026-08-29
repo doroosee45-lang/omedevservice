@@ -747,7 +747,7 @@ const DevisCloud = () => {
                       onChange={handleChange}
                       required
                       autoComplete="name"
-                      placeholder="Jean Dupont"
+                      placeholder="Nom complet"
                     />
                   </Field>
 
@@ -764,7 +764,7 @@ const DevisCloud = () => {
                       onChange={handleChange}
                       required
                       autoComplete="email"
-                      placeholder="jean@entreprise.com"
+                      placeholder="Adresse email"
                     />
                   </Field>
                 </div>

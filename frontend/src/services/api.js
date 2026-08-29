@@ -124,8 +124,16 @@ export const blog = {
   getAll: () => api.get('/blog/admin/all'),
   getById: (id) => api.get(`/blog/admin/${id}`),
   create: (data) => api.post('/blog', data),
-  update: (id, data) => api.put(`/blog/${id}`, data),
-  delete: (id) => api.delete(`/blog/${id}`),
+  update: (id, data) => api.put(`/blog/admin/${id}`, data),
+  delete: (id) => api.delete(`/blog/admin/${id}`),
+  uploadImage: (file, onUploadProgress) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    return api.post('/blog/upload-image', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      onUploadProgress,
+    });
+  },
 };
 
 // ==================== CRM (PROSPECTS) ====================

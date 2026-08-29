@@ -140,7 +140,9 @@ const updateArticle = async (req, res) => {
   article.excerpt = req.body.excerpt || article.excerpt;
   article.content = req.body.content || article.content;
   article.category = req.body.category || article.category;
-  article.image = req.body.image || article.image;
+  // req.body.image !== undefined (pas ||) : une chaîne vide doit pouvoir
+  // effacer volontairement l'image existante, pas retomber dessus.
+  article.image = req.body.image !== undefined ? req.body.image : article.image;
   article.metaTitle = req.body.metaTitle || article.metaTitle;
   article.metaDescription = req.body.metaDescription || article.metaDescription;
   article.tags = req.body.tags || article.tags;
@@ -189,6 +191,17 @@ const deleteArticle = async (req, res) => {
   }
 };
 
+// @desc    Téléverser une image de couverture d'article
+// @route   POST /api/blog/upload-image
+// @access  Private/Admin
+const uploadArticleImage = async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: 'Aucun fichier reçu' });
+  }
+  const url = `${req.protocol}://${req.get('host')}/uploads/articles/${req.file.filename}`;
+  res.status(201).json({ success: true, url });
+};
+
 module.exports = {
   getPublishedArticles,
   getArticleBySlug,
@@ -197,4 +210,5 @@ module.exports = {
   createArticle,
   updateArticle,
   deleteArticle,
+  uploadArticleImage,
 };

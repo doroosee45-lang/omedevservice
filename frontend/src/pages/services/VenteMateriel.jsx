@@ -685,8 +685,8 @@ export default function VenteMateriel() {
                             </h3>
                             <div className="grid grid-cols-1 gap-4">
                               {[
-                                { field: 'fullName', label: 'Nom complet *', placeholder: 'Jean Dupont',         type: 'text' },
-                                { field: 'email',    label: 'Email *',        placeholder: 'vous@exemple.com',    type: 'email' },
+                                { field: 'fullName', label: 'Nom complet *', placeholder: 'Nom complet',         type: 'text' },
+                                { field: 'email',    label: 'Email *',        placeholder: 'Adresse email',    type: 'email' },
                                 { field: 'phone',    label: 'Téléphone *',    placeholder: '+243 8XX XXX XXX',    type: 'tel'  },
                                 { field: 'address',  label: 'Adresse *',      placeholder: 'Numéro et rue',       type: 'text' },
                               ].map(({ field, label, placeholder, type }) => (

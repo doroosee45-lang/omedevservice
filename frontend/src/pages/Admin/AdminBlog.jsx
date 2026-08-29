@@ -1,13 +1,14 @@
 
 
 // src/pages/Admin/AdminBlog.jsx
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { blog as blogApi } from '../../services/api'
 import {
   BookOpen, Package, Settings, Plus, Edit, Trash2, Eye, Save,
   Globe, Share2, DollarSign, X, ExternalLink, Mail, Phone,
-  MapPin, Check, AlertCircle, ArrowUp, ArrowDown, Power, ImageIcon
+  MapPin, Check, AlertCircle, ArrowUp, ArrowDown, Power, ImageIcon,
+  Upload, Link2, Loader2
 } from 'lucide-react'
 import { PageHeader, Tabs } from '../../components/Admin/ui'
 
@@ -94,11 +95,48 @@ const ArticlePreview = ({ article, onClose }) => (
 )
 
 // ─── Article Modal ────────────────────────────────────────────────────────────
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024 // 5MB, doit correspondre à la limite backend
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+
 const ArticleModal = ({ article, categories, onSave, onClose }) => {
   const [form, setForm] = useState(article || {
     title: '', slug: '', metaDesc: '', category: '', content: '', status: 'draft', image: ''
   })
   const [imageError, setImageError] = useState(false)
+  const [imageMode, setImageMode] = useState('url')
+  const [imageUploading, setImageUploading] = useState(false)
+  const [imageUploadError, setImageUploadError] = useState('')
+  const fileInputRef = useRef(null)
+
+  const handleImageFile = async (file) => {
+    setImageUploadError('')
+    if (!file) return
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      setImageUploadError('Format non supporté (JPEG, PNG, WEBP ou GIF uniquement)')
+      return
+    }
+    if (file.size > MAX_IMAGE_SIZE) {
+      setImageUploadError('Image trop volumineuse (5 Mo maximum)')
+      return
+    }
+    setImageUploading(true)
+    try {
+      const res = await blogApi.uploadImage(file)
+      setForm(f => ({ ...f, image: res.data.url }))
+      setImageError(false)
+    } catch (err) {
+      setImageUploadError(err.response?.data?.message || "Échec du téléversement de l'image")
+    } finally {
+      setImageUploading(false)
+    }
+  }
+
+  const handleRemoveImage = () => {
+    setForm(f => ({ ...f, image: '' }))
+    setImageError(false)
+    setImageUploadError('')
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
 
   const autoSlug = (title) =>
     title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
@@ -165,18 +203,72 @@ const ArticleModal = ({ article, categories, onSave, onClose }) => {
             </div>
           </div>
           <div>
-            <label className="block text-sm text-white/50 mb-1">URL de l'image de couverture</label>
-            <input type="text" value={form.image}
-              onChange={(e) => { setForm(f => ({ ...f, image: e.target.value })); setImageError(false) }}
-              placeholder="https://images.unsplash.com/..."
-              className="admin-input" />
-            {form.image && !imageError && (
-              <div className="mt-2 rounded-xl overflow-hidden h-32">
-                <img src={form.image} alt="preview" className="w-full h-full object-cover" onError={() => setImageError(true)} />
+            <label className="block text-sm text-white/50 mb-1">Image de couverture</label>
+
+            {form.image ? (
+              <div>
+                <div className="relative rounded-xl overflow-hidden h-40 bg-white/5">
+                  {!imageError ? (
+                    <img src={form.image} alt="Aperçu de l'image de couverture" className="w-full h-full object-cover" onError={() => setImageError(true)} />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-red-400 text-xs">
+                      <AlertCircle className="w-5 h-5" />
+                      Impossible de charger cette image
+                    </div>
+                  )}
+                </div>
+                <div className="flex gap-2 mt-2">
+                  <button type="button" onClick={() => { setForm(f => ({ ...f, image: '' })); setImageError(false) }}
+                    className="admin-btn admin-btn-outline text-xs px-3 py-1.5 flex items-center gap-1.5">
+                    <Upload className="w-3.5 h-3.5" /> Remplacer
+                  </button>
+                  <button type="button" onClick={handleRemoveImage}
+                    className="admin-btn admin-btn-outline text-xs px-3 py-1.5 flex items-center gap-1.5 text-red-400 hover:border-red-400/50">
+                    <X className="w-3.5 h-3.5" /> Supprimer
+                  </button>
+                </div>
               </div>
-            )}
-            {imageError && (
-              <p className="text-xs text-red-400 mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> URL invalide</p>
+            ) : (
+              <>
+                <div className="flex gap-2 mb-2">
+                  <button type="button" onClick={() => setImageMode('upload')}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium border transition-all ${imageMode === 'upload' ? 'bg-[#0B74C1]/20 text-[#0B74C1] border-[#0B74C1]/40' : 'border-white/10 text-white/50 hover:bg-white/5'}`}>
+                    <Upload className="w-3.5 h-3.5" /> Téléverser un fichier
+                  </button>
+                  <button type="button" onClick={() => setImageMode('url')}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-medium border transition-all ${imageMode === 'url' ? 'bg-[#0B74C1]/20 text-[#0B74C1] border-[#0B74C1]/40' : 'border-white/10 text-white/50 hover:bg-white/5'}`}>
+                    <Link2 className="w-3.5 h-3.5" /> URL d'image
+                  </button>
+                </div>
+
+                {imageMode === 'upload' ? (
+                  <div key="upload-mode">
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp,image/gif"
+                      onChange={(e) => handleImageFile(e.target.files?.[0])}
+                      disabled={imageUploading}
+                      className="block w-full text-xs text-white/50 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-[#0B74C1]/20 file:text-[#0B74C1] hover:file:bg-[#0B74C1]/30 file:cursor-pointer cursor-pointer"
+                    />
+                    {imageUploading && (
+                      <p className="text-xs text-white/50 mt-1.5 flex items-center gap-1.5"><Loader2 className="w-3.5 h-3.5 animate-spin" /> Téléversement en cours...</p>
+                    )}
+                    {imageUploadError && (
+                      <p className="text-xs text-red-400 mt-1.5 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> {imageUploadError}</p>
+                    )}
+                    <p className="text-xs text-white/30 mt-1.5">JPEG, PNG, WEBP ou GIF — 5 Mo maximum</p>
+                  </div>
+                ) : (
+                  <div key="url-mode">
+                    <input type="text" value={form.image}
+                      onChange={(e) => { setForm(f => ({ ...f, image: e.target.value })); setImageError(false) }}
+                      placeholder="https://images.unsplash.com/..."
+                      className="admin-input" />
+                    <p className="text-xs text-white/30 mt-1.5">Collez l'URL d'une image déjà hébergée en ligne</p>
+                  </div>
+                )}
+              </>
             )}
           </div>
           <div>

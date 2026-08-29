@@ -64,8 +64,8 @@ const Profil = () => {
   const fileInputRef = useRef(null)
 
   const [profile, setProfile] = useState({
-    nom: localStorage.getItem('userName') || 'Jean Dupont',
-    email: localStorage.getItem('userEmail') || 'jean.dupont@email.com',
+    nom: localStorage.getItem('userName') || '',
+    email: localStorage.getItem('userEmail') || '',
     telephone: '',
     adresse: ''
   })

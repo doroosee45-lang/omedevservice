@@ -25,7 +25,7 @@ import {
   X,
   AlertCircle
 } from 'lucide-react'
-import { PageHeader, Button } from '../../components/Admin/ui'
+import { PageHeader, Button, EmptyState } from '../../components/Admin/ui'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -40,50 +40,14 @@ const stages = [
   { id: 'signe', name: 'Signé', color: 'from-[#2AACB2] to-[#2AACB2]', bgColor: 'bg-[#2AACB2]/10 border-[#2AACB2]/30', textColor: 'text-[#55DDB5]' },
 ]
 
-const initialProspectsData = {
-  lead: [
-    { id: 1, name: 'Société ABC', contact: 'Jean Martin', email: 'jean@abc.com', phone: '+243 555 503 59', value: '15 000€', lastContact: '10/04/2025' },
-    { id: 2, name: 'Entreprise XYZ', contact: 'Marie Dubois', email: 'marie@xyz.com', phone: '+243 555 503 60', value: '25 000€', lastContact: '12/04/2025' },
-    { id: 3, name: 'Startup Innov', contact: 'Thomas Bernard', email: 'thomas@innov.com', phone: '+243 555 503 61', value: '8 000€', lastContact: '14/04/2025' },
-    { id: 4, name: 'Tech Solutions', contact: 'Paul Dupont', email: 'paul@tech.com', phone: '+243 555 503 69', value: '10 000€', lastContact: '13/04/2025' },
-  ],
-  contact: [
-    { id: 5, name: 'Groupe Logistique', contact: 'Sophie Petit', email: 'sophie@logistique.com', phone: '+243 555 503 62', value: '45 000€', lastContact: '08/04/2025' },
-    { id: 6, name: 'Hôtel Paradis', contact: 'Pierre Durand', email: 'pierre@paradis.com', phone: '+243 555 503 63', value: '12 000€', lastContact: '09/04/2025' },
-    { id: 7, name: 'Agence Com', contact: 'Julie Martin', email: 'julie@agence.com', phone: '+243 555 503 70', value: '7 500€', lastContact: '07/04/2025' },
-  ],
-  proposition: [
-    { id: 8, name: 'Banque Centrale', contact: 'Nicolas Lefebvre', email: 'nicolas@banque.com', phone: '+243 555 503 64', value: '120 000€', lastContact: '05/04/2025' },
-    { id: 9, name: 'Université Kinshasa', contact: 'Claire Ntumba', email: 'claire@unikin.com', phone: '+243 555 503 65', value: '35 000€', lastContact: '07/04/2025' },
-  ],
-  negociation: [
-    { id: 10, name: 'Télécom RDC', contact: 'Marc Kabongo', email: 'marc@telecom.com', phone: '+243 555 503 66', value: '250 000€', lastContact: '03/04/2025' },
-    { id: 11, name: 'Ministère Éducation', contact: 'Joseph Kabila', email: 'joseph@education.gouv', phone: '+243 555 503 71', value: '75 000€', lastContact: '02/04/2025' },
-  ],
-  signe: [
-    { id: 12, name: 'Ministère Digital', contact: 'Joseph Kabila', email: 'joseph@digital.gouv', phone: '+243 555 503 67', value: '500 000€', lastContact: '01/04/2025' },
-    { id: 13, name: 'Agence Web Plus', contact: 'Lucie Mbenza', email: 'lucie@webplus.com', phone: '+243 555 503 68', value: '18 000€', lastContact: '02/04/2025' },
-    { id: 14, name: 'Cabinet Conseil', contact: 'Bernard Ngoy', email: 'bernard@conseil.com', phone: '+243 555 503 72', value: '22 000€', lastContact: '30/03/2025' },
-  ],
-}
+// Ces deux sections n'ont pas encore de source de données réelle côté
+// backend (aucune route d'agrégation "interactions récentes" ni de
+// modèle "infrastructure" n'existe) : on affiche un état vide honnête
+// plutôt que des exemples fictifs tant que cette intégration n'est pas
+// construite.
+const recentInfrastructures = []
 
-const recentInfrastructures = [
-  { id: 1, name: 'Data Center Principal', type: 'Serveur', status: 'operational', location: 'Kinshasa', uptime: '99.99%', lastCheck: '15/04/2025 08:00', icon: Server },
-  { id: 2, name: 'Cluster Kubernetes', type: 'Cloud', status: 'operational', location: 'Lubumbashi', uptime: '99.95%', lastCheck: '14/04/2025 10:30', icon: Database },
-  { id: 3, name: 'Backup NAS', type: 'Stockage', status: 'warning', location: 'Kinshasa', uptime: '98.5%', lastCheck: '13/04/2025 14:20', icon: HardDrive },
-  { id: 4, name: 'Réseau Fibre Optique', type: 'Réseau', status: 'operational', location: 'Goma', uptime: '99.98%', lastCheck: '12/04/2025 09:15', icon: Wifi },
-  { id: 5, name: 'Firewall Principal', type: 'Sécurité', status: 'critical', location: 'Kinshasa', uptime: '97.2%', lastCheck: '11/04/2025 16:45', icon: Zap },
-  { id: 6, name: 'Base de données SQL', type: 'Base de données', status: 'operational', location: 'Lubumbashi', uptime: '99.92%', lastCheck: '10/04/2025 11:00', icon: Database },
-]
-
-const recentInteractions = [
-  { id: 1, prospect: 'Société ABC', action: 'Appel commercial', description: 'Discussion sur les besoins en infrastructure réseau', date: '15/04/2025 10:30', user: 'Thomas', email: 'jean@abc.com', phone: '+243 555 503 59' },
-  { id: 2, prospect: 'Banque Centrale', action: 'Envoi devis', description: 'Devis pour solution cloud et cybersécurité', date: '14/04/2025 14:20', user: 'Sophie', email: 'nicolas@banque.com', phone: '+243 555 503 64' },
-  { id: 3, prospect: 'Télécom RDC', action: 'Réunion', description: 'Présentation de l\'offre SaaS', date: '13/04/2025 09:15', user: 'Marc', email: 'marc@telecom.com', phone: '+243 555 503 66' },
-  { id: 4, prospect: 'Groupe Logistique', action: 'Relance téléphonique', description: 'Suivi du devis envoyé la semaine dernière', date: '12/04/2025 11:00', user: 'Julie', email: 'sophie@logistique.com', phone: '+243 555 503 62' },
-  { id: 5, prospect: 'Université Kinshasa', action: 'Visite technique', description: 'Audit des infrastructures existantes', date: '11/04/2025 14:30', user: 'Pierre', email: 'claire@unikin.com', phone: '+243 555 503 65' },
-  { id: 6, prospect: 'Agence Web Plus', action: 'Signature contrat', description: 'Contrat signé pour le développement de la plateforme', date: '10/04/2025 16:00', user: 'Lucie', email: 'lucie@webplus.com', phone: '+243 555 503 68' },
-]
+const recentInteractions = []
 
 const getStatusConfig = (status) => {
   const configs = {
@@ -151,7 +115,7 @@ const ModalNouveauProspect = ({ isOpen, onClose, onSave }) => {
               <label className="text-xs text-white/50 mb-1 block">Société *</label>
               <input
                 type="text" value={form.name} onChange={e => setForm({...form, name: e.target.value})}
-                placeholder="Société ABC"
+                placeholder="Nom de l'entreprise"
                 className="admin-input text-sm"
               />
               {errors.name && <p className="text-xs text-red-400 mt-1">{errors.name}</p>}
@@ -160,7 +124,7 @@ const ModalNouveauProspect = ({ isOpen, onClose, onSave }) => {
               <label className="text-xs text-white/50 mb-1 block">Contact *</label>
               <input
                 type="text" value={form.contact} onChange={e => setForm({...form, contact: e.target.value})}
-                placeholder="Jean Martin"
+                placeholder="Nom du contact"
                 className="admin-input text-sm"
               />
               {errors.contact && <p className="text-xs text-red-400 mt-1">{errors.contact}</p>}
@@ -170,7 +134,7 @@ const ModalNouveauProspect = ({ isOpen, onClose, onSave }) => {
             <label className="text-xs text-white/50 mb-1 block">Email *</label>
             <input
               type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})}
-              placeholder="jean@societe.com"
+              placeholder="Adresse email"
               className="admin-input text-sm"
             />
             {errors.email && <p className="text-xs text-red-400 mt-1">{errors.email}</p>}
@@ -756,10 +720,16 @@ const AdminCRM = () => {
             Voir tout
           </button>
         </div>
-        <div id="section-infra" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {recentInfrastructures.map((infra) => (
-            <InfrastructureCard key={infra.id} infra={infra} />
-          ))}
+        <div id="section-infra">
+          {recentInfrastructures.length === 0 ? (
+            <EmptyState icon={Server} title="Aucune infrastructure suivie" description="Le monitoring d'infrastructure n'est pas encore connecté." />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {recentInfrastructures.map((infra) => (
+                <InfrastructureCard key={infra.id} infra={infra} />
+              ))}
+            </div>
+          )}
         </div>
       </motion.div>
 
@@ -781,10 +751,16 @@ const AdminCRM = () => {
             Voir tout
           </button>
         </div>
-        <div id="section-interactions" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {recentInteractions.map((interaction) => (
-            <InteractionCard key={interaction.id} interaction={interaction} />
-          ))}
+        <div id="section-interactions">
+          {recentInteractions.length === 0 ? (
+            <EmptyState icon={MessageSquare} title="Aucune interaction récente" description="Les échanges avec vos prospects apparaîtront ici." />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {recentInteractions.map((interaction) => (
+                <InteractionCard key={interaction.id} interaction={interaction} />
+              ))}
+            </div>
+          )}
         </div>
       </motion.div>
 

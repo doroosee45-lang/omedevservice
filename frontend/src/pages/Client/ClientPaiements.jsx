@@ -628,7 +628,7 @@ const ModalPayer = ({ paiement, onClose, onSuccess }) => {
                 <>
                   <div>
                     <label className="text-[#25364A]/70 text-xs mb-1 block">Nom du titulaire</label>
-                    <input type="text" placeholder="Jean Dupont" value={form.nom}
+                    <input type="text" placeholder="Nom du titulaire de la carte" value={form.nom}
                       onChange={e => setForm({ ...form, nom: e.target.value })}
                       className={`w-full px-4 py-2.5 rounded-xl bg-white border ${errors.nom ? 'border-red-500' : 'border-[rgba(5,56,118,0.18)]'} text-[#0B1213] placeholder-[#25364A]/45 focus:outline-none focus:border-[#2AACB2] transition-all text-sm`} />
                     {errors.nom && <p className="text-red-500 text-xs mt-1">{errors.nom}</p>}
