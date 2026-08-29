@@ -523,7 +523,7 @@ const Profil = () => {
                               </div>
                             </div>
                             <div className="flex items-center justify-between py-2">
-                              <span className="text-[#25364A]">Newsletter OMDEVE</span>
+                              <span className="text-[#25364A]">Newsletter OMEDEV</span>
                               <div
                                 onClick={() => handleNotificationChange('newsletter')}
                                 className={`w-12 h-6 rounded-full transition-all cursor-pointer ${notifications.newsletter ? 'bg-[#2AACB2]' : 'bg-[rgba(5,56,118,0.18)]'}`}

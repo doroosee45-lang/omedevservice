@@ -64,7 +64,7 @@ const AdminLayout = () => {
                 <div className="w-8 h-8 rounded-xl bg-gradient-to-r from-[#0B74C1] to-[#2AACB2] flex items-center justify-center">
                   <span className="text-white font-bold text-sm">AD</span>
                 </div>
-                <span className="font-syne font-bold text-white hidden sm:block">OMDEVE Admin</span>
+                <span className="font-syne font-bold text-white hidden sm:block">OMEDEV Admin</span>
               </Link>
             </div>
 
@@ -93,7 +93,7 @@ const AdminLayout = () => {
               <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-[#0B74C1] to-[#2AACB2] flex items-center justify-center">
                 <span className="text-white font-bold text-lg">AD</span>
               </div>
-              <span className="font-syne font-bold text-white">OMDEVE Admin</span>
+              <span className="font-syne font-bold text-white">OMEDEV Admin</span>
             </Link>
 
             <nav className="space-y-1 flex-1 overflow-y-auto">

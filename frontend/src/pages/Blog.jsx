@@ -11,7 +11,7 @@ import CTASection from '../components/Public/CTASection';
 
 const globalStyles = `
 
-  /* ── OMDEVE ABOUT DESIGN SYSTEM ── */
+  /* ── OMEDEV ABOUT DESIGN SYSTEM ── */
   :root {
     --omedev-navy: #053876;
     --omedev-blue-dark: #1D5B9B;
@@ -214,7 +214,7 @@ const ShareButtons = ({ article }) => {
   const [copied, setCopied] = useState(false);
 
   const articleUrl = `${window.location.origin}/blog/${article.slug}`;
-  const text       = encodeURIComponent(`${article.title} — OMDEVE Blog`);
+  const text       = encodeURIComponent(`${article.title} — OMEDEV Blog`);
   const encodedUrl = encodeURIComponent(articleUrl);
 
   const stop = (e) => { e.preventDefault(); e.stopPropagation(); };
@@ -382,8 +382,8 @@ const Blog = () => {
       {/* ── Hero ─────────────────────────────────────────────── */}
       <PublicHero
         badge="Blog & Actualités"
-        title="Blog OMDEVE"
-        highlight="OMDEVE"
+        title="Blog OMEDEV"
+        highlight="OMEDEV"
         subtitle="Découvrez nos articles sur la digitalisation, la cybersécurité, l'énergie solaire et les meilleures pratiques IT en Afrique Centrale."
         primaryAction={{ label: 'Demander un conseil', to: '/contact' }}
         secondaryAction={{ label: 'Voir nos tarifs', to: '/tarifs' }}

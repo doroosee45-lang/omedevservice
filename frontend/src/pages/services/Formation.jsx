@@ -750,7 +750,7 @@ const Formation = () => {
             className="map-frame mt-12"
           >
             <iframe
-              title="Carte des centres OMDEVE"
+              title="Carte des centres OMEDEV"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63800.05399612767!2d15.276786!3d-4.322447!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1a6a33ce0946a6f7%3A0x841c5ce35b8af2fb!2sKinshasa%2C%20R%C3%A9publique%20d%C3%A9mocratique%20du%20Congo!5e0!3m2!1sfr!2scd!4v1647863945678!5m2!1sfr!2scd"
               width="100%"
               height="300"

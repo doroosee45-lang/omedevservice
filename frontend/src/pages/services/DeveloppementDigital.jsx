@@ -29,7 +29,7 @@ import {
   Zap,
 } from 'lucide-react'
 /* ============================================================
-   OMDEVE — DÉVELOPPEMENT DIGITAL
+   OMEDEV — DÉVELOPPEMENT DIGITAL
    Design aligné à 100% sur la page About
    ============================================================ */
 
@@ -1463,7 +1463,7 @@ const testimonials = [
     name: 'Marie L.',
     role: 'Fondatrice, Startup Innov',
     quote:
-      "OMDEVE a développé notre MVP en 3 mois. L’équipe est réactive, professionnelle et à l’écoute.",
+      "OMEDEV a développé notre MVP en 3 mois. L’équipe est réactive, professionnelle et à l’écoute.",
     photo:
       'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
   },
@@ -1471,7 +1471,7 @@ const testimonials = [
     name: 'David K.',
     role: 'Directeur, Groupe Retail',
     quote:
-      'Notre plateforme e-commerce génère +200% de ventes grâce à l’expertise d’OMDEVE.',
+      'Notre plateforme e-commerce génère +200% de ventes grâce à l’expertise d’OMEDEV.',
     photo:
       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
   },
@@ -1849,7 +1849,7 @@ const DeveloppementDigital = () => {
       </section>
 
       {/* ======================================================
-          POURQUOI OMDEVE
+          POURQUOI OMEDEV
           ====================================================== */}
 
       <section
@@ -1920,7 +1920,7 @@ const DeveloppementDigital = () => {
                   marginTop: '1.2rem',
                 }}
               >
-                Pourquoi OMDEVE Digital ?
+                Pourquoi OMEDEV Digital ?
               </h2>
 
               <div

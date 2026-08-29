@@ -1252,7 +1252,7 @@ const CloudHebergement = () => {
       name: 'Nicolas R.',
       role: 'CTO, FinTech',
       quote:
-        "La migration de notre infrastructure legacy vers AWS a été fluide et sans downtime. OMDEVE a fait preuve d'un professionnalisme exceptionnel.",
+        "La migration de notre infrastructure legacy vers AWS a été fluide et sans downtime. OMEDEV a fait preuve d'un professionnalisme exceptionnel.",
       photo:
         'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
     },
@@ -1378,7 +1378,7 @@ const CloudHebergement = () => {
       </section>
 
       {/* ======================================================
-          POURQUOI OMDEVE CLOUD
+          POURQUOI OMEDEV CLOUD
           ====================================================== */}
       <section className="section-light" style={{ padding: '6rem 0' }}>
         <div className="container">
@@ -1400,7 +1400,7 @@ const CloudHebergement = () => {
                   marginBottom: '.5rem',
                 }}
               >
-                Pourquoi OMDEVE Cloud ?
+                Pourquoi OMEDEV Cloud ?
               </h2>
 
               <div

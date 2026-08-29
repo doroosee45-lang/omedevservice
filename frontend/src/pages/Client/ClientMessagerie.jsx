@@ -253,7 +253,7 @@ const ClientMessagerie = () => {
                 className="mb-8"
               >
                 <h1 className="text-2xl md:text-3xl font-bold text-[#053876] font-syne">Messagerie</h1>
-                <p className="text-[#25364A]/70 mt-1">Échangez avec le support OMDEVE</p>
+                <p className="text-[#25364A]/70 mt-1">Échangez avec le support OMEDEV</p>
               </motion.div>
 
               <div className="grid lg:grid-cols-3 gap-6">

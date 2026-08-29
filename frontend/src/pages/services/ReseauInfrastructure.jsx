@@ -1068,7 +1068,7 @@ const ReseauInfrastructure = () => {
                 <br />
 
                 <span className="benefits-highlight">
-                  OMDEVE ?
+                  OMEDEV ?
                 </span>
 
               </h2>
@@ -1167,7 +1167,7 @@ const ReseauInfrastructure = () => {
                 items={[{
                   name: 'Directeur IT',
                   role: 'Groupe Industriel',
-                  content: "OMDEVE a transformé notre infrastructure obsolète en un réseau hautement performant. Notre productivité a augmenté de 40%.",
+                  content: "OMEDEV a transformé notre infrastructure obsolète en un réseau hautement performant. Notre productivité a augmenté de 40%.",
                 }]}
                 badge={null}
                 title={null}

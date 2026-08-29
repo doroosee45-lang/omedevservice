@@ -351,7 +351,7 @@ const globalStyles = `
   }
 `;
 
-// ─── IMAGES DE FOND (élégantes, palette OMDEVE, haute résolution) ─────────
+// ─── IMAGES DE FOND (élégantes, palette OMEDEV, haute résolution) ─────────
 const bgImages = {
   // Équipe digitale / open-space lumineux — même photo que sur les autres pages publiques (PublicHero)
   hero: 'https://www.dmi40.fr/wp-content/uploads/2026/05/Actualite.webp',
@@ -445,7 +445,7 @@ const whyUs = [
 ];
 
 const testimonials = [
-  { name: 'Jean M.', position: 'CEO, TechCorp', content: 'OMDEVE a transformé notre infrastructure IT. Service impeccable et équipe très professionnelle.', rating: 5, avatar: 'https://randomuser.me/api/portraits/men/32.jpg' },
+  { name: 'Jean M.', position: 'CEO, TechCorp', content: 'OMEDEV a transformé notre infrastructure IT. Service impeccable et équipe très professionnelle.', rating: 5, avatar: 'https://randomuser.me/api/portraits/men/32.jpg' },
   { name: 'Sarah K.', position: 'Directrice, Energy Solutions', content: "L'installation des panneaux solaires a été réalisée avec excellence. Économies d'énergie significatives.", rating: 5, avatar: 'https://randomuser.me/api/portraits/women/68.jpg' },
   { name: 'Marc L.', position: 'CTO, Digital Africa', content: 'La plateforme e-commerce développée est performante et élégante. Hautement recommandé.', rating: 5, avatar: 'https://randomuser.me/api/portraits/men/45.jpg' },
 ];
@@ -1018,7 +1018,7 @@ const Home = () => {
       {/* ==================== POURQUOI NOUS CHOISIR ==================== */}
       <section className="omedev-light-section light-content py-16">
         <div className="container">
-          <SectionHeader badge="Pourquoi OMDEVE" title="Pourquoi nous choisir" subtitle="Une expertise locale avec des standards internationaux" />
+          <SectionHeader badge="Pourquoi OMEDEV" title="Pourquoi nous choisir" subtitle="Une expertise locale avec des standards internationaux" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {whyUs.map((item, idx) => (
               <motion.div key={idx} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.08 }}

@@ -302,11 +302,11 @@ const AdminBlog = () => {
   const [catalogueSaved, setCatalogueSaved] = useState(false)
 
   const [config, setConfig] = useState({
-    siteName: 'OMDEVE Services', siteEmail: 'contact@omdeve.com',
+    siteName: 'OMEDEV Services', siteEmail: 'contact@omdeve.com',
     sitePhone: '+243 555 503 59', siteAddress: 'Avenue Kabmabre n°75, Lingwala, Kinshasa',
     facebook: 'https://facebook.com/omdeve', linkedin: 'https://linkedin.com/company/omdeve',
     twitter: 'https://twitter.com/omdeve',
-    seoTitle: 'OMDEVE - Solutions IT, Énergie & Digital en RDC',
+    seoTitle: 'OMEDEV - Solutions IT, Énergie & Digital en RDC',
     seoDesc: 'Leader en solutions informatiques, énergétiques et digitales en République Démocratique du Congo',
     vatRate: '16', currency: 'EUR'
   })

@@ -544,7 +544,7 @@ const projects = [
     testimonial: {
       author: 'Jean Mukendi',
       position: 'Directeur Technique',
-      content: 'OMDEVE a réalisé un travail exceptionnel. Notre infrastructure réseau est désormais performante, sécurisée et fiable.',
+      content: 'OMEDEV a réalisé un travail exceptionnel. Notre infrastructure réseau est désormais performante, sécurisée et fiable.',
       rating: 5,
       avatar: 'https://randomuser.me/api/portraits/men/1.jpg'
     },
@@ -917,7 +917,7 @@ const RealisationsPage = () => {
       {/* ==================== CHIFFRES CLÉS ==================== */}
       <section className="omedev-white-section py-24">
         <div className="container">
-          <SectionHeader badge="Nos résultats" title="OMDEVE en quelques données" subtitle="Une expertise éprouvée sur des projets concrets à travers la RDC" />
+          <SectionHeader badge="Nos résultats" title="OMEDEV en quelques données" subtitle="Une expertise éprouvée sur des projets concrets à travers la RDC" />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {stats.map((stat, i) => {
               const Icon = stat.icon;

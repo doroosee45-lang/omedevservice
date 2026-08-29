@@ -456,7 +456,7 @@ const Contact = () => {
               <div className="text-center">
                 <div className="text-6xl drop-shadow-xl animate-pulse">📍</div>
                 <div className="mt-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-xl border border-[#D5DCE1] shadow-lg">
-                  <div className="font-bold text-[#053876] text-sm">OMDEVE Services</div>
+                  <div className="font-bold text-[#053876] text-sm">OMEDEV Services</div>
                   <div className="text-xs text-[#25364A]">Avenue Kabmabre n°75, Lingwala</div>
                   <div className="text-xs text-[#2AACB2] font-bold mt-1">● Ouvert aujourd'hui</div>
                 </div>

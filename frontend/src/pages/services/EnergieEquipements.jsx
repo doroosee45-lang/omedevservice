@@ -332,7 +332,7 @@ const testimonials = [
   {
     name: 'Jean-Paul M.',
     role: 'Propriétaire, Maison individuelle',
-    quote: 'OMDEVE a installé 12 panneaux solaires chez moi. En un an, j\u2019ai réduit ma facture d\u2019électricité de 60%.',
+    quote: 'OMEDEV a installé 12 panneaux solaires chez moi. En un an, j\u2019ai réduit ma facture d\u2019électricité de 60%.',
     photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
   },
   {
@@ -547,7 +547,7 @@ const EnergieEquipements = () => {
       {/* ==================== CHIFFRES CLÉS ==================== */}
       <section className="omedev-dark-section py-20">
         <div className="container">
-          <SectionHeader badge="Quelques chiffres" title="OMDEVE Énergie en données" light />
+          <SectionHeader badge="Quelques chiffres" title="OMEDEV Énergie en données" light />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {stats.map((stat, i) => {
               const Icon = stat.icon;
@@ -606,7 +606,7 @@ const EnergieEquipements = () => {
         </div>
       </section>
 
-      {/* ==================== POURQUOI OMDEVE ÉNERGIE ==================== */}
+      {/* ==================== POURQUOI OMEDEV ÉNERGIE ==================== */}
       <section className="omedev-light-section py-24">
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -617,7 +617,7 @@ const EnergieEquipements = () => {
               transition={{ duration: 0.6 }}
             >
               <span className="section-badge">Pourquoi nous</span>
-              <h2 className="section-title mt-4">Pourquoi OMDEVE Énergie ?</h2>
+              <h2 className="section-title mt-4">Pourquoi OMEDEV Énergie ?</h2>
               <div className="divider" style={{ margin: '1rem 0 1.5rem' }} />
               <div className="space-y-4">
                 {benefits.map((b, i) => {

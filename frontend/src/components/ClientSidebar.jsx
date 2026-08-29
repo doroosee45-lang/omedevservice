@@ -76,7 +76,7 @@ const ClientSidebar = () => {
             <div className="w-8 h-8 bg-gradient-to-r from-[#0B74C1] to-[#2AACB2] rounded-lg flex items-center justify-center">
               <span className="font-bold text-white text-sm">OM</span>
             </div>
-            <span className="font-bold text-white text-lg">OMDEVE</span>
+            <span className="font-bold text-white text-lg">OMEDEV</span>
           </NavLink>
         )}
         {isCollapsed && (

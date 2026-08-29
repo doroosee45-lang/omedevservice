@@ -484,7 +484,7 @@ const About = () => {
       {/* ==================== CHIFFRES CLÉS ==================== */}
       <section className="omedev-dark-section py-20">
         <div className="container">
-          <SectionHeader badge="Quelques chiffres" title="OMDEVE en quelques données" light />
+          <SectionHeader badge="Quelques chiffres" title="OMEDEV en quelques données" light />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {stats.map((stat, i) => {
               const Icon = stat.icon;

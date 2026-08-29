@@ -10,7 +10,7 @@ import {
 import ClientSidebar from '../../components/ClientSidebar'
 import ClientHeader from '../../components/ClientHeader'
 
-/* ─── Styles globaux (thème clair OMDEVE, identique à la page Profil) ────────── */
+/* ─── Styles globaux (thème clair OMEDEV, identique à la page Profil) ────────── */
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
 
@@ -59,7 +59,7 @@ const msgVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.25 } }
 }
 
-/* ─── Couleurs statut (palette OMDEVE) ─────────────────────────────────────── */
+/* ─── Couleurs statut (palette OMEDEV) ─────────────────────────────────────── */
 const getProgressColor = (p) =>
   p >= 75 ? 'from-[#2AACB2] to-[#55DDB5]'
   : p >= 50 ? 'from-[#0B74C1] to-[#2AACB2]'

@@ -57,7 +57,7 @@ const ENTREPRISE = {
   siret: '2325689',
   adresse: 'avenue kabambare n° 75',
   ville: 'Kinshasa, RDC',
-  tel: '+21655550359',
+  tel: '+24355550359',
   email: 'omedeveservices@gmail.com',
   site: 'www.omedeveservices.com',
   tva: ' 83 842391027',

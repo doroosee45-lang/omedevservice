@@ -547,7 +547,7 @@ const Securite = () => {
       name: 'Marc D.',
       role: 'Directeur IT, Groupe Bancaire',
       quote:
-        'OMDEVE a sécurisé l’ensemble de notre réseau et de nos télécoms. Leur expertise en cybersécurité est remarquable.',
+        'OMEDEV a sécurisé l’ensemble de notre réseau et de nos télécoms. Leur expertise en cybersécurité est remarquable.',
       photo:
         'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop'
     },
@@ -1076,7 +1076,7 @@ const Securite = () => {
         </div>
       </section>
 
-      {/* ==================== POURQUOI OMDEVE ==================== */}
+      {/* ==================== POURQUOI OMEDEV ==================== */}
 
       <section className="omedev-light-section py-24">
         <div className="container">
@@ -1105,7 +1105,7 @@ const Securite = () => {
               </span>
 
               <h2 className="section-title mt-4">
-                Pourquoi OMDEVE Sécurité ?
+                Pourquoi OMEDEV Sécurité ?
               </h2>
 
               <div
@@ -1203,7 +1203,7 @@ const Securite = () => {
               </div>
 
               <p className="text-[#25364A] italic leading-relaxed">
-                Grâce à OMDEVE, nous avons réduit les incidents de sécurité de 90% en 6 mois.
+                Grâce à OMEDEV, nous avons réduit les incidents de sécurité de 90% en 6 mois.
               </p>
 
               <p

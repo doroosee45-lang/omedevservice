@@ -248,7 +248,7 @@ const ClientDashboard = () => {
                   Bonjour, {userName} ! 👋
                 </h1>
                 <p className="text-[#25364A]/70 mt-1">
-                  Bienvenue sur votre espace client OMDEVE Services
+                  Bienvenue sur votre espace client OMEDEV Services
                 </p>
                 {userEmail && (
                   <p className="text-xs text-[#25364A]/50 mt-1">{userEmail}</p>
