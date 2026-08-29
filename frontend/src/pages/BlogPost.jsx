@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -156,6 +156,8 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.25, 0.1, 0.25, 1] } }
 };
 
+const MotionLink = motion(Link);
+
 const BlogPost = () => {
   const { slug } = useParams()
   const [article, setArticle] = useState(null)
@@ -182,7 +184,7 @@ const BlogPost = () => {
       <div className="min-h-screen bg-[#F6F6F7] flex items-center justify-center">
         <div className="text-center">
           <p className="text-[#25364A] text-lg mb-4">Article introuvable.</p>
-          <a href="/blog" className="text-[#0B74C1] hover:underline font-semibold">Retour au blog</a>
+          <Link to="/blog" className="text-[#0B74C1] hover:underline font-semibold">Retour au blog</Link>
         </div>
       </div>
     )
@@ -195,13 +197,13 @@ const BlogPost = () => {
       {/* Navigation Retour */}
       <nav className="bg-white border-b border-[#053876]/10 sticky top-0 z-50">
         <div className="max-w-4xl mx-auto px-6 py-5 flex items-center justify-between">
-          <a
-            href="/blog"
+          <Link
+            to="/blog"
             className="flex items-center gap-3 text-[#053876] hover:text-[#0B74C1] transition-colors font-medium"
           >
             <ArrowLeft className="w-5 h-5" />
             Retour au blog
-          </a>
+          </Link>
 
           <div className="flex items-center gap-4">
             <button className="p-3 hover:bg-[#F6F6F7] rounded-2xl transition text-[#053876]">
@@ -329,9 +331,9 @@ const BlogPost = () => {
 
             <div className="grid md:grid-cols-2 gap-6">
               {article.relatedArticles.map((related, index) => (
-                <motion.a
+                <MotionLink
                   key={index}
-                  href={`/blog/${related.slug}`}
+                  to={`/blog/${related.slug}`}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -344,7 +346,7 @@ const BlogPost = () => {
                     </h4>
                     <p className="text-[#0B74C1] text-sm mt-3 group-hover:underline">Lire l'article →</p>
                   </div>
-                </motion.a>
+                </MotionLink>
               ))}
             </div>
           </div>
@@ -361,18 +363,18 @@ const BlogPost = () => {
             Contactez OMEDEV pour un audit gratuit de votre infrastructure.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="/audit-gratuit"
+            <Link
+              to="/audit-gratuit"
               className="bg-white text-[#053876] px-10 py-4 rounded-full font-semibold hover:-translate-y-0.5 transition-all duration-300 shadow-lg hover:shadow-2xl"
             >
               Demander un Audit Gratuit
-            </a>
-            <a
-              href="/demander-devis"
+            </Link>
+            <Link
+              to="/demander-devis"
               className="border border-white/40 px-10 py-4 rounded-full font-semibold hover:bg-white/10 hover:-translate-y-0.5 transition-all duration-300"
             >
               Obtenir un Devis
-            </a>
+            </Link>
           </div>
         </div>
       </div>
