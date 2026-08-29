@@ -61,6 +61,13 @@ const inscriptionSchema = mongoose.Schema(
     emailSentAt: {
       type: Date,
     },
+    // Traçabilité pour les inscriptions migrées depuis l'ancienne collection
+    // QuoteRequest (avant la séparation inscriptions/devis).
+    migratedFrom: {
+      quoteRequestId: { type: mongoose.Schema.Types.ObjectId, ref: 'QuoteRequest' },
+      requestNumber: { type: String },
+      migratedAt: { type: Date },
+    },
   },
   {
     timestamps: true,
