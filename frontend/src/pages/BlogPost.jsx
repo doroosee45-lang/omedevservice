@@ -33,6 +33,43 @@ const globalStyles = `
     box-shadow: 0 22px 48px rgba(11,116,193,.14);
     border-color: rgba(42,172,178,.35);
   }
+
+  /* Contenu de l'article : couleurs explicites, indépendantes du plugin
+     Tailwind typography (non installé) sur lequel reposaient les classes
+     "prose-*" — elles n'avaient donc jamais eu d'effet, d'où le texte
+     invisible (couleur héritée par défaut). */
+  .omedev-blogpost .article-content {
+    color: #25364A;
+    font-size: 1.05rem;
+    line-height: 1.85;
+    white-space: pre-line;
+  }
+  .omedev-blogpost .article-content p {
+    color: #25364A;
+    margin-bottom: 1.25rem;
+    white-space: pre-line;
+  }
+  .omedev-blogpost .article-content h1,
+  .omedev-blogpost .article-content h2,
+  .omedev-blogpost .article-content h3,
+  .omedev-blogpost .article-content h4 {
+    color: #053876;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  .omedev-blogpost .article-content li {
+    color: #25364A;
+  }
+  .omedev-blogpost .article-content strong,
+  .omedev-blogpost .article-content b {
+    color: #0B74C1;
+  }
+  .omedev-blogpost .article-content a {
+    color: #0B74C1;
+    text-decoration: underline;
+  }
 `;
 
 const fadeUp = {
@@ -164,7 +201,7 @@ const BlogPost = () => {
         className="max-w-4xl mx-auto px-6 py-14 sm:py-16"
       >
         <article
-          className="prose prose-lg max-w-none prose-headings:font-syne prose-headings:text-[#053876] prose-p:text-[#25364A] prose-li:text-[#25364A] prose-strong:text-[#0B74C1] prose-a:text-[#0B74C1]"
+          className="article-content"
           dangerouslySetInnerHTML={{ __html: article.content }}
         />
 
