@@ -338,6 +338,7 @@ const Inscription = () => {
 
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleChange = (e) => {
     setFormData({
@@ -349,15 +350,15 @@ const Inscription = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
+    setError('')
 
     try {
       await quoteRequests.create({
-        name: formData.nom,
+        fullName: formData.nom,
         email: formData.email,
         phone: formData.telephone,
-        service: 'Formation',
-        serviceType: formData.formation,
-        message:
+        serviceType: 'formation',
+        description:
           `Formation: ${formData.formation} | ` +
           `Centre: ${formData.centre} | ` +
           `Disponibilité: ${formData.disponibilite} | ` +
@@ -384,6 +385,10 @@ const Inscription = () => {
 
     } catch (err) {
       console.error('Erreur inscription formation:', err)
+      setError(
+        err.response?.data?.message ||
+        'Une erreur est survenue lors de l\'envoi de votre inscription. Veuillez réessayer.'
+      )
     } finally {
       setLoading(false)
     }
@@ -542,6 +547,12 @@ const Inscription = () => {
                   onSubmit={handleSubmit}
                   className="space-y-6"
                 >
+
+                  {error && (
+                    <div className="mb-2 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600 font-medium">
+                      {error}
+                    </div>
+                  )}
 
                   {/* Progression */}
 

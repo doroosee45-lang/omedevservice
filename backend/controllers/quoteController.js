@@ -24,18 +24,28 @@ const transporter = nodemailer.createTransport({
 const createQuoteRequest = async (req, res) => {
   const { fullName, email, phone, company, serviceType, description, budget, timeline } = req.body;
 
-  const quoteRequest = await QuoteRequest.create({
-    fullName,
-    email,
-    phone,
-    company,
-    serviceType,
-    description,
-    budget,
-    timeline,
-    user: req.user?._id,
-  });
-  
+  let quoteRequest;
+  try {
+    quoteRequest = await QuoteRequest.create({
+      fullName,
+      email,
+      phone,
+      company,
+      serviceType,
+      description,
+      budget,
+      timeline,
+      user: req.user?._id,
+    });
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      const message = Object.values(error.errors).map((e) => e.message).join(', ');
+      return res.status(400).json({ success: false, message });
+    }
+    console.error('Erreur création demande de devis:', error);
+    return res.status(500).json({ success: false, message: 'Une erreur est survenue. Veuillez réessayer plus tard.' });
+  }
+
   // Envoyer un email de confirmation au client
   try {
     await transporter.sendMail({

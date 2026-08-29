@@ -529,6 +529,7 @@ const DevisCloud = () => {
   const [formData, setFormData] = useState(EMPTY_FORM)
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -545,16 +546,17 @@ const DevisCloud = () => {
     if (loading) return
 
     setLoading(true)
+    setError('')
 
     try {
       await quoteRequests.create({
-        name: formData.nom,
+        fullName: formData.nom,
         email: formData.email,
         phone: formData.telephone,
         company: formData.entreprise,
-        service: formData.service || 'Cloud & Hébergement',
+        serviceType: 'cloud',
         budget: formData.budget,
-        message:
+        description:
           `Type de projet: ${formData.typeProjet || 'Non précisé'} | ` +
           `Date souhaitée: ${formData.dateSouhaitee || 'Non précisée'}\n\n` +
           formData.message,
@@ -568,6 +570,10 @@ const DevisCloud = () => {
       }, 3500)
     } catch (err) {
       console.error('Erreur devis cloud:', err)
+      setError(
+        err.response?.data?.message ||
+        'Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer.'
+      )
     } finally {
       setLoading(false)
     }
@@ -711,6 +717,12 @@ const DevisCloud = () => {
                   padding: '2.75rem',
                 }}
               >
+                {error && (
+                  <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600 font-medium">
+                    {error}
+                  </div>
+                )}
+
                 {/* =============================================
                     COORDONNÉES
                     ============================================= */}
