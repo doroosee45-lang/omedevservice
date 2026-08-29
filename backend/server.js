@@ -29,6 +29,11 @@ app.use(express.urlencoded({ extended: true }));
 // Servir les fichiers statiques (ex: pour les PDFs générés)
 app.use('/uploads', express.static('uploads'));
 
+// Route racine (health check)
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', service: 'OMEDEV Services API' });
+});
+
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
