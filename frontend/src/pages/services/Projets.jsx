@@ -37,7 +37,7 @@ const projectsData = [
     link: "https://kinshop.omedev.com",
     github: "https://github.com/omedev/kinshop",
     features: ["Paiement mobile intégré", "Gestion de stock automatique", "Tableau de bord vendeur", "Suivi de livraison GPS"],
-    testimonial: "L'équipe d'Omedev a su comprendre nos besoins et nous livrer une solution parfaitement adaptée."
+    testimonial: "L'équipe d'OMEDEV a su comprendre nos besoins et nous livrer une solution parfaitement adaptée."
   },
   {
     id: 2,
@@ -86,7 +86,7 @@ const projectsData = [
     title: "Site Institutionnel - Ministère du Numérique",
     client: "Ministère du Numérique RDC",
     description: "Refonte complète du site institutionnel avec portail citoyen et actualités.",
-    longDescription: "Le Ministère a confié à Omedev la refonte de son site web. Nous avons développé un site moderne, responsive et accessible, intégrant un portail citoyen pour les démarches administratives en ligne.",
+    longDescription: "Le Ministère a confié à OMEDEV la refonte de son site web. Nous avons développé un site moderne, responsive et accessible, intégrant un portail citoyen pour les démarches administratives en ligne.",
     category: "web",
     technologies: ["WordPress", "PHP", "MySQL", "TailwindCSS", "A11Y"],
     image: "https://images.unsplash.com/photo-1555421689-491a97ff2040?w=800&q=80",
@@ -100,7 +100,7 @@ const projectsData = [
     title: "Vidéosurveillance AI - Supermarché Jambo",
     client: "Jambo Supermarché",
     description: "Installation de 32 caméras 4K avec détection intelligente et comptage de personnes.",
-    longDescription: "Pour sécuriser son point de vente, Jambo Supermarché a fait appel à Omedev. Nous avons installé un système de vidéosurveillance avec 32 caméras 4K, un NVR 48 voies, et des analytics AI.",
+    longDescription: "Pour sécuriser son point de vente, Jambo Supermarché a fait appel à OMEDEV. Nous avons installé un système de vidéosurveillance avec 32 caméras 4K, un NVR 48 voies, et des analytics AI.",
     category: "securite",
     technologies: ["Caméras Hikvision 4K", "NVR 48 voies", "Deep Learning", "Application mobile"],
     image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=800&q=80",

@@ -123,7 +123,7 @@ const WelcomeScreen = ({ onSuggestion }) => {
       </motion.div>
 
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-        <h3 className="text-white font-bold text-lg font-syne mb-1">Omedev Assist 🤖</h3>
+        <h3 className="text-white font-bold text-lg font-syne mb-1">OMEDEV Assist 🤖</h3>
         <p className="text-gray-400 text-xs leading-relaxed mb-6 max-w-[220px]">
           Assistant commercial & technique disponible 24h/24. Comment puis-je vous aider ?
         </p>
@@ -258,7 +258,7 @@ const ChatWidget = () => {
                   <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-[#55DDB5] rounded-full border-2 border-[#053876]" />
                 </div>
                 <div>
-                  <p className="text-white font-semibold text-sm font-syne leading-none">Omedev Assist</p>
+                  <p className="text-white font-semibold text-sm font-syne leading-none">OMEDEV Assist</p>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <p className="text-[#55DDB5] text-[10px]">● En ligne</p>
                     {aiMode && (
@@ -357,7 +357,7 @@ const ChatWidget = () => {
                 </button>
               </div>
               <p className="text-center text-[9px] text-gray-600 mt-1.5">
-                Omedev Assist • Réponses indicatives — devis officiel sur demande
+                OMEDEV Assist • Réponses indicatives — devis officiel sur demande
               </p>
             </div>
           </motion.div>

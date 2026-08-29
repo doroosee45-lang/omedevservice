@@ -427,8 +427,8 @@ const About = () => {
       {/* ==================== HERO ==================== */}
       <PublicHero
         badge="Qui sommes-nous ?"
-        title="À propos d'omedev services"
-        highlight="d'omedev services"
+        title="À propos d'OMEDEV Services"
+        highlight="d'OMEDEV Services"
         subtitle="Leader en solutions IT, énergétiques et digitales en République Démocratique du Congo."
         primaryAction={{ label: 'Nous contacter', to: '/contact' }}
         secondaryAction={{ label: 'Voir nos réalisations', to: '/realisations' }}
@@ -452,7 +452,7 @@ const About = () => {
                 <h2 className="font-syne text-2xl md:text-3xl font-bold" style={{ color: colors.navy }}>Notre histoire</h2>
               </div>
               <div className="space-y-4 text-[#25364A] leading-relaxed text-sm sm:text-base">
-                <p>Fondée en 2022 à Kinshasa, <strong style={{ color: colors.blue }}>omedev Services</strong> est née de la volonté de répondre aux défis numériques et énergétiques de la RDC.</p>
+                <p>Fondée en 2022 à Kinshasa, <strong style={{ color: colors.blue }}>OMEDEV Services</strong> est née de la volonté de répondre aux défis numériques et énergétiques de la RDC.</p>
                 <p>En 2022, nous avons élargi nos compétences aux énergies renouvelables, puis au développement digital en 2024. Aujourd'hui, nous accompagnons plus de 5 entreprises congolaises dans leur transformation technologique.</p>
                 <p>Notre mot d'ordre : <strong style={{ color: colors.blue }}>innovation locale, standards internationaux</strong>.</p>
               </div>

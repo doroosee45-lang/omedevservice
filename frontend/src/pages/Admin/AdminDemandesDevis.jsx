@@ -134,7 +134,7 @@ const QuoteDetailModal = ({ request, onClose, onStatusChange }) => {
 
         {/* Répondre par email */}
         <a
-          href={`mailto:${request.email}?subject=Votre demande de devis ${request.requestNumber} - Omedev Services&body=Bonjour ${request.fullName},%0D%0A%0D%0ANous avons bien reçu votre demande de devis pour ${SERVICE_LABELS[request.serviceType] || request.serviceType}.%0D%0A%0D%0ACordialement,%0D%0AL'équipe Omedev Services`}
+          href={`mailto:${request.email}?subject=Votre demande de devis ${request.requestNumber} - OMEDEV Services&body=Bonjour ${request.fullName},%0D%0A%0D%0ANous avons bien reçu votre demande de devis pour ${SERVICE_LABELS[request.serviceType] || request.serviceType}.%0D%0A%0D%0ACordialement,%0D%0AL'équipe OMEDEV Services`}
           className="admin-btn admin-btn-outline w-full"
         >
           Répondre par email

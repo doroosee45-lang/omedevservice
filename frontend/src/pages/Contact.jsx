@@ -277,7 +277,7 @@ const Contact = () => {
                         required
                         disabled={isSubmitting}
                         className="form-input"
-                        placeholder="Omedeve Services"
+                        placeholder="OMEDEV Services"
                       />
                     </div>
                     <div>

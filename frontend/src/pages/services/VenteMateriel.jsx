@@ -263,7 +263,7 @@ const CATEGORY_ICONS = {
   Serveurs: Server,
   Autre: Package,
 }
-// Déclinaisons de la palette omdev pour chaque catégorie
+// Déclinaisons de la palette OMEDEV pour chaque catégorie
 const CATEGORY_GRADIENTS = {
   Ordinateurs: 'from-[#0B74C1] to-[#2AACB2]',
   Climatisation: 'from-[#2AACB2] to-[#55DDB5]',

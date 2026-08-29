@@ -1,7 +1,7 @@
 {
-  "name": "omdeve-backend",
+  "name": "omedev-backend",
   "version": "1.0.0",
-  "description": "Backend API for OMDEVE Services Platform",
+  "description": "Backend API for OMEDEV Services Platform",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

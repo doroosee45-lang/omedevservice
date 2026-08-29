@@ -58,16 +58,16 @@ const modalVariants = {
 
 /* ─── Entreprise ──────────────────────────────────────────────────────────── */
 const ENTREPRISE = {
-  nom: 'TechVision Solutions',
-  siret: '842 391 027 00034',
-  adresse: '14 Rue de la République, 75001 Paris',
-  tel: '+33 1 42 86 00 00',
-  email: 'contact@techvision.fr',
-  tva: 'FR 83 842391027',
-  logo: 'TV'
+  nom: 'OMEDEV Services',
+  siret: '2325689',
+  adresse: 'Avenue Kabmabre n°75, Lingwala, Kinshasa, RDC',
+  tel: '+243 555 503 59',
+  email: 'omedevservices@gmail.com',
+  tva: '83 842391027',
+  logo: 'OM'
 }
 
-/* ─── Génération PDF devis (palette omdev) ────────────────────────────────── */
+/* ─── Génération PDF devis (palette OMEDEV) ────────────────────────────────── */
 const generateDevisPDF = async (demande) => {
   if (!window.jspdf) {
     await new Promise((resolve, reject) => {
@@ -80,7 +80,7 @@ const generateDevisPDF = async (demande) => {
   const { jsPDF } = window.jspdf
   const doc = new jsPDF({ unit: 'mm', format: 'a4' })
   const W = 210
-  // Palette omdev
+  // Palette OMEDEV
   const navy=[5,56,118], blue=[11,116,193], cyan=[42,172,178], emerald=[85,221,181]
   const gray50=[248,250,252], gray100=[241,245,249], gray300=[203,213,225]
   const gray500=[100,116,139], gray700=[51,65,85], white=[255,255,255]

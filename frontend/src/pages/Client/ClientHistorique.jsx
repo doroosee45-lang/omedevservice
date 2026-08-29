@@ -72,18 +72,18 @@ const modalVariants = {
 
 /* ─── Infos entreprise ────────────────────────────────────────────────────── */
 const ENTREPRISE = {
-  nom:    'TechVision Solutions',
-  siret:  '842 391 027 00034',
-  adresse:'14 Rue de la République',
-  ville:  '75001 Paris, France',
-  tel:    '+33 1 42 86 00 00',
-  email:  'contact@techvision.fr',
-  site:   'www.techvision.fr',
-  tva:    'FR 83 842391027',
-  iban:   'FR76 3000 6000 0112 3456 7890 189',
+  nom:    'OMEDEV Services',
+  siret:  '2325689',
+  adresse:'Avenue Kabmabre n°75, Lingwala',
+  ville:  'Kinshasa, RDC',
+  tel:    '+243 555 503 59',
+  email:  'omedevservices@gmail.com',
+  site:   'www.omedevservices.com',
+  tva:    '83 842391027',
+  iban:   'DRC76 3000 6000 0112 3456 7890 189',
   bic:    'BNPAFRPPXXX',
-  banque: 'BNP Paribas',
-  logo:   'TV'
+  banque: 'BNP Kinshasa',
+  logo:   'OM'
 }
 
 /* ─── Détails étendus par item ────────────────────────────────────────────── */
@@ -144,7 +144,7 @@ const DETAILS = {
   }
 }
 
-/* ─── Génération PDF via jsPDF (palette omdev) ────────────────────────────── */
+/* ─── Génération PDF via jsPDF (palette OMEDEV) ────────────────────────────── */
 const generateHistoriquePDF = async (item) => {
   if (!window.jspdf) {
     await new Promise((resolve, reject) => {

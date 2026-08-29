@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
   socketTimeout: 15000,
 });
 
-// Couleurs Omedev
+// Couleurs OMEDEV
 const C = {
   navy:        '#0d1b2a',
   navyMid:     '#112240',
@@ -110,7 +110,7 @@ const calculateAuditResults = (data) => {
   return { score, level, recommendations };
 };
 
-// Génération du PDF (style Omedev)
+// Génération du PDF (style OMEDEV)
 const generateAuditPDF = (audit) =>
   new Promise((resolve, reject) => {
     try {

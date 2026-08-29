@@ -53,18 +53,18 @@ const modalVariants = {
 
 /* ─── Infos entreprise ────────────────────────────────────────────────────── */
 const ENTREPRISE = {
-  nom: 'Omedev services',
+  nom: 'OMEDEV Services',
   siret: '2325689',
-  adresse: 'avenue kabambare n° 75',
+  adresse: 'Avenue Kabmabre n°75, Lingwala',
   ville: 'Kinshasa, RDC',
-  tel: '+24355550359',
-  email: 'omedeveservices@gmail.com',
-  site: 'www.omedeveservices.com',
-  tva: ' 83 842391027',
+  tel: '+243 555 503 59',
+  email: 'omedevservices@gmail.com',
+  site: 'www.omedevservices.com',
+  tva: '83 842391027',
   iban: 'DRC76 3000 6000 0112 3456 7890 189',
   bic: 'BNPAFRPPXXX',
-  banque: 'BNP kinshasa',
-  logo: 'TV'
+  banque: 'BNP Kinshasa',
+  logo: 'OM'
 }
 
 /* ─── Nom client selon projet ─────────────────────────────────────────────── */
@@ -75,7 +75,7 @@ const getClientNom = (projet) => {
   return 'Cyber Protect Group'
 }
 
-/* ─── Génération PDF via jsPDF (palette omdev) ────────────────────────────── */
+/* ─── Génération PDF via jsPDF (palette OMEDEV) ────────────────────────────── */
 const generateInvoicePDF = async (paiement) => {
   if (!window.jspdf) {
     await new Promise((resolve, reject) => {

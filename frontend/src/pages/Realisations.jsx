@@ -790,7 +790,7 @@ const projects = [
   }
 ];
 
-// Catégories — recolorées avec la palette omedev
+// Catégories — recolorées avec la palette OMEDEV
 const categories = [
   { id: 'all', name: 'Tous', icon: CheckCircle, hex: colors.navy, gradient: `linear-gradient(135deg, ${colors.navy}, ${colors.blueLight})` },
   { id: 'reseau', name: 'Réseau & Télécom', icon: Network, hex: colors.blue, gradient: `linear-gradient(135deg, ${colors.blue}, ${colors.blueLight})` },

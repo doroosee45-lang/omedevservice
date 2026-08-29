@@ -596,7 +596,7 @@ const Home = () => {
                 style={{ textShadow: '0 1px 12px rgba(5,56,118,0.35)' }}
               >
                 ERP · Cybersécurité · Cloud · Développement Web &amp; Mobile.
-                Omedev vous accompagne dans votre <strong className="text-white font-semibold">digitalisation complète</strong>, de l'audit au déploiement.
+                OMEDEV vous accompagne dans votre <strong className="text-white font-semibold">digitalisation complète</strong>, de l'audit au déploiement.
               </motion.p>
 
               <motion.div
@@ -649,7 +649,7 @@ const Home = () => {
                     <Rocket size={18} className="text-white" />
                   </div>
                   <div>
-                    <p className="text-white font-bold text-sm font-syne leading-none">Omedev Services</p>
+                    <p className="text-white font-bold text-sm font-syne leading-none">OMEDEV Services</p>
                     <p className="text-white/80 text-[11px] mt-1">Partenaire digital de confiance</p>
                   </div>
                 </div>
@@ -710,7 +710,7 @@ const Home = () => {
             ))}
           </div>
           <div className="text-center mt-8">
-            <p className="text-[#25364A] mb-6 text-lg">Omedev a la solution pour chacun de ces défis.</p>
+            <p className="text-[#25364A] mb-6 text-lg">OMEDEV a la solution pour chacun de ces défis.</p>
             <Link to="/services" className="btn-primary">Découvrir nos solutions <ArrowRight size={18} /></Link>
           </div>
         </div>

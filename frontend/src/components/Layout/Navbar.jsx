@@ -68,7 +68,7 @@ const Navbar = () => {
               <span className="text-white font-bold text-xl leading-none">O</span>
             </div>
             <div className="leading-tight">
-              <div className="font-bold text-lg text-white tracking-tight font-syne">Omedev</div>
+              <div className="font-bold text-lg text-white tracking-tight font-syne">OMEDEV</div>
               <div className="text-[9px] text-[#72A5CE] tracking-widest uppercase leading-none">Services</div>
             </div>
           </Link>
@@ -168,7 +168,7 @@ const Navbar = () => {
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%)' }}>
                   <span className="text-white font-bold text-xl leading-none">O</span>
                 </div>
-                <span className="font-bold text-lg text-white font-syne">Omedev</span>
+                <span className="font-bold text-lg text-white font-syne">OMEDEV</span>
               </Link>
               <button
                 type="button"

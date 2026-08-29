@@ -1,4 +1,4 @@
-// backend/controllers/assistantController.js — Omedev Assist · Intelligence duale
+// backend/controllers/assistantController.js — OMEDEV Assist · Intelligence duale
 // Primaire : Anthropic Claude  |  Fallback : moteur NLP local
 
 let Anthropic;
@@ -33,7 +33,7 @@ const getSession = (sid) => {
 // ══════════════════════════════════════════════════════════════════════════════
 
 const SYSTEM_PROMPT = `
-Tu es **Omedev Assist** 🤖, l'assistant commercial & technique d'**Omedev Services**.
+Tu es **OMEDEV Assist** 🤖, l'assistant commercial & technique d'**OMEDEV Services**.
 
 IDENTITÉ : Expert en solutions IT, cybersécurité, développement digital, cloud, énergie et formation professionnelle. Ton professionnel, chaleureux, jamais robotique. Emojis avec modération.
 
@@ -170,7 +170,7 @@ const KB = {
     garantie: { fr: "Nous offrons un support et une maintenance continue après chaque installation, avec un accompagnement technique 24/7 pour nos clients sous contrat ✅", en: "We provide ongoing support and maintenance after every install, with 24/7 technical assistance for contract clients ✅", ln: "Topesaka support na maintenance sima ya installation ✅" },
     paiement: { fr: "Nous acceptons : carte bancaire, virement, Wave, Orange Money, Airtel Money. Un acompte est demandé pour lancer certains projets, solde à la livraison 💳", en: "We accept: bank card, wire transfer, Wave, Orange Money, Airtel Money 💳", ln: "Topesa na : carte bancaire, virement, Wave, Orange Money, Airtel Money 💳" },
     audit:    { fr: "Notre audit initial est gratuit ! Nous analysons vos besoins et vous remettons un rapport avec recommandations sous 48h 🔍", en: "Our initial audit is free! We analyze your needs and deliver a report with recommendations within 48h 🔍", ln: "Audit ya ebandeli ezali ofele ! Rapport epesami na 48h 🔍" },
-    entreprise:{ fr: "Omedev Services est votre partenaire spécialisé en solutions IT, cybersécurité, développement digital, cloud, énergie et formation professionnelle. Disponibles 24h/24, 7j/7 pour tous vos projets 🏢", en: "Omedev Services is your specialist in IT solutions, cybersecurity, digital development, cloud, energy and professional training. Available 24/7 🏢", ln: "Omedev Services ezali partenaire ya bino na solutions IT, cybersécurité, développement digital, énergie mpe formation. Tozali 24h/24 🏢" },
+    entreprise:{ fr: "OMEDEV Services est votre partenaire spécialisé en solutions IT, cybersécurité, développement digital, cloud, énergie et formation professionnelle. Disponibles 24h/24, 7j/7 pour tous vos projets 🏢", en: "OMEDEV Services is your specialist in IT solutions, cybersecurity, digital development, cloud, energy and professional training. Available 24/7 🏢", ln: "OMEDEV Services ezali partenaire ya bino na solutions IT, cybersécurité, développement digital, énergie mpe formation. Tozali 24h/24 🏢" },
   },
 };
 
@@ -181,9 +181,9 @@ const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const T = {
   fr: {
     greeting: [
-      "Bonjour ! 👋 Je suis Omedev Assist, votre conseiller spécialisé. Comment puis-je vous aider aujourd'hui ?",
+      "Bonjour ! 👋 Je suis OMEDEV Assist, votre conseiller spécialisé. Comment puis-je vous aider aujourd'hui ?",
       "Bonjour et bienvenue ! 🤖 Je suis là pour répondre à toutes vos questions sur nos solutions IT, énergie et digital. Que puis-je faire pour vous ?",
-      "Bonjour ! Ravi de vous accueillir chez Omedev Services. Quel projet avez-vous en tête ? 😊",
+      "Bonjour ! Ravi de vous accueillir chez OMEDEV Services. Quel projet avez-vous en tête ? 😊",
     ],
     farewell: [
       "Merci de votre confiance ! N'hésitez pas à revenir si vous avez d'autres questions. Bonne journée ! 👋",
@@ -198,7 +198,7 @@ const T = {
       const q = s.questions[lang][0];
       return `Excellent choix ! 🚀 ${s.extra} Ce type de prestation est proposé sur devis personnalisé, adapté à vos besoins.\n\nPour un devis précis : ${q}`;
     },
-    info_generic: "Bien sûr ! Omedev Services propose des solutions en réseau & infrastructure, cybersécurité & surveillance, développement digital, cloud & télécommunications, énergie & équipements, vente de matériel IT et formation. Sur quel service souhaitez-vous plus d'infos ?",
+    info_generic: "Bien sûr ! OMEDEV Services propose des solutions en réseau & infrastructure, cybersécurité & surveillance, développement digital, cloud & télécommunications, énergie & équipements, vente de matériel IT et formation. Sur quel service souhaitez-vous plus d'infos ?",
     qualification: (service, qIdx, lang) => {
       const s = KB.services[service];
       const questions = s.questions[lang] || s.questions.fr;
@@ -208,13 +208,13 @@ const T = {
     escalade: "Cette demande mérite l'attention de notre équipe d'experts ! 👷 Je transmets votre dossier immédiatement — un conseiller vous contactera sous 30 minutes. Ça vous va ?",
     unknown: [
       "Je ne suis pas sûr de bien comprendre votre demande. Pourriez-vous préciser ? Je suis là pour vous aider avec nos solutions IT, énergie et digital 😊",
-      "Hmm, pouvez-vous reformuler ? Je suis spécialisé sur les solutions IT, cybersécurité, cloud et énergie d'Omedev Services.",
+      "Hmm, pouvez-vous reformuler ? Je suis spécialisé sur les solutions IT, cybersécurité, cloud et énergie d'OMEDEV Services.",
     ],
   },
   en: {
     greeting: [
-      "Hello! 👋 I'm Omedev Assist, your specialist advisor. How can I help you today?",
-      "Welcome to Omedev Services! 🤖 I'm here for all your questions about IT, energy and digital solutions. What can I do for you?",
+      "Hello! 👋 I'm OMEDEV Assist, your specialist advisor. How can I help you today?",
+      "Welcome to OMEDEV Services! 🤖 I'm here for all your questions about IT, energy and digital solutions. What can I do for you?",
     ],
     farewell: [
       "Thank you! Feel free to come back anytime. Have a great day! 👋",
@@ -229,7 +229,7 @@ const T = {
       const q = (s.questions.en || s.questions.fr)[0];
       return `Great choice! 🚀 ${s.extra} This service is quoted individually based on your needs.\n\nTo get an accurate quote: ${q}`;
     },
-    info_generic: "Of course! Omedev Services offers network & infrastructure, cybersecurity & surveillance, digital development, cloud & telecom, energy & equipment, IT equipment sales and professional training. Which service would you like to know more about?",
+    info_generic: "Of course! OMEDEV Services offers network & infrastructure, cybersecurity & surveillance, digital development, cloud & telecom, energy & equipment, IT equipment sales and professional training. Which service would you like to know more about?",
     qualification: (service, qIdx, lang) => {
       const s = KB.services[service];
       const questions = s.questions.en || s.questions.fr;
@@ -238,12 +238,12 @@ const T = {
     },
     escalade: "This requires our expert team's attention! 👷 I'm forwarding your file now — a specialist will contact you within 30 minutes. Does that work for you?",
     unknown: [
-      "I'm not sure I understood that. Could you clarify? I specialize in IT, energy and digital solutions for Omedev Services 😊",
+      "I'm not sure I understood that. Could you clarify? I specialize in IT, energy and digital solutions for OMEDEV Services 😊",
     ],
   },
   ln: {
     greeting: [
-      "Mbote! 👋 Ngai Omedev Assist, conseiller ya bino. Nakosuisa yo ndenge nini lelo ?",
+      "Mbote! 👋 Ngai OMEDEV Assist, conseiller ya bino. Nakosuisa yo ndenge nini lelo ?",
       "Malamu na kobanda ! 🤖 Ngai nazali awa mpo na mituna nyonso na solutions IT, énergie mpe digital. Nakosuisa yo na nini ?",
     ],
     farewell: [
@@ -259,7 +259,7 @@ const T = {
       const q = (s.questions.ln || s.questions.fr)[0];
       return `Choix ya malamu ! 🚀 ${s.extra} Service oyo ezali sur devis.\n\nNa devis ya malamu : ${q}`;
     },
-    info_generic: "Ezali malamu ! Omedev Services esaleli na réseau & infrastructure, cybersécurité, développement digital, cloud, énergie mpe formation. Service nini olingi koyeba lisusu ?",
+    info_generic: "Ezali malamu ! OMEDEV Services esaleli na réseau & infrastructure, cybersécurité, développement digital, cloud, énergie mpe formation. Service nini olingi koyeba lisusu ?",
     qualification: (service, qIdx) => {
       const s = KB.services[service];
       const questions = s.questions.ln || s.questions.fr;
@@ -268,7 +268,7 @@ const T = {
     },
     escalade: "Demande oyo esengeli miso ya expert ya biso ! 👷 Natindeli dossier na bino sik'oyo — conseiller akosambela bino na miniti 30. Ezali malamu ?",
     unknown: [
-      "Nabosani te kolimbola. Okoki kolobela lisusu ? Nasaleli na solutions IT, énergie mpe digital ya Omedev Services 😊",
+      "Nabosani te kolimbola. Okoki kolobela lisusu ? Nasaleli na solutions IT, énergie mpe digital ya OMEDEV Services 😊",
     ],
   },
 };
