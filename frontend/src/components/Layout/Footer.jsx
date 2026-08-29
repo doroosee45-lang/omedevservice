@@ -383,7 +383,7 @@ const Footer = () => {
             <Link to="/" className="brand-logo">
               <div className="brand-icon">O</div>
               <div>
-                <div className="brand-name">OMDEVE<span> Services</span></div>
+                <div className="brand-name">OMEDEV<span> Services</span></div>
                 <div className="brand-sub">IT · ÉNERGIE · INFRASTRUCTURE</div>
               </div>
             </Link>
@@ -450,7 +450,7 @@ const Footer = () => {
         <div className="footer-bottom">
           <div className="footer-bottom-inner">
             <div className="copyright">
-              © {new Date().getFullYear()} <strong>OMDEVE Services</strong> — Tous droits réservés
+              © {new Date().getFullYear()} <strong>OMEDEV Services</strong> — Tous droits réservés
             </div>
             <div style={{ display:'flex', gap:'20px', flexWrap:'wrap' }}>
               <Link to="/legal" style={{ color:'#25364A', fontSize:'0.75rem', textDecoration:'none', transition:'color 0.2s' }}
