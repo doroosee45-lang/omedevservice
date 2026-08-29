@@ -2,6 +2,23 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
+
+    <!-- Auto-réparation des anciens liens partagés sans "#" (ex:
+         /blog/mon-article) vers le format HashRouter correct
+         (/#/blog/mon-article). Doit s'exécuter avant tout autre script,
+         et nécessite que l'hébergeur serve bien index.html pour ces
+         chemins (règle de rewrite "/* -> /index.html"). -->
+    <script>
+      (function () {
+        if (window.location.hash) return;
+        var path = window.location.pathname;
+        var base = path.indexOf('/omedevservice/') === 0 ? '/omedevservice/' : '/';
+        if (path === base) return;
+        var route = path.slice(base.length);
+        window.location.replace(base + '#/' + route + window.location.search);
+      })();
+    </script>
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <!-- Viewport: viewport-fit=cover pour le support notch iPhone -->

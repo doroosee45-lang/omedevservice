@@ -46,7 +46,7 @@ const confirmationEmail = (name, email, unsubToken) => ({
         </div>
         <p style="font-size:12px;color:#64748b;text-align:center;margin:0;">
           Vous souhaitez vous désabonner ?
-          <a href="${FRONTEND_URL}/newsletter/unsubscribe?token=${unsubToken}" style="color:#94a3b8;">Cliquer ici</a>
+          <a href="${FRONTEND_URL}/#/newsletter/unsubscribe?token=${unsubToken}" style="color:#94a3b8;">Cliquer ici</a>
         </p>
       </div>
     </div>
@@ -54,8 +54,10 @@ const confirmationEmail = (name, email, unsubToken) => ({
 });
 
 const articleNotificationEmail = (subscriber, article) => {
-  const articleUrl = `${FRONTEND_URL}/blog/${article.slug}`;
-  const unsubUrl   = `${FRONTEND_URL}/newsletter/unsubscribe?token=${subscriber.unsubscribeToken}`;
+  // Le frontend utilise HashRouter : sans le "#", ces liens renvoient une
+  // 404 côté hébergeur au lieu d'ouvrir la bonne route côté client.
+  const articleUrl = `${FRONTEND_URL}/#/blog/${article.slug}`;
+  const unsubUrl   = `${FRONTEND_URL}/#/newsletter/unsubscribe?token=${subscriber.unsubscribeToken}`;
   return {
     from: `"OMEDEV Services" <${process.env.EMAIL_USER}>`,
     to: subscriber.email,

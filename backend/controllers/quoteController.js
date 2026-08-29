@@ -88,7 +88,7 @@ const createQuoteRequest = async (req, res) => {
           <p><strong>Budget:</strong> ${budget || 'Non spécifié'}</p>
           <p><strong>Délai souhaité:</strong> ${timeline || 'Non spécifié'}</p>
           <hr>
-          <p><a href="${process.env.FRONTEND_URL}/admin/quote-requests/${quoteRequest._id}">Voir la demande dans l'admin</a></p>
+          <p><a href="${process.env.FRONTEND_URL}/#/admin/demandes-devis">Voir la demande dans l'admin</a></p>
         </div>
       `,
     });

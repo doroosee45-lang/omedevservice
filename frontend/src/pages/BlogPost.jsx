@@ -162,6 +162,7 @@ const BlogPost = () => {
   const { slug } = useParams()
   const [article, setArticle] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [linkCopied, setLinkCopied] = useState(false)
 
   useEffect(() => {
     if (!slug) return
@@ -170,6 +171,33 @@ const BlogPost = () => {
       .catch(err => console.error('Erreur chargement article:', err))
       .finally(() => setLoading(false))
   }, [slug])
+
+  // L'app utilise HashRouter : une URL publique valide doit inclure le "#"
+  // (sans lui, le navigateur envoie une vraie requête HTTP pour ce chemin
+  // au serveur, qui n'a rien à cette adresse -> 404 à l'ouverture directe).
+  // On repart de l'URL actuelle (avant le "#") plutôt que de l'origine
+  // seule, pour rester correct sur un déploiement avec sous-chemin
+  // (ex: GitHub Pages en /omedevservice/) comme sur Render en racine "/".
+  const getArticleUrl = () => `${window.location.href.split('#')[0]}#/blog/${article?.slug || slug}`
+
+  const shareLinkedIn = () => {
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(getArticleUrl())}`, '_blank', 'noopener,width=600,height=500')
+  }
+  const shareWhatsApp = () => {
+    const text = encodeURIComponent(`${article?.title || ''} — OMEDEV Blog`)
+    window.open(`https://wa.me/?text=${text}%20${encodeURIComponent(getArticleUrl())}`, '_blank', 'noopener')
+  }
+  const shareX = () => {
+    const text = encodeURIComponent(`${article?.title || ''} — OMEDEV Blog`)
+    window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(getArticleUrl())}`, '_blank', 'noopener,width=600,height=500')
+  }
+  const copyArticleLink = async () => {
+    try {
+      await navigator.clipboard.writeText(getArticleUrl())
+      setLinkCopied(true)
+      setTimeout(() => setLinkCopied(false), 2000)
+    } catch { /* silencieux */ }
+  }
 
   if (loading) {
     return (
@@ -314,11 +342,14 @@ const BlogPost = () => {
             </button>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
             <span className="text-[#25364A]/70 text-sm">Partager :</span>
-            <button className="px-4 py-2.5 rounded-full text-sm font-medium border border-[#053876]/15 text-[#053876] hover:border-[#2AACB2] hover:text-[#0B74C1] transition-colors">LinkedIn</button>
-            <button className="px-4 py-2.5 rounded-full text-sm font-medium border border-[#053876]/15 text-[#053876] hover:border-[#2AACB2] hover:text-[#0B74C1] transition-colors">WhatsApp</button>
-            <button className="px-4 py-2.5 rounded-full text-sm font-medium border border-[#053876]/15 text-[#053876] hover:border-[#2AACB2] hover:text-[#0B74C1] transition-colors">X</button>
+            <button onClick={shareLinkedIn} className="px-4 py-2.5 rounded-full text-sm font-medium border border-[#053876]/15 text-[#053876] hover:border-[#2AACB2] hover:text-[#0B74C1] transition-colors">LinkedIn</button>
+            <button onClick={shareWhatsApp} className="px-4 py-2.5 rounded-full text-sm font-medium border border-[#053876]/15 text-[#053876] hover:border-[#2AACB2] hover:text-[#0B74C1] transition-colors">WhatsApp</button>
+            <button onClick={shareX} className="px-4 py-2.5 rounded-full text-sm font-medium border border-[#053876]/15 text-[#053876] hover:border-[#2AACB2] hover:text-[#0B74C1] transition-colors">X</button>
+            <button onClick={copyArticleLink} className={`px-4 py-2.5 rounded-full text-sm font-medium border transition-colors ${linkCopied ? 'border-[#2AACB2] text-[#2AACB2]' : 'border-[#053876]/15 text-[#053876] hover:border-[#2AACB2] hover:text-[#0B74C1]'}`}>
+              {linkCopied ? 'Lien copié !' : 'Copier le lien'}
+            </button>
           </div>
         </div>
       </motion.div>

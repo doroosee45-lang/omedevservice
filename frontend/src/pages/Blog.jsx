@@ -213,7 +213,13 @@ const ShareButtons = ({ article }) => {
   const [open,   setOpen]   = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const articleUrl = `${window.location.origin}/blog/${article.slug}`;
+  // L'app utilise HashRouter : une URL publique valide doit inclure le "#"
+  // (sans lui, le navigateur envoie une vraie requête HTTP pour ce chemin
+  // au serveur, qui n'a rien à cette adresse -> 404 à l'ouverture directe).
+  // On repart de l'URL actuelle (avant le "#") plutôt que de l'origine
+  // seule, pour rester correct sur un déploiement avec sous-chemin
+  // (ex: GitHub Pages en /omedevservice/) comme sur Render en racine "/".
+  const articleUrl = `${window.location.href.split('#')[0]}#/blog/${article.slug}`;
   const text       = encodeURIComponent(`${article.title} — OMEDEV Blog`);
   const encodedUrl = encodeURIComponent(articleUrl);
 
