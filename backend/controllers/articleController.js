@@ -2,6 +2,16 @@
 const Article = require('../models/Article');
 const { sendArticleNotification } = require('./newsletterController');
 
+const slugify = (str) =>
+  (str || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+
 // @desc    Obtenir tous les articles publiés
 // @route   GET /api/blog
 // @access  Public
@@ -42,15 +52,14 @@ const getPublishedArticles = async (req, res) => {
 // @access  Public
 const getArticleBySlug = async (req, res) => {
   const article = await Article.findOne({ slug: req.params.slug, status: 'published' });
-  
+
   if (article) {
     // Incrémenter le nombre de vues
     article.views += 1;
     await article.save();
     res.json(article);
   } else {
-    res.status(404);
-    throw new Error('Article non trouvé');
+    return res.status(404).json({ success: false, message: 'Article non trouvé' });
   }
 };
 
@@ -70,8 +79,7 @@ const getArticleById = async (req, res) => {
   if (article) {
     res.json(article);
   } else {
-    res.status(404);
-    throw new Error('Article non trouvé');
+    return res.status(404).json({ success: false, message: 'Article non trouvé' });
   }
 };
 
@@ -81,32 +89,40 @@ const getArticleById = async (req, res) => {
 const createArticle = async (req, res) => {
   const { title, slug, excerpt, content, category, image, metaTitle, metaDescription, tags, status } = req.body;
 
-  const article = await Article.create({
-    title,
-    slug,
-    excerpt,
-    content,
-    category,
-    image,
-    author: req.user.name,
-    authorId: req.user._id,
-    metaTitle: metaTitle || title,
-    metaDescription: metaDescription || excerpt,
-    tags,
-    status,
-    publishedAt: status === 'published' ? new Date() : null,
-  });
-
-  if (article) {
-    // Notify newsletter subscribers if published immediately
-    if (status === 'published') {
-      sendArticleNotification(article).catch(() => {});
+  let article;
+  try {
+    article = await Article.create({
+      title,
+      slug: slugify(slug) || slugify(title),
+      excerpt,
+      content,
+      category,
+      image,
+      author: req.user.name,
+      authorId: req.user._id,
+      metaTitle: metaTitle || title,
+      metaDescription: metaDescription || excerpt,
+      tags,
+      status,
+      publishedAt: status === 'published' ? new Date() : null,
+    });
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      const message = Object.values(error.errors).map((e) => e.message).join(', ');
+      return res.status(400).json({ success: false, message });
     }
-    res.status(201).json(article);
-  } else {
-    res.status(400);
-    throw new Error('Données d\'article invalides');
+    if (error.code === 11000) {
+      return res.status(400).json({ success: false, message: 'Un article avec ce titre ou ce slug existe déjà' });
+    }
+    console.error('Erreur création article:', error);
+    return res.status(500).json({ success: false, message: 'Une erreur est survenue. Veuillez réessayer plus tard.' });
   }
+
+  // Notify newsletter subscribers if published immediately
+  if (article.status === 'published') {
+    sendArticleNotification(article).catch(() => {});
+  }
+  res.status(201).json(article);
 };
 
 // @desc    Mettre à jour un article
@@ -115,37 +131,49 @@ const createArticle = async (req, res) => {
 const updateArticle = async (req, res) => {
   const article = await Article.findById(req.params.id);
 
-  if (article) {
-    article.title = req.body.title || article.title;
-    article.slug = req.body.slug || article.slug;
-    article.excerpt = req.body.excerpt || article.excerpt;
-    article.content = req.body.content || article.content;
-    article.category = req.body.category || article.category;
-    article.image = req.body.image || article.image;
-    article.metaTitle = req.body.metaTitle || article.metaTitle;
-    article.metaDescription = req.body.metaDescription || article.metaDescription;
-    article.tags = req.body.tags || article.tags;
-    
-    const oldStatus = article.status;
-    article.status = req.body.status || article.status;
-    
-    const justPublished = oldStatus !== 'published' && article.status === 'published';
-    if (justPublished) {
-      article.publishedAt = new Date();
-    }
-
-    const updatedArticle = await article.save();
-
-    // Send newsletter notification when article goes from draft/hidden → published
-    if (justPublished) {
-      sendArticleNotification(updatedArticle).catch(() => {});
-    }
-
-    res.json(updatedArticle);
-  } else {
-    res.status(404);
-    throw new Error('Article non trouvé');
+  if (!article) {
+    return res.status(404).json({ success: false, message: 'Article non trouvé' });
   }
+
+  article.title = req.body.title || article.title;
+  article.slug = req.body.slug ? slugify(req.body.slug) : article.slug;
+  article.excerpt = req.body.excerpt || article.excerpt;
+  article.content = req.body.content || article.content;
+  article.category = req.body.category || article.category;
+  article.image = req.body.image || article.image;
+  article.metaTitle = req.body.metaTitle || article.metaTitle;
+  article.metaDescription = req.body.metaDescription || article.metaDescription;
+  article.tags = req.body.tags || article.tags;
+
+  const oldStatus = article.status;
+  article.status = req.body.status || article.status;
+
+  const justPublished = oldStatus !== 'published' && article.status === 'published';
+  if (justPublished) {
+    article.publishedAt = new Date();
+  }
+
+  let updatedArticle;
+  try {
+    updatedArticle = await article.save();
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      const message = Object.values(error.errors).map((e) => e.message).join(', ');
+      return res.status(400).json({ success: false, message });
+    }
+    if (error.code === 11000) {
+      return res.status(400).json({ success: false, message: 'Un article avec ce titre ou ce slug existe déjà' });
+    }
+    console.error('Erreur mise à jour article:', error);
+    return res.status(500).json({ success: false, message: 'Une erreur est survenue. Veuillez réessayer plus tard.' });
+  }
+
+  // Send newsletter notification when article goes from draft/hidden → published
+  if (justPublished) {
+    sendArticleNotification(updatedArticle).catch(() => {});
+  }
+
+  res.json(updatedArticle);
 };
 
 // @desc    Supprimer un article
@@ -157,8 +185,7 @@ const deleteArticle = async (req, res) => {
     await article.deleteOne();
     res.json({ message: 'Article supprimé' });
   } else {
-    res.status(404);
-    throw new Error('Article non trouvé');
+    return res.status(404).json({ success: false, message: 'Article non trouvé' });
   }
 };
 

@@ -134,7 +134,7 @@ const ArticleModal = ({ article, categories, onSave, onClose }) => {
             <label className="block text-sm text-white/50 mb-1">Slug (URL)</label>
             <div className="flex items-center gap-2">
               <span className="text-white/40 text-sm shrink-0">/blog/</span>
-              <input type="text" value={form.slug} onChange={(e) => setForm(f => ({ ...f, slug: e.target.value }))}
+              <input type="text" value={form.slug} onChange={(e) => setForm(f => ({ ...f, slug: autoSlug(e.target.value) }))}
                 placeholder="exemple-article"
                 className="admin-input flex-1" />
             </div>
