@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import {
   Calendar, Clock, User, ArrowLeft,
   Share2, Bookmark, ThumbsUp
@@ -34,20 +36,19 @@ const globalStyles = `
     border-color: rgba(42,172,178,.35);
   }
 
-  /* Contenu de l'article : couleurs explicites, indépendantes du plugin
-     Tailwind typography (non installé) sur lequel reposaient les classes
-     "prose-*" — elles n'avaient donc jamais eu d'effet, d'où le texte
-     invisible (couleur héritée par défaut). */
+  /* Contenu de l'article (rendu via react-markdown) : couleurs explicites,
+     indépendantes du plugin Tailwind typography (non installé) sur lequel
+     reposaient les anciennes classes "prose-*" — elles n'avaient donc
+     jamais eu d'effet, d'où le texte invisible (couleur héritée par
+     défaut) et le Markdown affiché tel quel (###, **texte**...). */
   .omedev-blogpost .article-content {
     color: #25364A;
     font-size: 1.05rem;
     line-height: 1.85;
-    white-space: pre-line;
   }
   .omedev-blogpost .article-content p {
     color: #25364A;
-    margin-bottom: 1.25rem;
-    white-space: pre-line;
+    margin: 0 0 1.25rem;
   }
   .omedev-blogpost .article-content h1,
   .omedev-blogpost .article-content h2,
@@ -56,19 +57,97 @@ const globalStyles = `
     color: #053876;
     font-family: 'Syne', sans-serif;
     font-weight: 800;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+    line-height: 1.3;
+    margin: 2rem 0 1rem;
   }
+  .omedev-blogpost .article-content h1 { font-size: 1.9rem; }
+  .omedev-blogpost .article-content h2 { font-size: 1.6rem; }
+  .omedev-blogpost .article-content h3 { font-size: 1.3rem; }
+  .omedev-blogpost .article-content h4 { font-size: 1.1rem; }
+  .omedev-blogpost .article-content ul,
+  .omedev-blogpost .article-content ol {
+    color: #25364A;
+    margin: 0 0 1.25rem;
+    padding-left: 1.5rem;
+  }
+  .omedev-blogpost .article-content ul { list-style: disc; }
+  .omedev-blogpost .article-content ol { list-style: decimal; }
   .omedev-blogpost .article-content li {
     color: #25364A;
+    margin-bottom: .4rem;
   }
+  .omedev-blogpost .article-content li > p { margin-bottom: .4rem; }
   .omedev-blogpost .article-content strong,
   .omedev-blogpost .article-content b {
     color: #0B74C1;
+    font-weight: 700;
+  }
+  .omedev-blogpost .article-content em {
+    font-style: italic;
   }
   .omedev-blogpost .article-content a {
     color: #0B74C1;
     text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .omedev-blogpost .article-content a:hover {
+    color: #2AACB2;
+  }
+  .omedev-blogpost .article-content blockquote {
+    margin: 0 0 1.25rem;
+    padding: .75rem 1.25rem;
+    border-left: 4px solid #2AACB2;
+    background: #F6F6F7;
+    color: #25364A;
+    font-style: italic;
+    border-radius: 0 10px 10px 0;
+  }
+  .omedev-blogpost .article-content code {
+    background: #F6F6F7;
+    color: #053876;
+    padding: .15rem .4rem;
+    border-radius: 6px;
+    font-size: .9em;
+  }
+  .omedev-blogpost .article-content pre {
+    background: #0B1213;
+    color: #F6F6F7;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    overflow-x: auto;
+    margin: 0 0 1.25rem;
+  }
+  .omedev-blogpost .article-content pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+  }
+  .omedev-blogpost .article-content hr {
+    border: none;
+    border-top: 1px solid rgba(5,56,118,.12);
+    margin: 2rem 0;
+  }
+  .omedev-blogpost .article-content img {
+    max-width: 100%;
+    border-radius: 14px;
+    margin: 1.25rem 0;
+  }
+  .omedev-blogpost .article-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 1.25rem;
+  }
+  .omedev-blogpost .article-content th,
+  .omedev-blogpost .article-content td {
+    border: 1px solid rgba(5,56,118,.12);
+    padding: .6rem .8rem;
+    text-align: left;
+    color: #25364A;
+  }
+  .omedev-blogpost .article-content th {
+    background: #F6F6F7;
+    color: #053876;
+    font-family: 'Syne', sans-serif;
   }
 `;
 
@@ -200,10 +279,11 @@ const BlogPost = () => {
         variants={fadeUp}
         className="max-w-4xl mx-auto px-6 py-14 sm:py-16"
       >
-        <article
-          className="article-content"
-          dangerouslySetInnerHTML={{ __html: article.content }}
-        />
+        <article className="article-content">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {article.content}
+          </ReactMarkdown>
+        </article>
 
         {/* Tags */}
         {article.tags?.length > 0 && (
