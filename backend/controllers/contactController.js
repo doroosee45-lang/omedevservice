@@ -101,7 +101,11 @@ const sendContactMessage = async (req, res) => {
     });
   } catch (emailError) {
     console.error('Erreur envoi email contact:', emailError);
-    // On ne bloque pas : le message est déjà en base
+    return res.status(502).json({
+      success: false,
+      message: "Votre message a été enregistré, mais l'envoi de l'email a échoué. Veuillez réessayer plus tard ou nous contacter directement par téléphone.",
+      code: emailError.code,
+    });
   }
 
   res.status(200).json({

@@ -574,7 +574,7 @@ const ServiceDetailPage = () => {
       categoryId: 'cloud-hebergement',
       icon: Server,
       color: '#4681B7',
-      shortDescription: 'Hébergement web haute disponibilité sur AWS/Vercel pour une performance optimale.',
+      shortDescription: 'Hébergement web haute disponibilité sur AWS pour une performance optimale.',
       fullDescription: 'Nous proposons des solutions d\'hébergement cloud haute performance : uptime 99.9%, CDN mondial, sauvegardes automatiques, monitoring et support 24/7.',
       features: [
         'Uptime garanti 99.9%',

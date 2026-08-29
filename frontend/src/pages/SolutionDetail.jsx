@@ -280,7 +280,7 @@ const SolutionDetailPage = () => {
 - Notifications push
 
 **2. Infrastructure cloud scalable**
-- Hébergement AWS/Vercel haute disponibilité
+- Hébergement AWS haute disponibilité
 - CDN mondial
 - Sauvegardes automatiques
 - Monitoring 24/7

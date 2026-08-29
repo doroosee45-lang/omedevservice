@@ -1414,7 +1414,7 @@ const technologies = [
     icon: Smartphone,
   },
   {
-    name: 'AWS / Vercel',
+    name: 'AWS',
     icon: Cloud,
   },
   {
