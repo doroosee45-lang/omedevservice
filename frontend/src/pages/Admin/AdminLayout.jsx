@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Outlet, Link, useLocation } from 'react-router-dom'
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   LayoutDashboard,
@@ -25,6 +25,7 @@ import { adminGlobalStyles } from '../../components/Admin/ui'
 const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate()
 
   const navItems = [
     { path: '/admin/dashboard',        icon: LayoutDashboard, label: 'Dashboard'           },
@@ -122,7 +123,7 @@ const AdminLayout = () => {
                   localStorage.removeItem('userName')
                   localStorage.removeItem('userEmail')
                   localStorage.removeItem('userId')
-                  window.location.href = '/#/login'
+                  navigate('/login')
                 }}
                 className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/50 hover:text-red-400 hover:bg-red-500/10 transition-all w-full"
               >

@@ -1,5 +1,6 @@
 import { Bell, Search, Menu, X } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { tickets as ticketsApi } from '../services/api'
 
 const ClientHeader = ({ onMenuClick }) => {
@@ -98,9 +99,9 @@ const ClientHeader = ({ onMenuClick }) => {
                   ))}
                 </div>
                 <div className="p-3 text-center border-t">
-                  <a href="/client/messagerie" className="text-sm text-[#0B74C1] hover:text-[#2AACB2] hover:underline transition-colors">
+                  <Link to="/client/messagerie" className="text-sm text-[#0B74C1] hover:text-[#2AACB2] hover:underline transition-colors">
                     Voir tous les messages →
-                  </a>
+                  </Link>
                 </div>
               </div>
             )}

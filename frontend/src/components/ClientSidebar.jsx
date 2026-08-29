@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   FileText,
@@ -14,6 +14,7 @@ import {
 import { useState, useEffect } from 'react';
 
 const ClientSidebar = () => {
+  const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [userName, setUserName] = useState('Client');
   const [userEmail, setUserEmail] = useState('');
@@ -51,7 +52,7 @@ const ClientSidebar = () => {
     localStorage.removeItem('user');
     
     // Rediriger vers login
-    window.location.href = '/#/login';
+    navigate('/login');
   };
 
   // Initiales pour l'avatar

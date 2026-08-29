@@ -44,7 +44,9 @@ api.interceptors.response.use(
         localStorage.removeItem('userName');
         localStorage.removeItem('userEmail');
         localStorage.removeItem('userId');
-        window.location.href = '/#/login';
+        // Changer uniquement le hash (pas .href) : HashRouter capte le
+        // hashchange et route en client-side, sans recharger toute l'app.
+        window.location.hash = '/login';
       }
     }
     return Promise.reject(error);

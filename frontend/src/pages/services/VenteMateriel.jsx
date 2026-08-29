@@ -299,6 +299,13 @@ const HOW_IT_WORKS = [
 ]
 
 export default function VenteMateriel() {
+  // Ancre vers une section de la page. Un simple href="#id" casse la
+  // navigation sous HashRouter (le routeur interprète tout après "#"
+  // comme un chemin de route), donc on scrolle manuellement à la place.
+  const scrollToSection = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   // Produits
   const [products, setProducts]         = useState([])
   const [loadingProducts, setLoading]   = useState(true)
@@ -427,8 +434,8 @@ export default function VenteMateriel() {
         title="Le matériel qu'il vous faut, au meilleur prix"
         highlight="au meilleur prix"
         subtitle="Ordinateurs, climatiseurs, caméras, serveurs, accessoires… Livraison rapide et support technique inclus."
-        primaryAction={{ label: 'Voir le catalogue', href: '#catalogue', icon: <ShoppingBag size={18} /> }}
-        secondaryAction={{ label: 'Suivre ma commande', href: '#suivi', icon: <Search size={18} /> }}
+        primaryAction={{ label: 'Voir le catalogue', onClick: () => scrollToSection('catalogue'), icon: <ShoppingBag size={18} /> }}
+        secondaryAction={{ label: 'Suivre ma commande', onClick: () => scrollToSection('suivi'), icon: <Search size={18} /> }}
       />
 
       {/* ==================== GARANTIES ==================== */}

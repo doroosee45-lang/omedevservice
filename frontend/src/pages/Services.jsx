@@ -198,6 +198,13 @@ const CategorySection = ({ category, index }) => (
 );
 
 const ServicesPage = () => {
+  // Ancre vers une section de la page. Un simple href="#id" casse la
+  // navigation sous HashRouter (le routeur interprète tout après "#"
+  // comme un chemin de route), donc on scrolle manuellement à la place.
+  const scrollToSection = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
     <div className="omedev-services">
       <style>{globalStyles}</style>
@@ -245,14 +252,15 @@ const ServicesPage = () => {
         <div className="container">
           <div className="flex flex-wrap justify-center gap-3">
             {serviceCategories.map((cat, idx) => (
-              <a
+              <button
                 key={idx}
-                href={`#${cat.id}`}
+                type="button"
+                onClick={() => scrollToSection(cat.id)}
                 className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 border hover:scale-105"
                 style={{ background: `${cat.hex}12`, color: cat.hex, borderColor: `${cat.hex}40` }}
               >
                 {cat.name}
-              </a>
+              </button>
             ))}
           </div>
         </div>
