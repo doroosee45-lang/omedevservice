@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { devis as devisApi } from '../../services/api'
+import { devis as devisApi, auth as authApi } from '../../services/api'
+import { getClientDestinataireLines } from '../../utils/clientInfo'
 import {
   CreditCard, Download, Eye, Search, Calendar, Euro,
   CheckCircle, Clock, AlertCircle, Plus, Wallet, X,
@@ -67,16 +68,8 @@ const ENTREPRISE = {
   logo: 'OM'
 }
 
-/* ─── Nom client selon projet ─────────────────────────────────────────────── */
-const getClientNom = (projet) => {
-  if (projet.includes('E-commerce')) return 'Boutique Élégance SARL'
-  if (projet.includes('Réseau'))     return 'Infra Conseil SAS'
-  if (projet.includes('Cloud'))      return 'DataFlow Technologies'
-  return 'Cyber Protect Group'
-}
-
 /* ─── Génération PDF via jsPDF (palette OMEDEV) ────────────────────────────── */
-const generateInvoicePDF = async (paiement) => {
+const generateInvoicePDF = async (paiement, clientProfile) => {
   if (!window.jspdf) {
     await new Promise((resolve, reject) => {
       const s = document.createElement('script')
@@ -178,14 +171,7 @@ const generateInvoicePDF = async (paiement) => {
     ENTREPRISE.email
   ])
 
-  drawInfoBloc(110, 88, navy, 'CLIENT / DESTINATAIRE', [
-    getClientNom(paiement.projet),
-    'Responsable : M. Jean Dupont',
-    "12 Avenue de l'Innovation",
-    '69002 Lyon, France',
-    'contact@client.fr',
-    '+33 4 72 00 00 00'
-  ])
+  drawInfoBloc(110, 88, navy, 'CLIENT / DESTINATAIRE', getClientDestinataireLines(clientProfile))
 
   // ── Infos facture (3 colonnes)
   y = 124
@@ -344,7 +330,7 @@ const generateInvoicePDF = async (paiement) => {
 }
 
 /* ─── Modal: Voir Facture ─────────────────────────────────────────────────── */
-const ModalVoirFacture = ({ paiement, onClose, onPay, onDownload }) => {
+const ModalVoirFacture = ({ paiement, onClose, onPay, onDownload, clientProfile }) => {
   const status = {
     paid:    { label: 'Payé',       color: 'bg-[#55DDB5]/15 text-[#1D5B9B] border-[#55DDB5]/50', icon: CheckCircle },
     pending: { label: 'En attente', color: 'bg-amber-100 text-amber-700 border-amber-300/50',     icon: Clock },
@@ -392,10 +378,9 @@ const ModalVoirFacture = ({ paiement, onClose, onPay, onDownload }) => {
             </div>
             <div className="bg-[#F6F6F7] rounded-xl p-4">
               <p className="text-[#0B74C1] text-xs font-bold uppercase tracking-wide mb-3">Client</p>
-              <p className="text-[#053876] font-bold text-sm">{getClientNom(paiement.projet)}</p>
-              <p className="text-[#25364A]/70 text-xs mt-1">M. Jean Dupont</p>
-              <p className="text-[#25364A]/70 text-xs">12 Av. de l'Innovation</p>
-              <p className="text-[#25364A]/70 text-xs">69002 Lyon, France</p>
+              {getClientDestinataireLines(clientProfile).map((line, i) => (
+                <p key={i} className={i === 0 ? 'text-[#053876] font-bold text-sm' : 'text-[#25364A]/70 text-xs mt-1'}>{line}</p>
+              ))}
             </div>
           </div>
 
@@ -460,13 +445,13 @@ const ModalVoirFacture = ({ paiement, onClose, onPay, onDownload }) => {
 }
 
 /* ─── Modal: Télécharger PDF ──────────────────────────────────────────────── */
-const ModalTelecharger = ({ paiement, onClose }) => {
+const ModalTelecharger = ({ paiement, onClose, clientProfile }) => {
   const [status, setStatus] = useState('idle')
 
   const handleDownload = async () => {
     setStatus('loading')
     try {
-      await generateInvoicePDF(paiement)
+      await generateInvoicePDF(paiement, clientProfile)
       setStatus('done')
       setTimeout(onClose, 2000)
     } catch {
@@ -742,6 +727,13 @@ const Paiements = () => {
   const [modalPayer, setModalPayer]       = useState(null)
 
   const [paiements, setPaiements] = useState([])
+  const [clientProfile, setClientProfile] = useState(null)
+
+  useEffect(() => {
+    // Profil réel du client connecté, utilisé pour le bloc "CLIENT /
+    // DESTINATAIRE" des factures — jamais de données fictives.
+    authApi.getProfile().then(res => setClientProfile(res.data)).catch(err => console.error('Erreur chargement profil client:', err))
+  }, [])
 
   useEffect(() => {
     devisApi.getMyDevis().then(res => {
@@ -792,12 +784,13 @@ const Paiements = () => {
       <AnimatePresence>
         {modalVoir && (
           <ModalVoirFacture paiement={modalVoir}
+            clientProfile={clientProfile}
             onClose={() => setModalVoir(null)}
             onPay={p => { setModalVoir(null); setModalPayer(p) }}
             onDownload={p => { setModalVoir(null); setModalDownload(p) }} />
         )}
         {modalDownload && (
-          <ModalTelecharger paiement={modalDownload} onClose={() => setModalDownload(null)} />
+          <ModalTelecharger paiement={modalDownload} clientProfile={clientProfile} onClose={() => setModalDownload(null)} />
         )}
         {modalPayer && (
           <ModalPayer paiement={modalPayer}

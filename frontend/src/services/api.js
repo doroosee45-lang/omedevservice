@@ -54,6 +54,15 @@ api.interceptors.response.use(
 );
 
 
+// ==================== PROFIL UTILISATEUR CONNECTÉ ====================
+// GET/PUT /auth/profile n'acceptent aucun ID en paramètre : le backend
+// utilise toujours req.user._id (déduit du token JWT), donc ces appels
+// ne peuvent renvoyer que les données du compte réellement authentifié.
+export const auth = {
+  getProfile: () => api.get('/auth/profile'),
+  updateProfile: (data) => api.put('/auth/profile', data),
+};
+
 // ==================== DASHBOARD ADMIN ====================
 export const adminDashboard = {
   getStats: () => api.get('/dashboard/admin/stats'),

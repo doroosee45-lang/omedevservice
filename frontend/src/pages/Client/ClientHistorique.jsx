@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { history as historyApi } from '../../services/api'
+import { history as historyApi, auth as authApi } from '../../services/api'
+import { getClientDestinataireLines } from '../../utils/clientInfo'
 import {
   History as HistoryIcon,
   CheckCircle,
@@ -145,7 +146,7 @@ const DETAILS = {
 }
 
 /* ─── Génération PDF via jsPDF (palette OMEDEV) ────────────────────────────── */
-const generateHistoriquePDF = async (item) => {
+const generateHistoriquePDF = async (item, clientProfile) => {
   if (!window.jspdf) {
     await new Promise((resolve, reject) => {
       const s = document.createElement('script')
@@ -253,14 +254,7 @@ const generateHistoriquePDF = async (item) => {
     ENTREPRISE.email
   ])
 
-  drawBloc(110, 88, navy, 'CLIENT / DESTINATAIRE', [
-    item.type === 'PRJ-001' ? 'Boutique Elegance SARL' : 'Client TechVision',
-    `Responsable : M. Jean Dupont`,
-    "12 Avenue de l'Innovation",
-    '69002 Lyon, France',
-    'contact@client.fr',
-    '+33 4 72 00 00 00'
-  ])
+  drawBloc(110, 88, navy, 'CLIENT / DESTINATAIRE', getClientDestinataireLines(clientProfile))
 
   // ── Infos mission
   y = 124
@@ -539,13 +533,13 @@ const ModalDetails = ({ item, onClose, onDownload }) => {
 }
 
 /* ─── Modal: Télécharger PDF ──────────────────────────────────────────────── */
-const ModalTelecharger = ({ item, onClose }) => {
+const ModalTelecharger = ({ item, onClose, clientProfile }) => {
   const [status, setStatus] = useState('idle')
 
   const handleDownload = async () => {
     setStatus('loading')
     try {
-      await generateHistoriquePDF(item)
+      await generateHistoriquePDF(item, clientProfile)
       setStatus('done')
       setTimeout(onClose, 2000)
     } catch {
@@ -625,13 +619,20 @@ const Historique = () => {
   const [modalDetails, setModalDetails]     = useState(null)
   const [modalDownload, setModalDownload]   = useState(null)
   const [historique, setHistorique] = useState([])
+  const [clientProfile, setClientProfile] = useState(null)
+
+  useEffect(() => {
+    // Profil réel du client connecté, utilisé pour le bloc "CLIENT /
+    // DESTINATAIRE" des documents — jamais de données fictives.
+    authApi.getProfile().then(res => setClientProfile(res.data)).catch(err => console.error('Erreur chargement profil client:', err))
+  }, [])
 
   useEffect(() => {
     historyApi.getMyHistory().then(res => {
       const data = (res.data?.history || res.data || []).map(h => ({
         ...h,
-        id: h.reference || h._id,
-        name: h.title || h.description || 'Opération',
+        id: h.id || h._id,
+        name: h.name || h.description || 'Opération',
         type: h.type || 'Projet',
         date: h.createdAt ? new Date(h.createdAt).toLocaleDateString('fr-FR') : '',
         amount: h.amount ? `${h.amount}€` : '—',
@@ -688,7 +689,7 @@ const Historique = () => {
             onDownload={item => { setModalDetails(null); setModalDownload(item) }} />
         )}
         {modalDownload && (
-          <ModalTelecharger item={modalDownload} onClose={() => setModalDownload(null)} />
+          <ModalTelecharger item={modalDownload} clientProfile={clientProfile} onClose={() => setModalDownload(null)} />
         )}
       </AnimatePresence>
 

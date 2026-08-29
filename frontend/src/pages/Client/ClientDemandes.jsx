@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { devis as devisApi } from '../../services/api'
+import { devis as devisApi, auth as authApi } from '../../services/api'
+import { getClientDestinataireLines } from '../../utils/clientInfo'
 import {
   Search, Filter, Eye, Download, Calendar, Euro,
   Clock, CheckCircle, XCircle, AlertCircle, FileText,
@@ -68,7 +69,7 @@ const ENTREPRISE = {
 }
 
 /* ─── Génération PDF devis (palette OMEDEV) ────────────────────────────────── */
-const generateDevisPDF = async (demande) => {
+const generateDevisPDF = async (demande, clientProfile) => {
   if (!window.jspdf) {
     await new Promise((resolve, reject) => {
       const s = document.createElement('script')
@@ -135,15 +136,15 @@ const generateDevisPDF = async (demande) => {
     .forEach((l,i)=>doc.text(l,17,y+22+i*5.5))
 
   // Client
+  const destLines = getClientDestinataireLines(clientProfile)
   doc.setFillColor(...gray50); doc.roundedRect(110,y,88,46,3,3,'F')
   doc.setFillColor(...navy); doc.roundedRect(110,y,88,8,3,3,'F'); doc.rect(110,y+4,88,4,'F')
   doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(...white)
   doc.text('CLIENT / DESTINATAIRE',118,y+5.5)
   doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(...gray700)
-  doc.text('Client Premium SAS',115,y+15)
+  doc.text(destLines[0],115,y+15)
   doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(...gray500)
-  ;['Responsable : M. Jean Dupont','12 Avenue de l\'Innovation','69002 Lyon, France','contact@client.fr','+33 4 72 00 00 00']
-    .forEach((l,i)=>doc.text(l,115,y+22+i*5.5))
+  destLines.slice(1).forEach((l,i)=>doc.text(l,115,y+22+i*5.5))
 
   // Infos devis
   y=120
@@ -366,13 +367,13 @@ const ModalDetails = ({ demande, onClose, onDownload }) => {
 }
 
 /* ─── Modal: Télécharger PDF ──────────────────────────────────────────────── */
-const ModalDownload = ({ demande, onClose }) => {
+const ModalDownload = ({ demande, onClose, clientProfile }) => {
   const [status, setStatus] = useState('idle')
 
   const handleDownload = async () => {
     setStatus('loading')
     try {
-      await generateDevisPDF(demande)
+      await generateDevisPDF(demande, clientProfile)
       setStatus('done')
       setTimeout(onClose, 1800)
     } catch {
@@ -446,6 +447,13 @@ const Demandes = () => {
   const [modalDetails, setModalDetails] = useState(null)
   const [modalDownload, setModalDownload] = useState(null)
   const [demandes, setDemandes] = useState([])
+  const [clientProfile, setClientProfile] = useState(null)
+
+  useEffect(() => {
+    // Profil réel du client connecté, utilisé pour le bloc "CLIENT /
+    // DESTINATAIRE" des documents — jamais de données fictives.
+    authApi.getProfile().then(res => setClientProfile(res.data)).catch(err => console.error('Erreur chargement profil client:', err))
+  }, [])
 
   useEffect(() => {
     devisApi.getMyDevis().then(res => {
@@ -494,7 +502,7 @@ const Demandes = () => {
             onDownload={d => { setModalDetails(null); setModalDownload(d) }} />
         )}
         {modalDownload && (
-          <ModalDownload demande={modalDownload} onClose={() => setModalDownload(null)} />
+          <ModalDownload demande={modalDownload} clientProfile={clientProfile} onClose={() => setModalDownload(null)} />
         )}
       </AnimatePresence>
 
