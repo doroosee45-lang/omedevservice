@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const { protect, authorize } = require('../middleware/authMiddleware');
+const { publicFormLimiter } = require('../middleware/rateLimitMiddleware');
 const {
   subscribe,
   unsubscribe,
@@ -11,7 +12,7 @@ const {
 } = require('../controllers/newsletterController');
 
 // Public
-router.post('/subscribe', subscribe);
+router.post('/subscribe', publicFormLimiter, subscribe);
 router.get('/unsubscribe/:token', unsubscribe);
 
 // Admin

@@ -13,12 +13,13 @@ const {
   refreshToken,
 } = require('../controllers/authController');
 const { protect } = require('../middleware/authMiddleware');
+const { loginLimiter, forgotPasswordLimiter } = require('../middleware/rateLimitMiddleware');
 
 // Routes publiques
 // NB : pas d'inscription publique — les comptes sont créés exclusivement
 // par le SuperAdministrateur depuis l'espace d'administration.
-router.post('/login', loginUser);
-router.post('/forgot-password', forgotPassword);
+router.post('/login', loginLimiter, loginUser);
+router.post('/forgot-password', forgotPasswordLimiter, forgotPassword);
 router.post('/reset-password', resetPassword);
 router.post('/activate-account', activateAccount);
 router.post('/refresh-token', refreshToken);

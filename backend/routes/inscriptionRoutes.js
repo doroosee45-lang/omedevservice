@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const { protect, authorize } = require('../middleware/authMiddleware');
+const { publicFormLimiter } = require('../middleware/rateLimitMiddleware');
 const {
   createInscription,
   getAllInscriptions,
@@ -13,7 +14,7 @@ const {
 } = require('../controllers/inscriptionController');
 
 // Route publique
-router.post('/', createInscription);
+router.post('/', publicFormLimiter, createInscription);
 
 // Routes admin
 router.use(protect, authorize('admin', 'super_admin'));

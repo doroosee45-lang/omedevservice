@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const { protect, authorize } = require('../middleware/authMiddleware');
+const { publicFormLimiter } = require('../middleware/rateLimitMiddleware');
 const {
   // Public functions
   createQuoteRequest,
@@ -20,7 +21,7 @@ const {
 } = require('../controllers/quoteController');
 
 // ==================== ROUTES PUBLIQUES ====================
-router.post('/', createQuoteRequest);
+router.post('/', publicFormLimiter, createQuoteRequest);
 router.get('/track/:requestNumber', trackQuoteRequest);
 
 // ==================== ROUTES CLIENTS CONNECTÉS ====================

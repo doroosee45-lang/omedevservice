@@ -115,6 +115,19 @@ const updateUser = async (req, res) => {
   const user = await User.findById(req.params.id);
 
   if (user) {
+    // La création de compte est réservée au SuperAdministrateur (voir
+    // createUser ci-dessus) : la modification de rôle doit suivre la même
+    // règle, sinon un simple admin pourrait s'auto-promouvoir (ou promouvoir
+    // n'importe qui) super_admin via cette route, qui n'exige que
+    // authorize('admin','super_admin'). Un simple admin ne peut pas non
+    // plus toucher un compte déjà super_admin (rôle, statut...).
+    if (req.body.role && req.body.role !== user.role && req.user.role !== 'super_admin') {
+      return res.status(403).json({ success: false, message: 'Seul un Super Administrateur peut modifier le rôle d\'un utilisateur.' });
+    }
+    if (user.role === 'super_admin' && req.user.role !== 'super_admin') {
+      return res.status(403).json({ success: false, message: 'Seul un Super Administrateur peut modifier ce compte.' });
+    }
+
     // Sauvegarde des anciennes valeurs pour l'audit
     const oldData = { role: user.role, isActive: user.isActive, name: user.name, email: user.email };
 
@@ -164,6 +177,9 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   const user = await User.findById(req.params.id);
   if (user) {
+    if (user.role === 'super_admin' && req.user.role !== 'super_admin') {
+      return res.status(403).json({ success: false, message: 'Seul un Super Administrateur peut supprimer ce compte.' });
+    }
     await user.deleteOne();
     await logAction({ action: 'delete', entityType: 'user', entityId: user._id, entityName: user.name, req });
     res.json({ message: 'Utilisateur supprimé' });
@@ -179,6 +195,9 @@ const deleteUser = async (req, res) => {
 const toggleUserStatus = async (req, res) => {
   const user = await User.findById(req.params.id);
   if (user) {
+    if (user.role === 'super_admin' && req.user.role !== 'super_admin') {
+      return res.status(403).json({ success: false, message: 'Seul un Super Administrateur peut modifier ce compte.' });
+    }
     const oldStatus = user.isActive;
     user.isActive = !user.isActive;
     await user.save();

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { protect, authorize } = require('../middleware/authMiddleware');
+const { publicFormLimiter } = require('../middleware/rateLimitMiddleware');
 const {
   createAuditRequest,
   getMyAudits,
@@ -26,7 +27,7 @@ console.log('createAuditRequest:', createAuditRequest); // pour debug
 // et a été retirée pour éviter la confusion (elle laissait croire, à tort,
 // que la route était protégée par rôle admin).
 router.get('/:id/pdf', downloadAuditPDF);
-router.post('/', createAuditRequest);
+router.post('/', publicFormLimiter, createAuditRequest);
 router.get('/track/:requestNumber', getAuditByRequestNumber);
 
 // Routes client connecté

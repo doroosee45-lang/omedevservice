@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { protect, authorize } = require('../middleware/authMiddleware');
+const { publicFormLimiter } = require('../middleware/rateLimitMiddleware');
 const {
   getProducts, getAllProducts, createProduct, updateProduct, deleteProduct,
   createOrder, trackOrder, getMyOrders, getStats, getAllOrders, getOrderById, updateOrderStatus, deleteOrder,
@@ -17,7 +18,7 @@ router.route('/products/:id')
 router.post('/products', protect, authorize('admin', 'super_admin'), createProduct);
 
 // ===== COMMANDES =====
-router.post('/orders', createOrder);                                               // Public — passer une commande
+router.post('/orders', publicFormLimiter, createOrder);                            // Public — passer une commande
 router.get('/orders/track/:orderNumber', trackOrder);                              // Public — suivi par numéro
 router.get('/orders/my-orders', protect, getMyOrders);                             // Client — ses commandes
 router.get('/orders/stats', protect, authorize('admin', 'super_admin'), getStats); // Admin — statistiques

@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const { protect, authorize } = require('../middleware/authMiddleware');
+const { publicFormLimiter } = require('../middleware/rateLimitMiddleware');
 const {
   sendContactMessage,
   getContactMessages,
@@ -12,7 +13,7 @@ const {
 } = require('../controllers/contactController');
 
 // Route publique
-router.post('/', sendContactMessage);
+router.post('/', publicFormLimiter, sendContactMessage);
 
 // Routes admin
 router.use(protect, authorize('admin', 'super_admin'));

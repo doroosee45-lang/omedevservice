@@ -69,8 +69,14 @@ const addMessageToTicket = async (req, res) => {
     return res.status(404).json({ error: 'Ticket non trouvé' });
   }
   
-  // Vérifier que le ticket appartient au client (sauf si admin)
-  if (ticket.client.toString() !== req.user._id.toString() && req.user.role === 'client') {
+  // Vérifier que le ticket appartient au client (sauf si admin). Le rôle
+  // seul ne suffit pas à distinguer "propriétaire" de "tiers non admin" :
+  // manager et visitor ne sont ni l'un ni l'autre, donc seuls
+  // admin/super_admin bénéficient du contournement (sinon un manager/visitor
+  // pouvait écrire dans le ticket de n'importe quel client via son seul _id).
+  const isOwner = ticket.client.toString() === req.user._id.toString();
+  const isAdmin = ['admin', 'super_admin'].includes(req.user.role);
+  if (!isOwner && !isAdmin) {
     return res.status(403).json({ error: 'Non autorisé' });
   }
   

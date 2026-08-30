@@ -7,6 +7,15 @@ const connectDB = require('./config/db');
 // Charger les variables d'environnement
 dotenv.config();
 
+// Express 4 ne transmet pas automatiquement les rejets de Promise d'un
+// handler async à errorHandler (contrairement à Express 5) : sans ce patch,
+// une erreur async (ex. CastError sur un ObjectId invalide, ValidationError,
+// doublon Mongo) laisse la requête sans réponse jusqu'au timeout du client
+// au lieu de renvoyer l'erreur JSON propre attendue par errorMiddleware.js
+// - confirmé en conditions réelles (GET avec ID malformé -> connexion qui
+// reste ouverte indéfiniment) avant ce correctif.
+require('express-async-errors');
+
 // Connexion à la base de données
 connectDB();
 
@@ -19,9 +28,24 @@ const app = express();
 // (ex: URLs d'images uploadées, voir articleController.js).
 app.set('trust proxy', 1);
 
-// CORS — accepte toutes les origines (répondre aux preflight OPTIONS inclus)
+// CORS — restreint à l'origine réelle du frontend en production.
+// FRONTEND_URL est déjà la source de vérité utilisée ailleurs dans l'app
+// (liens d'activation, de suivi de dossier, de désabonnement...) : elle doit
+// donc déjà pointer vers la bonne URL de production sur Render, ce qui évite
+// d'avoir à deviner un domaine ici. En développement (NODE_ENV !== 'production'),
+// on reste permissif comme avant pour ne pas gêner le travail local (ports
+// Vite variables, plusieurs instances locales, etc.).
+const normalizeOrigin = (url) => (url || '').replace(/\/+$/, '');
+const allowedOrigins = [normalizeOrigin(process.env.FRONTEND_URL)].filter(Boolean);
 const corsOptions = {
-  origin: (origin, callback) => callback(null, true),
+  origin: (origin, callback) => {
+    // Pas d'en-tête Origin (requêtes serveur-à-serveur, health check Render,
+    // curl...) : rien à restreindre, ce n'est jamais un navigateur tiers.
+    if (!origin) return callback(null, true);
+    if (process.env.NODE_ENV !== 'production') return callback(null, true);
+    if (allowedOrigins.includes(normalizeOrigin(origin))) return callback(null, true);
+    return callback(new Error('Origine non autorisée par la politique CORS'), false);
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],

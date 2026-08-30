@@ -36,8 +36,14 @@ const downloadDevisPDF = async (req, res) => {
     res.status(404);
     throw new Error('Devis non trouvé');
   }
-  // Vérifier que l'utilisateur est le propriétaire ou admin
-  if (devis.user.toString() !== req.user._id.toString() && req.user.role === 'client') {
+  // Vérifier que l'utilisateur est le propriétaire ou admin. Le rôle seul
+  // ne suffit pas à distinguer "propriétaire" de "tiers non admin" : manager
+  // et visitor ne sont ni l'un ni l'autre, donc seuls admin/super_admin
+  // bénéficient du contournement (sinon un manager/visitor pouvait
+  // télécharger le devis de n'importe quel client via son seul _id).
+  const isOwner = devis.user.toString() === req.user._id.toString();
+  const isAdmin = ['admin', 'super_admin'].includes(req.user.role);
+  if (!isOwner && !isAdmin) {
     res.status(403);
     throw new Error('Non autorisé');
   }
