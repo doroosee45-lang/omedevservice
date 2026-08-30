@@ -405,13 +405,20 @@ const createAuditRequest = async (req, res) => {
       </div>
     `;
 
-    await transporter.sendMail({
-      from:    `"OMEDEV Services" <${process.env.EMAIL_USER}>`,
-      to:      auditData.email,
-      subject: `Confirmation de votre demande d'audit — ${auditRequest.requestNumber}`,
-      html:    confirmationHtml,
-    });
-    console.log(`Email de confirmation envoyé à ${auditData.email}`);
+    // La demande d'audit est déjà enregistrée à ce stade : un échec
+    // d'envoi d'email (ex. limite du mode bac à sable Resend) ne doit
+    // jamais faire échouer la création du dossier lui-même.
+    try {
+      await transporter.sendMail({
+        from:    `"OMEDEV Services" <${process.env.EMAIL_USER}>`,
+        to:      auditData.email,
+        subject: `Confirmation de votre demande d'audit — ${auditRequest.requestNumber}`,
+        html:    confirmationHtml,
+      });
+      console.log(`Email de confirmation envoyé à ${auditData.email}`);
+    } catch (emailError) {
+      console.error('Erreur envoi email confirmation audit:', emailError);
+    }
 
     // Planification de l'envoi du rapport après 4 minutes
     scheduleAuditReport(auditRequest._id);

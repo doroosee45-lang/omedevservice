@@ -20,6 +20,12 @@ const sendContactMessage = async (req, res) => {
   // Sauvegarder en base de données
   await ContactMessage.create({ nom, email, phone: phone || '', objet, message });
 
+  // Le message est déjà enregistré à ce stade : un échec d'envoi d'email
+  // (ex. limite du mode bac à sable Resend tant qu'aucun domaine n'est
+  // vérifié - voir mailer.js) ne doit jamais faire croire au visiteur que
+  // sa demande n'a pas été prise en compte. Les deux emails sont chacun
+  // dans leur propre try/catch pour que l'échec de l'un ne bloque pas
+  // l'envoi de l'autre.
   try {
     // Email de confirmation au client
     await sendMail({
@@ -55,7 +61,11 @@ const sendContactMessage = async (req, res) => {
         </body></html>
       `,
     });
+  } catch (emailError) {
+    console.error('Erreur envoi email confirmation contact:', emailError);
+  }
 
+  try {
     // Email de notification à l'équipe
     await sendMail({
       from: `"Formulaire Contact OMEDEV" <${process.env.EMAIL_USER}>`,
@@ -90,12 +100,7 @@ const sendContactMessage = async (req, res) => {
       `,
     });
   } catch (emailError) {
-    console.error('Erreur envoi email contact:', emailError);
-    return res.status(502).json({
-      success: false,
-      message: "Votre message a été enregistré, mais l'envoi de l'email a échoué. Veuillez réessayer plus tard ou nous contacter directement par téléphone.",
-      code: emailError.code,
-    });
+    console.error('Erreur envoi email notification contact:', emailError);
   }
 
   res.status(200).json({
