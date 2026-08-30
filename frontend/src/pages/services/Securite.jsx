@@ -1157,7 +1157,7 @@ const Securite = () => {
               </div>
 
               <Link
-                to="/devis"
+                to="/demander-devis"
                 className="btn-primary mt-8"
               >
                 Demander un devis sécurité

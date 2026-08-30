@@ -448,6 +448,8 @@ const Demandes = () => {
   const [modalDownload, setModalDownload] = useState(null)
   const [demandes, setDemandes] = useState([])
   const [clientProfile, setClientProfile] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(false)
 
   useEffect(() => {
     // Profil réel du client connecté, utilisé pour le bloc "CLIENT /
@@ -455,7 +457,9 @@ const Demandes = () => {
     authApi.getProfile().then(res => setClientProfile(res.data)).catch(err => console.error('Erreur chargement profil client:', err))
   }, [])
 
-  useEffect(() => {
+  const loadDemandes = () => {
+    setLoading(true)
+    setLoadError(false)
     devisApi.getMyDevis().then(res => {
       const data = (res.data?.devis || res.data || []).map(d => ({
         ...d,
@@ -467,7 +471,14 @@ const Demandes = () => {
         estimatedDelivery: d.deadline ? new Date(d.deadline).toLocaleDateString('fr-FR') : '-',
       }))
       setDemandes(data)
-    }).catch(err => console.error('Erreur chargement demandes:', err))
+    }).catch(err => {
+      console.error('Erreur chargement demandes:', err)
+      setLoadError(true)
+    }).finally(() => setLoading(false))
+  }
+
+  useEffect(() => {
+    loadDemandes()
   }, [])
 
   const getStatusConfig = (status) => ({
@@ -562,7 +573,29 @@ const Demandes = () => {
                 </div>
               </motion.div>
 
+              {/* Chargement */}
+              {loading && (
+                <div className="flex flex-col items-center justify-center gap-3 py-20 text-[#25364A]/60">
+                  <div className="w-8 h-8 border-2 border-[#2AACB2] border-t-transparent rounded-full animate-spin" />
+                  <span className="text-sm">Chargement de vos demandes…</span>
+                </div>
+              )}
+
+              {/* Erreur de chargement */}
+              {!loading && loadError && (
+                <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+                  className="text-center py-16 bg-white border border-red-200 rounded-2xl shadow-[0_10px_30px_rgba(5,56,118,0.06)]">
+                  <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-[#053876]">Impossible de charger vos demandes</h3>
+                  <p className="text-[#25364A]/60 mt-1 mb-5">Une erreur est survenue. Vérifiez votre connexion et réessayez.</p>
+                  <button onClick={loadDemandes} className="px-5 py-2.5 rounded-full bg-[#2AACB2] hover:bg-[#2AACB2]/80 text-white text-sm font-semibold transition-colors">
+                    Réessayer
+                  </button>
+                </motion.div>
+              )}
+
               {/* Grille */}
+              {!loading && !loadError && (
               <motion.div variants={staggerContainer} initial="hidden" animate="visible"
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredDemandes.map((demande) => {
@@ -644,9 +677,10 @@ const Demandes = () => {
                   )
                 })}
               </motion.div>
+              )}
 
               {/* Empty state */}
-              {filteredDemandes.length === 0 && (
+              {!loading && !loadError && filteredDemandes.length === 0 && (
                 <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
                   className="text-center py-16 bg-white border border-[rgba(5,56,118,0.09)] rounded-2xl shadow-[0_10px_30px_rgba(5,56,118,0.06)]">
                   <AlertCircle className="w-16 h-16 text-[#25364A]/30 mx-auto mb-4" />

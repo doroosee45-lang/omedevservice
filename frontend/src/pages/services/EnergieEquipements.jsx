@@ -463,7 +463,7 @@ const EnergieEquipements = () => {
                   );
                 })}
               </div>
-              <Link to="/devis" className="btn-primary mt-8">
+              <Link to="/demander-devis" className="btn-primary mt-8">
                 Commander du matériel <ArrowRight size={16} />
               </Link>
             </motion.div>
@@ -637,7 +637,7 @@ const EnergieEquipements = () => {
                   );
                 })}
               </div>
-              <Link to="/devis" className="btn-primary mt-8">
+              <Link to="/demander-devis" className="btn-primary mt-8">
                 Demander un devis personnalisé <ArrowRight size={16} />
               </Link>
             </motion.div>

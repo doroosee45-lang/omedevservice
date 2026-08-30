@@ -188,6 +188,7 @@ const ResetPassword = () => {
                       placeholder="••••••••"
                     />
                     <button type="button" onClick={() => setShowPassword(!showPassword)}
+                      aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-[#55DDB5] transition-colors">
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -209,6 +210,7 @@ const ResetPassword = () => {
                       placeholder="••••••••"
                     />
                     <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      aria-label={showConfirmPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-[#55DDB5] transition-colors">
                       {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>

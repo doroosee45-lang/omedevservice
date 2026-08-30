@@ -748,7 +748,7 @@ const DevisCloud = () => {
 
                 <div className="flex flex-col sm:flex-row justify-center gap-4 mt-2 mb-2">
                   <Link
-                    to="/cloud-hebergement"
+                    to="/services/cloud-hebergement"
                     className="btn-outline"
                   >
                     <ChevronLeft size={17} />
@@ -1305,7 +1305,7 @@ const DevisCloud = () => {
           }}
         >
           <Link
-            to="/cloud-hebergement"
+            to="/services/cloud-hebergement"
             style={{
               display: 'inline-flex',
               alignItems: 'center',

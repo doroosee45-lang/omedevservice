@@ -17,7 +17,7 @@ import {
   MessageSquare,
 } from 'lucide-react'
 import { adminDashboard } from '../../services/api'
-import { PageHeader, StatCard, Card, LoadingState, fadeUp, staggerContainer } from '../../components/Admin/ui'
+import { PageHeader, StatCard, Card, LoadingState, EmptyState, fadeUp, staggerContainer } from '../../components/Admin/ui'
 
 // Mappe les couleurs métier historiques vers les dégradés du Design System (Home)
 const colorToGradient = {
@@ -60,35 +60,55 @@ const AdminDashboard = () => {
   const currentYear = new Date().getFullYear()
 
   const [loading, setLoading]       = useState(true)
+  const [error, setError]           = useState(false)
   const [stats, setStats]           = useState(null)
   const [revenueData, setRevenue]   = useState([])
   const [activities, setActivities] = useState([])
   const [alerts, setAlerts]         = useState([])
 
-  useEffect(() => {
-    const fetchAll = async () => {
-      try {
-        const [sRes, rRes, aRes, alRes] = await Promise.all([
-          adminDashboard.getStats(),
-          adminDashboard.getRevenue(currentYear),
-          adminDashboard.getActivities(),
-          adminDashboard.getAlerts(),
-        ])
-        setStats(sRes.data)
-        setRevenue(rRes.data)
-        setActivities(aRes.data)
-        setAlerts(alRes.data)
-      } catch (err) {
-        console.error('Erreur chargement dashboard:', err)
-      } finally {
-        setLoading(false)
-      }
+  const fetchAll = async () => {
+    setLoading(true)
+    setError(false)
+    try {
+      const [sRes, rRes, aRes, alRes] = await Promise.all([
+        adminDashboard.getStats(),
+        adminDashboard.getRevenue(currentYear),
+        adminDashboard.getActivities(),
+        adminDashboard.getAlerts(),
+      ])
+      setStats(sRes.data)
+      setRevenue(rRes.data)
+      setActivities(aRes.data)
+      setAlerts(alRes.data)
+    } catch (err) {
+      console.error('Erreur chargement dashboard:', err)
+      setError(true)
+    } finally {
+      setLoading(false)
     }
+  }
+
+  useEffect(() => {
     fetchAll()
   }, [])
 
   if (loading) {
     return <LoadingState label="Chargement du dashboard…" />
+  }
+
+  if (error) {
+    return (
+      <EmptyState
+        icon={AlertCircle}
+        title="Impossible de charger le tableau de bord"
+        description="Une erreur est survenue lors du chargement des données. Vérifiez votre connexion et réessayez."
+        action={
+          <button onClick={fetchAll} className="px-5 py-2.5 rounded-full bg-[#2AACB2] hover:bg-[#2AACB2]/80 text-white text-sm font-semibold transition-colors">
+            Réessayer
+          </button>
+        }
+      />
+    )
   }
 
   const statCards = stats ? [

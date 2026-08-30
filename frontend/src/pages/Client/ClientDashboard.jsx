@@ -159,6 +159,7 @@ const ClientDashboard = () => {
   const [statsData, setStatsData] = useState(null)
   const [recentDemandes, setRecentDemandes] = useState([])
   const [activeProjects, setActiveProjects] = useState([])
+  const [loadError, setLoadError] = useState(false)
 
   useEffect(() => {
     const name = localStorage.getItem('userName')
@@ -169,6 +170,7 @@ const ClientDashboard = () => {
   }, [])
 
   const loadDashboardData = async () => {
+    setLoadError(false)
     try {
       const [statsRes, demandsRes, projectsRes] = await Promise.allSettled([
         dashApi.getStats(),
@@ -178,8 +180,14 @@ const ClientDashboard = () => {
       if (statsRes.status === 'fulfilled') setStatsData(statsRes.value.data)
       if (demandsRes.status === 'fulfilled') setRecentDemandes(demandsRes.value.data?.demands || demandsRes.value.data || [])
       if (projectsRes.status === 'fulfilled') setActiveProjects(projectsRes.value.data?.projects || projectsRes.value.data || [])
+      // Toutes les requêtes ont échoué : les tirets d'espace réservé ('—')
+      // seuls ne préviennent pas l'utilisateur d'un vrai problème réseau/API.
+      if ([statsRes, demandsRes, projectsRes].every((r) => r.status === 'rejected')) {
+        setLoadError(true)
+      }
     } catch (err) {
       console.error('Erreur chargement dashboard client:', err)
+      setLoadError(true)
     }
   }
 
@@ -254,6 +262,15 @@ const ClientDashboard = () => {
                   <p className="text-xs text-[#25364A]/50 mt-1">{userEmail}</p>
                 )}
               </motion.div>
+
+              {loadError && (
+                <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600 font-medium flex items-center justify-between gap-4">
+                  <span>Une erreur est survenue lors du chargement de vos données. Vérifiez votre connexion.</span>
+                  <button onClick={loadDashboardData} className="shrink-0 px-4 py-1.5 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-semibold transition-colors">
+                    Réessayer
+                  </button>
+                </div>
+              )}
 
               {/* Stats Grid */}
               <motion.div

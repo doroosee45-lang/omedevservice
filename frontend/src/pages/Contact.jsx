@@ -194,7 +194,7 @@ const Contact = () => {
         highlight="en contact"
         subtitle="Une question, un projet ? Notre équipe IT, Énergie & Infrastructure est là pour vous répondre."
         primaryAction={{ label: 'Nos services', to: '/services' }}
-        secondaryAction={{ label: 'Audit gratuit', to: '/audit' }}
+        secondaryAction={{ label: 'Audit gratuit', to: '/audit-gratuit' }}
         compact
       />
 

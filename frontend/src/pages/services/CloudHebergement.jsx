@@ -1447,7 +1447,7 @@ const CloudHebergement = () => {
               </div>
 
               <div style={{ marginTop: '1.5rem' }}>
-                <Link to="/devis" className="btn-primary">
+                <Link to="/demander-devis" className="btn-primary">
                   Demander un devis cloud
                   <ArrowRight size={17} />
                 </Link>

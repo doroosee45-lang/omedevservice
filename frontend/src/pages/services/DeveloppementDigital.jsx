@@ -1977,7 +1977,7 @@ const DeveloppementDigital = () => {
 
               <div style={{ marginTop: '1.5rem' }}>
                 <Link
-                  to="/devis"
+                  to="/demander-devis"
                   className="btn-primary"
                 >
                   Discuter de votre projet

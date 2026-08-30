@@ -540,7 +540,7 @@ const Inscription = () => {
                   ) : null}
 
                   <Link
-                    to="/formation"
+                    to="/services/formation"
                     className="inline-flex items-center
                       gap-2 mt-8 font-bold"
                     style={{ color: colors.blue }}
@@ -1011,7 +1011,7 @@ const Inscription = () => {
           >
 
             <Link
-              to="/formation"
+              to="/services/formation"
               className="inline-flex items-center
                 gap-2 text-sm font-bold
                 transition-all hover:-translate-x-1"
@@ -1081,7 +1081,7 @@ const Inscription = () => {
             </p>
 
             <Link
-              to="/formation"
+              to="/services/formation"
               className="inline-flex items-center
                 gap-2 px-7 py-4 rounded-xl
                 font-bold text-white

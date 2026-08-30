@@ -977,7 +977,7 @@ const Home = () => {
                 </div>
                 <h3 className="font-display font-bold text-white text-xl mb-3">{product.title}</h3>
                 <p className="text-[#25364A] text-sm leading-relaxed mb-4">{product.description}</p>
-                <Link to="/boutique" className="text-blue-400 text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">Voir les produits <ArrowRight size={14} /></Link>
+                <Link to="/services/vente-materiel" className="text-blue-400 text-sm font-semibold inline-flex items-center gap-1 hover:gap-2 transition-all">Voir les produits <ArrowRight size={14} /></Link>
               </motion.div>
             ))}
           </div>

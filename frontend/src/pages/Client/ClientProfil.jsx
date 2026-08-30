@@ -18,7 +18,7 @@ import {
 } from 'lucide-react'
 import ClientSidebar from '../../components/ClientSidebar'
 import ClientHeader from '../../components/ClientHeader'
-import axios from 'axios'
+import { auth as authApi } from '../../services/api'
 
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
@@ -73,8 +73,7 @@ const Profil = () => {
   useEffect(() => {
     const token = localStorage.getItem('accessToken')
     if (token) {
-      const baseURL = import.meta?.env?.VITE_API_URL || 'http://localhost:5000/api'
-      axios.get(`${baseURL}/auth/profile`, { headers: { Authorization: `Bearer ${token}` } })
+      authApi.getProfile()
         .then(res => {
           const u = res.data
           setProfile(p => ({
@@ -151,14 +150,12 @@ const Profil = () => {
   const handleSaveProfile = async () => {
     setIsLoading(true)
     try {
-      const token = localStorage.getItem('accessToken')
-      const baseURL = import.meta?.env?.VITE_API_URL || 'http://localhost:5000/api'
-      await axios.put(`${baseURL}/auth/profile`, {
+      await authApi.updateProfile({
         name: profile.nom,
         email: profile.email,
         phone: profile.telephone,
         address: profile.adresse,
-      }, { headers: { Authorization: `Bearer ${token}` } })
+      })
       localStorage.setItem('userName', profile.nom)
       localStorage.setItem('userEmail', profile.email)
       setSuccessMessage('Profil mis à jour avec succès !')
@@ -178,12 +175,10 @@ const Profil = () => {
       return
     }
     try {
-      const token = localStorage.getItem('accessToken')
-      const baseURL = import.meta?.env?.VITE_API_URL || 'http://localhost:5000/api'
-      await axios.put(`${baseURL}/auth/change-password`, {
+      await authApi.changePassword({
         currentPassword: passwords.current,
         newPassword: passwords.new,
-      }, { headers: { Authorization: `Bearer ${token}` } })
+      })
       alert('Mot de passe changé avec succès !')
       setPasswords({ current: '', new: '', confirm: '' })
     } catch (err) {
