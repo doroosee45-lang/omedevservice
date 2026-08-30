@@ -47,7 +47,7 @@ const AuditDetailModal = ({ audit, onClose, onStatusChange }) => {
 
   const handleDownloadPDF = async () => {
     try {
-      const res = await auditsApi.downloadPDF(audit._id)
+      const res = await auditsApi.downloadPDF(audit._id, audit.email)
       const url = URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }))
       const a = document.createElement('a')
       a.href = url

@@ -209,12 +209,12 @@ export const inscriptions = {
 export const audits = {
   create: (data) => api.post('/audit-requests', data),
   getMyAudits: () => api.get('/audit-requests/my-audits'),
-  track: (requestNumber) => api.get(`/audit-requests/track/${requestNumber}`),
+  track: (requestNumber, email) => api.get(`/audit-requests/track/${requestNumber}`, { params: { email } }),
   getAll: () => api.get('/audit-requests'),
   getStats: () => api.get('/audit-requests/stats'),
   getById: (id) => api.get(`/audit-requests/${id}`),
   updateStatus: (id, status) => api.put(`/audit-requests/${id}/status`, { status }),
-  downloadPDF: (id) => api.get(`/audit-requests/${id}/pdf`, { responseType: 'blob' }),
+  downloadPDF: (id, email) => api.get(`/audit-requests/${id}/pdf`, { params: { email }, responseType: 'blob' }),
   updatePdfUrl: (id, pdfReportUrl) => api.put(`/audit-requests/${id}/pdf`, { pdfReportUrl }),
   delete: (id) => api.delete(`/audit-requests/${id}`),
 };
@@ -256,7 +256,7 @@ export const venteMateriel = {
   deleteProduct: (id) => api.delete(`/vente-materiel/products/${id}`),
   // Commandes
   createOrder: (data) => api.post('/vente-materiel/orders', data),
-  trackOrder: (orderNumber) => api.get(`/vente-materiel/orders/track/${orderNumber}`),
+  trackOrder: (orderNumber, email) => api.get(`/vente-materiel/orders/track/${orderNumber}`, { params: { email } }),
   getMyOrders: () => api.get('/vente-materiel/orders/my-orders'),
   getAllOrders: (params) => api.get('/vente-materiel/orders', { params }),
   getOrderById: (id) => api.get(`/vente-materiel/orders/${id}`),

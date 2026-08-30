@@ -174,10 +174,24 @@ const createOrder = async (req, res) => {
   }
 };
 
+// orderNumber (CMD-YYMM-####) est séquentiel donc énumérable : il ne doit
+// jamais suffire seul à consulter une commande (nom du produit, prix payé,
+// ville de livraison...). On exige l'email du client en second facteur, et
+// on renvoie le même message générique que le numéro n'existe pas ou que
+// l'email ne corresponde pas, pour ne jamais confirmer qu'un numéro existe.
 const trackOrder = async (req, res) => {
   try {
-    const order = await VenteMaterielOrder.findOne({ orderNumber: req.params.orderNumber });
-    if (!order) return res.status(404).json({ success: false, message: 'Commande introuvable' });
+    const { email } = req.query;
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Numéro de commande et email requis.' });
+    }
+
+    const order = await VenteMaterielOrder.findOne({
+      orderNumber: req.params.orderNumber,
+      email: email.toLowerCase().trim(),
+    });
+    if (!order) return res.status(404).json({ success: false, message: 'Aucune commande ne correspond à ce numéro et cet email.' });
+
     res.json({
       orderNumber: order.orderNumber,
       status:      order.status,

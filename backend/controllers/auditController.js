@@ -440,11 +440,22 @@ const createAuditRequest = async (req, res) => {
 };
 
 // Téléchargement du PDF (pour l'admin)
+// Route accessible en public (voir routes/auditRoutes.js — nécessaire pour
+// que le client puisse télécharger son rapport juste après l'avoir soumis,
+// avant même d'avoir un compte) ET par l'admin authentifié depuis le panel.
+// Comme l'ObjectId Mongo seul ne suffit pas à garantir qu'il n'a pas fuité
+// (logs, URL partagée...), on exige systématiquement l'email du demandeur
+// en second facteur - y compris pour l'appel admin, qui l'a déjà sous la
+// main dans la fiche de l'audit affichée.
 const downloadAuditPDF = async (req, res) => {
   console.log('📥 Téléchargement PDF demandé pour ID :', req.params.id);
   try {
+    const { email } = req.query;
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Email requis.' });
+    }
     const audit = await AuditRequest.findById(req.params.id);
-    if (!audit) {
+    if (!audit || audit.email !== email.toLowerCase().trim()) {
       return res.status(404).json({ success: false, message: 'Audit non trouvé' });
     }
     let pdfUrl = audit.pdfReportUrl;
@@ -472,10 +483,25 @@ const getMyAudits = async (req, res) => {
   }
 };
 
+// requestNumber (AUD-YYMM-####) est séquentiel donc énumérable : il ne doit
+// jamais suffire seul à consulter un audit (score, niveau, statut d'une
+// entreprise tierce...). On exige l'email du demandeur en second facteur,
+// et on renvoie le même message générique que le numéro n'existe pas ou
+// que l'email ne corresponde pas, pour ne jamais confirmer qu'un numéro
+// existe.
 const getAuditByRequestNumber = async (req, res) => {
   try {
-    const audit = await AuditRequest.findOne({ requestNumber: req.params.requestNumber });
-    if (!audit) return res.status(404).json({ message: 'Audit non trouvé' });
+    const { email } = req.query;
+    if (!email) {
+      return res.status(400).json({ message: 'Numéro de dossier et email requis.' });
+    }
+
+    const audit = await AuditRequest.findOne({
+      requestNumber: req.params.requestNumber,
+      email: email.toLowerCase().trim(),
+    });
+    if (!audit) return res.status(404).json({ message: 'Aucun audit ne correspond à ce numéro et cet email.' });
+
     res.json({
       requestNumber: audit.requestNumber,
       status:        audit.status,

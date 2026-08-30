@@ -314,6 +314,7 @@ export default function VenteMateriel() {
 
   // Track order
   const [trackNumber, setTrackNumber]   = useState('')
+  const [trackEmail, setTrackEmail]     = useState('')
   const [trackResult, setTrackResult]   = useState(null)
   const [tracking, setTracking]         = useState(false)
   const [trackError, setTrackError]     = useState('')
@@ -388,7 +389,10 @@ export default function VenteMateriel() {
         country:       formData.country,
         paymentMethod: formData.paymentMethod,
       })
-      setOrderNumber(res.data?.orderNumber || res.data?.order?.orderNumber || 'CMD-' + Date.now())
+      // Ne jamais fabriquer un faux numéro : la commande est bien créée même
+      // si l'API ne renvoie pas de orderNumber, mais promettre un numéro qui
+      // n'existerait pas réellement en base le rendrait impossible à suivre.
+      setOrderNumber(res.data?.orderNumber || '')
       setOrderDone(true)
     } catch (err) {
       setOrderError(err.response?.data?.message || 'Erreur lors de l\'envoi. Veuillez réessayer.')
@@ -399,13 +403,13 @@ export default function VenteMateriel() {
 
   const handleTrack = async (e) => {
     e.preventDefault()
-    if (!trackNumber.trim()) return
+    if (!trackNumber.trim() || !trackEmail.trim()) return
     setTracking(true); setTrackError(''); setTrackResult(null)
     try {
-      const res = await vmApi.trackOrder(trackNumber.trim())
+      const res = await vmApi.trackOrder(trackNumber.trim(), trackEmail.trim())
       setTrackResult(res.data)
     } catch {
-      setTrackError('Aucune commande trouvée avec ce numéro.')
+      setTrackError('Aucune commande ne correspond à ce numéro et cet email.')
     } finally {
       setTracking(false)
     }
@@ -606,14 +610,20 @@ export default function VenteMateriel() {
                           <CheckCircle className="w-10 h-10 text-[#2AACB2]" />
                         </motion.div>
                         <h3 className="text-2xl font-bold text-[#053876] font-syne mb-2">Commande confirmée !</h3>
-                        <p className="text-[#25364A]/70 mb-4">Numéro de suivi :</p>
-                        <div className="text-xl font-mono font-bold text-[#0B74C1] bg-[#F6F6F7] inline-block px-6 py-2 rounded-xl mb-5">{orderNumber}</div>
+                        {orderNumber && (
+                          <>
+                            <p className="text-[#25364A]/70 mb-4">Numéro de suivi :</p>
+                            <div className="text-xl font-mono font-bold text-[#0B74C1] bg-[#F6F6F7] inline-block px-6 py-2 rounded-xl mb-5">{orderNumber}</div>
+                          </>
+                        )}
                         <p className="text-[#25364A]/70 text-sm mb-2">Un email de confirmation a été envoyé à <strong className="text-[#053876]">{formData.email}</strong>.</p>
                         <p className="text-[#25364A]/50 text-xs mb-8">Conservez votre numéro pour suivre votre commande ci-dessous.</p>
                         <div className="flex gap-3 justify-center">
                           <button onClick={closeForm} className="px-5 py-2 bg-[#0B74C1] hover:bg-[#053876] text-white rounded-xl font-semibold text-sm transition">Nouvelle commande</button>
-                          <button onClick={() => { closeForm(); setTrackNumber(orderNumber); setTimeout(() => document.getElementById('suivi')?.scrollIntoView({ behavior: 'smooth' }), 200) }}
-                            className="px-5 py-2 bg-white border border-[rgba(5,56,118,0.18)] hover:border-[#2AACB2] text-[#053876] hover:bg-[#F6F6F7] rounded-xl font-semibold text-sm transition">Suivre ma commande</button>
+                          {orderNumber && (
+                            <button onClick={() => { closeForm(); setTrackNumber(orderNumber); setTrackEmail(formData.email); setTimeout(() => document.getElementById('suivi')?.scrollIntoView({ behavior: 'smooth' }), 200) }}
+                              className="px-5 py-2 bg-white border border-[rgba(5,56,118,0.18)] hover:border-[#2AACB2] text-[#053876] hover:bg-[#F6F6F7] rounded-xl font-semibold text-sm transition">Suivre ma commande</button>
+                          )}
                         </div>
                       </div>
                     ) : (
@@ -855,14 +865,16 @@ export default function VenteMateriel() {
           <SectionHeader
             badge="Suivi"
             title="Suivre ma commande"
-            subtitle="Entrez votre numéro de commande pour connaître son statut en temps réel."
+            subtitle="Entrez votre numéro de commande et l'email utilisé lors de l'achat pour connaître son statut en temps réel."
           />
 
-          <form onSubmit={handleTrack} className="flex gap-3">
+          <form onSubmit={handleTrack} className="flex flex-col sm:flex-row gap-3">
             <input value={trackNumber} onChange={e => setTrackNumber(e.target.value)} placeholder="Ex : CMD-2406-0001"
               className="flex-1 px-4 py-3 bg-white border border-[rgba(5,56,118,0.18)] rounded-xl text-[#0B1213] placeholder-[#25364A]/45 text-sm focus:outline-none focus:border-[#2AACB2] transition" />
+            <input type="email" value={trackEmail} onChange={e => setTrackEmail(e.target.value)} placeholder="Email utilisé lors de l'achat"
+              className="flex-1 px-4 py-3 bg-white border border-[rgba(5,56,118,0.18)] rounded-xl text-[#0B1213] placeholder-[#25364A]/45 text-sm focus:outline-none focus:border-[#2AACB2] transition" />
             <motion.button type="submit" disabled={tracking} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-              className="px-5 py-3 bg-gradient-to-r from-[#0B74C1] via-[#2AACB2] to-[#55DDB5] hover:brightness-110 text-white rounded-xl font-semibold text-sm flex items-center gap-2 transition disabled:opacity-60">
+              className="px-5 py-3 bg-gradient-to-r from-[#0B74C1] via-[#2AACB2] to-[#55DDB5] hover:brightness-110 text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition disabled:opacity-60">
               {tracking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search size={16} />}
               {tracking ? 'Recherche…' : 'Suivre'}
             </motion.button>

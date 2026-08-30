@@ -16,8 +16,16 @@ const {
 
 // Vérifiez que createAuditRequest est bien défini
 console.log('createAuditRequest:', createAuditRequest); // pour debug
+
+// Route publique - accessible sans compte (le client télécharge son propre
+// rapport juste après l'avoir soumis). Protégée par un second facteur
+// (email) directement dans le contrôleur, pas par ce middleware - voir
+// downloadAuditPDF. Une seconde déclaration de cette même route existait
+// plus bas dans le bloc admin ; Express ne retient que la première
+// correspondance, donc cette seconde déclaration n'était jamais exécutée
+// et a été retirée pour éviter la confusion (elle laissait croire, à tort,
+// que la route était protégée par rôle admin).
 router.get('/:id/pdf', downloadAuditPDF);
-// Route publique
 router.post('/', createAuditRequest);
 router.get('/track/:requestNumber', getAuditByRequestNumber);
 
@@ -30,7 +38,6 @@ router.get('/', getAllAudits);
 router.get('/stats', getAuditStats);
 router.get('/:id', getAuditById);
 router.put('/:id/status', updateAuditStatus);
-router.get('/:id/pdf', downloadAuditPDF);
 router.put('/:id/pdf', updateAuditPdfUrl);
 router.delete('/:id', deleteAudit);
 
