@@ -254,71 +254,68 @@ const BlogPost = () => {
         </div>
       </nav>
 
-      {/* Hero Image — object-contain (jamais recadrée : la photo reste
-          entière, de la tête aux chaussures pour une personne debout) sur
-          un fond flouté du même visuel pour remplir la bannière sans
-          bandes vides. */}
-      <div className="relative h-[420px] sm:h-[500px] md:h-[560px] min-h-[420px] overflow-hidden bg-[#0B1213]">
-        <img
-          src={article.image || 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop'}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover scale-110 blur-2xl opacity-50"
-        />
-        <img
-          src={article.image || 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop'}
-          alt={article.title}
-          className="relative w-full h-full object-contain"
-        />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(5,56,118,0.92) 0%, rgba(5,56,118,0.45) 55%, rgba(5,56,118,0.10) 100%)' }} />
+      {/* Titre et métadonnées — volontairement séparés de la photo : les
+          superposer exigeait un voile sombre sur l'image pour rester
+          lisibles, ce qui teintait/assombrissait la photo. Ici la photo
+          garde ses couleurs et sa luminosité naturelles, sans aucun
+          filtre. */}
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={fadeUp}
+        className="max-w-4xl mx-auto px-6 pt-10 sm:pt-14"
+      >
+        <div className="inline-flex items-center gap-2 bg-[#0B74C1]/10 border border-[#0B74C1]/20 px-4 py-1.5 rounded-full mb-5 font-syne">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#2AACB2]" />
+          <span className="text-xs font-bold tracking-wider uppercase text-[#0B74C1]">{article.category}</span>
+        </div>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight mb-6 font-syne tracking-tight text-[#053876]">
+          {article.title}
+        </h1>
 
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={fadeUp}
-          className="absolute bottom-0 left-0 right-0 max-w-4xl mx-auto px-6 pb-12 sm:pb-16 text-white"
-        >
-          <div className="inline-flex items-center gap-2 bg-white/10 border border-white/25 backdrop-blur-md px-4 py-1.5 rounded-full mb-5 font-syne">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#55DDB5]" />
-            <span className="text-xs font-bold tracking-wider uppercase">{article.category}</span>
-          </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight mb-6 font-syne tracking-tight">
-            {article.title}
-          </h1>
+        <div className="flex flex-wrap items-center gap-5 sm:gap-6 text-sm mb-10">
+          {article.author && (
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold" style={{ background: 'linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%)' }}>
+                {article.author.split(' ').map(n => n[0]).join('')}
+              </div>
+              <p className="font-medium text-[#053876]">{article.author}</p>
+            </div>
+          )}
 
-          <div className="flex flex-wrap items-center gap-5 sm:gap-6 text-sm">
-            {article.author && (
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl flex items-center justify-center text-white font-bold" style={{ background: 'linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%)' }}>
-                  {article.author.split(' ').map(n => n[0]).join('')}
-                </div>
-                <div>
-                  <p className="font-medium">{article.author}</p>
-                </div>
+          <div className="flex items-center gap-6 text-[#25364A]/70">
+            {article.createdAt && (
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                {new Date(article.createdAt).toLocaleDateString('fr-FR', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric'
+                })}
               </div>
             )}
-
-            <div className="flex items-center gap-6 text-[#A6C3D7]">
-              {article.createdAt && (
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
-                  {new Date(article.createdAt).toLocaleDateString('fr-FR', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric'
-                  })}
-                </div>
-              )}
-              {article.readTime && (
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4" />
-                  {article.readTime} de lecture
-                </div>
-              )}
-            </div>
+            {article.readTime && (
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                {article.readTime} de lecture
+              </div>
+            )}
           </div>
-        </motion.div>
-      </div>
+        </div>
+
+        {/* Photo — couleurs, luminosité et contraste naturels : aucun
+            overlay, aucun filtre, aucune teinte. object-contain : jamais
+            recadrée ni déformée, l'image entière reste visible (une
+            personne debout est visible de la tête aux chaussures) quel
+            que soit son ratio d'origine. */}
+        <div className="rounded-2xl overflow-hidden border border-[#053876]/10 shadow-[0_10px_30px_rgba(5,56,118,0.08)] bg-white mb-10">
+          <img
+            src={article.image || 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop'}
+            alt={article.title}
+            className="w-full max-h-[70vh] object-contain"
+          />
+        </div>
+      </motion.div>
 
       {/* Contenu Principal */}
       <motion.div
