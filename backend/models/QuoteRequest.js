@@ -54,6 +54,14 @@ const quoteRequestSchema = mongoose.Schema(
     notes: {
       type: String,
     },
+    // Historique public des changements de statut (date + statut uniquement -
+    // jamais les notes internes admin, qui restent dans `notes` ci-dessus).
+    statusHistory: [
+      {
+        status: { type: String },
+        changedAt: { type: Date, default: Date.now },
+      },
+    ],
   },
   {
     timestamps: true,

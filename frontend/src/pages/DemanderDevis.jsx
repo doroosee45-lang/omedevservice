@@ -884,9 +884,11 @@ const Devis = () => {
           payload
         )
 
-      const requestNumber =
-        response.data?.requestNumber
-        || `DEV-${Date.now()}`
+      // Ne jamais fabriquer un faux numéro : si l'API n'en renvoie pas, le
+      // dossier a bien été créé mais on ne peut pas promettre un numéro de
+      // suivi qui n'existerait pas réellement en base (voir affichage plus
+      // bas, qui masque le bloc numéro/suivi dans ce cas).
+      const requestNumber = response.data?.requestNumber || null
 
       setSubmittedRequest({
 
@@ -987,25 +989,29 @@ const Devis = () => {
 
                 </p>
 
-                <div className="inline-block mb-6 px-6 py-4 rounded-2xl bg-gradient-to-r from-[#0B74C1]/10 to-[#2AACB2]/10 border border-[#2AACB2]/25">
+                {submittedRequest.number && (
 
-                  <p className="text-xs uppercase tracking-wider font-bold text-[#4681B7] mb-1">
+                  <div className="inline-block mb-6 px-6 py-4 rounded-2xl bg-gradient-to-r from-[#0B74C1]/10 to-[#2AACB2]/10 border border-[#2AACB2]/25">
 
-                    Numéro de votre demande
+                    <p className="text-xs uppercase tracking-wider font-bold text-[#4681B7] mb-1">
 
-                  </p>
+                      Numéro de votre demande
 
-                  <div className="font-syne text-2xl md:text-3xl font-extrabold text-[#053876]">
+                    </p>
 
-                    {submittedRequest.number}
+                    <div className="font-syne text-2xl md:text-3xl font-extrabold text-[#053876]">
+
+                      {submittedRequest.number}
+
+                    </div>
 
                   </div>
 
-                </div>
+                )}
 
                 <p className="text-sm text-[#25364A] max-w-lg mx-auto">
 
-                  Une confirmation sera envoyée à :
+                  Une confirmation {submittedRequest.number ? 'avec votre lien de suivi ' : ''}sera envoyée à :
 
                   {' '}
 
@@ -1016,6 +1022,18 @@ const Devis = () => {
                   </strong>
 
                 </p>
+
+                {submittedRequest.number && (
+
+                  <Link
+                    to={`/suivi-devis/${submittedRequest.number}?email=${encodeURIComponent(submittedRequest.email)}`}
+                    className="inline-flex items-center gap-2 mt-5 text-sm font-semibold text-[#0B74C1] hover:text-[#053876] transition-colors"
+                  >
+                    Suivre ma demande dès maintenant
+                    <ArrowRight size={16} />
+                  </Link>
+
+                )}
 
                 <div className="mt-8 p-5 rounded-2xl bg-[#F6F6F7] border border-[#053876]/10 flex gap-3 text-left">
 

@@ -181,7 +181,7 @@ export const tickets = {
 // ==================== DEMANDES DE DEVIS (formulaire rapide) ====================
 export const quoteRequests = {
   create: (data) => api.post('/quote-requests', data),
-  track: (requestNumber) => api.get(`/quote-requests/track/${requestNumber}`),
+  track: (requestNumber, email) => api.get(`/quote-requests/track/${requestNumber}`, { params: { email } }),
   getMyRequests: () => api.get('/quote-requests/my-requests'),
   getAll: () => api.get('/quote-requests'),
   getStats: () => api.get('/quote-requests/stats'),

@@ -14,6 +14,8 @@ import {
   Building2,
   Download,
   TrendingUp,
+  Copy,
+  Check,
 } from 'lucide-react'
 import { quoteRequests as quoteApi } from '../../services/api'
 import { PageHeader, Card, Button, Modal, SearchInput, Select, Pagination, EmptyState, LoadingState, fadeUp, staggerContainer } from '../../components/Admin/ui'
@@ -38,6 +40,29 @@ const SERVICE_LABELS = {
   'audit':          'Audit',
   'conseil':        'Conseil',
   'autre':          'Autre',
+}
+
+const CopyableNumber = ({ value, className = '' }) => {
+  const [copied, setCopied] = useState(false)
+  const handleCopy = async (e) => {
+    e.stopPropagation()
+    try {
+      await navigator.clipboard.writeText(value)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1500)
+    } catch { /* silencieux */ }
+  }
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      title="Copier le numéro de dossier"
+      className={`inline-flex items-center gap-1 hover:text-white transition-colors ${className}`}
+    >
+      {value}
+      {copied ? <Check className="w-3 h-3 text-[#55DDB5]" /> : <Copy className="w-3 h-3 opacity-60" />}
+    </button>
+  )
 }
 
 const QuoteDetailModal = ({ request, onClose, onStatusChange }) => {
@@ -65,7 +90,7 @@ const QuoteDetailModal = ({ request, onClose, onStatusChange }) => {
         </span>
         <span>
           <span className="block">Demande de devis</span>
-          <span className="block text-xs font-normal text-white/50">{request.requestNumber}</span>
+          <CopyableNumber value={request.requestNumber} className="text-xs font-normal text-white/50" />
         </span>
       </span>
     }>
@@ -131,6 +156,21 @@ const QuoteDetailModal = ({ request, onClose, onStatusChange }) => {
             Enregistrer
           </Button>
         </div>
+
+        {/* Historique des statuts */}
+        {request.statusHistory?.length > 0 && (
+          <div className="bg-white/5 rounded-xl p-4">
+            <h3 className="text-xs font-semibold text-white/50 uppercase tracking-wide mb-3">Historique des statuts</h3>
+            <div className="space-y-1.5">
+              {request.statusHistory.map((h, i) => (
+                <div key={i} className="flex items-center justify-between text-xs">
+                  <span className="text-white/70">{STATUS_CONFIG[h.status]?.label || h.status}</span>
+                  <span className="text-white/40">{new Date(h.changedAt).toLocaleString('fr-FR')}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Répondre par email */}
         <a
@@ -288,7 +328,7 @@ const AdminDemandesDevis = () => {
                   <div className="h-1 bg-gradient-to-r from-[#0B74C1] to-[#2AACB2]" />
                   <div className="p-4 flex-1 flex flex-col gap-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-mono text-white/40">{req.requestNumber}</span>
+                      <CopyableNumber value={req.requestNumber} className="text-xs font-mono text-white/40" />
                       <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs border ${sc.color}`}>
                         <StatusIcon className="w-3 h-3" />
                         {sc.label}

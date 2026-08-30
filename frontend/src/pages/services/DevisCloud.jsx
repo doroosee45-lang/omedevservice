@@ -344,6 +344,30 @@ const globalStyles = `
     box-shadow: none;
   }
 
+  .omedev-devis .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    background: transparent;
+    color: #053876;
+    font-size: .9rem;
+    font-weight: 700;
+    padding: .9rem 1.7rem;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all .3s ease;
+    cursor: pointer;
+    border: 1.5px solid rgba(5,56,118,.2);
+    font-family: 'Syne', sans-serif;
+  }
+
+  .omedev-devis .btn-outline:hover {
+    border-color: #2AACB2;
+    color: #0B74C1;
+    background: rgba(42,172,178,.06);
+  }
+
   .omedev-devis .btn-full {
     width: 100%;
     padding: 1rem 1.5rem;
@@ -528,6 +552,7 @@ const FormSectionHeader = ({
 const DevisCloud = () => {
   const [formData, setFormData] = useState(EMPTY_FORM)
   const [submitted, setSubmitted] = useState(false)
+  const [submittedRequest, setSubmittedRequest] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -549,7 +574,7 @@ const DevisCloud = () => {
     setError('')
 
     try {
-      await quoteRequests.create({
+      const res = await quoteRequests.create({
         fullName: formData.nom,
         email: formData.email,
         phone: formData.telephone,
@@ -562,12 +587,12 @@ const DevisCloud = () => {
           formData.message,
       })
 
+      setSubmittedRequest({
+        number: res.data?.requestNumber || null,
+        email: formData.email,
+      })
       setSubmitted(true)
-
-      setTimeout(() => {
-        setSubmitted(false)
-        setFormData(EMPTY_FORM)
-      }, 3500)
+      setFormData(EMPTY_FORM)
     } catch (err) {
       console.error('Erreur devis cloud:', err)
       setError(
@@ -701,13 +726,45 @@ const DevisCloud = () => {
                   une proposition personnalisée.
                 </p>
 
-                <Link
-                  to="/cloud-hebergement"
-                  className="btn-primary"
-                >
-                  <ChevronLeft size={17} />
-                  Retour à Cloud & Hébergement
-                </Link>
+                {submittedRequest?.number && (
+                  <div
+                    style={{
+                      display: 'inline-block',
+                      margin: '0 auto 1.5rem',
+                      padding: '1rem 1.5rem',
+                      borderRadius: '1rem',
+                      background: 'linear-gradient(135deg, rgba(11,116,193,.1), rgba(42,172,178,.1))',
+                      border: '1px solid rgba(42,172,178,.25)',
+                    }}
+                  >
+                    <p style={{ fontSize: '.7rem', textTransform: 'uppercase', letterSpacing: '.05em', fontWeight: 700, color: '#4681B7', marginBottom: '.25rem' }}>
+                      Numéro de votre demande
+                    </p>
+                    <div className="font-syne" style={{ fontSize: '1.5rem', fontWeight: 800, color: '#053876' }}>
+                      {submittedRequest.number}
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex flex-col sm:flex-row justify-center gap-4 mt-2 mb-2">
+                  <Link
+                    to="/cloud-hebergement"
+                    className="btn-outline"
+                  >
+                    <ChevronLeft size={17} />
+                    Retour à Cloud & Hébergement
+                  </Link>
+
+                  {submittedRequest?.number && (
+                    <Link
+                      to={`/suivi-devis/${submittedRequest.number}?email=${encodeURIComponent(submittedRequest.email)}`}
+                      className="btn-primary"
+                    >
+                      Suivre ma demande
+                      <ArrowRight size={17} />
+                    </Link>
+                  )}
+                </div>
               </motion.div>
             ) : (
               <form

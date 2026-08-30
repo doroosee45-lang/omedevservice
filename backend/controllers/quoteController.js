@@ -2,6 +2,16 @@
 const QuoteRequest = require('../models/QuoteRequest');
 const nodemailer = require('nodemailer');
 
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+
+// Le frontend utilise HashRouter : un lien public valide doit inclure le "#"
+// (sinon 404 côté hébergeur à l'ouverture directe). L'email est inclus en
+// query param car il sert de seconde vérification sur la page de suivi
+// publique (le numéro de dossier seul est trop facile à deviner/énumérer,
+// vu qu'il est séquentiel) - voir trackQuoteRequest.
+const buildTrackingUrl = (requestNumber, email) =>
+  `${FRONTEND_URL}/#/suivi-devis/${requestNumber}?email=${encodeURIComponent(email)}`;
+
 // Configuration email (à mettre dans .env)
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
@@ -59,6 +69,7 @@ const createQuoteRequest = async (req, res) => {
           <p>Nous avons bien reçu votre demande de devis pour <strong>${serviceType}</strong>.</p>
           <p>Votre numéro de dossier est : <strong style="font-size: 18px; color: #2563eb;">${quoteRequest.requestNumber}</strong></p>
           <p>Notre équipe commerciale vous contactera dans les plus brefs délais (sous 24h ouvrées).</p>
+          <p><a href="${buildTrackingUrl(quoteRequest.requestNumber, email)}" style="display:inline-block;background-color:#2563eb;color:white;padding:10px 24px;text-decoration:none;border-radius:6px;font-weight:600;">Suivre ma demande</a></p>
           <p>Cordialement,<br/>L'équipe OMEDEV Services</p>
           <hr style="margin: 20px 0;">
           <p style="font-size: 12px; color: #666;">OMEDEV Services — Solutions IT, Énergie &amp; Digital</p>
@@ -103,25 +114,46 @@ const createQuoteRequest = async (req, res) => {
   });
 };
 
-// @desc    Suivre une demande de devis par numéro (public)
-// @route   GET /api/quote-requests/track/:requestNumber
+// @desc    Suivre une demande de devis par numéro + email (public)
+// @route   GET /api/quote-requests/track/:requestNumber?email=...
 // @access  Public
+//
+// Le numéro de dossier est séquentiel (QR-YYMM-####) donc facilement
+// énumérable : il ne doit jamais suffire à lui seul pour consulter un
+// dossier. On exige l'email du demandeur en seconde vérification, et on
+// renvoie le même 404 générique que le numéro n'existe pas ou que l'email
+// ne corresponde pas, pour ne jamais confirmer qu'un numéro est valide.
+// La réponse ne contient que le strict nécessaire à l'affichage public -
+// jamais l'email, le téléphone, l'entreprise, la description, le budget,
+// les notes internes ou l'utilisateur lié.
 const trackQuoteRequest = async (req, res) => {
-  const quoteRequest = await QuoteRequest.findOne({ 
-    requestNumber: req.params.requestNumber 
-  });
-  
-  if (quoteRequest) {
-    res.json({
-      requestNumber: quoteRequest.requestNumber,
-      status: quoteRequest.status,
-      createdAt: quoteRequest.createdAt,
-      serviceType: quoteRequest.serviceType,
-    });
-  } else {
-    res.status(404);
-    throw new Error('Demande non trouvée');
+  const { email } = req.query;
+
+  if (!email) {
+    return res.status(400).json({ message: 'Numéro de dossier et email requis.' });
   }
+
+  const quoteRequest = await QuoteRequest.findOne({
+    requestNumber: req.params.requestNumber,
+    email: email.toLowerCase().trim(),
+  });
+
+  if (!quoteRequest) {
+    return res.status(404).json({ message: 'Aucun dossier ne correspond à ce numéro et cet email.' });
+  }
+
+  res.json({
+    requestNumber: quoteRequest.requestNumber,
+    fullName: quoteRequest.fullName,
+    serviceType: quoteRequest.serviceType,
+    status: quoteRequest.status,
+    createdAt: quoteRequest.createdAt,
+    updatedAt: quoteRequest.updatedAt,
+    statusHistory: (quoteRequest.statusHistory || []).map(h => ({
+      status: h.status,
+      changedAt: h.changedAt,
+    })),
+  });
 };
 
 // ==================== FONCTIONS CLIENT CONNECTÉ ====================
@@ -250,7 +282,11 @@ const updateQuoteRequestStatus = async (req, res) => {
   quoteRequest.status = status || quoteRequest.status;
   quoteRequest.assignedTo = assignedTo || quoteRequest.assignedTo;
   quoteRequest.notes = notes || quoteRequest.notes;
-  
+
+  if (status && status !== oldStatus) {
+    quoteRequest.statusHistory.push({ status, changedAt: new Date() });
+  }
+
   await quoteRequest.save();
   
   // Envoyer un email au client si le statut change
@@ -294,7 +330,7 @@ const updateQuoteRequestStatus = async (req, res) => {
               <p style="margin: 0; color: ${statusColor}; font-weight: bold;">${statusMessage}</p>
             </div>
             <p>Vous pouvez suivre l'évolution de votre demande ici :</p>
-            <p><a href="${process.env.FRONTEND_URL}/suivi-devis/${quoteRequest.requestNumber}" style="background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Suivre ma demande</a></p>
+            <p><a href="${buildTrackingUrl(quoteRequest.requestNumber, quoteRequest.email)}" style="background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Suivre ma demande</a></p>
             <p>Cordialement,<br/>L'équipe OMEDEV Services</p>
             <hr style="margin: 20px 0;">
             <p style="font-size: 12px; color: #666;">OMEDEV Services — Solutions IT, Énergie &amp; Digital</p>
