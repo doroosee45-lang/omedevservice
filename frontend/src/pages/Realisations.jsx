@@ -5,7 +5,7 @@ import { useState } from 'react';
 import {
   ArrowRight, CheckCircle, Rocket, Star, Calendar, MapPin, Briefcase, Clock,
   Eye, X, Search, Quote, ThumbsUp, Award, Users,
-  Network, Shield, Code, Cloud, Sun, BookOpen, Camera, Grid
+  Network, Code, Cloud, Sun, Camera, Grid
 } from 'lucide-react';
 import PublicHero from '../components/Public/PublicHero';
 import CTASection from '../components/Public/CTASection';
@@ -690,11 +690,9 @@ const projects = [
 const categories = [
   { id: 'all', name: 'Tous', icon: CheckCircle, hex: colors.navy, gradient: `linear-gradient(135deg, ${colors.navy}, ${colors.blueLight})` },
   { id: 'reseau', name: 'Réseau & Télécom', icon: Network, hex: colors.blue, gradient: `linear-gradient(135deg, ${colors.blue}, ${colors.blueLight})` },
-  { id: 'securite', name: 'Sécurité & Surveillance', icon: Shield, hex: colors.navy, gradient: `linear-gradient(135deg, ${colors.navy}, ${colors.blueDark})` },
   { id: 'developpement', name: 'Développement Digital', icon: Code, hex: colors.turquoise, gradient: `linear-gradient(135deg, ${colors.turquoise}, ${colors.energy})` },
   { id: 'cloud', name: 'Cloud & Hébergement', icon: Cloud, hex: colors.blueLight, gradient: `linear-gradient(135deg, ${colors.blueLight}, ${colors.cyan})` },
-  { id: 'energie', name: 'Énergie', icon: Sun, hex: colors.energy, gradient: `linear-gradient(135deg, ${colors.turquoise}, ${colors.energy})` },
-  { id: 'formation', name: 'Formation & Accompagnement', icon: BookOpen, hex: colors.cyan, gradient: `linear-gradient(135deg, ${colors.blue}, ${colors.cyan})` }
+  { id: 'energie', name: 'Énergie', icon: Sun, hex: colors.energy, gradient: `linear-gradient(135deg, ${colors.turquoise}, ${colors.energy})` }
 ];
 
 const ProjectCard = ({ project, index, onOpenModal }) => {
