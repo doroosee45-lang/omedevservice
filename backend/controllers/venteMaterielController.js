@@ -1,18 +1,8 @@
 const VenteMaterielProduct = require('../models/VenteMaterielProduct');
 const VenteMaterielOrder   = require('../models/VenteMaterielOrder');
-const nodemailer = require('nodemailer');
+const { sendMail: sendMailViaResend } = require('../utils/mailer');
 
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
-  secure: Number(process.env.EMAIL_PORT) === 465,
-  auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 15000,
-});
-
-const sendMail = (opts) => transporter.sendMail(opts).catch(e => console.error('Email erreur:', e.message));
+const sendMail = (opts) => sendMailViaResend(opts).catch(e => console.error('Email erreur:', e.message));
 
 // Produits par défaut si catalogue vide
 const DEFAULT_PRODUCTS = [

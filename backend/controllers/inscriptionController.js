@@ -2,24 +2,11 @@
 // La base de données est la source de vérité : une inscription est validée
 // dès qu'elle est enregistrée, indépendamment du sort de l'email de
 // confirmation (voir sendConfirmationEmail, jamais bloquant).
-const nodemailer = require('nodemailer');
 const Inscription = require('../models/Inscription');
-
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
-  secure: Number(process.env.EMAIL_PORT) === 465,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 15000,
-});
+const { sendMail } = require('../utils/mailer');
 
 const sendConfirmationEmail = async (inscription) => {
-  await transporter.sendMail({
+  await sendMail({
     from: `"OMEDEV Services" <${process.env.EMAIL_USER}>`,
     to: inscription.email,
     subject: `Confirmation de votre inscription — ${inscription.inscriptionNumber}`,
@@ -37,9 +24,9 @@ const sendConfirmationEmail = async (inscription) => {
     `,
   });
 
-  await transporter.sendMail({
+  await sendMail({
     from: `"Inscriptions Formation OMEDEV" <${process.env.EMAIL_USER}>`,
-    to: process.env.FORMATION_EMAIL || process.env.EMAIL_USER,
+    to: process.env.FORMATION_EMAIL || process.env.CONTACT_EMAIL,
     subject: `Nouvelle inscription formation — ${inscription.inscriptionNumber}`,
     html: `
       <div style="font-family: Arial, sans-serif;">

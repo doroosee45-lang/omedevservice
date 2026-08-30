@@ -1,16 +1,7 @@
 // backend/controllers/newsletterController.js
 const NewsletterSubscriber = require('../models/NewsletterSubscriber');
-const nodemailer = require('nodemailer');
-
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
-  secure: Number(process.env.EMAIL_PORT) === 465,
-  auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 15000,
-});
+const { sendMail: transporterSendMail } = require('../utils/mailer');
+const transporter = { sendMail: transporterSendMail };
 
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 

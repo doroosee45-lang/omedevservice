@@ -3,21 +3,8 @@ const AuditRequest = require('../models/AuditRequest');
 const PDFDocument  = require('pdfkit');
 const fs           = require('fs');
 const path         = require('path');
-const nodemailer   = require('nodemailer');
-
-// Configuration email
-const transporter = nodemailer.createTransport({
-  host:   process.env.EMAIL_HOST,
-  port:   process.env.EMAIL_PORT,
-  secure: Number(process.env.EMAIL_PORT) === 465,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 15000,
-});
+const { sendMail: transporterSendMail } = require('../utils/mailer');
+const transporter = { sendMail: transporterSendMail };
 
 // Couleurs OMEDEV
 const C = {
@@ -337,12 +324,14 @@ const sendAuditReportEmail = async (audit, pdfUrl) => {
       </div>
     </div>
   `;
+  // Resend attend le contenu du fichier (Buffer/base64), pas un chemin
+  // disque comme nodemailer - on lit le PDF déjà généré sur disque.
   await transporter.sendMail({
     from:        `"OMEDEV Services" <${process.env.EMAIL_USER}>`,
     to:          audit.email,
     subject:     `Votre rapport d'audit OMEDEV — ${audit.requestNumber}`,
     html:        emailHtml,
-    attachments: [{ filename: `audit_${audit.requestNumber}.pdf`, path: pdfUrl }],
+    attachments: [{ filename: `audit_${audit.requestNumber}.pdf`, content: fs.readFileSync(pdfUrl) }],
   });
   console.log(`Rapport PDF envoyé à ${audit.email}`);
 };

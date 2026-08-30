@@ -4,23 +4,8 @@
 // Harmonisé avec la charte graphique OMEDEV (bleu, cyan, dégradés)
 // ============================================================
 
-const nodemailer = require('nodemailer');
-
-// ------------------------------------------------------------
-// Configuration du transporteur SMTP
-// ------------------------------------------------------------
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
-  secure: Number(process.env.EMAIL_PORT) === 465,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 15000,
-});
+const { sendMail: transporterSendMail } = require('./mailer');
+const transporter = { sendMail: transporterSendMail };
 
 // ============================================================
 // COMPOSANTS RÉUTILISABLES – DESIGN OMEDEV

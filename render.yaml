@@ -18,16 +18,15 @@ services:
         sync: false
       - key: JWT_EXPIRE
         value: 30d
-      - key: EMAIL_HOST
-        value: smtp.gmail.com
-      - key: EMAIL_PORT
-        value: 587
-      - key: EMAIL_USER
-        sync: false
-      - key: EMAIL_PASS
-        sync: false
+      # SMTP (Gmail) — abandonné : Render bloque/timeout les connexions
+      # sortantes vers smtp.gmail.com:587 (ETIMEDOUT confirmé), remplacé
+      # par RESEND_API_KEY ci-dessous (API HTTPS).
       - key: CONTACT_EMAIL
+        sync: false          # adresse qui reçoit les notifications internes
+      - key: RESEND_API_KEY
         sync: false
+      - key: RESEND_FROM_EMAIL
+        sync: false          # optionnel : seulement une fois un domaine vérifié sur resend.com/domains
       - key: ANTHROPIC_API_KEY
         sync: false
       - key: FRONTEND_URL

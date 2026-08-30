@@ -1,6 +1,7 @@
 // src/controllers/quoteController.js - Contrôleur pour les demandes de devis rapides
 const QuoteRequest = require('../models/QuoteRequest');
-const nodemailer = require('nodemailer');
+const { sendMail: transporterSendMail } = require('../utils/mailer');
+const transporter = { sendMail: transporterSendMail };
 
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
@@ -11,20 +12,6 @@ const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 // vu qu'il est séquentiel) - voir trackQuoteRequest.
 const buildTrackingUrl = (requestNumber, email) =>
   `${FRONTEND_URL}/#/suivi-devis/${requestNumber}?email=${encodeURIComponent(email)}`;
-
-// Configuration email (à mettre dans .env)
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
-  secure: Number(process.env.EMAIL_PORT) === 465,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 15000,
-});
 
 // ==================== FONCTIONS PUBLIQUES ====================
 
@@ -85,7 +72,7 @@ const createQuoteRequest = async (req, res) => {
   try {
     await transporter.sendMail({
       from: `"OMEDEV Services" <${process.env.EMAIL_USER}>`,
-      to: process.env.SALES_EMAIL || process.env.EMAIL_USER,
+      to: process.env.SALES_EMAIL || process.env.CONTACT_EMAIL,
       subject: `Nouvelle demande de devis — ${quoteRequest.requestNumber}`,
       html: `
         <div style="font-family: Arial, sans-serif;">

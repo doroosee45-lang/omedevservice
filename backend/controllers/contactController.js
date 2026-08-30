@@ -1,19 +1,6 @@
 // controllers/contactController.js
-const nodemailer = require('nodemailer');
 const ContactMessage = require('../models/ContactMessage');
-
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
-  secure: Number(process.env.EMAIL_PORT) === 465,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 15000,
-});
+const { sendMail } = require('../utils/mailer');
 
 // @desc    Envoyer un message de contact (public)
 // @route   POST /api/contact
@@ -35,7 +22,7 @@ const sendContactMessage = async (req, res) => {
 
   try {
     // Email de confirmation au client
-    await transporter.sendMail({
+    await sendMail({
       from: `"OMEDEV Services" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: `Confirmation de votre message — OMEDEV Services`,
@@ -70,7 +57,7 @@ const sendContactMessage = async (req, res) => {
     });
 
     // Email de notification à l'équipe
-    await transporter.sendMail({
+    await sendMail({
       from: `"Formulaire Contact OMEDEV" <${process.env.EMAIL_USER}>`,
       to: process.env.CONTACT_EMAIL || process.env.EMAIL_USER,
       subject: `Nouveau message de contact — ${objet}`,
