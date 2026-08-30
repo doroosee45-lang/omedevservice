@@ -410,7 +410,11 @@ const Inscription = () => {
   const centresList = [
     'Kinshasa',
     'Lubumbashi',
-    'Bulungu'
+    'Bulungu',
+    'Kikwit',
+    'Bandundu',
+    'Moanda',
+    'Matadi'
   ]
 
   const disponibilitesList = [
