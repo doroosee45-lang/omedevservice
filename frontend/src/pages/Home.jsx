@@ -425,7 +425,7 @@ const products = [
 ];
 
 const stats = [
-  { icon: Users, value: 5, label: 'Clients satisfaits', suffix: '+' },
+  { icon: Users, value: 7, label: 'Clients satisfaits', suffix: '+' },
   { icon: Code, value: 15, label: 'Projets réalisés', suffix: '+' },
   { icon: Clock, value: 24, label: 'Support technique', suffix: '/7' },
   { icon: Award, value: 100, label: 'Qualité garantie', suffix: '%' },
@@ -658,7 +658,7 @@ const Home = () => {
                   {[
                     { n: '15+', l: 'Projets livrés', icon: '🚀' },
                     { n: '98%', l: 'Satisfaction client', icon: '⭐' },
-                    { n: '5+', l: 'Entreprises clientes', icon: '🏢' },
+                    { n: '7+', l: 'Entreprises clientes', icon: '🏢' },
                     { n: '4 ans', l: "D'expertise", icon: '📅' }
                   ].map((s, i) => (
                     <motion.div

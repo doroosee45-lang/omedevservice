@@ -785,7 +785,7 @@ const RealisationsPage = () => {
 
   const stats = [
     { value: '15+', label: 'Projets réalisés', icon: Briefcase },
-    { value: '95+', label: 'Clients satisfaits', icon: Users },
+    { value: '7+', label: 'Clients satisfaits', icon: Users },
     { value: '4+', label: "Années d'expérience", icon: Award },
     { value: '98%', label: 'Taux de satisfaction', icon: ThumbsUp }
   ];
