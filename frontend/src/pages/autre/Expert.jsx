@@ -494,13 +494,13 @@ const Experts = () => {
       id: 1,
       name: 'Meya Dorodoro',
       role: 'CEO & Fondateur',
-      position: 'Expert en Informatique Appliquée & Développeur Full-Stack',
-      bio: "Plus de 4 ans d'expérience en infrastructure IT et cybersécurité en Afrique centrale. Visionnaire et passionné par l'innovation technologique.",
+      position: 'Expert en Informatique Appliquée | Développeur Full-Stack',
+      bio: "Plus de 6 ans d'expérience en infrastructure IT et expert en génie logiciel . Visionnaire et passionné par l'innovation technologique.",
       image: expert1,
       gradient: 'from-[#0B74C1] to-[#053876]',
       posClass: 'pos1',
-      socials: { linkedin: 'https://linkedin.com/in/meya-dorodoro', github: 'https://github.com/meyadorodoro', twitter: 'https://twitter.com/meyadorodoro', email: 'oseedoro@gmail.com' },
-      skills: ['Cybersécurité', 'Infrastructure IT', 'Cloud Computing', 'Leadership'],
+      socials: { linkedin: 'https://www.linkedin.com/feed/', github: 'https://github.com/dashboard', twitter: 'https://x.com/meyadorodoro', email: 'oseedoro@gmail.com' },
+      skills: ['Genie logivciel', 'Infrastructure IT', 'Leadership'],
       certifications: ['CISSP', 'PMP', 'AWS Solutions Architect']
     },
     {
