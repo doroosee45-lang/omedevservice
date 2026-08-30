@@ -308,7 +308,7 @@ const Tarifs = () => {
       name: 'Réseau & Infrastructure',
       icon: Wifi,
       description: 'Installation et maintenance de réseaux informatiques',
-      price: { monthly: '250€', quarterly: '680€', yearly: '2 400€' },
+      price: { monthly: 'Sur devis', quarterly: 'Sur devis', yearly: 'Sur devis' },
       features: [
         'Audit réseau initial',
         'Câblage structuré',
@@ -325,7 +325,7 @@ const Tarifs = () => {
       name: 'Sécurité',
       icon: Shield,
       description: 'Solutions de sécurité complètes',
-      price: { monthly: '350€', quarterly: '950€', yearly: '3 360€' },
+      price: { monthly: 'Sur devis', quarterly: 'Sur devis', yearly: 'Sur devis' },
       features: [
         'Vidéosurveillance HD',
         'Audit cybersécurité',
@@ -342,7 +342,7 @@ const Tarifs = () => {
       name: 'Développement Digital',
       icon: Code,
       description: 'Création de sites et applications sur mesure',
-      price: { monthly: '500€', quarterly: '1 350€', yearly: '4 800€' },
+      price: { monthly: 'Sur devis', quarterly: 'Sur devis', yearly: 'Sur devis' },
       features: [
         'Site vitrine / E-commerce',
         'Application mobile',
@@ -359,7 +359,7 @@ const Tarifs = () => {
       name: 'Cloud & Hébergement',
       icon: Cloud,
       description: 'Solutions cloud haute disponibilité',
-      price: { monthly: '180€', quarterly: '490€', yearly: '1 728€' },
+      price: { monthly: 'Sur devis', quarterly: 'Sur devis', yearly: 'Sur devis' },
       features: [
         'Hébergement sécurisé',
         'Backup automatique',
@@ -376,7 +376,7 @@ const Tarifs = () => {
       name: 'Énergie & Équipements',
       icon: Sun,
       description: 'Solutions énergétiques durables',
-      price: { monthly: '300€', quarterly: '810€', yearly: '2 880€' },
+      price: { monthly: 'Sur devis', quarterly: 'Sur devis', yearly: 'Sur devis' },
       features: [
         'Audit énergétique',
         'Installation panneaux solaires',
@@ -393,7 +393,7 @@ const Tarifs = () => {
       name: 'Formation',
       icon: GraduationCap,
       description: 'Formations professionnelles certifiantes',
-      price: { monthly: '200€', quarterly: '540€', yearly: '1 920€' },
+      price: { monthly: 'Sur devis', quarterly: 'Sur devis', yearly: 'Sur devis' },
       features: [
         'Accès illimité formations',
         'Certifications reconnues',
@@ -410,8 +410,8 @@ const Tarifs = () => {
   const packs = [
     {
       name: 'Pack Start',
-      price: '990€',
-      originalPrice: '1 490€',
+      price: 'Sur devis',
+      originalPrice: null,
       description: 'Idéal pour les petites structures',
       features: [
         'Site vitrine (5 pages)',
@@ -424,8 +424,8 @@ const Tarifs = () => {
     },
     {
       name: 'Pack Business',
-      price: '2 490€',
-      originalPrice: '3 490€',
+      price: 'Sur devis',
+      originalPrice: null,
       description: 'Pour les entreprises en croissance',
       features: [
         'Site e-commerce complet',
