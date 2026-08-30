@@ -1,7 +1,32 @@
 // src/controllers/articleController.js - Gestion des articles de blog
+const https = require('https');
 const Article = require('../models/Article');
 const { sendArticleNotification } = require('./newsletterController');
 const cloudinary = require('../config/cloudinary');
+
+// Cloudinary signe chaque upload avec un timestamp et rejette toute
+// requête dont l'horloge s'écarte de plus d'une heure de l'heure réelle
+// ("stale request"). L'horloge système de ce serveur n'est pas fiable à
+// 100% (observé en dev), donc plutôt que de faire confiance à Date.now(),
+// on récupère l'heure réelle directement depuis l'en-tête Date de la
+// réponse HTTPS de Cloudinary lui-même juste avant l'upload - fiable, et
+// ça évite toute dépendance à un service tiers. Si ce contrôle échoue
+// (réseau indisponible...), on retombe sur l'horloge locale plutôt que
+// de bloquer complètement l'upload.
+const getReliableTimestamp = () =>
+  new Promise((resolve) => {
+    const req = https.request(
+      `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/ping`,
+      { method: 'HEAD', timeout: 5000 },
+      (res) => {
+        const real = Date.parse(res.headers.date);
+        resolve(Number.isNaN(real) ? Math.floor(Date.now() / 1000) : Math.floor(real / 1000));
+      }
+    );
+    req.on('error', () => resolve(Math.floor(Date.now() / 1000)));
+    req.on('timeout', () => { req.destroy(); resolve(Math.floor(Date.now() / 1000)); });
+    req.end();
+  });
 
 // Les images d'articles uploadées sont stockées en chemin RELATIF
 // ("/uploads/articles/xxx.jpg") - jamais avec un hôte figé en base. La
@@ -252,9 +277,11 @@ const uploadArticleImage = async (req, res) => {
   }
   try {
     const dataUri = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+    const timestamp = await getReliableTimestamp();
     const result = await cloudinary.uploader.upload(dataUri, {
       folder: 'omedev/articles',
       resource_type: 'image',
+      timestamp,
     });
     res.status(201).json({ success: true, url: result.secure_url });
   } catch (error) {
