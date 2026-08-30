@@ -105,7 +105,7 @@ const generateAuditPDF = (audit) =>
       const PAGE_H = 841.89;
       const doc = new PDFDocument({ margin: 0, size: 'A4', bufferPages: true });
       const filename  = `audit_${audit.requestNumber}_${Date.now()}.pdf`;
-      const uploadDir = path.join(__dirname, '../../uploads/audits');
+      const uploadDir = path.join(__dirname, '../uploads/audits');
       if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
       const filepath = path.join(uploadDir, filename);
       const stream   = fs.createWriteStream(filepath);
@@ -349,7 +349,7 @@ const scheduleAuditReport = (auditId) => {
       audit.pdfReportUrl = pdfUrl;
       audit.status = 'completed';
       await audit.save();
-      await sendAuditReportEmail(audit, path.join(__dirname, '../..', pdfUrl));
+      await sendAuditReportEmail(audit, path.join(__dirname, '..', pdfUrl));
     } catch (error) {
       console.error(`❌ Erreur lors de l'envoi automatique du rapport pour l'audit ${auditId}:`, error);
     }
@@ -455,13 +455,20 @@ const downloadAuditPDF = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Audit non trouvé' });
     }
     let pdfUrl = audit.pdfReportUrl;
-    if (!pdfUrl) {
+    let filepath = pdfUrl ? path.join(__dirname, '..', pdfUrl) : null;
+    // Le disque local de l'hébergeur est éphémère (voir Cloudinary pour les
+    // images de blog, migrées pour la même raison) : pdfReportUrl peut
+    // rester renseigné en base après un redéploiement alors que le fichier
+    // a disparu. On revalide sa présence réelle et on régénère si besoin -
+    // la génération est entièrement déterministe à partir des données de
+    // l'audit en base, donc sans perte d'information.
+    if (!pdfUrl || !fs.existsSync(filepath)) {
       pdfUrl = await generateAuditPDF(audit);
+      filepath = path.join(__dirname, '..', pdfUrl);
       audit.pdfReportUrl = pdfUrl;
       audit.status = 'completed';
       await audit.save();
     }
-    const filepath = path.join(__dirname, '../..', pdfUrl);
     res.download(filepath, `audit_${audit.requestNumber}.pdf`);
   } catch (error) {
     console.error('❌ Erreur génération PDF :', error);
@@ -590,7 +597,7 @@ const deleteAudit = async (req, res) => {
     const audit = await AuditRequest.findById(req.params.id);
     if (!audit) return res.status(404).json({ message: 'Audit non trouvé' });
     if (audit.pdfReportUrl) {
-      const filepath = path.join(__dirname, '../..', audit.pdfReportUrl);
+      const filepath = path.join(__dirname, '..', audit.pdfReportUrl);
       if (fs.existsSync(filepath)) fs.unlinkSync(filepath);
     }
     await audit.deleteOne();
