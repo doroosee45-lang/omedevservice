@@ -140,7 +140,7 @@ const ClientSidebar = () => {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-white truncate">{userName}</p>
-              <p className="text-xs text-white/50 truncate">{userEmail || 'client@omdeve.com'}</p>
+              <p className="text-xs text-white/50 truncate">{userEmail || 'doroosee45@gmail.com'}</p>
             </div>
           </div>
         </div>

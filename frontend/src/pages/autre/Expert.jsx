@@ -512,7 +512,7 @@ const Experts = () => {
       image: expert2,
       gradient: 'from-[#72A5CE] to-[#1D5B9B]',
       posClass: 'pos2',
-      socials: { linkedin: 'https://linkedin.com/in/osee-mbongo', github: 'https://github.com/oseembongo', twitter: 'https://twitter.com/oseembongo', email: 'osee.mbongo@omedev.com' },
+      socials: { linkedin: 'https://linkedin.com/in/osee-mbongo', github: 'https://github.com/oseembongo', twitter: 'https://twitter.com/oseembongo', email: 'doroosee45@gmail.com' },
       skills: ['Réseaux', 'Télécommunications', 'Cloud', '5G', 'IoT'],
       certifications: ['CCNP', 'Azure Administrator', '5G Specialist']
     },
@@ -525,7 +525,7 @@ const Experts = () => {
       image: expert3,
       gradient: 'from-[#55DDB5] to-[#2AACB2]',
       posClass: 'pos3',
-      socials: { linkedin: 'https://linkedin.com/in/paul-kasongo', twitter: 'https://twitter.com/paulkasongo', email: 'paul.kasongo@omedev.com' },
+      socials: { linkedin: 'https://linkedin.com/in/paul-kasongo', twitter: 'https://twitter.com/paulkasongo', email: 'doroosee45@gmail.com' },
       skills: ['Solaire photovoltaïque', 'Efficacité énergétique', 'Stockage batterie', 'Micro-grids'],
       certifications: ['PV Design Expert', 'Energy Manager', 'HSE']
     },
@@ -538,7 +538,7 @@ const Experts = () => {
       image: expert4,
       gradient: 'from-[#1D5B9B] to-[#053876]',
       posClass: 'pos4',
-      socials: { linkedin: 'https://linkedin.com/in/claire-mbenza', github: 'https://github.com/clairembenza', twitter: 'https://twitter.com/clairembenza', instagram: 'https://instagram.com/claire.dev', email: 'claire.mbenza@omedev.com' },
+      socials: { linkedin: 'https://linkedin.com/in/claire-mbenza', github: 'https://github.com/clairembenza', twitter: 'https://twitter.com/clairembenza', instagram: 'https://instagram.com/claire.dev', email: 'doroosee45@gmail.com' },
       skills: ['React', 'Node.js', 'Flutter', 'MongoDB', 'AWS'],
       certifications: ['Meta Frontend Developer', 'AWS Cloud Practitioner']
     },
@@ -551,7 +551,7 @@ const Experts = () => {
       image: expert6,
       gradient: 'from-[#2AACB2] to-[#1D5B9B]',
       posClass: 'pos6',
-      socials: { linkedin: 'https://linkedin.com/in/fido-makayabu', instagram: 'https://instagram.com/fido.tech', behance: 'https://behance.net/fidomakayabu', email: 'fido.makayabu@omedev.com' },
+      socials: { linkedin: 'https://linkedin.com/in/fido-makayabu', instagram: 'https://instagram.com/fido.tech', behance: 'https://behance.net/fidomakayabu', email: 'doroosee45@gmail.com' },
       skills: ['Networking', 'Cisco', 'Juniper', 'Linux', 'Windows Server'],
       certifications: ['CCNA', 'CCNP', 'MCSE']
     },
@@ -564,7 +564,7 @@ const Experts = () => {
       image: expert7,
       gradient: 'from-[#72A5CE] to-[#053876]',
       posClass: 'pos7',
-      socials: { linkedin: 'https://linkedin.com/in/amosi-aristote', instagram: 'https://instagram.com/amosi.clim', email: 'amosi.aristote@omedev.com' },
+      socials: { linkedin: 'https://linkedin.com/in/amosi-aristote', instagram: 'https://instagram.com/amosi.clim', email: 'doroosee45@gmail.com' },
       skills: ['Climatisation', 'HVAC', 'Installation', 'Maintenance', 'Réparation'],
       certifications: ['Certificat Climatisation', 'Maintenance HVAC', 'Technicien Réfrigération']
     },
@@ -577,7 +577,7 @@ const Experts = () => {
       image: expert8,
       gradient: 'from-[#4681B7] to-[#1D5B9B]',
       posClass: 'pos8',
-      socials: { linkedin: 'https://linkedin.com/in/rodric-kasway', instagram: 'https://instagram.com/rodric.tech', email: 'rodric.kasway@omedev.com' },
+      socials: { linkedin: 'https://linkedin.com/in/rodric-kasway', instagram: 'https://instagram.com/rodric.tech', email: 'doroosee45@gmail.com' },
       skills: ['Création réseau', 'IP Cameras', 'Configuration réseau', 'Câblage'],
       certifications: ['Certificat Cisco', 'Technicien Sécurité Électronique']
     },
@@ -590,7 +590,7 @@ const Experts = () => {
       image: expert9,
       gradient: 'from-[#2AACB2] to-[#053876]',
       posClass: 'pos9',
-      socials: { linkedin: 'https://linkedin.com/in/glody-ntudi', instagram: 'https://instagram.com/glody.design', behance: 'https://behance.net/glodyntudi', email: 'glody.ntudi@omedev.com' },
+      socials: { linkedin: 'https://linkedin.com/in/glody-ntudi', instagram: 'https://instagram.com/glody.design', behance: 'https://behance.net/glodyntudi', email: 'doroosee45@gmail.com' },
       skills: ['Photoshop', 'Illustrator', 'InDesign', 'Identité visuelle', 'Web Design'],
       certifications: ['Adobe Certified', 'Technicien Infographiste', 'Web Designer']
     },
@@ -604,7 +604,7 @@ const Experts = () => {
       image: expert10,
       gradient: 'from-[#55DDB5] to-[#0B74C1]',
       posClass: 'pos10',
-      socials: { linkedin: 'https://linkedin.com/in/glody-ntudi', instagram: 'https://instagram.com/glody.design', behance: 'https://behance.net/glodyntudi', email: 'glody.ntudi@omedev.com' },
+      socials: { linkedin: 'https://linkedin.com/in/glody-ntudi', instagram: 'https://instagram.com/glody.design', behance: 'https://behance.net/glodyntudi', email: 'doroosee45@gmail.com' },
       skills: ['Photoshop', 'Illustrator', 'InDesign', 'Identité visuelle', 'Web Design'],
       certifications: ['Adobe Certified', 'Technicien Infographiste', 'Web Designer']
     },

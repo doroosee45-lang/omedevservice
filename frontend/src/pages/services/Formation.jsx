@@ -492,13 +492,13 @@ const stats = [
 ];
 
 const centers = [
-  { city: 'Kinshasa', address: '123 Avenue du Commerce, Gombe, Kinshasa', phone: '+243 81 234 5678', email: 'kinshasa@omdeve.com' },
-  { city: 'Lubumbashi', address: '45 Avenue Kamanyola, Lubumbashi', phone: '+243 97 456 7890', email: 'lubumbashi@omdeve.com' },
-  { city: 'Bulungu', address: "78 Avenue de l'Indépendance, Bulungu, Kwilu", phone: '+243 82 567 8901', email: 'bulungu@omdeve.com' },
-  { city: 'Kikwit', address: '12 Avenue Mama Yemo, Kikwit, Kwilu', phone: '+243 89 123 4567', email: 'kikwit@omdeve.com' },
-  { city: 'Bandundu', address: '34 Avenue du 4 Janvier, Bandundu-Ville', phone: '+243 85 234 5678', email: 'bandundu@omdeve.com' },
-  { city: 'Moanda', address: '9 Avenue du Port, Moanda, Kongo Central', phone: '+243 84 345 6789', email: 'moanda@omdeve.com' },
-  { city: 'Matadi', address: '56 Avenue Lumumba, Matadi, Kongo Central', phone: '+243 83 456 7890', email: 'matadi@omdeve.com' },
+  { city: 'Kinshasa', address: '123 Avenue du Commerce, Gombe, Kinshasa', phone: '+243 81 234 5678', email: 'doroosee45@gmail.com' },
+  { city: 'Lubumbashi', address: '45 Avenue Kamanyola, Lubumbashi', phone: '+243 97 456 7890', email: 'doroosee45@gmail.com' },
+  { city: 'Bulungu', address: "78 Avenue de l'Indépendance, Bulungu, Kwilu", phone: '+243 82 567 8901', email: 'doroosee45@gmail.com' },
+  { city: 'Kikwit', address: '12 Avenue Mama Yemo, Kikwit, Kwilu', phone: '+243 89 123 4567', email: 'doroosee45@gmail.com' },
+  { city: 'Bandundu', address: '34 Avenue du 4 Janvier, Bandundu-Ville', phone: '+243 85 234 5678', email: 'doroosee45@gmail.com' },
+  { city: 'Moanda', address: '9 Avenue du Port, Moanda, Kongo Central', phone: '+243 84 345 6789', email: 'doroosee45@gmail.com' },
+  { city: 'Matadi', address: '56 Avenue Lumumba, Matadi, Kongo Central', phone: '+243 83 456 7890', email: 'doroosee45@gmail.com' },
 ];
 
 const Formation = () => {

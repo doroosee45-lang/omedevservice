@@ -105,7 +105,7 @@ const DemandeDetail = () => {
         amount: d.budget ? `${d.budget}€` : 'Sur devis',
         estimatedDelivery: d.deadline ? new Date(d.deadline).toLocaleDateString('fr-FR') : '—',
         technicalContact: d.assignedTo || 'Équipe OMEDEV',
-        technicalEmail: 'contact@omedev.com',
+        technicalEmail: 'doroosee45@gmail.com',
         technicalPhone: '+243 555 503 59',
         timeline: d.timeline || [
           { step: 'Demande reçue', date: d.createdAt ? new Date(d.createdAt).toLocaleDateString('fr-FR') : '—', completed: true },

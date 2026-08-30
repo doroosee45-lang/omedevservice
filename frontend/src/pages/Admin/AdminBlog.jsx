@@ -394,7 +394,7 @@ const AdminBlog = () => {
   const [catalogueSaved, setCatalogueSaved] = useState(false)
 
   const [config, setConfig] = useState({
-    siteName: 'OMEDEV Services', siteEmail: 'contact@omdeve.com',
+    siteName: 'OMEDEV Services', siteEmail: 'doroosee45@gmail.com',
     sitePhone: '+243 555 503 59', siteAddress: 'Avenue Kabmabre n°75, Lingwala, Kinshasa',
     facebook: 'https://facebook.com/omdeve', linkedin: 'https://linkedin.com/company/omdeve',
     twitter: 'https://twitter.com/omdeve',
