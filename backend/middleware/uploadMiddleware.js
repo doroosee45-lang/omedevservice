@@ -22,18 +22,11 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ storage, fileFilter, limits: { fileSize: 5 * 1024 * 1024 } }); // 5MB
 
 // ── Images d'articles de blog ────────────────────────────────────────────
-const articleImageStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const dir = 'uploads/articles/';
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    const unique = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, unique + path.extname(file.originalname));
-  },
-});
-
+// Stockage en mémoire (pas sur le disque local) : le disque de
+// l'hébergeur (Render) est éphémère et remis à zéro à chaque redéploiement
+// ou redémarrage - un fichier écrit avec multer.diskStorage y disparaît
+// silencieusement. Le buffer en mémoire est envoyé à Cloudinary (stockage
+// durable) par le contrôleur juste après - voir articleController.js.
 const imageFileFilter = (req, file, cb) => {
   const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
   if (allowed.includes(file.mimetype)) cb(null, true);
@@ -41,7 +34,7 @@ const imageFileFilter = (req, file, cb) => {
 };
 
 const uploadArticleImage = multer({
-  storage: articleImageStorage,
+  storage: multer.memoryStorage(),
   fileFilter: imageFileFilter,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
 });

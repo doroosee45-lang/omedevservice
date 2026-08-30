@@ -1,6 +1,7 @@
 // src/controllers/articleController.js - Gestion des articles de blog
 const Article = require('../models/Article');
 const { sendArticleNotification } = require('./newsletterController');
+const cloudinary = require('../config/cloudinary');
 
 // Les images d'articles uploadées sont stockées en chemin RELATIF
 // ("/uploads/articles/xxx.jpg") - jamais avec un hôte figé en base. La
@@ -237,14 +238,29 @@ const deleteArticle = async (req, res) => {
 // @desc    Téléverser une image de couverture d'article
 // @route   POST /api/blog/upload-image
 // @access  Private/Admin
+//
+// Uploadée vers Cloudinary (stockage durable) plutôt qu'écrite sur le
+// disque local : le disque de l'hébergeur est éphémère et perd tout
+// fichier au redémarrage/redéploiement du service, ce qui rendait les
+// images d'articles imprévisiblement cassées quel que soit le correctif
+// apporté à la construction de l'URL. L'URL Cloudinary renvoyée est
+// stable et absolue - resolveImageUrl la laisse déjà passer telle
+// quelle, comme n'importe quelle image externe.
 const uploadArticleImage = async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ success: false, message: 'Aucun fichier reçu' });
   }
-  // Chemin relatif uniquement (voir resolveImageUrl ci-dessus) : ne jamais
-  // figer un hôte en base, la lecture le reconstruit toujours avec le bon.
-  const url = `/uploads/articles/${req.file.filename}`;
-  res.status(201).json({ success: true, url });
+  try {
+    const dataUri = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+    const result = await cloudinary.uploader.upload(dataUri, {
+      folder: 'omedev/articles',
+      resource_type: 'image',
+    });
+    res.status(201).json({ success: true, url: result.secure_url });
+  } catch (error) {
+    console.error('Erreur upload Cloudinary:', error);
+    res.status(500).json({ success: false, message: "Échec de l'envoi de l'image. Veuillez réessayer." });
+  }
 };
 
 module.exports = {

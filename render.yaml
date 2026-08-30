@@ -32,6 +32,12 @@ services:
         sync: false
       - key: FRONTEND_URL
         sync: false          # ex: https://omedev-frontend.onrender.com
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false          # stockage des images d'articles (disque local éphémère sur Render)
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
 
   # ── FRONTEND (React/Vite, static site) ──────────────────────────────────────
   - type: web
