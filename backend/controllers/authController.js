@@ -262,6 +262,7 @@
 const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
 const jwt = require('jsonwebtoken');
+const { sendPasswordReset } = require('../utils/emailService');
 
 // @desc    Connexion d'un utilisateur
 // @route   POST /api/auth/login
@@ -396,8 +397,21 @@ const forgotPassword = async (req, res) => {
     { expiresIn: '1h' }
   );
 
-  // TODO (production) : envoyer un email avec le lien suivant :
-  // `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`
+  // Le frontend utilise HashRouter (voir ResetPassword.jsx, qui lit le token
+  // depuis la query string du fragment, pas depuis un paramètre de route) :
+  // un lien valide doit inclure le "#" et passer le token en query string.
+  const resetLink = `${process.env.FRONTEND_URL}/#/reset-password?token=${resetToken}`;
+
+  // Contrairement aux autres flux (inscription, contact...), il n'y a ici
+  // aucune écriture en base servant de filet de sécurité : l'email EST
+  // l'action demandée. Si son envoi échoue, l'utilisateur doit en être
+  // informé plutôt que de recevoir un faux message de succès.
+  try {
+    await sendPasswordReset(user.email, user.name, resetLink);
+  } catch (emailError) {
+    console.error(`Erreur d'envoi de l'email de réinitialisation à ${user.email}:`, emailError);
+    return res.status(502).json({ message: 'Impossible d\'envoyer l\'email de réinitialisation pour le moment. Veuillez réessayer plus tard.' });
+  }
 
   res.json({
     message: 'Email de réinitialisation envoyé',

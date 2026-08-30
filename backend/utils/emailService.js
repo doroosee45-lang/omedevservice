@@ -391,11 +391,39 @@ const sendAccountActivation = async (to, name, role, activationLink) => {
   await sendEmail({ to, subject, html });
 };
 
+// Email de réinitialisation de mot de passe — envoyé sur demande de
+// l'utilisateur (mot de passe oublié). Le lien contient un token à usage
+// unique et à durée limitée (1h, voir authController.forgotPassword).
+const sendPasswordReset = async (to, name, resetLink) => {
+  const subject = 'Réinitialisation de votre mot de passe — OMEDEV Services';
+
+  const html = emailWrapper(`
+    ${badge('Réinitialisation demandée', '#fcd34d', 'rgba(245,158,11,0.1)', 'rgba(245,158,11,0.3)')}
+    ${heading(`Bonjour ${name},`)}
+    ${subtitle('Vous avez demandé la réinitialisation de votre mot de passe OMEDEV Services.')}
+
+    <p style="margin: 0 0 20px; font-size: 14px; color: #94a3b8; line-height: 1.75;">
+      Cliquez sur le bouton ci-dessous pour définir un nouveau mot de passe. Ce lien est valable 1 heure.
+    </p>
+
+    ${ctaButton('Réinitialiser mon mot de passe', resetLink)}
+
+    ${infoBlock(
+      'Si vous n\'êtes pas à l\'origine de cette demande, ignorez simplement cet email : votre mot de passe actuel reste inchangé.'
+    )}
+
+    ${signature()}
+  `);
+
+  await sendEmail({ to, subject, html });
+};
+
 // ============================================================
 // EXPORTS
 // ============================================================
 module.exports = {
   sendEmail,
+  sendPasswordReset,
   sendContactConfirmation,
   sendContactNotificationToAdmin,
   sendQuoteRequestConfirmation,

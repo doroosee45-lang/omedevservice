@@ -5,6 +5,10 @@
 const Inscription = require('../models/Inscription');
 const { sendMail } = require('../utils/mailer');
 
+// Email de confirmation au candidat. Séparé de la notification admin
+// ci-dessous : les deux ne doivent jamais dépendre l'une de l'autre (voir
+// createInscription) - sinon l'échec de l'une (ex. restriction du mode bac
+// à sable Resend sur l'adresse du candidat) empêcherait l'envoi de l'autre.
 const sendConfirmationEmail = async (inscription) => {
   await sendMail({
     from: `"OMEDEV Services" <${process.env.EMAIL_USER}>`,
@@ -23,7 +27,10 @@ const sendConfirmationEmail = async (inscription) => {
       </div>
     `,
   });
+};
 
+// Email de notification à l'équipe formation.
+const sendAdminNotificationEmail = async (inscription) => {
   await sendMail({
     from: `"Inscriptions Formation OMEDEV" <${process.env.EMAIL_USER}>`,
     to: process.env.FORMATION_EMAIL || process.env.CONTACT_EMAIL,
@@ -72,17 +79,27 @@ const createInscription = async (req, res) => {
     return res.status(500).json({ success: false, message: 'Une erreur est survenue. Veuillez réessayer plus tard.' });
   }
 
-  // L'inscription est déjà enregistrée et valide à ce stade. L'email est une
-  // étape secondaire dont l'échec ne doit jamais annuler l'inscription.
+  // L'inscription est déjà enregistrée et valide à ce stade. Les emails sont
+  // une étape secondaire dont l'échec ne doit jamais annuler l'inscription.
+  // Les deux envois sont indépendants : l'échec de l'un (ex. restriction du
+  // mode bac à sable Resend sur l'adresse du candidat) ne doit jamais
+  // empêcher l'envoi de l'autre.
   try {
     await sendConfirmationEmail(inscription);
     inscription.emailStatus = 'sent';
     inscription.emailSentAt = new Date();
   } catch (emailError) {
-    console.error('Erreur envoi email inscription:', emailError);
+    console.error('Erreur envoi email confirmation inscription:', emailError);
     inscription.emailStatus = 'failed';
     inscription.emailError = emailError.message;
   }
+
+  try {
+    await sendAdminNotificationEmail(inscription);
+  } catch (adminEmailError) {
+    console.error('Erreur envoi email notification inscription (équipe formation):', adminEmailError);
+  }
+
   await inscription.save();
 
   res.status(201).json({
