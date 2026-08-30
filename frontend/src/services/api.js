@@ -14,11 +14,25 @@ const getBaseURL = () => {
 };
 
 const API_BASE_URL = getBaseURL();
+const API_ORIGIN = API_BASE_URL.replace(/\/api\/?$/, '');
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: { 'Content-Type': 'application/json' },
 });
+
+// Les endpoints GET renvoient déjà des URLs d'image absolues et
+// correctes (résolues côté backend avec l'hôte réel de la requête - voir
+// articleController.js). Le seul cas où le frontend reçoit encore un
+// chemin relatif brut ("/uploads/articles/xxx.jpg") est la réponse
+// immédiate de l'upload, utilisée pour l'aperçu avant sauvegarde. Cette
+// fonction gère ce cas et laisse toute URL déjà absolue (backend résolu,
+// ou externe type Unsplash) inchangée.
+export const resolveImageUrl = (src) => {
+  if (!src) return '';
+  if (src.startsWith('/')) return `${API_ORIGIN}${src}`;
+  return src;
+};
 
 // Intercepteur requête : ajoute le token si présent (toujours, le backend décide si requis)
 api.interceptors.request.use(

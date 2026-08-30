@@ -2,6 +2,43 @@
 const Article = require('../models/Article');
 const { sendArticleNotification } = require('./newsletterController');
 
+// Les images d'articles uploadées sont stockées en chemin RELATIF
+// ("/uploads/articles/xxx.jpg") - jamais avec un hôte figé en base. La
+// base de données est partagée entre l'environnement local et la
+// production (même cluster MongoDB Atlas) : une URL absolue enregistrée
+// au moment de l'upload (ex. http://localhost:5000/...) resterait
+// cassée pour toujours dès que l'article est lu depuis un autre
+// environnement. On reconstruit donc l'URL absolue à la LECTURE, avec
+// l'hôte réel de la requête en cours - qui est toujours le bon, quel que
+// soit l'environnement d'où la lecture a lieu. Ça gère aussi
+// automatiquement les anciennes valeurs déjà figées sur un hôte de dev.
+//
+// Important : on ne réécrit QUE (a) un chemin déjà relatif, ou (b) une
+// URL absolue dont l'HÔTE est localhost/127.0.0.1 - jamais en cherchant
+// juste la sous-chaîne "/uploads/" n'importe où dans l'URL. Beaucoup de
+// sites tiers utilisent eux-mêmes un chemin "/uploads/" (ex. WordPress :
+// "wp-content/uploads/..."), donc une simple recherche de sous-chaîne
+// détournerait par erreur une vraie image externe vers notre propre
+// backend, où elle n'existe pas.
+const resolveImageUrl = (req, image) => {
+  if (!image) return image;
+  if (image.startsWith('/uploads/')) {
+    return `${req.protocol}://${req.get('host')}${image}`;
+  }
+  try {
+    const parsed = new URL(image);
+    if (/^(localhost|127\.0\.0\.1)$/i.test(parsed.hostname) && parsed.pathname.startsWith('/uploads/')) {
+      return `${req.protocol}://${req.get('host')}${parsed.pathname}${parsed.search}`;
+    }
+  } catch { /* pas une URL absolue valide : laisser tel quel */ }
+  return image;
+};
+
+const withResolvedImage = (req, doc) => {
+  const obj = typeof doc.toObject === 'function' ? doc.toObject() : doc;
+  return { ...obj, image: resolveImageUrl(req, obj.image) };
+};
+
 const slugify = (str) =>
   (str || '')
     .toLowerCase()
@@ -40,7 +77,7 @@ const getPublishedArticles = async (req, res) => {
   const total = await Article.countDocuments(query);
 
   res.json({
-    articles,
+    articles: articles.map((a) => withResolvedImage(req, a)),
     page,
     pages: Math.ceil(total / limit),
     total,
@@ -57,7 +94,7 @@ const getArticleBySlug = async (req, res) => {
     // Incrémenter le nombre de vues
     article.views += 1;
     await article.save();
-    res.json(article);
+    res.json(withResolvedImage(req, article));
   } else {
     return res.status(404).json({ success: false, message: 'Article non trouvé' });
   }
@@ -68,7 +105,7 @@ const getArticleBySlug = async (req, res) => {
 // @access  Private/Admin
 const getAllArticles = async (req, res) => {
   const articles = await Article.find({}).sort('-createdAt');
-  res.json(articles);
+  res.json(articles.map((a) => withResolvedImage(req, a)));
 };
 
 // @desc    Obtenir un article par ID (Admin)
@@ -77,7 +114,7 @@ const getAllArticles = async (req, res) => {
 const getArticleById = async (req, res) => {
   const article = await Article.findById(req.params.id);
   if (article) {
-    res.json(article);
+    res.json(withResolvedImage(req, article));
   } else {
     return res.status(404).json({ success: false, message: 'Article non trouvé' });
   }
@@ -118,11 +155,15 @@ const createArticle = async (req, res) => {
     return res.status(500).json({ success: false, message: 'Une erreur est survenue. Veuillez réessayer plus tard.' });
   }
 
-  // Notify newsletter subscribers if published immediately
+  const resolved = withResolvedImage(req, article);
+
+  // Notify newsletter subscribers if published immediately (avec l'image
+  // déjà résolue en URL absolue : un email n'a pas de "page d'origine"
+  // pour résoudre un chemin relatif, contrairement au frontend).
   if (article.status === 'published') {
-    sendArticleNotification(article).catch(() => {});
+    sendArticleNotification(resolved).catch(() => {});
   }
-  res.status(201).json(article);
+  res.status(201).json(resolved);
 };
 
 // @desc    Mettre à jour un article
@@ -170,12 +211,14 @@ const updateArticle = async (req, res) => {
     return res.status(500).json({ success: false, message: 'Une erreur est survenue. Veuillez réessayer plus tard.' });
   }
 
+  const resolved = withResolvedImage(req, updatedArticle);
+
   // Send newsletter notification when article goes from draft/hidden → published
   if (justPublished) {
-    sendArticleNotification(updatedArticle).catch(() => {});
+    sendArticleNotification(resolved).catch(() => {});
   }
 
-  res.json(updatedArticle);
+  res.json(resolved);
 };
 
 // @desc    Supprimer un article
@@ -198,7 +241,9 @@ const uploadArticleImage = async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ success: false, message: 'Aucun fichier reçu' });
   }
-  const url = `${req.protocol}://${req.get('host')}/uploads/articles/${req.file.filename}`;
+  // Chemin relatif uniquement (voir resolveImageUrl ci-dessus) : ne jamais
+  // figer un hôte en base, la lecture le reconstruit toujours avec le bon.
+  const url = `/uploads/articles/${req.file.filename}`;
   res.status(201).json({ success: true, url });
 };
 

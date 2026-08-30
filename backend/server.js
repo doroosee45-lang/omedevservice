@@ -12,6 +12,13 @@ connectDB();
 
 const app = express();
 
+// Render (et la plupart des hébergeurs) termine le TLS en amont et transmet
+// en HTTP simple au serveur : sans "trust proxy", req.protocol renvoie
+// toujours "http" même quand le site public est en https, ce qui casse
+// (contenu mixte) toute URL absolue reconstruite à partir de req.protocol
+// (ex: URLs d'images uploadées, voir articleController.js).
+app.set('trust proxy', 1);
+
 // CORS — accepte toutes les origines (répondre aux preflight OPTIONS inclus)
 const corsOptions = {
   origin: (origin, callback) => callback(null, true),

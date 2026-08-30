@@ -3,7 +3,7 @@
 // src/pages/Admin/AdminBlog.jsx
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { blog as blogApi } from '../../services/api'
+import { blog as blogApi, resolveImageUrl } from '../../services/api'
 import {
   BookOpen, Package, Settings, Plus, Edit, Trash2, Eye, Save,
   Globe, Share2, DollarSign, X, ExternalLink, Mail, Phone,
@@ -64,7 +64,7 @@ const ArticlePreview = ({ article, onClose }) => (
     >
       {article.image && (
         <div className="relative h-56 overflow-hidden">
-          <img src={article.image} alt={article.title} className="w-full h-full object-cover" />
+          <img src={resolveImageUrl(article.image)} alt={article.title} className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent" />
           <div className="absolute bottom-4 left-6">
             <span className="px-2 py-1 rounded-full text-xs bg-blue-500/80 text-white mr-2">{article.category}</span>
@@ -209,7 +209,7 @@ const ArticleModal = ({ article, categories, onSave, onClose }) => {
               <div>
                 <div className="relative rounded-xl overflow-hidden h-40 bg-white/5">
                   {!imageError ? (
-                    <img src={form.image} alt="Aperçu de l'image de couverture" className="w-full h-full object-cover" onError={() => setImageError(true)} />
+                    <img src={resolveImageUrl(form.image)} alt="Aperçu de l'image de couverture" className="w-full h-full object-cover" onError={() => setImageError(true)} />
                   ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-red-400 text-xs">
                       <AlertCircle className="w-5 h-5" />
@@ -529,7 +529,7 @@ const AdminBlog = () => {
                       <tr key={article.id} >
                         <td>
                           {article.image
-                            ? <img src={article.image} alt={article.title} className="w-12 h-12 rounded-lg object-cover border border-white/10" onError={(e) => { e.target.style.display = 'none' }} />
+                            ? <img src={resolveImageUrl(article.image)} alt={article.title} className="w-12 h-12 rounded-lg object-cover border border-white/10" onError={(e) => { e.target.style.display = 'none' }} />
                             : <div className="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center"><ImageIcon className="w-5 h-5 text-white/30" /></div>
                           }
                         </td>
