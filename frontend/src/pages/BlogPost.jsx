@@ -8,6 +8,7 @@ import {
   Share2, Bookmark, ThumbsUp
 } from 'lucide-react';
 import { blog as blogApi } from '../services/api';
+import CTASection from '../components/Public/CTASection';
 
 /* Styles d'harmonisation avec le reste du site (Formation.jsx, Blog.jsx…).
    Ce fichier n'avait aucun <style> propre : la classe "card-hover" utilisée
@@ -384,31 +385,16 @@ const BlogPost = () => {
         </div>
       )}
 
-      {/* CTA Final */}
-      <div className="text-white py-16 sm:py-20 text-center" style={{ background: 'linear-gradient(135deg, #053876 0%, #0B74C1 55%, #2AACB2 100%)' }}>
-        <div className="max-w-3xl mx-auto px-6">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-6 font-syne">
-            Besoin d'une expertise IT ?
-          </h2>
-          <p className="text-lg sm:text-xl text-[#A6C3D7] mb-10">
-            Contactez OMEDEV pour un audit gratuit de votre infrastructure.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/audit-gratuit"
-              className="bg-white text-[#053876] px-10 py-4 rounded-full font-semibold hover:-translate-y-0.5 transition-all duration-300 shadow-lg hover:shadow-2xl"
-            >
-              Demander un Audit Gratuit
-            </Link>
-            <Link
-              to="/demander-devis"
-              className="border border-white/40 px-10 py-4 rounded-full font-semibold hover:bg-white/10 hover:-translate-y-0.5 transition-all duration-300"
-            >
-              Obtenir un Devis
-            </Link>
-          </div>
-        </div>
-      </div>
+      {/* CTA Final — composant partagé, identique à Blog.jsx pour rester
+          cohérent entre la liste des articles et le détail d'un article. */}
+      <CTASection
+        badge="Envie d'échanger ?"
+        title="Vous avez un projet ?"
+        highlight="un projet"
+        subtitle="Discutons de vos besoins et trouvons ensemble la solution la plus adaptée."
+        backgroundImage="https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1920&q=80"
+        primaryAction={{ label: 'Prendre rendez-vous', to: '/contact' }}
+      />
     </div>
   );
 };
