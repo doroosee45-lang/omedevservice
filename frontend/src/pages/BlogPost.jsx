@@ -16,6 +16,15 @@ import CTASection from '../components/Public/CTASection';
    ces cartes s'affichaient sans bordure/ombre/hover, en décalage avec le
    reste du site. */
 const globalStyles = `
+  /* Comme sur Blog.jsx : sans ce garde-fou, les orbes décoratifs de
+     CTASection (positionnés en partie hors cadre par design) et le fond
+     flouté agrandi de l'image héro peuvent élargir le scroll horizontal
+     de la page malgré leurs propres overflow-hidden locaux. Les deux
+     sélecteurs sont nécessaires : ne fixer que "body" interrompt la
+     propagation d'overflow vers "html", qui redevient alors le scroller
+     racine (non clippé) - c'est ce qui causait le débordement résiduel. */
+  html, body { overflow-x: hidden; }
+
   .omedev-blogpost {
     --omedev-navy: #053876;
     --omedev-blue: #0B74C1;
@@ -245,12 +254,21 @@ const BlogPost = () => {
         </div>
       </nav>
 
-      {/* Hero Image */}
-      <div className="relative h-[420px] sm:h-[500px] md:h-[560px] min-h-[420px] overflow-hidden">
+      {/* Hero Image — object-contain (jamais recadrée : la photo reste
+          entière, de la tête aux chaussures pour une personne debout) sur
+          un fond flouté du même visuel pour remplir la bannière sans
+          bandes vides. */}
+      <div className="relative h-[420px] sm:h-[500px] md:h-[560px] min-h-[420px] overflow-hidden bg-[#0B1213]">
+        <img
+          src={article.image || 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop'}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover scale-110 blur-2xl opacity-50"
+        />
         <img
           src={article.image || 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop'}
           alt={article.title}
-          className="w-full h-full object-cover"
+          className="relative w-full h-full object-contain"
         />
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(5,56,118,0.92) 0%, rgba(5,56,118,0.45) 55%, rgba(5,56,118,0.10) 100%)' }} />
 

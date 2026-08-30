@@ -478,12 +478,18 @@ const Blog = () => {
                   <motion.div key={article._id ?? article.id} variants={fadeUp}
                     className="group article-card transition-all duration-500 hover:-translate-y-2 flex flex-col">
 
-                    {/* Image */}
+                    {/* Image — object-contain (jamais recadrée : une photo de
+                        personne debout reste visible de la tête aux
+                        chaussures, quel que soit son ratio d'origine) sur un
+                        fond flouté du même visuel pour remplir le cadre sans
+                        bandes vides disgracieuses. */}
                     <Link to={`/blog/${article.slug}`} className="block">
-                      <div className="relative overflow-hidden h-56">
+                      <div className="relative overflow-hidden h-64 sm:h-72 bg-[#0B1213]">
+                        <img src={article.image} alt="" aria-hidden="true"
+                          className="absolute inset-0 w-full h-full object-cover scale-110 blur-2xl opacity-40" />
                         <img src={article.image} alt={article.title}
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#053876] via-transparent to-transparent opacity-60" />
+                          className="relative w-full h-full object-contain transition-transform duration-700 group-hover:scale-105" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#053876]/70 via-transparent to-transparent pointer-events-none" />
                         <div className="absolute top-4 left-4">
                           <span className="px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-[#0B74C1] to-[#1D5B9B] text-white shadow-lg">
                             {article.category}
