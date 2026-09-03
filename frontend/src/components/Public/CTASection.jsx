@@ -11,7 +11,7 @@ const ctaStyles = `
     position: relative;
     overflow: hidden;
     color: #fff;
-    background: #051C36;
+    background: #14120F;
   }
 
   /* ── Photo de fond avec effet Ken Burns (identique en esprit à PublicHero) ── */
@@ -31,17 +31,18 @@ const ctaStyles = `
     will-change: transform;
   }
 
-  /* Overlay allégé et centré : la photo reste le sujet, le voile garantit
-     la lisibilité du texte désormais centré. */
+  /* Overlay allégé et centré, neutre (indépendant de la palette bleue du
+     site) : la photo reste le sujet, le voile garantit la lisibilité du
+     texte désormais centré. */
   .cta-section .cta-overlay {
     position: absolute;
     inset: 0;
-    background: radial-gradient(120% 100% at 50% 40%, rgba(3,20,41,0.55) 0%, rgba(5,56,118,0.68) 45%, rgba(3,20,41,0.85) 100%);
+    background: radial-gradient(120% 100% at 50% 40%, rgba(20,18,14,0.55) 0%, rgba(20,18,14,0.68) 45%, rgba(20,18,14,0.85) 100%);
   }
   .cta-section .cta-vignette {
     position: absolute;
     inset: 0;
-    background: radial-gradient(80% 60% at 50% 50%, rgba(3,20,41,0.15) 0%, transparent 65%);
+    background: radial-gradient(80% 60% at 50% 50%, rgba(20,18,14,0.15) 0%, transparent 65%);
   }
 
   /* Grille subtile, cohérente avec PublicHero */
@@ -130,7 +131,7 @@ const ctaStyles = `
     gap: .65rem;
     padding: .6rem .9rem;
     border-radius: 12px;
-    background: rgba(3,20,41,.35);
+    background: rgba(20,18,14,.35);
     border: 1px solid rgba(255,255,255,.18);
     backdrop-filter: blur(6px);
   }
@@ -163,7 +164,7 @@ const ctaStyles = `
     padding: .35rem .35rem .35rem 1.6rem;
     border-radius: 999px;
     text-decoration: none;
-    box-shadow: 0 14px 34px rgba(3,20,41,.45);
+    box-shadow: 0 14px 34px rgba(20,18,14,.45);
     transition: transform .3s ease, box-shadow .3s ease;
   }
   .cta-section .cta-btn-primary:hover,
@@ -193,7 +194,7 @@ const ctaStyles = `
     display: inline-flex;
     align-items: center;
     gap: .6rem;
-    background: rgba(3,20,41,.35);
+    background: rgba(20,18,14,.35);
     color: #fff;
     font-weight: 600;
     font-family: 'Syne', sans-serif;
@@ -213,7 +214,7 @@ const ctaStyles = `
 
   @media (max-width: 768px) {
     .cta-section .cta-overlay {
-      background: radial-gradient(140% 100% at 50% 30%, rgba(3,20,41,0.75) 0%, rgba(5,56,118,0.72) 50%, rgba(3,20,41,0.9) 100%);
+      background: radial-gradient(140% 100% at 50% 30%, rgba(20,18,14,0.75) 0%, rgba(20,18,14,0.72) 50%, rgba(20,18,14,0.9) 100%);
     }
   }
 

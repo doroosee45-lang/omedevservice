@@ -1,34 +1,56 @@
 // ==================== PublicHero ====================
-// Hero identique à celui de Home.jsx, réutilisable sur toutes les pages
-// publiques. Même photo, mêmes overlays, mêmes animations (heroZoom,
-// hero-photo, float/animate-float), même grille, mêmes orbes, et surtout
-// même hauteur — quel que soit le contenu (avec ou sans stats).
+// Hero réutilisable sur toutes les pages publiques.
+// IMPORTANT : cette section est VISUELLEMENT INDÉPENDANTE du reste du
+// site. Aucune couleur bleue, aucune couleur "globale" de l'application
+// n'est utilisée ici. Le Hero possède sa propre identité : tons neutres
+// (noir/blanc/gris) + accent vert-d'eau/mint (#55DDB5) qui reste dans
+// les tons verts et ne tire jamais vers le bleu.
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronRight } from 'lucide-react';
 
 const HERO_IMAGE =
-  'https://www.dmi40.fr/wp-content/uploads/2026/05/Actualite.webp';
+  'https://www.nato.int/content/dam/nato/webready/evergreen-assets/science-tech/55296437891_def0963a79_o.jpg/jcr:content/renditions/cq5dam.web.1280.1280.jpeg';
+
+/* ──────────────────────────────────────────────────────────────────
+   Palette VISUELLEMENT NEUTRE et INDÉPENDANTE du Hero.
+   Aucun bleu, aucune couleur "corporate" du site. Tout est défini ici
+   en valeurs explicites pour ne pas dépendre d'un Tailwind config ou
+   d'un CSS global qui pourrait teinter la section.
+   ────────────────────────────────────────────────────────────────── */
+const COLORS = {
+  // Accent principal du Hero : vert-d'eau / menthe (NOT blue)
+  accent: '#55DDB5',
+  accentLight: '#5EEAD4',
+  accentLighter: '#A7F3D0',
+  // Vert foncé "propre" pour le CTA (teal foncé — tire sur le vert, pas le bleu)
+  accentDeep: '#0f766e', // teal-700 : clairement vert, pas bleu contrairement à #0B74C1
+  accentMid: '#14b8a6',  // teal-500
+  // Neutres purs
+  white: '#ffffff',
+  black: '#000000',
+};
 
 const heroStyles = `
+  /* Boîtier principal du Hero : isole visuellement la section. */
   .public-hero {
     position: relative;
     overflow: hidden;
-    color: #fff;
-    /* Le dégradé de fond ne sert que de fallback pendant le chargement de
-       l'image : il ne doit JAMAIS teinter la photo elle-même (voir overlay
-       plus bas, désormais bien plus léger). */
-    background: linear-gradient(135deg, #053876 0%, #1D5B9B 35%, #4681B7 60%, #72A5CE 80%, #A6C3D7 100%);
+    color: ${COLORS.white};
+    /* Fond de secours neutre gris très clair, pas de teinte colorée */
+    background: linear-gradient(135deg, #f8fafc 0%, #eef2f5 100%);
     min-height: 460px;
+    /* Force l'héritage neutre pour éviter qu'un style global ne teinte le Hero */
+    font-family: inherit;
   }
   @media (max-width: 1024px) {
-    .public-hero { min-height: 560px; } /* la carte de stats passe sous le texte en dessous de lg */
+    .public-hero { min-height: 560px; }
   }
   @media (max-width: 640px) {
     .public-hero { min-height: 620px; }
   }
 
-  /* ── Animations identiques à Home.jsx ── */
+  /* ── Animations identiques ── */
   @keyframes heroZoom {
     0%   { transform: scale(1.06) translate(0, 0); }
     50%  { transform: scale(1.14) translate(-1.5%, -1.5%); }
@@ -37,9 +59,6 @@ const heroStyles = `
   .public-hero .hero-photo {
     animation: heroZoom 20s ease-in-out infinite;
     will-change: transform;
-    /* Plus de saturate/contrast/brightness poussés : c'est ce qui donnait
-       cet aspect "lavé" par la couleur principale. On laisse l'image
-       telle quelle, nette. */
     filter: none;
   }
   @keyframes float {
@@ -48,12 +67,14 @@ const heroStyles = `
   }
   .public-hero .animate-float { animation: float 6s ease-in-out infinite; }
 
+  /* Grille 100 % blanche, aucune couleur */
   .public-hero .hero-grid {
     background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
     background-size: 56px 56px;
   }
 
+  /* Badge : verre blanc neutre */
   .public-hero .ph-badge {
     display: inline-flex;
     align-items: center;
@@ -64,12 +85,13 @@ const heroStyles = `
     background: rgba(255,255,255,.10);
     border: 1px solid rgba(255,255,255,.25);
     backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
   }
   .public-hero .ph-badge-dot {
     width: 6px;
     height: 6px;
     border-radius: 999px;
-    background: #55DDB5;
+    background: ${COLORS.accent};
     animation: ph-pulse 2s ease-in-out infinite;
   }
   @keyframes ph-pulse {
@@ -77,13 +99,15 @@ const heroStyles = `
     50% { opacity: .35; }
   }
   .public-hero .ph-badge-label {
-    color: #fff;
+    color: ${COLORS.white};
     font-family: 'Syne', sans-serif;
     font-weight: 700;
     font-size: 11px;
     letter-spacing: .2em;
     text-transform: uppercase;
   }
+
+  /* Titre : blanc pur avec ombre noire forte pour la lisibilité */
   .public-hero .ph-title {
     font-family: 'Syne', sans-serif;
     font-weight: 800;
@@ -91,27 +115,34 @@ const heroStyles = `
     line-height: 1.15;
     margin-bottom: 1.5rem;
     font-size: clamp(1.75rem, 5vw, 4.2rem);
-    color: #fff;
-    /* Ombre renforcée pour garder le texte lisible même avec un overlay
-       plus léger sur l'image. */
+    color: ${COLORS.white};
     text-shadow: 0 2px 24px rgba(0,0,0,.55);
   }
+
+  /* Highlight : plus de bleu. Dégradé vert-d'eau uniquement. */
   .public-hero .ph-highlight { position: relative; display: inline-block; }
   .public-hero .ph-highlight-glow {
     position: absolute;
     inset: -.5rem;
-    background: linear-gradient(90deg, #55DDB5, #72A5CE);
+    /* Anciennement : linear-gradient(90deg, #55DDB5, #72A5CE) → #72A5CE = BLEU acier.
+       Remplacé par un glow menthe → blanc totalement neutre. */
+    background: linear-gradient(90deg, ${COLORS.accent}55, rgba(255,255,255,.22));
     filter: blur(30px);
-    opacity: .3;
+    opacity: .45;
+    border-radius: 999px;
   }
   .public-hero .ph-highlight-text {
     position: relative;
-    background: linear-gradient(90deg, #55DDB5 0%, #5EEAD4 55%, #60A5FA 100%);
+    /* Anciennement : ... #60A5FA 100% → #60A5FA = BLEU vif (blue-400).
+       Remplacé par un dégradé 100% vert-d'eau / menthe, aucun bleu. */
+    background: linear-gradient(90deg, ${COLORS.accent} 0%, ${COLORS.accentLight} 55%, ${COLORS.accentLighter} 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
     filter: drop-shadow(0 2px 10px rgba(0,0,0,.5));
   }
+
+  /* Sous-titre : blanc */
   .public-hero .ph-subtitle {
     color: rgba(255,255,255,.92);
     font-size: clamp(1rem, 1.4vw, 1.25rem);
@@ -120,7 +151,14 @@ const heroStyles = `
     max-width: 40rem;
     text-shadow: 0 1px 14px rgba(0,0,0,.5);
   }
+
   .public-hero .ph-actions { display: flex; flex-wrap: wrap; gap: 1rem; }
+
+  /* Bouton primaire : palette PROPRE au Hero, indépendante du site.
+     Anciennement : linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%)
+     → #0B74C1 = BLEU corporatif du site, ombre rgba(11,116,193,.30) = BLEU.
+     Nouveau dégradé : teal foncé (VERT, pas bleu) → teal → menthe.
+     L'ombre et le hover utilisent également ces teintes vertes. */
   .public-hero .ph-btn-primary {
     display: inline-flex;
     align-items: center;
@@ -129,16 +167,19 @@ const heroStyles = `
     border-radius: 999px;
     font-weight: 600;
     font-family: 'Syne', sans-serif;
-    color: #fff;
-    background: linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%);
-    box-shadow: 0 10px 28px rgba(11,116,193,.30);
+    color: ${COLORS.white};
+    background: linear-gradient(135deg, ${COLORS.accentDeep} 0%, ${COLORS.accentMid} 55%, ${COLORS.accent} 100%);
+    box-shadow: 0 10px 28px rgba(15,118,110,.28);
     transition: transform .3s ease, box-shadow .3s ease, filter .3s ease;
+    text-decoration: none;
   }
   .public-hero .ph-btn-primary:hover {
     transform: translateY(-3px);
-    box-shadow: 0 16px 36px rgba(42,172,178,.35);
+    box-shadow: 0 16px 36px rgba(20,184,166,.35);
     filter: brightness(1.08);
   }
+
+  /* Bouton outline : verre noir/blanc neutre */
   .public-hero .ph-btn-outline {
     display: inline-flex;
     align-items: center;
@@ -147,28 +188,33 @@ const heroStyles = `
     border-radius: 999px;
     font-weight: 600;
     font-family: 'Syne', sans-serif;
-    color: #fff;
+    color: ${COLORS.white};
     border: 1px solid rgba(255,255,255,.35);
     background: rgba(0,0,0,.15);
     backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     transition: all .3s ease;
+    text-decoration: none;
   }
   .public-hero .ph-btn-outline:hover {
     border-color: rgba(255,255,255,.7);
     background: rgba(255,255,255,.15);
     transform: translateY(-3px);
   }
+
   .public-hero .ph-chip {
     display: inline-flex;
     align-items: center;
     gap: .35rem;
     margin-top: 1rem;
-    color: #55DDB5;
+    color: ${COLORS.accent};
     font-size: .85rem;
     font-weight: 600;
     transition: color .2s ease;
+    text-decoration: none;
   }
-  .public-hero .ph-chip:hover { color: #fff; }
+  .public-hero .ph-chip:hover { color: ${COLORS.white}; }
+
   .public-hero .ph-breadcrumb {
     display: flex;
     align-items: center;
@@ -178,10 +224,14 @@ const heroStyles = `
     font-size: .82rem;
     color: rgba(255,255,255,.75);
   }
-  .public-hero .ph-breadcrumb a { color: rgba(255,255,255,.75); transition: color .2s ease; }
-  .public-hero .ph-breadcrumb a:hover { color: #fff; }
+  .public-hero .ph-breadcrumb a {
+    color: rgba(255,255,255,.75);
+    transition: color .2s ease;
+    text-decoration: none;
+  }
+  .public-hero .ph-breadcrumb a:hover { color: ${COLORS.white}; }
 
-  /* Carte vitrée de stats (colonne droite optionnelle, façon Home) */
+  /* Carte vitrée de stats : verre blanc/noir neutre */
   .public-hero .ph-glass {
     position: relative;
     border-radius: 1.5rem;
@@ -200,13 +250,14 @@ const heroStyles = `
     padding: 1rem;
     text-align: center;
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     transition: background .3s ease, transform .3s ease;
   }
   .public-hero .ph-glass-item:hover {
     background: rgba(255,255,255,.22);
     transform: translateY(-3px);
   }
-  .public-hero .ph-glass-item-value { color: #fff; font-family: 'Syne', sans-serif; }
+  .public-hero .ph-glass-item-value { color: ${COLORS.white}; font-family: 'Syne', sans-serif; }
   .public-hero .ph-glass-item-label { color: rgba(255,255,255,.85); }
 
   @media (max-width: 768px) {
@@ -258,7 +309,7 @@ const PublicHero = ({
     >
       <style>{heroStyles}</style>
 
-      {/* Photo de fond (identique à Home.jsx, avec animation Ken Burns) */}
+      {/* Photo de fond — animation Ken Burns conservée */}
       <div className="absolute inset-0 z-0">
         <img
           src={HERO_IMAGE}
@@ -267,46 +318,55 @@ const PublicHero = ({
         />
       </div>
 
-      {/* Overlay très léger, uniquement pour garantir la lisibilité du
-          texte : un voile neutre noir/transparent, plus le dégradé bleu
-          de la marque qui "mangeait" l'image. L'image reste donc claire
-          et nette, indépendamment de la couleur principale du site. */}
+      {/* Overlay NEUTRE 100% noir/transparent.
+          Pas la moindre teinte colorée. Garantit la lisibilité sans
+          jamais "laver" l'image avec une couleur de marque. */}
       <div
         className="absolute inset-0 z-0"
         style={{
           background:
-            'linear-gradient(100deg, rgba(0,0,0,0.28) 0%, rgba(0,0,0,0.14) 48%, rgba(0,0,0,0.06) 100%)',
+            'linear-gradient(100deg, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.16) 48%, rgba(0,0,0,0.08) 100%)',
         }}
       />
 
-      {/* Vignette très douce, neutre (noir), juste pour ancrer le texte */}
+      {/* Vignette d'ancrage, neutre (noir) */}
       <div
         className="absolute inset-0 z-0"
         style={{
           background:
-            'radial-gradient(120% 80% at 50% 40%, transparent 60%, rgba(0,0,0,0.12) 100%)',
+            'radial-gradient(120% 80% at 50% 40%, transparent 60%, rgba(0,0,0,0.14) 100%)',
         }}
       />
 
-      {/* Grille subtile */}
-      <div
-        className="hero-grid absolute inset-0 opacity-[0.14] z-[1]"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)`,
-          backgroundSize: '56px 56px',
-        }}
-      />
+      {/* Grille blanche subtile */}
+      <div className="hero-grid absolute inset-0 opacity-[0.14] z-[1]" />
 
-      {/* Orbes lumineux */}
-      <div className="absolute w-[26rem] h-[26rem] bg-cyan-300/15 top-10 -left-24 rounded-full filter blur-[100px] animate-float" />
+      {/* ──────────────────────────────────────────────────────────
+           Orbes lumineux — 100 % BLANC PUR.
+           Anciennement :
+             - bg-cyan-300/15 → Cyan/BLEU
+             - bg-teal-300/15 → Teal/BLEU-VERT qui tire bleu
+             - bg-white/10
+           Ces orbes colorés étaient la cause principale de la dominante
+           bleue transparente qui couvrait l'image. Ils sont remplacés
+           par de la lumière BLANCHE exclusivement (opacités différentes
+           pour conserver la profondeur et l'animation float), afin que
+           l'image de fond garde ses couleurs naturelles.
+           Les classes utilisent des valeurs arbitraires explicites
+           (ex: bg-white/[0.12]) pour ne pas dépendre d'un thème Tailwind
+           global qui pourrait les recolorer.
+           ────────────────────────────────────────────────────────── */}
       <div
-        className="absolute w-[22rem] h-[22rem] bg-teal-300/15 bottom-0 right-0 rounded-full filter blur-[110px] animate-float"
-        style={{ animationDelay: '2s' }}
+        className="absolute w-[26rem] h-[26rem] top-10 -left-24 rounded-full animate-float"
+        style={{ background: 'rgba(255,255,255,0.12)', filter: 'blur(100px)' }}
       />
       <div
-        className="absolute w-64 h-64 bg-white/10 top-1/3 right-1/4 rounded-full filter blur-[90px] animate-float"
-        style={{ animationDelay: '4s' }}
+        className="absolute w-[22rem] h-[22rem] bottom-0 right-0 rounded-full animate-float"
+        style={{ background: 'rgba(255,255,255,0.10)', filter: 'blur(110px)', animationDelay: '2s' }}
+      />
+      <div
+        className="absolute w-64 h-64 top-1/3 right-1/4 rounded-full animate-float"
+        style={{ background: 'rgba(255,255,255,0.08)', filter: 'blur(90px)', animationDelay: '4s' }}
       />
 
       <div className="container mx-auto px-4 relative z-10">

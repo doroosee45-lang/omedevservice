@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom';
 import { useRef, useEffect, useState } from 'react';
 import CTASection from '../components/Public/CTASection';
+import PublicHero from '../components/Public/PublicHero';
 import {
   ArrowRight,
   Server,
@@ -250,11 +251,6 @@ const globalStyles = `
     z-index: 0;
   }
 
-  .omedev-home .omedev-hero {
-    background: linear-gradient(135deg, #053876 0%, #1D5B9B 35%, #4681B7 60%, #72A5CE 80%, #A6C3D7 100%);
-    position: relative;
-  }
-
   .omedev-home .omedev-light-section {
     background: #F6F6F7;
   }
@@ -271,26 +267,6 @@ const globalStyles = `
     background: linear-gradient(135deg, #053876 0%, #1D5B9B 55%, #0B74C1 100%);
   }
 
-  .omedev-home .hero-grid {
-    background-image: linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
-    background-size: 56px 56px;
-  }
-
-  .omedev-home .hero-glass {
-    background: rgba(255,255,255,.14);
-    border: 1px solid rgba(255,255,255,.30);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    box-shadow: 0 24px 60px rgba(5,56,118,.30);
-  }
-
-  .omedev-home .hero-glass-item {
-    background: rgba(255,255,255,.10);
-    border: 1px solid rgba(255,255,255,.20);
-    backdrop-filter: blur(10px);
-  }
-
   .omedev-home .energy-icon {
     background: rgba(85,221,181,.14);
     color: #2AACB2;
@@ -305,8 +281,7 @@ const globalStyles = `
 
   .omedev-home .dark-section .text-white,
   .omedev-home .omedev-dark-section .text-white,
-  .omedev-home .omedev-energy-section .text-white,
-  .omedev-home .omedev-hero .text-white { color: #fff !important; }
+  .omedev-home .omedev-energy-section .text-white { color: #fff !important; }
 
   .omedev-home .light-content .text-white,
   .omedev-home .omedev-light-section .text-white,
@@ -333,19 +308,6 @@ const globalStyles = `
   }
   .omedev-home .animate-float { animation: float 6s ease-in-out infinite; }
 
-  /* Zoom/pan doux ("Ken Burns") sur la photo du hero */
-  @keyframes heroZoom {
-    0%   { transform: scale(1.06) translate(0, 0); }
-    50%  { transform: scale(1.14) translate(-1.5%, -1.5%); }
-    100% { transform: scale(1.06) translate(0, 0); }
-  }
-  .omedev-home .hero-photo {
-    animation: heroZoom 20s ease-in-out infinite;
-    will-change: transform;
-    /* Rendu plus net et moderne : léger boost de contraste/saturation */
-    filter: saturate(1.08) contrast(1.06) brightness(1.02);
-  }
-
   @media (max-width: 768px) {
     .omedev-home .container { padding: 0 1rem; }
   }
@@ -353,8 +315,6 @@ const globalStyles = `
 
 // ─── IMAGES DE FOND (élégantes, palette OMEDEV, haute résolution) ─────────
 const bgImages = {
-  // Équipe digitale / open-space lumineux — même photo que sur les autres pages publiques (PublicHero)
-  hero: 'https://www.dmi40.fr/wp-content/uploads/2026/05/Actualite.webp',
   // Open-space moderne / transformation digitale
   cta: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1920&q=80',
   // Réseau / globe connecté — pour la section CTA sombre
@@ -526,168 +486,26 @@ const Home = () => {
     <div className="omedev-home">
       <style>{globalStyles}</style>
 
-      {/* ==================== HERO SECTION ==================== */}
-      <section className="omedev-hero relative text-white overflow-hidden flex items-center min-h-[300px] py-8 md:py-10" style={{
-        background: 'linear-gradient(135deg, #053876 0%, #1D5B9B 35%, #4681B7 60%, #72A5CE 80%, #A6C3D7 100%)',
-      }}>
-        {/* Photo de fond élégante (animation Ken Burns) */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src={bgImages.hero}
-            alt=""
-            className="hero-photo w-full h-full object-cover object-center"
-          />
-        </div>
-        {/* Overlay dégradé allégé — photo bien visible, texte lisible à gauche */}
-        <div className="absolute inset-0 z-0" style={{
-          background: 'linear-gradient(100deg, rgba(5,56,118,0.62) 0%, rgba(11,116,193,0.34) 48%, rgba(42,172,178,0.20) 100%)'
-        }} />
-        {/* Vignette très douce */}
-        <div className="absolute inset-0 z-0" style={{
-          background: 'radial-gradient(120% 80% at 50% 40%, transparent 55%, rgba(5,56,118,0.15) 100%)'
-        }} />
-        {/* Grille subtile */}
-        <div className="hero-grid absolute inset-0 opacity-[0.14] z-[1]" style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)`,
-          backgroundSize: '56px 56px'
-        }} />
-        {/* Orbes lumineux — atténués pour ne pas noyer la photo */}
-        <div className="absolute w-[26rem] h-[26rem] bg-cyan-300/15 top-10 -left-24 rounded-full filter blur-[100px] animate-float" />
-        <div className="absolute w-[22rem] h-[22rem] bg-teal-300/15 bottom-0 right-0 rounded-full filter blur-[110px] animate-float" style={{ animationDelay: '2s' }} />
-        <div className="absolute w-64 h-64 bg-white/10 top-1/3 right-1/4 rounded-full filter blur-[90px] animate-float" style={{ animationDelay: '4s' }} />
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-14 items-center">
-
-            {/* ── Colonne texte ── */}
-            <div className="text-center lg:text-left min-w-0">
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="inline-flex items-center gap-2 mb-7 px-4 py-2 rounded-full bg-white/10 border border-white/25 backdrop-blur-sm"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#55DDB5] animate-pulse" />
-                <span className="text-white font-bold text-[11px] tracking-[0.2em] uppercase font-syne">Croissance &amp; Innovation</span>
-              </motion.div>
-
-              <motion.h1
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.1 }}
-                className="text-[1.75rem] sm:text-5xl md:text-6xl lg:text-[4.2rem] font-extrabold leading-[1.15] mb-6 font-syne tracking-tight"
-                style={{ textShadow: '0 2px 20px rgba(5,56,118,0.35)' }}
-              >
-                Accélérez votre{' '}
-                <span className="relative inline-block max-w-full break-words">
-                  <span className="absolute -inset-2 bg-gradient-to-r from-[#55DDB5] to-[#72A5CE] blur-3xl opacity-30" />
-                  <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-[#55DDB5] via-teal-300 to-blue-400">
-                    Transformation Digitale
-                  </span>
-                </span>
-              </motion.h1>
-
-              <motion.p
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.3 }}
-                className="text-white/90 text-base sm:text-lg md:text-xl mb-10 max-w-xl mx-auto lg:mx-0"
-                style={{ textShadow: '0 1px 12px rgba(5,56,118,0.35)' }}
-              >
-                ERP · Cybersécurité · Cloud · Développement Web &amp; Mobile.
-                OMEDEV vous accompagne dans votre <strong className="text-white font-semibold">digitalisation complète</strong>, de l'audit au déploiement.
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.4 }}
-                className="flex flex-wrap gap-4 justify-center lg:justify-start mb-4"
-              >
-                <Link to="/demander-devis" className="group bg-gradient-to-r from-[#0B74C1] via-[#2AACB2] to-[#55DDB5] hover:brightness-110 text-white px-6 py-3.5 sm:px-8 sm:py-4 rounded-full font-semibold flex items-center gap-2 transition-all duration-300 hover:-translate-y-0.5 shadow-lg shadow-blue-900/30 hover:shadow-2xl hover:shadow-cyan-500/30">
-                  Demander un devis <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </Link>
-                <Link
-                  to="/solutions"
-                  className="group border border-white/25 hover:border-white/60 px-6 py-3.5 sm:px-8 sm:py-4 rounded-full font-semibold text-white hover:bg-white/10 transition-all duration-300 hover:-translate-y-0.5"
-                  style={{ background: 'rgba(5,56,118,0.15)', backdropFilter: 'blur(4px)' }}
-                >
-                  Voir les solutions
-                </Link>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.7, delay: 0.55 }}
-              >
-                <Link to="/audit-gratuit" className="inline-flex items-center gap-1.5 text-[#55DDB5] hover:text-white text-sm font-semibold link-underline transition-colors">
-                  Audit gratuit sans engagement <ChevronRight size={14} />
-                </Link>
-              </motion.div>
-            </div>
-
-            {/* ── Colonne carte flottante (stats + visuel) ── */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.92, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="relative mx-auto max-w-sm lg:max-w-none"
-            >
-              <div
-                className="hero-glass relative rounded-3xl p-7 backdrop-blur-xl overflow-hidden"
-                style={{
-                  background: 'rgba(255,255,255,0.14)',
-                  border: '1px solid rgba(255,255,255,0.30)',
-                  boxShadow: '0 30px 80px -20px rgba(5,56,118,0.35)',
-                }}
-              >
-                <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#55DDB5]/20 rounded-full blur-3xl" />
-                <div className="relative flex items-center gap-2 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#55DDB5] to-[#0B74C1] flex items-center justify-center shadow-lg">
-                    <Rocket size={18} className="text-white" />
-                  </div>
-                  <div>
-                    <p className="text-white font-bold text-sm font-syne leading-none">OMEDEV Services</p>
-                    <p className="text-white/80 text-[11px] mt-1">Partenaire digital de confiance</p>
-                  </div>
-                </div>
-
-                <div className="relative grid grid-cols-2 gap-3">
-                  {[
-                    { n: '15+', l: 'Projets livrés', icon: '🚀' },
-                    { n: '98%', l: 'Satisfaction client', icon: '⭐' },
-                    { n: '7+', l: 'Entreprises clientes', icon: '🏢' },
-                    { n: '4 ans', l: "D'expertise", icon: '📅' }
-                  ].map((s, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 15 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.6 + i * 0.08 }}
-                      whileHover={{ y: -3 }}
-                      className="hero-glass-item rounded-2xl p-4 text-center transition-all duration-300 hover:bg-white/20"
-                      style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)' }}
-                    >
-                      <div className="text-lg mb-1 opacity-70">{s.icon}</div>
-                      <div className="font-extrabold text-xl text-white mb-0.5 font-syne">{s.n}</div>
-                      <div className="text-white/80 text-[11px] leading-tight">{s.l}</div>
-                    </motion.div>
-                  ))}
-                </div>
-
-                <div className="relative mt-5 pt-5 border-t border-white/10 flex items-center justify-between">
-                  <span className="text-white/80 text-xs">Disponible 24/7</span>
-                  <span className="flex items-center gap-1.5 text-[#55DDB5] text-xs font-semibold">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#55DDB5] animate-pulse" /> En ligne
-                  </span>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
+      {/* ==================== HERO SECTION (composant partagé PublicHero) ==================== */}
+      <PublicHero
+        title="Accélérez votre Transformation Digitale"
+        highlight="Transformation Digitale"
+        subtitle={
+          <>
+            ERP · Cybersécurité · Cloud · Développement Web &amp; Mobile.
+            OMEDEV vous accompagne dans votre <strong className="text-white font-semibold">digitalisation complète</strong>, de l'audit au déploiement.
+          </>
+        }
+        primaryAction={{ label: 'Demander un devis', to: '/demander-devis' }}
+        secondaryAction={{ label: 'Voir les solutions', to: '/solutions' }}
+        tertiaryLink={{ label: 'Audit gratuit sans engagement', to: '/audit-gratuit' }}
+        stats={[
+          { icon: '🚀', value: '15+', label: 'Projets livrés' },
+          { icon: '⭐', value: '98%', label: 'Satisfaction client' },
+          { icon: '🏢', value: '7+', label: 'Entreprises clientes' },
+          { icon: '📅', value: '4 ans', label: "D'expertise" },
+        ]}
+      />
 
 
       {/* ==================== DÉFIS (Ces défis vous parlent ?) ==================== */}
@@ -1115,3 +933,6 @@ const Home = () => {
 };
 
 export default Home;
+
+
+
