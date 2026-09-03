@@ -10,7 +10,7 @@ import {
 import PublicHero from '../components/Public/PublicHero';
 import CTASection from '../components/Public/CTASection';
 import meyaImg from '../assets/images/experts/os5.jpeg';
-import oseeImg from '../assets/images/experts/mab.jpeg';
+import oseeImg from '../assets/images/experts/fido.jpeg';
 import paulImg from '../assets/images/experts/ro.jpeg';
 import claireImg from '../assets/images/experts/st.jpeg';
 
@@ -382,16 +382,16 @@ const About = () => {
       name: 'Meya Dorodoro',
       role: 'CEO & Fondateur',
       position: 'Informatique & Full-Stack',
-      bio: "Expert en infrastructure IT et cybersécurité avec plus de 4 ans d'expérience en domaines d'informatique.",
+      bio: "Expert en infrastructure IT et cybersécurité avec plus de 6 ans d'expérience en domaines d'informatique.",
       image: meyaImg,
       gradientBg: 'linear-gradient(135deg, #0B74C1, #2AACB2)',
       number: '01',
       initial: 'M',
     },
     {
-      name: 'Maboko Alida',
-      role: 'Directrice Technique',
-      position: 'Experte réseaux & cloud',
+      name: 'Fido makayabu',
+      role: 'Directeur Technique',
+      position: 'Experte réseaux & Telecommunication',
       bio: 'Spécialiste des réseaux haut débit et des solutions cloud.',
       image: oseeImg,
       gradientBg: 'linear-gradient(135deg, #2AACB2, #55DDB5)',
