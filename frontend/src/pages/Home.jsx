@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useRef, useEffect, useState } from 'react';
 import CTASection from '../components/Public/CTASection';
 import PublicHero from '../components/Public/PublicHero';
+import useDocumentMeta from '../hooks/useDocumentMeta';
 import {
   ArrowRight,
   Server,
@@ -471,6 +472,11 @@ const projects = [
 ];
 
 const Home = () => {
+  useDocumentMeta({
+    description: "OMEDEV Services accompagne les entreprises de RDC dans leur transformation digitale : réseaux & infrastructure IT, cybersécurité, cloud, développement web & mobile, énergie et formation.",
+    path: '/',
+  })
+
   // Témoignages — carrousel automatique (3 s)
   const [tIndex, setTIndex] = useState(0)
   const [tDir, setTDir] = useState(1)

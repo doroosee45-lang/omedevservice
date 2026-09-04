@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import PublicHero from '../components/Public/PublicHero';
 import CTASection from '../components/Public/CTASection';
+import useDocumentMeta from '../hooks/useDocumentMeta';
 
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
@@ -198,6 +199,12 @@ const CategorySection = ({ category, index }) => (
 );
 
 const ServicesPage = () => {
+  useDocumentMeta({
+    title: 'Nos Services',
+    description: 'Réseau & infrastructure, cybersécurité, cloud, développement digital, énergie et formation : découvrez tous les services IT d\'OMEDEV Services en RDC.',
+    path: '/services',
+  })
+
   // Ancre vers une section de la page. Un simple href="#id" casse la
   // navigation sous HashRouter (le routeur interprète tout après "#"
   // comme un chemin de route), donc on scrolle manuellement à la place.

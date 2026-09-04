@@ -8,6 +8,7 @@ import {
 import api from '../services/api';
 import PublicHero from '../components/Public/PublicHero';
 import CTASection from '../components/Public/CTASection';
+import useDocumentMeta from '../hooks/useDocumentMeta';
 
 const globalStyles = `
 
@@ -334,6 +335,12 @@ const ShareButtons = ({ article }) => {
 
 /* ── Blog principal ─────────────────────────────────────────── */
 const Blog = () => {
+  useDocumentMeta({
+    title: 'Blog',
+    description: "Actualités et articles OMEDEV Services sur la digitalisation, la cybersécurité, l'énergie solaire et les meilleures pratiques IT en Afrique Centrale.",
+    path: '/blog',
+  })
+
   const [searchTerm,       setSearchTerm]       = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Tous');
   const [currentPage,      setCurrentPage]      = useState(1);

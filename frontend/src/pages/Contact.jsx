@@ -9,6 +9,7 @@ import {
 import api from '../services/api';  // ← Import du service API centralisé
 import PublicHero from '../components/Public/PublicHero';
 import CTASection from '../components/Public/CTASection';
+import useDocumentMeta from '../hooks/useDocumentMeta';
 
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&display=swap');
@@ -80,6 +81,12 @@ const staggerContainer = {
 };
 
 const Contact = () => {
+  useDocumentMeta({
+    title: 'Contact',
+    description: 'Contactez OMEDEV Services à Kinshasa pour vos projets IT, énergie et digital. Réponse sous 24h ouvrées.',
+    path: '/contact',
+  })
+
   const [formData, setFormData] = useState({
     nom: '',
     email: '',

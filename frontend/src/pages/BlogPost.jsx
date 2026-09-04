@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { blog as blogApi } from '../services/api';
 import CTASection from '../components/Public/CTASection';
+import useDocumentMeta from '../hooks/useDocumentMeta';
 
 /* Styles d'harmonisation avec le reste du site (Formation.jsx, Blog.jsx…).
    Ce fichier n'avait aucun <style> propre : la classe "card-hover" utilisée
@@ -181,6 +182,16 @@ const BlogPost = () => {
       .catch(err => console.error('Erreur chargement article:', err))
       .finally(() => setLoading(false))
   }, [slug])
+
+  // Titre, description, Open Graph et canonical propres à cet article —
+  // automatique à chaque publication, aucune modification de code requise.
+  useDocumentMeta({
+    title: article?.title,
+    description: article?.excerpt,
+    image: article?.image,
+    path: `/blog/${article?.slug || slug}`,
+    type: 'article',
+  })
 
   // L'app utilise HashRouter : une URL publique valide doit inclure le "#"
   // (sans lui, le navigateur envoie une vraie requête HTTP pour ce chemin
