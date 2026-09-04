@@ -121,4 +121,38 @@
         <priority>0.8</priority>
     </url>
 
+    <url>
+        <loc>https://www-omedevservices.net/blog/canadcleaning</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+        <lastmod>2026-09-02</lastmod>
+    </url>
+
+    <url>
+        <loc>https://www-omedevservices.net/blog/oseehyun</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+        <lastmod>2026-09-04</lastmod>
+    </url>
+
+    <url>
+        <loc>https://www-omedevservices.net/blog/developpements-numerique</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+        <lastmod>2026-09-03</lastmod>
+    </url>
+
+    <url>
+        <loc>https://www-omedevservices.net/blog/intelligence-artificielle</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+        <lastmod>2026-08-30</lastmod>
+    </url>
+
+    <url>
+        <loc>https://www-omedevservices.net/blog/meya</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+        <lastmod>2026-08-30</lastmod>
+    </url>
 </urlset>
