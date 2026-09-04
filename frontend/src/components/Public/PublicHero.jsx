@@ -8,13 +8,13 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronRight } from 'lucide-react';
-import heroImage from '../../assets/images/hero/public-hero.jpg';
+import heroImage from '../../assets/images/hero/hp.jpg';
 
-// Auparavant hébergée sur le CDN de nato.int (photo de presse d'un drone
-// tactique militaire, aucun rapport avec l'activité de l'entreprise, droits
-// d'usage non maîtrisés) : remplacée par une photo Unsplash sous licence
-// libre (usage commercial autorisé, aucune attribution requise), stockée
-// localement plutôt qu'hotlinkée.
+// Visuel de marque OMEDEV (logo intégré), stocké localement. Remplace
+// l'ancienne photo de stock provisoire (elle-même un remplacement d'urgence
+// d'une image militaire hébergée sur le CDN de nato.int, sans rapport avec
+// l'entreprise). Recompressée en JPEG (2,58 Mo -> 377 Ko), qualité visuelle
+// inchangée.
 const HERO_IMAGE = heroImage;
 
 /* ──────────────────────────────────────────────────────────────────
