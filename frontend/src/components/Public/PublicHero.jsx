@@ -8,9 +8,14 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronRight } from 'lucide-react';
+import heroImage from '../../assets/images/hero/public-hero.jpg';
 
-const HERO_IMAGE =
-  'https://www.nato.int/content/dam/nato/webready/evergreen-assets/science-tech/55296437891_def0963a79_o.jpg/jcr:content/renditions/cq5dam.web.1280.1280.jpeg';
+// Auparavant hébergée sur le CDN de nato.int (photo de presse d'un drone
+// tactique militaire, aucun rapport avec l'activité de l'entreprise, droits
+// d'usage non maîtrisés) : remplacée par une photo Unsplash sous licence
+// libre (usage commercial autorisé, aucune attribution requise), stockée
+// localement plutôt qu'hotlinkée.
+const HERO_IMAGE = heroImage;
 
 /* ──────────────────────────────────────────────────────────────────
    Palette VISUELLEMENT NEUTRE et INDÉPENDANTE du Hero.
