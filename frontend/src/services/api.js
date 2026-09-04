@@ -141,6 +141,7 @@ export const blog = {
   create: (data) => api.post('/blog', data),
   update: (id, data) => api.put(`/blog/admin/${id}`, data),
   delete: (id) => api.delete(`/blog/admin/${id}`),
+  resendNewsletter: (id) => api.post(`/blog/admin/${id}/resend-newsletter`),
   uploadImage: (file, onUploadProgress) => {
     const formData = new FormData();
     formData.append('image', file);
@@ -298,6 +299,7 @@ export const users = {
   update: (id, data) => api.put(`/users/${id}`, data),
   delete: (id) => api.delete(`/users/${id}`),
   toggleStatus: (id) => api.put(`/users/${id}/toggle-status`),
+  resendActivation: (id) => api.post(`/users/${id}/resend-activation`),
 };
 
 // ==================== UPLOADS (fichiers) ====================

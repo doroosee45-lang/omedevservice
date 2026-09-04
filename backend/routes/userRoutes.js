@@ -8,6 +8,7 @@ const {
   updateUser,
   deleteUser,
   toggleUserStatus,
+  resendActivationEmail,
 } = require('../controllers/userController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
@@ -25,5 +26,6 @@ router.route('/:id')
   .delete(deleteUser);
 
 router.put('/:id/toggle-status', toggleUserStatus);
+router.post('/:id/resend-activation', authorize('super_admin'), resendActivationEmail);
 
 module.exports = router;

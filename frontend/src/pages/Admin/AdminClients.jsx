@@ -163,7 +163,7 @@ const AdminClients = () => {
         setAuditLog(prev => [log, ...prev])
         showFeedback(`Profil de ${data.name} mis à jour.`)
       } else {
-        await usersApi.create({
+        const res = await usersApi.create({
           name: data.name,
           email: data.email,
           phone: data.phone,
@@ -171,7 +171,14 @@ const AdminClients = () => {
         })
         const log = { id: Date.now(), action: 'Création de compte', user: 'Admin', target: data.name, targetId: null, date: new Date().toLocaleString('fr-FR') }
         setAuditLog(prev => [log, ...prev])
-        showFeedback(`Compte créé pour ${data.name}. Un email d'activation a été envoyé à ${data.email}.`)
+        if (res.data?.emailSent) {
+          showFeedback(`Compte créé pour ${data.name}. Un email d'activation a été envoyé à ${data.email}.`)
+        } else {
+          showFeedback(
+            `Compte créé pour ${data.name}, mais l'email d'activation n'a pas pu être envoyé à ${data.email}${res.data?.activationEmailError ? ` (${res.data.activationEmailError})` : ''}. Utilisez "Renvoyer l'activation" une fois le problème résolu.`,
+            'error'
+          )
+        }
       }
       setShowModal(false)
       setSelectedClient(null)
@@ -202,6 +209,16 @@ const AdminClients = () => {
 
   const handleSendEmail = (email) => {
     window.location.href = `mailto:${email}`
+  }
+
+  const handleResendActivation = async (client) => {
+    try {
+      const res = await usersApi.resendActivation(client.id)
+      showFeedback(res.data?.message || `Email d'activation renvoyé à ${client.email}.`)
+      await loadUsers()
+    } catch (err) {
+      showFeedback(err.response?.data?.message || `Échec du renvoi de l'email à ${client.email}.`, 'error')
+    }
   }
 
   return (
@@ -393,6 +410,20 @@ const AdminClients = () => {
                   <Send className="w-3 h-3" />
                   Envoyer un email
                 </button>
+
+                {/* L'email d'activation a échoué à la création (ex: restriction
+                    du mode bac à sable Resend) : permettre de le renvoyer une
+                    fois le problème résolu, sans avoir à recréer le compte. */}
+                {client.status === 'inactive' && client.activationEmailStatus === 'failed' && (
+                  <button
+                    onClick={() => handleResendActivation(client)}
+                    title={client.activationEmailError || "L'email d'activation n'a pas pu être envoyé"}
+                    className="mt-1.5 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg bg-red-500/10 text-red-400 text-xs font-medium hover:bg-red-500/20 transition-all"
+                  >
+                    <Mail className="w-3 h-3" />
+                    Renvoyer l'activation (échec précédent)
+                  </button>
+                )}
               </div>
             </motion.div>
           )

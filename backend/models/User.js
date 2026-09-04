@@ -54,6 +54,17 @@ const userSchema = mongoose.Schema(
       newsletter: { type: Boolean, default: false },
     },
     stripeCustomerId: { type: String },
+    // Statut réel de l'email d'activation envoyé à la création du compte —
+    // sans ça, un échec d'envoi (ex. restriction Resend) était invisible :
+    // l'admin voyait juste "compte créé" sans savoir que le client n'a
+    // jamais reçu son lien. Même schéma que Inscription.emailStatus.
+    activationEmailStatus: {
+      type: String,
+      enum: ['sent', 'failed', 'pending'],
+      default: 'pending',
+    },
+    activationEmailSentAt: { type: Date },
+    activationEmailError: { type: String },
   },
   { timestamps: true }
 );

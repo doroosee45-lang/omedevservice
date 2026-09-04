@@ -59,10 +59,16 @@ const createUser = async (req, res) => {
     let emailSent = true;
     try {
       await sendAccountActivation(user.email, user.name, user.role, activationLink);
+      user.activationEmailStatus = 'sent';
+      user.activationEmailSentAt = new Date();
+      user.activationEmailError = undefined;
     } catch (error) {
       emailSent = false;
+      user.activationEmailStatus = 'failed';
+      user.activationEmailError = error.message;
       console.error(`Erreur d'envoi de l'email d'activation à ${user.email}:`, error);
     }
+    await user.save();
 
     await logAction({
       action: 'create',
@@ -81,6 +87,8 @@ const createUser = async (req, res) => {
       role:     user.role,
       isActive: user.isActive,
       emailSent,
+      activationEmailStatus: user.activationEmailStatus,
+      activationEmailError: user.activationEmailError,
     });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message || 'Erreur lors de la création de l\'utilisateur' });
@@ -209,6 +217,37 @@ const toggleUserStatus = async (req, res) => {
   }
 };
 
+// @desc    Renvoyer l'email d'activation d'un compte (ex: échec initial)
+// @route   POST /api/users/:id/resend-activation
+// @access  Private/Admin
+const resendActivationEmail = async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    return res.status(404).json({ success: false, message: 'Utilisateur non trouvé' });
+  }
+  if (user.isActive) {
+    return res.status(400).json({ success: false, message: 'Ce compte est déjà activé.' });
+  }
+
+  const activationToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+  const activationLink = `${process.env.FRONTEND_URL}/#/activate-account?token=${activationToken}`;
+
+  try {
+    await sendAccountActivation(user.email, user.name, user.role, activationLink);
+    user.activationEmailStatus = 'sent';
+    user.activationEmailSentAt = new Date();
+    user.activationEmailError = undefined;
+    await user.save();
+    return res.json({ success: true, message: 'Email d\'activation renvoyé avec succès.', activationEmailStatus: 'sent' });
+  } catch (error) {
+    user.activationEmailStatus = 'failed';
+    user.activationEmailError = error.message;
+    await user.save();
+    console.error(`Erreur de renvoi de l'email d'activation à ${user.email}:`, error);
+    return res.status(502).json({ success: false, message: "L'envoi de l'email a échoué.", activationEmailStatus: 'failed', activationEmailError: error.message });
+  }
+};
+
 module.exports = {
   createUser,
   getUsers,
@@ -216,4 +255,5 @@ module.exports = {
   updateUser,
   deleteUser,
   toggleUserStatus,
+  resendActivationEmail,
 };
