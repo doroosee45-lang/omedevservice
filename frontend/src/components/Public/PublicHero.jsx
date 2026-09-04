@@ -8,7 +8,7 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronRight } from 'lucide-react';
-import heroImage from '../../assets/images/hero/hp.jpg';
+import heroImage from '../../assets/images/hero/hero.png';
 
 // Visuel de marque OMEDEV (logo intégré), stocké localement. Remplace
 // l'ancienne photo de stock provisoire (elle-même un remplacement d'urgence
