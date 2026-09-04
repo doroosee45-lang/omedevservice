@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { useState } from 'react'
 import { inscriptions } from '../../services/api'
 import PublicHero from '../../components/Public/PublicHero'
+import useDocumentMeta from '../../hooks/useDocumentMeta'
 import {
   GraduationCap,
   User,
@@ -325,6 +326,12 @@ const colors = {
 }
 
 const Inscription = () => {
+  useDocumentMeta({
+    title: "Inscription aux Formations",
+    description: "Inscrivez-vous aux formations professionnelles d'OMEDEV Services dans l'un de ses centres partenaires en RDC.",
+    path: '/inscription',
+  });
+
   const [formData, setFormData] = useState({
     nom: '',
     email: '',

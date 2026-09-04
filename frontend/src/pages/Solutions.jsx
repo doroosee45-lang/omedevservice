@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import PublicHero from '../components/Public/PublicHero';
 import CTASection from '../components/Public/CTASection';
+import useDocumentMeta from '../hooks/useDocumentMeta';
 
 /* ─────────────────────────────────────────────
    DESIGN SYSTEM — identique à la page About
@@ -792,6 +793,12 @@ const ComparisonCard = ({ pack, index }) => {
 };
 
 const SolutionsPage = () => {
+  useDocumentMeta({
+    title: 'Solutions Clé en Main',
+    description: "Des solutions IT et énergie prêtes à déployer pour les entreprises en RDC : installation rapide, tarifs transparents et support inclus 24/7.",
+    path: '/solutions',
+  });
+
   const pourquoi = [
     { icon: CheckCircle, title: 'Clé en main', desc: 'Solutions prêtes à déployer', color: colors.blue },
     { icon: Clock, title: 'Déploiement rapide', desc: 'Installation en quelques jours', color: colors.blueLight },

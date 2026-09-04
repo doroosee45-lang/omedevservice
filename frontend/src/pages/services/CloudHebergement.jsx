@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import PublicHero from '../../components/Public/PublicHero'
+import useDocumentMeta from '../../hooks/useDocumentMeta'
 import TestimonialsCarousel from '../../components/Public/TestimonialsCarousel'
 import CTASection from '../../components/Public/CTASection'
 import {
@@ -1177,6 +1178,12 @@ const colors = {
 }
 
 const CloudHebergement = () => {
+  useDocumentMeta({
+    title: 'Cloud & Hébergement',
+    description: "Migration cloud, hébergement et infrastructure gérée par OMEDEV Services pour les entreprises en RDC.",
+    path: '/services/cloud-hebergement',
+  });
+
   const cloudServices = [
     {
       icon: Database,

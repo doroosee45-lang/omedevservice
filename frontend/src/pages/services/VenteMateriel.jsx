@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { venteMateriel as vmApi } from '../../services/api'
 import { motion, AnimatePresence } from 'framer-motion'
 import PublicHero from '../../components/Public/PublicHero'
+import useDocumentMeta from '../../hooks/useDocumentMeta'
 import CTASection from '../../components/Public/CTASection'
 import PartnersCarousel from '../../components/Public/PartnersCarousel'
 import {
@@ -299,6 +300,12 @@ const HOW_IT_WORKS = [
 ]
 
 export default function VenteMateriel() {
+  useDocumentMeta({
+    title: 'Vente de Matériel IT',
+    description: "Vente de matériel informatique et équipements IT au meilleur prix par OMEDEV Services en RDC.",
+    path: '/services/vente-materiel',
+  });
+
   // Ancre vers une section de la page. Un simple href="#id" casse la
   // navigation sous HashRouter (le routeur interprète tout après "#"
   // comme un chemin de route), donc on scrolle manuellement à la place.

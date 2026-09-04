@@ -7,6 +7,7 @@ import {
   TrendingUp, Handshake, Target
 } from 'lucide-react';
 import PublicHero from '../components/Public/PublicHero';
+import useDocumentMeta from '../hooks/useDocumentMeta';
 import CTASection from '../components/Public/CTASection';
 
 /* ─────────────────────────────────────────────
@@ -300,6 +301,12 @@ const colors = {
 };
 
 const Tarifs = () => {
+  useDocumentMeta({
+    title: 'Tarifs',
+    description: "Nos services IT, énergie et digital sont proposés sur devis personnalisé, adapté aux besoins de votre entreprise en RDC.",
+    path: '/tarifs',
+  });
+
   const [billingPeriod, setBillingPeriod] = useState('monthly');
 
   const services = [

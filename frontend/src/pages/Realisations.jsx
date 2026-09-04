@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import PublicHero from '../components/Public/PublicHero';
 import CTASection from '../components/Public/CTASection';
+import useDocumentMeta from '../hooks/useDocumentMeta';
 
 /* ─────────────────────────────────────────────
    DESIGN SYSTEM — identique à la page About
@@ -757,6 +758,12 @@ const Download = (props) => (
 );
 
 const RealisationsPage = () => {
+  useDocumentMeta({
+    title: 'Nos Réalisations',
+    description: "Découvrez les projets IT, énergie et digital réalisés par OMEDEV Services pour ses clients en République Démocratique du Congo.",
+    path: '/realisations',
+  });
+
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedProject, setSelectedProject] = useState(null);

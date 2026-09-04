@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import PublicHero from '../../components/Public/PublicHero';
+import useDocumentMeta from '../../hooks/useDocumentMeta';
 import TestimonialsCarousel from '../../components/Public/TestimonialsCarousel';
 import CTASection from '../../components/Public/CTASection';
 import {
@@ -367,6 +368,12 @@ const auditItems = [
 ];
 
 const EnergieEquipements = () => {
+  useDocumentMeta({
+    title: 'Énergie & Équipements',
+    description: "Solutions énergétiques durables et équipements pour les entreprises en RDC, par OMEDEV Services.",
+    path: '/services/energie-equipements',
+  });
+
   return (
     <div className="omedev-energie">
       <style>{globalStyles}</style>

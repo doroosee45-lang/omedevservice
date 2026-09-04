@@ -21,6 +21,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import PublicHero from '../components/Public/PublicHero';
+import useDocumentMeta from '../hooks/useDocumentMeta';
 import {
   ArrowRight,
   ChevronRight,
@@ -851,6 +852,12 @@ const ServiceDetailPage = () => {
       setLoading(false);
     }, 100);
   }, [id]);
+
+  useDocumentMeta({
+    title: service?.name,
+    description: service?.shortDescription,
+    path: `/service/${id}`,
+  });
 
   const handleQuoteRequest = () => {
     setShowQuoteModal(true);

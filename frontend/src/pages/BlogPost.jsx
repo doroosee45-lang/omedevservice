@@ -187,7 +187,7 @@ const BlogPost = () => {
   // automatique à chaque publication, aucune modification de code requise.
   useDocumentMeta({
     title: article?.title,
-    description: article?.excerpt,
+    description: article?.metaDescription || article?.excerpt,
     image: article?.image,
     path: `/blog/${article?.slug || slug}`,
     type: 'article',

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import PublicHero from '../../components/Public/PublicHero'
+import useDocumentMeta from '../../hooks/useDocumentMeta'
 import {
   Send,
   CheckCircle,
@@ -550,6 +551,12 @@ const FormSectionHeader = ({
    ============================================================ */
 
 const DevisCloud = () => {
+  useDocumentMeta({
+    title: 'Devis Cloud & Hébergement',
+    description: "Demandez un devis personnalisé pour votre projet Cloud & Hébergement auprès d'OMEDEV Services.",
+    path: '/devis-cloud',
+  });
+
   const [formData, setFormData] = useState(EMPTY_FORM)
   const [submitted, setSubmitted] = useState(false)
   const [submittedRequest, setSubmittedRequest] = useState(null)

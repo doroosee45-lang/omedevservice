@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import PublicHero from '../components/Public/PublicHero'
+import useDocumentMeta from '../hooks/useDocumentMeta'
 import {
   ChevronRight,
   ChevronLeft,
@@ -564,6 +565,11 @@ const fadeUp = {
 }
 
 const Devis = () => {
+  useDocumentMeta({
+    title: 'Demander un Devis',
+    description: "Obtenez un devis personnalisé pour votre projet IT, énergie ou digital auprès d'OMEDEV Services.",
+    path: '/demander-devis',
+  });
 
   const [step, setStep] = useState(1)
 

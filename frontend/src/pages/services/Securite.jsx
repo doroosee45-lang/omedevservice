@@ -1,6 +1,7 @@
 ﻿import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import PublicHero from '../../components/Public/PublicHero'
+import useDocumentMeta from '../../hooks/useDocumentMeta'
 import TestimonialsCarousel from '../../components/Public/TestimonialsCarousel'
 import CTASection from '../../components/Public/CTASection'
 import {
@@ -438,6 +439,12 @@ const colors = {
 }
 
 const Securite = () => {
+  useDocumentMeta({
+    title: 'Sécurité Globale',
+    description: "Audit, protection et sécurisation des infrastructures IT des entreprises en RDC par OMEDEV Services.",
+    path: '/services/securite',
+  });
+
   const securityServices = [
     {
       icon: Video,

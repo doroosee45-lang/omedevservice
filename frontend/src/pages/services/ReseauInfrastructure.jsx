@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import PublicHero from '../../components/Public/PublicHero'
+import useDocumentMeta from '../../hooks/useDocumentMeta'
 import TestimonialsCarousel from '../../components/Public/TestimonialsCarousel'
 import CTASection from '../../components/Public/CTASection'
 import {
@@ -836,6 +837,11 @@ const staggerContainer = {
 }
 
 const ReseauInfrastructure = () => {
+  useDocumentMeta({
+    title: 'Réseau & Infrastructure',
+    description: "Conception, installation et maintenance de réseaux et infrastructures IT hautes performances par OMEDEV Services en RDC.",
+    path: '/services/reseau-infrastructure',
+  });
 
   const features = [
     {

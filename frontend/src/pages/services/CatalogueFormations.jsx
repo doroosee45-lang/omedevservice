@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import PublicHero from '../../components/Public/PublicHero';
+import useDocumentMeta from '../../hooks/useDocumentMeta';
 import CTASection from '../../components/Public/CTASection';
 import {
   Network,
@@ -403,6 +404,12 @@ const FormationCatalogueCard = ({ formation, index }) => {
 };
 
 const CatalogueFormations = () => {
+  useDocumentMeta({
+    title: 'Catalogue des Formations',
+    description: "Découvrez le catalogue complet des formations professionnelles proposées par OMEDEV Services et ses centres partenaires en RDC.",
+    path: '/formations/catalogue',
+  });
+
   return (
     <div className="omedev-catalogue">
       <style>{globalStyles}</style>

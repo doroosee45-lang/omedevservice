@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import PublicHero from '../../components/Public/PublicHero';
+import useDocumentMeta from '../../hooks/useDocumentMeta';
 import TestimonialsCarousel from '../../components/Public/TestimonialsCarousel';
 import CTASection from '../../components/Public/CTASection';
 import {
@@ -502,6 +503,12 @@ const centers = [
 ];
 
 const Formation = () => {
+  useDocumentMeta({
+    title: 'Formation',
+    description: "Formations professionnelles en informatique, réseaux et digital dispensées par OMEDEV Services dans ses centres partenaires en RDC.",
+    path: '/services/formation',
+  });
+
   return (
     <div className="omedev-formation">
       <style>{globalStyles}</style>

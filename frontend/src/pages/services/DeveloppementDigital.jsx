@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import PublicHero from '../../components/Public/PublicHero'
+import useDocumentMeta from '../../hooks/useDocumentMeta'
 import TestimonialsCarousel from '../../components/Public/TestimonialsCarousel'
 import CTASection from '../../components/Public/CTASection'
 
@@ -1622,6 +1623,12 @@ const TechnologyCard = ({
    ============================================================ */
 
 const DeveloppementDigital = () => {
+  useDocumentMeta({
+    title: 'Développement Digital',
+    description: "Développement web et mobile sur mesure par OMEDEV Services : sites, applications et plateformes pour les entreprises en RDC.",
+    path: '/services/developpement-digital',
+  });
+
   return (
     <div className="omedev-development">
       <style>{globalStyles}</style>

@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import api from '../services/api';
 import PublicHero from '../components/Public/PublicHero';
+import useDocumentMeta from '../hooks/useDocumentMeta';
 import CTASection from '../components/Public/CTASection';
 
 /* ─────────────────────────────────────────────
@@ -113,6 +114,12 @@ const colors = {
 };
 
 const AuditGratuit = () => {
+  useDocumentMeta({
+    title: 'Audit Gratuit',
+    description: "Demandez un audit gratuit de votre infrastructure IT auprès d'OMEDEV Services et recevez des recommandations personnalisées.",
+    path: '/audit-gratuit',
+  });
+
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     companyName: '',

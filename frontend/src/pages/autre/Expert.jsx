@@ -9,6 +9,7 @@ import {
 import { FaLinkedin, FaGithub, FaTwitter, FaInstagram, FaBehance } from 'react-icons/fa';
 import { MdEmail } from 'react-icons/md';
 import PublicHero from '../../components/Public/PublicHero';
+import useDocumentMeta from '../../hooks/useDocumentMeta';
 import CTASection from '../../components/Public/CTASection';
 
 import expert1 from '/src/assets/images/experts/os5.jpeg';
@@ -488,6 +489,11 @@ const Counter = ({ end, suffix, duration = 2.2 }) => {
 };
 
 const Experts = () => {
+  useDocumentMeta({
+    title: 'Nos Experts',
+    description: "Découvrez l'équipe d'experts d'OMEDEV Services : professionnels IT, énergie et digital au service de vos projets en RDC.",
+    path: '/experts',
+  });
 
   const experts = [
     {
