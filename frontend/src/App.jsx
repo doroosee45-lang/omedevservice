@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import Navbar from './components/Layout/Navbar'
@@ -29,31 +30,33 @@ import ForgotPassword from './pages/Auth/ForgotPassword'
 import ResetPassword from './pages/Auth/ResetPassword'
 import ActivateAccount from './pages/Auth/ActivateAccount'
 
-// Espace Client
-import ClientLayout from './components/Layout/ClientLayout'
-import ClientDashboard from './pages/Client/ClientDashboard'
-import ClientDemandes from './pages/Client/ClientDemandes'
-import ClientDemandeDetail from './pages/Client/ClientDemandeDetail'
-import ClientProjets from './pages/Client/ClientProjets'
-import ClientHistorique from './pages/Client/ClientHistorique'
-import ClientProfil from './pages/Client/ClientProfil'
-import ClientPaiements from './pages/Client/ClientPaiements'
-import ClientMessagerie from './pages/Client/ClientMessagerie'
+// Espace Client — chargé à la demande : un visiteur public ne doit jamais
+// télécharger le code de l'espace client (formulaires, tableaux, PDF...).
+const ClientLayout = lazy(() => import('./components/Layout/ClientLayout'))
+const ClientDashboard = lazy(() => import('./pages/Client/ClientDashboard'))
+const ClientDemandes = lazy(() => import('./pages/Client/ClientDemandes'))
+const ClientDemandeDetail = lazy(() => import('./pages/Client/ClientDemandeDetail'))
+const ClientProjets = lazy(() => import('./pages/Client/ClientProjets'))
+const ClientHistorique = lazy(() => import('./pages/Client/ClientHistorique'))
+const ClientProfil = lazy(() => import('./pages/Client/ClientProfil'))
+const ClientPaiements = lazy(() => import('./pages/Client/ClientPaiements'))
+const ClientMessagerie = lazy(() => import('./pages/Client/ClientMessagerie'))
 
-// Espace Admin
-import AdminLayout from './pages/Admin/AdminLayout'
-import AdminDashboard from './pages/Admin/AdminDashboard'
-import AdminClients from './pages/Admin/AdminClients'
-import AdminCRM from './pages/Admin/AdminCRM'
-import AdminProjets from './pages/Admin/AdminProjets'
-import AdminDevis from './pages/Admin/AdminDevis'
-import AdminBlog from './pages/Admin/AdminBlog'
-import AdminAudits from './pages/Admin/AdminAudits'
-import AdminContacts from './pages/Admin/AdminContacts'
-import AdminDemandesDevis from './pages/Admin/AdminDemandesDevis'
-import AdminNewsletter from './pages/Admin/AdminNewsletter'
-import AdminVenteMateriel from './pages/Admin/AdminVenteMateriel'
-import AdminFormation from './pages/Admin/AdminFormation'
+// Espace Admin — même logique : le code d'administration (CRM, éditeur
+// d'articles, gestion des devis...) ne concerne jamais un visiteur public.
+const AdminLayout = lazy(() => import('./pages/Admin/AdminLayout'))
+const AdminDashboard = lazy(() => import('./pages/Admin/AdminDashboard'))
+const AdminClients = lazy(() => import('./pages/Admin/AdminClients'))
+const AdminCRM = lazy(() => import('./pages/Admin/AdminCRM'))
+const AdminProjets = lazy(() => import('./pages/Admin/AdminProjets'))
+const AdminDevis = lazy(() => import('./pages/Admin/AdminDevis'))
+const AdminBlog = lazy(() => import('./pages/Admin/AdminBlog'))
+const AdminAudits = lazy(() => import('./pages/Admin/AdminAudits'))
+const AdminContacts = lazy(() => import('./pages/Admin/AdminContacts'))
+const AdminDemandesDevis = lazy(() => import('./pages/Admin/AdminDemandesDevis'))
+const AdminNewsletter = lazy(() => import('./pages/Admin/AdminNewsletter'))
+const AdminVenteMateriel = lazy(() => import('./pages/Admin/AdminVenteMateriel'))
+const AdminFormation = lazy(() => import('./pages/Admin/AdminFormation'))
 import NewsletterUnsubscribe from './pages/NewsletterUnsubscribe'
 
 // Services
@@ -74,6 +77,15 @@ const HIDDEN_CHROME = ['/admin', '/client', '/login', '/register', '/forgot-pass
 // Routes où le chat IA ne doit PAS apparaître
 const HIDDEN_CHAT = ['/admin']
 
+// Affiché le temps du premier chargement du code admin/client (lazy) —
+// n'apparaît jamais sur les pages publiques, qui ne sont pas concernées.
+const RouteFallback = () => (
+  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+    <div style={{ width: 36, height: 36, borderRadius: '50%', border: '3px solid #D5DCE1', borderTopColor: '#0B74C1', animation: 'spin 0.8s linear infinite' }} />
+    <style>{'@keyframes spin { to { transform: rotate(360deg); } }'}</style>
+  </div>
+)
+
 function App() {
   const location = useLocation()
   const hideChrome = HIDDEN_CHROME.some(p => location.pathname.startsWith(p))
@@ -85,6 +97,7 @@ function App() {
       {!hideChrome && <Navbar />}
 
       <AnimatePresence mode="wait">
+        <Suspense fallback={<RouteFallback />}>
         <Routes location={location} key={location.pathname}>
 
           {/* ========== PAGES PUBLIQUES ========== */}
@@ -157,6 +170,7 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
 
         </Routes>
+        </Suspense>
       </AnimatePresence>
 
       {!hideChrome && <Footer />}
