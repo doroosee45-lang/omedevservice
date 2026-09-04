@@ -13,9 +13,27 @@ const storage = multer.diskStorage({
   },
 });
 
+// Les pièces jointes sont stockées sur disque et servies telles quelles par
+// express.static('uploads') (voir server.js) : express.static déduit le
+// Content-Type renvoyé au navigateur de l'EXTENSION du fichier, pas du
+// mimetype d'origine de l'upload. Ne valider que file.mimetype (contrôlé par
+// le client, donc trivialement falsifiable) laisserait passer un fichier
+// envoyé avec un Content-Type "image/jpeg" usurpé mais nommé "x.html" - le
+// fichier serait alors stocké et re-servi comme text/html, exécutant tout
+// script qu'il contient dans l'origine de l'API si le lien est ouvert
+// directement. D'où la double vérification mimetype + extension ici.
+const allowedMimeToExt = {
+  'image/jpeg': ['.jpg', '.jpeg'],
+  'image/png': ['.png'],
+  'application/pdf': ['.pdf'],
+  'application/msword': ['.doc'],
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
+};
+
 const fileFilter = (req, file, cb) => {
-  const allowed = ['image/jpeg', 'image/png', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-  if (allowed.includes(file.mimetype)) cb(null, true);
+  const allowedExts = allowedMimeToExt[file.mimetype];
+  const ext = path.extname(file.originalname).toLowerCase();
+  if (allowedExts && allowedExts.includes(ext)) cb(null, true);
   else cb(new Error('Type de fichier non autorisé'), false);
 };
 

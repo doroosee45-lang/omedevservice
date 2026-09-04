@@ -2,6 +2,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const helmet = require('helmet');
 const connectDB = require('./config/db');
 
 // Charger les variables d'environnement
@@ -27,6 +28,19 @@ const app = express();
 // (contenu mixte) toute URL absolue reconstruite à partir de req.protocol
 // (ex: URLs d'images uploadées, voir articleController.js).
 app.set('trust proxy', 1);
+
+// En-têtes de sécurité HTTP (HSTS, X-Content-Type-Options, X-Frame-Options,
+// Referrer-Policy...). CSP désactivée volontairement : cette API ne sert que
+// du JSON et des fichiers statiques dans /uploads (jamais de HTML applicatif
+// autre que la route de health-check ci-dessous), donc une CSP stricte
+// n'apporte pas de protection réelle ici et risquerait de bloquer sans
+// bénéfice le chargement cross-origin des pièces jointes/images par le
+// frontend. crossOriginResourcePolicy en "cross-origin" pour la même raison :
+// le frontend (autre origine) doit pouvoir charger les fichiers de /uploads.
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+}));
 
 // CORS — restreint à l'origine réelle du frontend en production.
 // FRONTEND_URL est déjà la source de vérité utilisée ailleurs dans l'app
