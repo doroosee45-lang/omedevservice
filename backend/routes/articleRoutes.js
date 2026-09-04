@@ -10,6 +10,7 @@ const {
   updateArticle,
   deleteArticle,
   uploadArticleImage,
+  resendNewsletterNotification,
 } = require('../controllers/articleController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 const { uploadArticleImage: uploadArticleImageMiddleware } = require('../middleware/uploadMiddleware');
@@ -27,5 +28,6 @@ router.route('/admin/:id')
   .get(getArticleById)
   .put(updateArticle)
   .delete(deleteArticle);
+router.post('/admin/:id/resend-newsletter', resendNewsletterNotification);
 
 module.exports = router;

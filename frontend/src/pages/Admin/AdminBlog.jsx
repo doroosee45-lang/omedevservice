@@ -435,6 +435,17 @@ const AdminBlog = () => {
     }
   }
 
+  const handleResendNewsletter = async (article) => {
+    try {
+      const res = await blogApi.resendNewsletter(article.id)
+      const stats = res.data?.newsletterStats
+      showToast(stats ? `Notification renvoyée : ${stats.sent}/${stats.total} envoyés.` : 'Notification renvoyée.')
+      await loadArticles()
+    } catch (err) {
+      showToast(err.response?.data?.message || "Échec du renvoi de la notification", 'error')
+    }
+  }
+
   const handleDeleteArticle = (id) => {
     setDeleteConfirm({
       message: "Cette action est irréversible.",
@@ -545,6 +556,23 @@ const AdminBlog = () => {
                           <span className={`px-2 py-1 rounded-full text-xs font-medium ${article.status === 'published' ? 'bg-[#2AACB2]/20 text-[#55DDB5]' : 'bg-amber-500/20 text-amber-400'}`}>
                             {article.status === 'published' ? '● Publié' : '○ Brouillon'}
                           </span>
+                          {article.status === 'published' && article.newsletterStatus && article.newsletterStatus !== 'none' && (
+                            <button
+                              onClick={() => handleResendNewsletter(article)}
+                              title={
+                                article.newsletterStatus === 'sent'
+                                  ? `Newsletter envoyée à ${article.newsletterStats?.sent || 0} abonné(s) — cliquer pour renvoyer`
+                                  : `Newsletter : ${article.newsletterStats?.sent || 0}/${article.newsletterStats?.total || 0} envoyés — cliquer pour réessayer`
+                              }
+                              className={`block mt-1 px-2 py-0.5 rounded-full text-[10px] font-medium ${
+                                article.newsletterStatus === 'sent'
+                                  ? 'bg-emerald-500/15 text-emerald-400'
+                                  : 'bg-red-500/15 text-red-400'
+                              }`}
+                            >
+                              ✉ {article.newsletterStats?.sent || 0}/{article.newsletterStats?.total || 0} abonnés
+                            </button>
+                          )}
                         </td>
                         <td className="text-white/50 text-sm">{article.date}</td>
                         <td>

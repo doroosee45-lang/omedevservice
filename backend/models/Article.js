@@ -62,6 +62,20 @@ const articleSchema = mongoose.Schema(
       type: Number,
       default: 0,
     },
+    // Résultat de la notification newsletter envoyée à la publication —
+    // sans ça, un échec (ex. restriction Resend) était invisible : l'admin
+    // n'avait aucun moyen de savoir si les abonnés avaient été notifiés.
+    newsletterStatus: {
+      type: String,
+      enum: ['none', 'sent', 'partial', 'failed'],
+      default: 'none',
+    },
+    newsletterSentAt: { type: Date },
+    newsletterStats: {
+      total: { type: Number, default: 0 },
+      sent: { type: Number, default: 0 },
+      failed: { type: Number, default: 0 },
+    },
   },
   {
     timestamps: true,

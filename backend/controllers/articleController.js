@@ -290,6 +290,31 @@ const uploadArticleImage = async (req, res) => {
   }
 };
 
+// @desc    Renvoyer la notification newsletter d'un article déjà publié
+//          (ex: échec total/partiel au moment de la publication)
+// @route   POST /api/blog/:id/resend-newsletter
+// @access  Private/Admin
+const resendNewsletterNotification = async (req, res) => {
+  const article = await Article.findById(req.params.id);
+  if (!article) {
+    return res.status(404).json({ success: false, message: 'Article non trouvé' });
+  }
+  if (article.status !== 'published') {
+    return res.status(400).json({ success: false, message: "Seul un article publié peut être notifié aux abonnés." });
+  }
+
+  const { sendArticleNotification } = require('./newsletterController');
+  await sendArticleNotification(withResolvedImage(req, article));
+
+  const updated = await Article.findById(article._id);
+  res.json({
+    success: true,
+    message: 'Notification renvoyée.',
+    newsletterStatus: updated.newsletterStatus,
+    newsletterStats: updated.newsletterStats,
+  });
+};
+
 module.exports = {
   getPublishedArticles,
   getArticleBySlug,
@@ -299,4 +324,5 @@ module.exports = {
   updateArticle,
   deleteArticle,
   uploadArticleImage,
+  resendNewsletterNotification,
 };

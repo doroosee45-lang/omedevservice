@@ -180,20 +180,43 @@ const deleteSubscriber = async (req, res) => {
 
 // ─── INTERNAL (appelée par articleController) ─────────────────────────────────
 
+// Enregistre le résultat sur l'article lui-même (Article, importé ici plutôt
+// qu'au niveau module pour éviter une dépendance circulaire avec
+// articleController, qui importe déjà ce fichier) - sans ça, un échec total
+// ou partiel (ex. restriction du mode bac à sable Resend, qui rejette tout
+// destinataire autre que le titulaire du compte) n'était visible que dans
+// les logs serveur, jamais dans l'interface d'administration.
 const sendArticleNotification = async (article) => {
+  const Article = require('../models/Article');
+  let sent = 0;
+  let failed = 0;
+  let total = 0;
+
   try {
     const subscribers = await NewsletterSubscriber.find({ isActive: true });
-    if (!subscribers.length) return;
+    total = subscribers.length;
 
-    const results = await Promise.allSettled(
-      subscribers.map(sub => transporter.sendMail(articleNotificationEmail(sub, article)))
-    );
+    if (total) {
+      const results = await Promise.allSettled(
+        subscribers.map(sub => transporter.sendMail(articleNotificationEmail(sub, article)))
+      );
+      sent   = results.filter(r => r.status === 'fulfilled').length;
+      failed = results.filter(r => r.status === 'rejected').length;
+      console.log(`📬 Newsletter envoyée pour "${article.title}" : ${sent} succès, ${failed} échecs sur ${total} abonné(s)`);
+    }
 
-    const sent     = results.filter(r => r.status === 'fulfilled').length;
-    const failed   = results.filter(r => r.status === 'rejected').length;
-    console.log(`📬 Newsletter envoyée : ${sent} succès, ${failed} échecs`);
+    await Article.findByIdAndUpdate(article._id, {
+      newsletterStatus: total === 0 ? 'none' : failed === 0 ? 'sent' : sent === 0 ? 'failed' : 'partial',
+      newsletterSentAt: new Date(),
+      newsletterStats: { total, sent, failed },
+    });
   } catch (err) {
     console.error('Erreur envoi newsletter:', err);
+    await Article.findByIdAndUpdate(article._id, {
+      newsletterStatus: 'failed',
+      newsletterSentAt: new Date(),
+      newsletterStats: { total, sent, failed },
+    }).catch(() => {});
   }
 };
 
