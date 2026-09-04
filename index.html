@@ -2,32 +2,125 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
+
+    <!-- Google Search Console -->
+    <meta
+      name="google-site-verification"
+      content="D2zvhGD5aVRD-W5IQoj9uUM1tSKH5B3ZWrHQD4ZRAMg"
+    />
+
+    <!-- Auto-réparation des anciens liens partagés sans "#" -->
+    <script>
+      (function () {
+        if (window.location.hash) return;
+
+        var path = window.location.pathname;
+        var base =
+          path.indexOf('/omedevservice/') === 0
+            ? '/omedevservice/'
+            : '/';
+
+        if (path === base) return;
+
+        var route = path.slice(base.length);
+
+        window.location.replace(
+          base + '#/' + route + window.location.search
+        );
+      })();
+    </script>
+
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/omedevservice/favicon.svg" />
 
-    <!-- Viewport: viewport-fit=cover pour le support notch iPhone -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <!-- Viewport -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
 
-    <!-- Android Chrome — couleur de la barre d'adresse -->
+    <!-- Android Chrome -->
     <meta name="theme-color" content="#0f172a" />
 
-    <!-- PWA — plein écran (standard + iOS Safari) -->
+    <!-- PWA -->
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Omedev" />
+    <meta
+      name="apple-mobile-web-app-capable"
+      content="yes"
+    />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta
+      name="apple-mobile-web-app-title"
+      content="OMEDEV"
+    />
 
-    <!-- Préconnexion Google Fonts pour réduire la latence -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Préconnexion Google Fonts -->
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
 
-    <title>OMEDEV Services - Solutions IT, Énergie & Digital</title>
-    <meta name="description" content="Leader en solutions informatiques, énergétiques et digitales en République Démocratique du Congo" />
-    <meta name="keywords" content="IT, réseau, sécurité, cloud, énergie, formation, RDC" />
-    <meta name="author" content="OMEDEV Services" />
-    <script type="module" crossorigin src="/omedevservice/assets/index-D-E_sUiS.js"></script>
-    <link rel="stylesheet" crossorigin href="/omedevservice/assets/index-BiJwaSBD.css">
+    <!-- SEO -->
+    <title>
+      OMEDEV Services - Solutions IT, Énergie & Digital
+    </title>
+
+    <meta
+      name="description"
+      content="OMEDEV Services propose des solutions informatiques, énergétiques et digitales pour les entreprises et organisations en République Démocratique du Congo."
+    />
+
+    <meta
+      name="keywords"
+      content="OMEDEV Services, informatique, développement web, développement mobile, réseau, cybersécurité, cloud, énergie, formation, digital, RDC, République Démocratique du Congo"
+    />
+
+    <meta
+      name="author"
+      content="OMEDEV Services"
+    />
+
+    <!-- URL canonique -->
+    <link
+      rel="canonical"
+      href="https://www-omedevservices.net/"
+    />
+
+    <!-- Données structurées Schema.org : identité de l'entreprise, pour les
+    résultats enrichis Google (nom, coordonnées visibles dans le Footer du
+    site, reprises ici telles quelles - aucune valeur inventée). -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "OMEDEV Services",
+        "url": "https://www-omedevservices.net/",
+        "logo": "https://www-omedevservices.net/favicon.svg",
+        "email": "omedevservices@gmail.com",
+        "telephone": "+24355550359",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Avenue Kabmabre n°75, Lingwala",
+          "addressLocality": "Kinshasa",
+          "addressCountry": "CD"
+        }
+      }
+    </script>
+    <script type="module" crossorigin src="/omedevservice/assets/index-CEOar0YN.js"></script>
+    <link rel="modulepreload" crossorigin href="/omedevservice/assets/jsx-runtime-C2ZqOKBi.js">
+    <link rel="stylesheet" crossorigin href="/omedevservice/assets/index-BnIFVgWL.css">
   </head>
+
   <body>
     <div id="root"></div>
+
   </body>
 </html>

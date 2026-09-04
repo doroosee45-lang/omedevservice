@@ -1,0 +1,1 @@
+var e=`Non renseigné`,t=t=>{if(!t)return[e,e,e,e,e];let n=[t.city,t.country].filter(Boolean).join(`, `),r=[t.name||`Non renseigné`];return t.companyName&&r.push(t.companyName),r.push(t.address||`Non renseigné`,n||`Non renseigné`,t.phone||`Non renseigné`,t.email||`Non renseigné`),r};export{t};

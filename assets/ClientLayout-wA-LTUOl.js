@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-C2ZqOKBi.js";import{bt as t,xt as n}from"./index-CEOar0YN.js";var r=e(),i=()=>{let e=localStorage.getItem(`accessToken`),i=localStorage.getItem(`userRole`);return e?i===`super_admin`||i===`admin`?(0,r.jsx)(t,{to:`/admin/dashboard`,replace:!0}):(0,r.jsx)(n,{}):(0,r.jsx)(t,{to:`/login`,replace:!0})};export{i as default};
