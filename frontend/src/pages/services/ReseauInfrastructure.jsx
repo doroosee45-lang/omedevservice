@@ -909,7 +909,7 @@ const ReseauInfrastructure = () => {
             <span
               key={tag}
               className="px-3.5 py-1.5 rounded-full text-xs font-semibold"
-              style={{ background: 'rgba(255,255,255,.10)', border: '1px solid rgba(255,255,255,.22)', color: '#fff' }}
+              style={{ background: 'rgba(11,116,193,.08)', border: '1px solid rgba(11,116,193,.20)', color: '#0B74C1' }}
             >
               {tag}
             </span>
@@ -1201,4 +1201,3 @@ const ReseauInfrastructure = () => {
 }
 
 export default ReseauInfrastructure
-

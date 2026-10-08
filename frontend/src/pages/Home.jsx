@@ -494,6 +494,7 @@ const Home = () => {
 
       {/* ==================== HERO SECTION (composant partagé PublicHero) ==================== */}
       <PublicHero
+        showBackgroundImage={false}
         title="Accélérez votre Transformation Digitale"
         highlight="Transformation Digitale"
         subtitle={
@@ -939,6 +940,5 @@ const Home = () => {
 };
 
 export default Home;
-
 
 

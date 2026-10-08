@@ -48,11 +48,68 @@ const heroStyles = `
     /* Force l'héritage neutre pour éviter qu'un style global ne teinte le Hero */
     font-family: inherit;
   }
+  .public-hero-no-image {
+    background: #F6F6F7;
+    color: #0B1213;
+    min-height: 500px;
+  }
+  .public-hero.public-hero-no-image .hero-grid {
+    background-image: linear-gradient(rgba(11,116,193,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(11,116,193,.04) 1px, transparent 1px);
+  }
+  .public-hero.public-hero-no-image .ph-title { color: #0B1213; text-shadow: none; }
+  .public-hero.public-hero-no-image .ph-highlight-glow { display: none; }
+  .public-hero.public-hero-no-image .ph-highlight-text {
+    background: linear-gradient(90deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    filter: none;
+  }
+  .public-hero.public-hero-no-image .ph-subtitle { text-shadow: none; color: #25364A; }
+  .public-hero.public-hero-no-image .ph-subtitle strong { color: #053876; }
+  .public-hero.public-hero-no-image .ph-badge {
+    background: rgba(11,116,193,.08);
+    border-color: rgba(11,116,193,.18);
+  }
+  .public-hero.public-hero-no-image .ph-badge-label { color: #0B74C1; }
+  .public-hero.public-hero-no-image .ph-btn-primary {
+    background: linear-gradient(135deg, #0B74C1 0%, #2AACB2 55%, #55DDB5 100%);
+    box-shadow: 0 10px 28px rgba(11,116,193,.20);
+  }
+  .public-hero.public-hero-no-image .ph-btn-outline {
+    color: #053876;
+    border-color: rgba(5,56,118,.22);
+    background: #fff;
+  }
+  .public-hero.public-hero-no-image .ph-btn-outline:hover {
+    border-color: #2AACB2;
+    color: #0B74C1;
+    background: rgba(85,221,181,.08);
+  }
+  .public-hero.public-hero-no-image .ph-chip { color: #0B74C1; }
+  .public-hero.public-hero-no-image .ph-chip:hover { color: #053876; }
+  .public-hero.public-hero-no-image .ph-glass {
+    background: linear-gradient(145deg, #053876 0%, #0B74C1 100%);
+    border-color: rgba(5,56,118,.12);
+    box-shadow: 0 18px 42px rgba(5,56,118,.22);
+  }
+  .public-hero.public-hero-no-image .ph-glass-item {
+    background: rgba(255,255,255,.12);
+    border-color: rgba(255,255,255,.20);
+  }
+  .public-hero.public-hero-no-image .ph-glass-item:hover { background: rgba(255,255,255,.20); }
+  .public-hero.public-hero-no-image .ph-glass-item-value { color: #fff; }
+  .public-hero.public-hero-no-image .ph-glass-item-label { color: rgba(255,255,255,.88); }
+  .public-hero.public-hero-no-image > .animate-float {
+    display: none;
+  }
   @media (max-width: 1024px) {
     .public-hero { min-height: 560px; }
+    .public-hero-no-image { min-height: 500px; }
   }
   @media (max-width: 640px) {
     .public-hero { min-height: 620px; }
+    .public-hero-no-image { min-height: 560px; }
   }
 
   /* ── Animations identiques ── */
@@ -305,43 +362,50 @@ const PublicHero = ({
   align = 'center',
   className = '',
   children,
+  showBackgroundImage = false,
 }) => {
   const isSplit = !!stats?.length;
 
   return (
     <section
-      className={`public-hero relative overflow-hidden flex items-center py-8 md:py-10 ${className}`}
+      className={`public-hero relative overflow-hidden flex items-center py-8 md:py-10 ${showBackgroundImage ? '' : 'public-hero-no-image'} ${className}`}
     >
       <style>{heroStyles}</style>
 
-      {/* Photo de fond — animation Ken Burns conservée */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src={HERO_IMAGE}
-          alt=""
-          className="hero-photo w-full h-full object-cover object-center"
-        />
-      </div>
+      {/* Photo de fond — désactivable pour les pages en cours de revue visuelle. */}
+      {showBackgroundImage && (
+        <div className="absolute inset-0 z-0">
+          <img
+            src={HERO_IMAGE}
+            alt=""
+            className="hero-photo w-full h-full object-cover object-center"
+          />
+        </div>
+      )}
 
       {/* Overlay NEUTRE 100% noir/transparent.
           Pas la moindre teinte colorée. Garantit la lisibilité sans
           jamais "laver" l'image avec une couleur de marque. */}
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          background:
-            'linear-gradient(100deg, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.16) 48%, rgba(0,0,0,0.08) 100%)',
-        }}
-      />
+      {showBackgroundImage && (
+        <div
+          className="absolute inset-0 z-0"
+          style={{
+            background:
+              'linear-gradient(100deg, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.16) 48%, rgba(0,0,0,0.08) 100%)',
+          }}
+        />
+      )}
 
       {/* Vignette d'ancrage, neutre (noir) */}
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          background:
-            'radial-gradient(120% 80% at 50% 40%, transparent 60%, rgba(0,0,0,0.14) 100%)',
-        }}
-      />
+      {showBackgroundImage && (
+        <div
+          className="absolute inset-0 z-0"
+          style={{
+            background:
+              'radial-gradient(120% 80% at 50% 40%, transparent 60%, rgba(0,0,0,0.14) 100%)',
+          }}
+        />
+      )}
 
       {/* Grille blanche subtile */}
       <div className="hero-grid absolute inset-0 opacity-[0.14] z-[1]" />
